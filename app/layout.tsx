@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
+import "../globals.css";
+import Layout from "@/components/shared/layout";
 import localFont from "next/font/local";
-import "./globals.css";
+import "../globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const iranSansBold = localFont({
+  src: "../public/fonts/IRANSans(FaNum)_Bold.ttf",
+  variable: "--font-iran-sans-bold",
+  weight: "700",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const iranSansMedium = localFont({
+  src: "../public/fonts/IRANSans(FaNum)_Medium.ttf",
+  variable: "--font-iran-sans-medium",
+  weight: "500",
+});
+
+const iranSans = localFont({
+  src: "../public/fonts/IRANSans(FaNum).ttf",
+  variable: "--font-iran-sans",
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -26,9 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${iranSansBold.variable} ${iranSansMedium.variable} ${iranSans.variable} antialiased`}
       >
-        {children}
+        <Layout>{children}</Layout>
       </body>
     </html>
   );

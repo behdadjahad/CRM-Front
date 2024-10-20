@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 224, 85%, 97%;
+    --foreground: 210, 11%, 15%;
+    --foreground-mute: 210, 13%, 62%;
+
+    --header: 0, 0%, 100%;
+
+    --primary: 226, 48%, 21%;
+    --primary-foreground: 0, 0%, 100%;
+    --primary-hover: 226, 41%, 25%;
+    --primary-active: 226, 41%, 25%;
+
+    --secondary: 218, 72%, 63%;
+    --secondary-hover: 200, 100%, 97%;
+    --secondary-foreground: 0, 0%, 100%;
+    --secondary-active: 211, 83%, 16%;
+
+    --disable: 0, 0%, 96%;
+    --disable-foreground: 0, 0%, 69%;
+    --disable-mute: 0, 0%, 82%;
+
+    --card: 0, 0%, 100%;
+    --card-foreground: 220, 2%, 27%;
+
+    --accessible: 20, 91%, 53%;
+    --accessible-foreground: 0, 0%, 100%;
+    --accessible-active: 20, 91%, 53%;
+
+    --accent: 342, 53%, 90%;
+    --accent-foreground: 347, 77%, 57%;
+    --accent-active: 347, 77%, 57%;
+
+    --tertiary: 207, 82%, 73%;
+    --tertiary-foreground: 0, 0%, 100%;
+    --tertiary-active: 206, 92%, 46%;
+    --tertiary-background: 209, 73%, 94%;
+
+    --quartiery: 171, 23%, 84%;
+    --quartiery-foreground: 137, 100%, 32%;
+    --quartiery-active: 137, 100%, 32%;
+
+    --info: 213, 37%, 89%;
+    --info-foreground: 218, 50%, 53%;
+    --info-active: 218, 50%, 53%;
+
+    --warning: 42, 86%, 89%;
+    --warning-foreground: 42, 93%, 64%;
+    --warning-active: 42, 93%, 64%;
+
+    --badge: 220, 27%, 98%;
+    --badge-foreground: 210, 10%, 23%;
+    --badge-active: 20, 91%, 53%;
+
+    --muted: 227, 13%, 57%;
+    --muted-foreground: 217, 16%, 23%;
+    --muted-active: 208, 13%, 45%;
+
+    --border: 0, 0%, 85%;
+    --input: 0, 1%, 85%;
+
+    --subtitle: 220, 25%, 98%;
+    --subtitle-dark: 210, 10%, 23%;
+
+    --popover: 0, 0%, 100%;
+    --popover-foreground: 222.2, 84%, 4.9%;
+
+    --destructive: 32, 89%, 81%;
+    --destructive-foreground: 29, 96%, 43%;
+
+    --ring: 222.2, 84%, 4.9%;
+    --radius: 8px;
+
+    --background-active: 214.3, 31.8%, 91.4%;
+    --background-gradient: 214.3 31.8% 91.4%;
+
+    --link-active: 214.3 31.8% 91.4%;
+    --link-active-background: 214.3 31.8% 91.4%;
+
+    --btn: 214.3 31.8% 91.4%;
+    --btn-foreground: 214.3 31.8% 91.4%;
+    --btn-active: 214.3 31.8% 91.4%;
+
+    --card-active: 214.3 31.8% 91.4%;
+
+    --success: 171, 23%, 84%;
+    --success-foreground: 137, 100%, 32%;
+    --success-active: 137, 100%, 32%;
+
+    --negative: 0, 74.78%, 54.9%;
+    --negative-foreground: 214.3 31.8% 91.4%;
+    --negative-active: 214.3 31.8% 91.4%;
+
+    --accent-active: 214.3 31.8% 91.4%;
+
+    --link-shadow: 214.3 31.8% 91.4%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border leading-normal scroll-smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-primary text-right;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+  }
+}
