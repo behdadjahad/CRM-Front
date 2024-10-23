@@ -3,6 +3,7 @@ import React, { useCallback } from "react";
 import { cn } from "@/lib/utils";
 import SelectInput from "./select-input";
 import _ from "lodash";
+import TextInput from "./text-input";
 
 export interface OptionType {
   label: string;
@@ -22,6 +23,7 @@ export interface FormMakerInterface {
     options?: OptionType[];
     className?: string;
     style?: any;
+    icon?: string;
     defaultValue?: string | null;
     children?: React.ReactNode;
   }[];
@@ -41,7 +43,7 @@ export default function FormMaker({
   const setTextFieldValue = useCallback(
     _.debounce((key: string, value: string) => {
       form.setFieldValue(key, value);
-    }, 300),
+    }, 0),
     [form]
   );
 
@@ -58,19 +60,10 @@ export default function FormMaker({
           );
         case "input":
           return (
-            <input
-              key={item.key}
-              placeholder={
-                form.values[item.key] || item.placeholder || item.label
-              }
-              type={item.type}
-              defaultValue={item.defaultValue || ""}
-              onChange={(e: any) => setTextFieldValue(item.key, e.target.value)}
-              className={cn(
-                "text-subtitle text-sm h-10 placeholder:text-sm placeholder:text-subtitle",
-                item.labelClassName
-              )}
-            />
+            <TextInput
+              item={item}
+              setTextFieldValue={setTextFieldValue}
+              form={form} />
           );
         case "textarea":
           return (

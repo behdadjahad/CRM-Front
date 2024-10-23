@@ -32,7 +32,7 @@ export function NavLink({
       {...props}
       onClick={onClick}
       className={cn(
-        "text-base text-foreground flex flex-row-reverse items-center",
+        "text-base text-foreground flex flex-row items-center",
         { "gap-2.5": label && icon },
         pathname == link ? activeClassName : "",
         className

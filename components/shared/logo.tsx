@@ -16,7 +16,7 @@ export default function Logo({
   return (
     <div
       className={cn(
-        "w-full flex flex-row-reverse items-center gap-2",
+        "w-full flex flex-row items-center gap-2",
         className
       )}
     >

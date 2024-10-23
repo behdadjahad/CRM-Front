@@ -1,9 +1,6 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
@@ -21,21 +18,22 @@ export default function ProfileDropDown({
   return (
     <div>
       <DropdownMenu>
-        <DropdownMenuTrigger className="bg-badge p-2 rounded-lg flex flex-row-reverse items-center gap-3 outline-none h-10">
-          <div className="flex flex-row-reverse items-center gap-2 text-badge-foreground">
-            <Image src={avatar} alt={name} width={24} height={24} />
+        <DropdownMenuTrigger className="bg-badge p-2 rounded-lg flex flex-row items-center gap-3 outline-none h-10">
+          <div className="flex flex-row items-center gap-2 text-badge-foreground">
+            <Image
+              src={avatar}
+              alt={name}
+              width={24}
+              height={24}
+              className="shadow-[0px_4px_4px_0px_#00000040] rounded-full" />
+
             <span className="text-xsl">{name}</span>
           </div>
 
           <ChevronDown size={16} />
         </DropdownMenuTrigger>
+
         <DropdownMenuContent>
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Billing</DropdownMenuItem>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuItem>Subscription</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

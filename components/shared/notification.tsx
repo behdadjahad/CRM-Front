@@ -1,0 +1,18 @@
+import Image from "next/image";
+
+export interface NotificationInterface {
+  unread: boolean;
+}
+
+export default function Notification({
+  unread,
+}: NotificationInterface) {
+  return (
+    <div className="bg-badge p-2 rounded-lg flex flex-row items-center justify-center gap-3 outline-none h-10 w-10">
+      <div className="relative">
+        {unread ? <span className="p-1 bg-destructive rounded-full w-2 h-2 absolute top-0 right-0"></span> : <></>}
+        <Image src={"/icons/notification.png"} alt="notification" width={22} height={22} />
+      </div>
+    </div>
+  );
+}
