@@ -37,7 +37,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
                     {item.category}
                   </span>
                 ) : (
-                  <div className="bg-muted pb-px w-full" />
+                    <div className="bg-muted-foreground pb-px w-full" />
                 )}
               </div>
 
