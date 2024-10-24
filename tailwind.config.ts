@@ -82,8 +82,6 @@ const config: Config = {
         "54": "218px",
       },
       fontSize: {
-        xs: "10px",
-        xsl: "12px",
         sm: "14px",
         sml: "14.5px",
         base: "16px",
@@ -244,10 +242,11 @@ const config: Config = {
       },
       backgroundImage: {
         banner:
-          "linear-gradient(270deg, #A5A5A5 0%, rgba(231, 231, 231, 0.5) 58.5%, #A5A5A5 100%)",
+          "radial-gradient(49.59% 49.48% at 50.41% 47.2%, #0475B5 0%, #233059 100%)",
+        city: "url('/images/city.png')"
       },
       boxShadow: {
-        header: "0px 8px 28px 0px #4859661A",
+        "header-bottom": "0px 8px 28px 0px #4859661A",
       },
     },
   },

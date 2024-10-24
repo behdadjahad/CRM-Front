@@ -14,6 +14,7 @@ export interface FormMakerInterface {
   form: any;
   fields: {
     component: "input" | "Select" | "textarea" | "non-field";
+    floating?: boolean;
     placeholder?: string;
     labelClassName?: string;
     hideSelect?: boolean;

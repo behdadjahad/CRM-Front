@@ -4,13 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export interface NavLinkInterface {
-  icon: React.ReactNode;
   link: string;
+  icon?: React.ReactNode;
   label?: string;
   labelClass?: string;
   activeClassName?: string;
   className?: string;
   props?: any;
+  children?: React.ReactNode;
   onClick?: () => any;
 }
 
@@ -22,6 +23,7 @@ export function NavLink({
   labelClass,
   className,
   props,
+  children,
   onClick,
 }: NavLinkInterface) {
   const pathname = usePathname();
@@ -44,6 +46,7 @@ export function NavLink({
           {label}
         </span>
       )}
+      {children}
     </Link>
   );
 }

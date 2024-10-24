@@ -22,9 +22,7 @@ export default function Layout({
         )}
       >
         <Header />
-        <main className="w-full h-[calc(100vh-80px)] overflow-auto">
-          {children}
-        </main>
+        {children}
       </div>
     </div>
   );

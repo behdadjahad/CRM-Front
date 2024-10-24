@@ -27,7 +27,7 @@ export default function ProfileDropDown({
               height={24}
               className="shadow-[0px_4px_4px_0px_#00000040] rounded-full" />
 
-            <span className="text-xsl">{name}</span>
+            <span className="text-xs">{name}</span>
           </div>
 
           <ChevronDown size={16} />

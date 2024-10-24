@@ -33,7 +33,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
             <div key={item.category} className="flex flex-col">
               <div className="h-10 flex flex-col justify-center transition-all duration-200">
                 {state ? (
-                  <span className="text-xsl font-light text-muted text-clip">
+                  <span className="text-xs font-light text-muted text-clip px-3">
                     {item.category}
                   </span>
                 ) : (
@@ -45,7 +45,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
                 <NavLink
                   {...linkItem}
                   key={linkItem.label}
-                  className="text-primary-foreground text-xsl p-3 rounded-xl relative"
+                  className="text-primary-foreground text-xs p-3 rounded-xl relative"
                   activeClassName="bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9"
                   labelClass={!state ? "hidden" : ""}
                 />
@@ -59,7 +59,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
         <div
           onClick={() => setState((prev: any) => !prev)}
           className={cn(
-            "flex flex-row items-center text-primary-foreground text-xsl p-3 rounded-xl cursor-pointer",
+            "flex flex-row items-center text-primary-foreground text-xs p-3 rounded-xl cursor-pointer",
             { "gap-x-2.5": state }
           )}
         >
