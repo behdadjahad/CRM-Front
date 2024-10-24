@@ -13,22 +13,31 @@ export default function TextInput({
   setTextFieldValue: (key: string, value: string) => any;
 }) {
   return (
-    <div className={cn('relative', item.className)}>
+    <div className={cn('relative', { 'input-container': item.floating }, item.className)}>
       <input
         key={item.key}
-        placeholder={item.placeholder}
+        placeholder={item.floating ? " " : item.placeholder}
         value={form.values[item.key]}
         type={item.type}
         defaultValue={item.defaultValue || ""}
         onChange={(e: any) => setTextFieldValue(item.key, e.target.value)}
         className={cn(
-          "text-subtitle/80 text-xsl h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
+          "text-subtitle/80 text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
           item.labelClassName,
+          {
+            'floating-input bg-primary-foreground': item.floating
+          },
           {
             "pr-9": item.icon
           }
         )}
       />
+
+      {
+        item.floating ?
+          <label className="floating-label">{item.placeholder}</label>
+          : <></>
+      }
 
       {
         item.icon ?

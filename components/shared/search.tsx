@@ -25,6 +25,7 @@ export default function Search({ className }: SearchInterface) {
           placeholder: 'جستجو',
           icon: '/icons/search.png',
           type: 'text',
+          floating: false,
           labelClassName: 'bg-badge'
         }
       ]}

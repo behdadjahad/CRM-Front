@@ -5,8 +5,8 @@
 @layer base {
   :root {
     --background: 224, 85%, 97%;
-    --foreground: 210, 11%, 15%;
-    --foreground-mute: 210, 13%, 62%;
+    --foreground: 220, 24%, 12%;
+    --foreground-mute: 220, 6%, 66%;
 
     --header: 0, 0%, 100%;
 
@@ -60,7 +60,7 @@
     --muted-foreground: 217, 16%, 23%;
     --muted-active: 208, 13%, 45%;
 
-    --border: 0, 0%, 85%;
+    --border: 220, 6%, 85%;
     --input: 0, 1%, 85%;
 
     --subtitle: 208, 13%, 45%;
@@ -105,10 +105,42 @@
   * {
     @apply border-border leading-normal scroll-smooth;
   }
+
+  main {
+    @apply flex flex-col w-full h-[calc(100vh-80px)] overflow-auto p-8 gap-8;
+  }
+
   body {
     @apply bg-background text-foreground antialiased font-primary text-right;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-smooth: never;
+  }
+
+  h1 {
+    @apply text-foreground text-lg md:text-xl lg:text-3xl font-medium;
+  }
+
+  /* FloatingLabelInput */
+  .input-container {
+    @apply relative mt-5;
+  }
+
+  .floating-input {
+    @apply border border-border w-full p-3 outline-none transition-all duration-200 ease-in-out;
+  }
+
+  .floating-label {
+    @apply absolute top-1/2 right-3 -translate-y-1/2 text-muted pointer-events-none transition-all duration-200 ease-in-out;
+  }
+
+  .floating-input:focus ~ .floating-label,
+  .floating-input:not(:placeholder-shown) ~ .floating-label {
+    @apply text-foreground-mute px-2 bg-primary-foreground right-3 top-0;
+  }
+
+  /* Adjust the input's border color on focus */
+  .floating-input:focus {
+    @apply border border-foreground;
   }
 }
