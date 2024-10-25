@@ -1,0 +1,146 @@
+import React, { useState, useCallback, useEffect } from 'react';
+import FormMaker, { FormMakerInterface } from './form-maker';
+import { useFormik } from 'formik';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { Button } from '../ui/button';
+import { FaPlus } from 'react-icons/fa';
+import { debounce } from 'lodash';
+
+export interface FormExtenderInterface {
+  fields: FormMakerInterface["fields"] | any;
+  initialValues: any;
+  validationSchema: any;
+  title: string;
+}
+
+export default function FormExtender({
+  title,
+  fields,
+  initialValues,
+  validationSchema,
+}: FormExtenderInterface) {
+  const [forms, setForms] = useState<{ id: string; values: any }[]>([
+    { id: `${title}-0`, values: { ...initialValues } },
+  ]);
+  const [formCount, setFormCount] = useState(1);
+
+  const extendForm = useCallback(() => {
+    setForms((prevForms) => [
+      ...prevForms,
+      { id: `${title}-${formCount}`, values: { ...initialValues } },
+    ]);
+    setFormCount((prevCount) => prevCount + 1);
+  }, [formCount, initialValues, title]);
+
+  const removeForm = useCallback((id: string) => {
+    setForms((prevForms) => prevForms.filter((form) => form.id !== id));
+  }, []);
+
+  const debouncedUpdate = useCallback(
+    debounce((id: string, newValues: any) => {
+      setForms((prevForms) =>
+        prevForms.map((form) => (form.id === id ? { ...form, values: newValues } : form))
+      );
+    }, 300),
+    []
+  );
+
+  const handleSubmit = useCallback(() => {
+    console.log("All Form Values:", forms.map((form) => form.values));
+  }, [forms]);
+
+  return (
+    <div className="bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col items-end">
+      {forms.map((form, index) => (
+        <div className="w-full flex flex-col gap-5"
+          key={form.id}>
+          <FormikWrapper
+            id={form.id}
+            values={form.values}
+            validationSchema={validationSchema}
+            fields={fields}
+            updateValues={(newValues) => debouncedUpdate(form.id, newValues)}
+            removeForm={forms.length > 1 ? () => removeForm(form.id) : undefined}
+            title={forms[0].id === form.id ? title : undefined}
+          />
+
+          {index != forms.length - 1 ? <div className="w-full h-[0.5px] bg-border"></div> : <></>}
+        </div>
+      ))}
+
+      <Button variant={"transparent"} onClick={extendForm}>
+        <FaPlus /> {title}
+      </Button>
+
+      <Button variant={"transparent"} onClick={handleSubmit}>
+        Submit
+      </Button>
+    </div>
+  );
+}
+
+interface FormikWrapperInterface {
+  id: string;
+  values: any;
+  validationSchema: any;
+  fields: FormMakerInterface["fields"];
+  updateValues: (values: any) => void;
+  removeForm?: () => void;
+  title?: string;
+}
+
+function FormikWrapper({
+  id,
+  values,
+  validationSchema,
+  fields,
+  updateValues,
+  removeForm,
+  title,
+}: FormikWrapperInterface) {
+  const formik = useFormik({
+    initialValues: values,
+    validationSchema,
+    onSubmit: () => { },
+  });
+
+  useEffect(() => {
+    updateValues(formik.values);
+  }, [formik.values, updateValues]);
+
+  return (
+    <div key={id} className="w-full">
+      <div className="border p-4 rounded-lg gap-6 flex flex-col w-full">
+        {title && <span>{title}</span>}
+
+        <FormMaker
+          form={formik}
+          fields={
+            removeForm
+              ? [
+                ...fields,
+                {
+                  component: "non-field",
+                  key: "delete",
+                  children: (
+                    <Button variant={"transparent"} onClick={removeForm}>
+                      <Image
+                        src={"/icons/trash.png"}
+                        alt="delete the item"
+                        width={28}
+                        height={28}
+                      />
+                    </Button>
+                  ),
+                  className: "col-span-12 md:col-span-6 lg:col-span-3",
+                },
+              ]
+              : [...fields]
+          }
+          className={cn("w-full flex flex-row p-0")}
+        />
+      </div>
+    </div>
+  );
+}

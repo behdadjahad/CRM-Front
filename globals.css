@@ -104,6 +104,8 @@
 @layer base {
   * {
     @apply border-border leading-normal scroll-smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) var(--primary-foreground);
   }
 
   main {
@@ -123,7 +125,7 @@
 
   /* FloatingLabelInput */
   .input-container {
-    @apply relative mt-5;
+    @apply relative;
   }
 
   .floating-input {
@@ -142,5 +144,26 @@
   /* Adjust the input's border color on focus */
   .floating-input:focus {
     @apply border border-foreground;
+  }
+
+  /* Custom Scrollbar using TailwindCSS and @apply directive */
+  *::-webkit-scrollbar {
+    @apply w-2 h-2; 
+  }
+
+  *::-webkit-scrollbar-track {
+    @apply bg-primary-hover rounded-lg; 
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-primary rounded-lg bg-clip-content border-2 border-transparent;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary; 
+  }
+
+  *::-webkit-scrollbar-corner {
+    @apply bg-transparent;
   }
 }

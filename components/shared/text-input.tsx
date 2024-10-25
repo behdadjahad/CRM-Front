@@ -6,21 +6,18 @@ import Image from 'next/image';
 export default function TextInput({
   form,
   item,
-  setTextFieldValue,
 }: {
   form: any;
-  item: FormMakerInterface["fields"][0];
-  setTextFieldValue: (key: string, value: string) => any;
+    item: FormMakerInterface["fields"][0];
 }) {
   return (
-    <div className={cn('relative', { 'input-container': item.floating }, item.className)}>
+    <div className={cn('relative w-full', { 'input-container': item.floating })}>
       <input
         key={item.key}
         placeholder={item.floating ? " " : item.placeholder}
         value={form.values[item.key]}
         type={item.type}
-        defaultValue={item.defaultValue || ""}
-        onChange={(e: any) => setTextFieldValue(item.key, e.target.value)}
+        onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
           "text-subtitle/80 text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
           item.labelClassName,
@@ -35,7 +32,9 @@ export default function TextInput({
 
       {
         item.floating ?
-          <label className="floating-label">{item.placeholder}</label>
+          <label className="floating-label">
+            {item.placeholder}
+          </label>
           : <></>
       }
 

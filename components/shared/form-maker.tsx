@@ -2,7 +2,6 @@
 import React, { useCallback } from "react";
 import { cn } from "@/lib/utils";
 import SelectInput from "./select-input";
-import _ from "lodash";
 import TextInput from "./text-input";
 
 export interface OptionType {
@@ -36,17 +35,7 @@ export default function FormMaker({
   fields,
   className,
 }: FormMakerInterface) {
-  const setFieldValue = (key: string, value: string) => {
-    form.setFieldValue(key, value);
-  };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const setTextFieldValue = useCallback(
-    _.debounce((key: string, value: string) => {
-      form.setFieldValue(key, value);
-    }, 0),
-    [form]
-  );
 
   const renderField = useCallback(
     (item: any) => {
@@ -56,14 +45,12 @@ export default function FormMaker({
             <SelectInput
               form={form}
               item={item}
-              setFieldValue={setFieldValue}
             />
           );
         case "input":
           return (
             <TextInput
               item={item}
-              setTextFieldValue={setTextFieldValue}
               form={form} />
           );
         case "textarea":
@@ -71,7 +58,7 @@ export default function FormMaker({
             <textarea
               key={item.key}
               placeholder={item.label}
-              onChange={(e: any) => setFieldValue(item.key, e.target.value)}
+              onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
               rows={5}
               className={cn("text-subtitle", item.labelClassName)}
             />
@@ -80,20 +67,20 @@ export default function FormMaker({
           return null;
       }
     },
-    [form, setFieldValue]
+    [form]
   );
 
   return (
     <div className={cn("w-full", className)}>
       <form
-        className="flex flex-wrap w-full items-start justify-between"
+        className="w-full gap-x-4 gap-y-6 grid grid-cols-12"
         onSubmit={(e) => e?.preventDefault()}
       >
         {fields.map((item) => (
           <div
             key={item.key}
             className={cn(
-              "relative outline-none px-2 w-full flex flex-col",
+              "relative outline-none w-full",
               item.className
             )}
             style={item.style}

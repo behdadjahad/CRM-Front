@@ -2,7 +2,9 @@
 
 import Breadcrumb from "@/components/shared/breadcrumb";
 import EditableContainer from "@/components/shared/editable-container";
+import FormExtender from "@/components/shared/form-extender";
 import Title from "@/components/shared/title";
+import { PersonalInfoFormExtender } from "@/constants/extendable-fields";
 import Image from "next/image";
 
 export default function Home() {
@@ -52,6 +54,12 @@ export default function Home() {
           icon: <Image src={'/icons/edit.png'} alt="edit" width={24} height={24} />,
           click: () => console.log("clicked")
         }}
+      />
+
+      <FormExtender title="اطلاعات شخصی"
+        fields={PersonalInfoFormExtender.fields}
+        initialValues={PersonalInfoFormExtender.initialValues}
+        validationSchema={PersonalInfoFormExtender.validationSchema}
       />
     </main>
   );

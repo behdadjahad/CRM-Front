@@ -12,17 +12,15 @@ import { cn } from "@/lib/utils";
 const SelectInput = React.memo(function SelectInput({
   form,
   item,
-  setFieldValue,
 }: {
   form: any;
-  item: FormMakerInterface["fields"][0];
-  setFieldValue: (key: string, value: string) => any;
+    item: FormMakerInterface["fields"][0];
 }) {
   const handleValueChange = useCallback(
     (value: string) => {
-      setFieldValue(item.key, value);
+      form.setFieldValue(item.key, value);
     },
-    [item.key, setFieldValue]
+    [item.key]
   );
 
   useEffect(() => {
@@ -31,9 +29,9 @@ const SelectInput = React.memo(function SelectInput({
       item.defaultValue !== "worldwide" &&
       (!form.values[item.key] || form.values[item.key] === "worldwide")
     ) {
-      setFieldValue(item.key, item.defaultValue);
+      form.setFieldValue(item.key, item.defaultValue);
     }
-  }, [item.defaultValue, form.values[item.key], item.key, setFieldValue]);
+  }, [item.defaultValue, form.values[item.key], item.key, form]);
 
   return (
     <Select onValueChange={handleValueChange}>

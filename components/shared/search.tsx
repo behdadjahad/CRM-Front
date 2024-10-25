@@ -26,6 +26,7 @@ export default function Search({ className }: SearchInterface) {
           icon: '/icons/search.png',
           type: 'text',
           floating: false,
+          className: "col-span-12",
           labelClassName: 'bg-badge'
         }
       ]}

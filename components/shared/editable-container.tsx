@@ -17,13 +17,13 @@ export interface EditableContainerInterface {
 
 export default function EditableContainer({ action, list }: EditableContainerInterface) {
   return (
-    <div className='bg-city bg-full rounded-xl overflow-hidden'>
+    <div className='bg-city bg-full rounded-xl overflow-hidden min-h-fit'>
       <div className="bg-banner opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">
         <div className="flex flex-row gap-8">
           {
             list.map((item, index) => (
-              <>
-                <div key={item.label} className='flex flex-col items-start gap-2.5'>
+              <div key={item.label} className='flex flex-row gap-8 items-start'>
+                <div className='flex flex-col items-start gap-2.5'>
                   <span className='text-base font-normal'>
                     {item.label}
                   </span>
@@ -40,7 +40,7 @@ export default function EditableContainer({ action, list }: EditableContainerInt
                     className='h-full border-l border-dashed border-primary-foreground'
                   />)
                 }
-              </>
+              </div>
             ))
           }
         </div>
