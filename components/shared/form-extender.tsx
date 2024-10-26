@@ -12,6 +12,7 @@ export interface FormExtenderInterface {
   initialValues: any;
   validationSchema: any;
   title: string;
+  className?: string;
 }
 
 export default function FormExtender({
@@ -19,6 +20,7 @@ export default function FormExtender({
   fields,
   initialValues,
   validationSchema,
+  className
 }: FormExtenderInterface) {
   const [forms, setForms] = useState<{ id: string; values: any }[]>([
     { id: `${title}-0`, values: { ...initialValues } },
@@ -46,12 +48,12 @@ export default function FormExtender({
     []
   );
 
-  const handleSubmit = useCallback(() => {
-    console.log("All Form Values:", forms.map((form) => form.values));
-  }, [forms]);
+  // const handleSubmit = useCallback(() => {
+  //   console.log("All Form Values:", forms.map((form) => form.values));
+  // }, [forms]);
 
   return (
-    <div className="bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col items-end">
+    <div className={cn("bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col justify-between items-end", className)}>
       {forms.map((form, index) => (
         <div className="w-full flex flex-col gap-5"
           key={form.id}>
@@ -69,12 +71,8 @@ export default function FormExtender({
         </div>
       ))}
 
-      <Button variant={"transparent"} onClick={extendForm}>
+      <Button variant={"transparent"} onClick={extendForm} className='mr-auto'>
         <FaPlus /> {title}
-      </Button>
-
-      <Button variant={"transparent"} onClick={handleSubmit}>
-        Submit
       </Button>
     </div>
   );
@@ -111,8 +109,8 @@ function FormikWrapper({
 
   return (
     <div key={id} className="w-full">
-      <div className="border p-4 rounded-lg gap-6 flex flex-col w-full">
-        {title && <span>{title}</span>}
+      <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
+        {title && <span className='px-2'>{title}</span>}
 
         <FormMaker
           form={formik}
@@ -138,7 +136,7 @@ function FormikWrapper({
               ]
               : [...fields]
           }
-          className={cn("w-full flex flex-row p-0")}
+          className={cn("w-full p-0")}
         />
       </div>
     </div>

@@ -109,7 +109,7 @@
   }
 
   main {
-    @apply flex flex-col w-full h-[calc(100vh-80px)] overflow-auto p-8 gap-8;
+    @apply flex flex-col w-full h-[calc(100vh-64px)] overflow-auto p-8 gap-8;
   }
 
   body {
@@ -166,4 +166,15 @@
   *::-webkit-scrollbar-corner {
     @apply bg-transparent;
   }
+  
+  .phone-floating-label {
+    @apply absolute top-1/2 right-3 -translate-y-1/2 text-base text-foreground-mute pointer-events-none transition-all duration-200 ease-in-out;
+  }
+  
+  .phone-floating-input:focus ~ .phone-floating-label,
+  .phone-floating-input:not(:placeholder-shown) ~ .phone-floating-label {
+    @apply text-foreground-mute px-2 bg-primary-foreground right-3 top-0;
+  }
+  
 }
+

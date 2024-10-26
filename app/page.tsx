@@ -2,9 +2,9 @@
 
 import Breadcrumb from "@/components/shared/breadcrumb";
 import EditableContainer from "@/components/shared/editable-container";
-import FormExtender from "@/components/shared/form-extender";
+import ExtendableFormTabContainer from "@/components/shared/extendable-form-tab-container";
 import Title from "@/components/shared/title";
-import { PersonalInfoFormExtender } from "@/constants/extendable-fields";
+import { ContactInfoFormExtender, PersonalInfoFormExtender } from "@/constants/extendable-fields";
 import Image from "next/image";
 
 export default function Home() {
@@ -56,11 +56,31 @@ export default function Home() {
         }}
       />
 
-      <FormExtender title="اطلاعات شخصی"
-        fields={PersonalInfoFormExtender.fields}
-        initialValues={PersonalInfoFormExtender.initialValues}
-        validationSchema={PersonalInfoFormExtender.validationSchema}
-      />
+      <ExtendableFormTabContainer
+        tabs={[
+          {
+            title: "اطلاعات مشتری",
+            forms: [
+              PersonalInfoFormExtender,
+              ContactInfoFormExtender,
+            ]
+          },
+          {
+            title: "اطلاعات محل سکونت",
+            forms: [
+              ContactInfoFormExtender,
+              PersonalInfoFormExtender,
+            ]
+          },
+          {
+            title: "اطلاعات محل کار",
+            forms: [
+              PersonalInfoFormExtender,
+            ]
+          }
+        ]} />
+
+
     </main>
   );
 }
