@@ -15,9 +15,11 @@ const buttonVariants = cva(
         "primary-foreground":
           "border bg-transparent text-primary border-primary hover:text-secondary hover:border-secondary disabled:text-disable-mute disabled:border-disable-mute",
         foreground:
-          "bg-background text-foreground disabled:text-disable-foreground disabled:bg-disable",
+          "bg-background-active text-foreground disabled:text-disable-foreground disabled:bg-disable",
         // based on design system.
         background: "bg-foreground text-background disabled:bg-disable",
+        info:
+          "bg-info text-info-foreground hover:bg-info-active",
         secondary:
           "bg-secondary !text-secondary-foreground disabled:text-secondary disabled:bg-secondary-foreground hover:text-secondary-foreground",
         "secondary-foreground":
@@ -37,7 +39,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 py-6 px-2",
+        default: "py-3 px-4",
         xs: "text-sm py-1.5 px-3 leading-5",
         sm: "text-sm py-2 px-[15px] leading-5",
         md: "text-base py-2.5 px-5 leading-6",
@@ -53,7 +55,7 @@ const buttonVariants = cva(
     defaultVariants: {
       variant: "default",
       size: "default",
-      radius: "default",
+      radius: "lg",
     },
   }
 );

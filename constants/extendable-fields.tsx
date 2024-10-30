@@ -1,6 +1,8 @@
 import { FormExtenderInterface } from "@/components/shared/form-extender";
 import * as Yup from 'yup';
 
+const REQUIERD_TEXT = "این فیلد ضروری است"
+
 export const PersonalInfoFormExtender: FormExtenderInterface = {
   title: "اطلاعات شخصی",
   fields: [
@@ -68,12 +70,12 @@ export const PersonalInfoFormExtender: FormExtenderInterface = {
     career: '',
   },
   validationSchema: Yup.object().shape({
-    name: Yup.string().required('required'),
-    familyName: Yup.string().required('required'),
-    birthdate: Yup.string().required('required'),
-    socialNumber: Yup.string().required('required'),
-    idNumber: Yup.string().required('required'),
-    career: Yup.string().required('required'),
+    name: Yup.string().required(REQUIERD_TEXT),
+    familyName: Yup.string().required(REQUIERD_TEXT),
+    birthdate: Yup.string().required(REQUIERD_TEXT),
+    socialNumber: Yup.string().required(REQUIERD_TEXT),
+    idNumber: Yup.string().required(REQUIERD_TEXT),
+    career: Yup.string().required(REQUIERD_TEXT),
   })
 }
 
@@ -134,11 +136,209 @@ export const ContactInfoFormExtender: FormExtenderInterface = {
     website: '',
   },
   validationSchema: Yup.object().shape({
-    personalHome: Yup.string().required('required'),
-    homePhone: Yup.string().required('required'),
-    jobPhone: Yup.string().email().required('required'),
-    email: Yup.string().email().required('required'),
-    website: Yup.string().required('required'),
+    personalHome: Yup.string().required(REQUIERD_TEXT),
+    homePhone: Yup.string().required(REQUIERD_TEXT),
+    jobPhone: Yup.string().email().required(REQUIERD_TEXT),
+    email: Yup.string().email().required(REQUIERD_TEXT),
+    website: Yup.string().required(REQUIERD_TEXT),
+  })
+}
+
+export const LivingInformationExtender: FormExtenderInterface = {
+  title: "اطلاعات محل سکونت",
+  fields: [
+    {
+      key: 'province',
+      component: 'input',
+      placeholder: 'استان',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'city',
+      component: 'input',
+      placeholder: 'شهر',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'street',
+      component: 'input',
+      placeholder: 'خیابان',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'postalCode',
+      component: 'input',
+      placeholder: 'کد پستی',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'category',
+      component: 'select',
+      placeholder: 'دسته بندی',
+      type: 'text',
+      options: [],
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'address',
+      component: 'input',
+      placeholder: 'آدرس',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2'
+    }
+  ],
+  initialValues: {
+    province: '',
+    city: '',
+    street: '',
+    postalCode: '',
+    category: '',
+    address: '',
+  },
+  validationSchema: Yup.object().shape({
+    province: Yup.string().required(REQUIERD_TEXT),
+    city: Yup.string().required(REQUIERD_TEXT),
+    street: Yup.string().required(REQUIERD_TEXT),
+    postalCode: Yup.string().required(REQUIERD_TEXT),
+    category: Yup.string().required(REQUIERD_TEXT),
+    address: Yup.string().required(REQUIERD_TEXT),
+  })
+}
+
+export const workInformationExtender: FormExtenderInterface = {
+  title: "اطلاعات محل کار",
+  fields: [
+    {
+      key: 'province',
+      component: 'input',
+      placeholder: 'استان',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'city',
+      component: 'input',
+      placeholder: 'شهر',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'street',
+      component: 'input',
+      placeholder: 'خیابان',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'postalCode',
+      component: 'input',
+      placeholder: 'کد پستی',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'category',
+      component: 'select',
+      placeholder: 'دسته بندی',
+      type: 'text',
+      options: [],
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'address',
+      component: 'input',
+      placeholder: 'آدرس',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2'
+    }
+  ],
+  initialValues: {
+    province: '',
+    city: '',
+    street: '',
+    postalCode: '',
+    category: '',
+    address: '',
+  },
+  validationSchema: Yup.object().shape({
+    province: Yup.string().required(REQUIERD_TEXT),
+    city: Yup.string().required(REQUIERD_TEXT),
+    street: Yup.string().required(REQUIERD_TEXT),
+    postalCode: Yup.string().required(REQUIERD_TEXT),
+    category: Yup.string().required(REQUIERD_TEXT),
+    address: Yup.string().required(REQUIERD_TEXT),
+  })
+}
+
+export const organizationInformationExtender: FormExtenderInterface = {
+  title: "اطلاعات محل کار",
+  fields: [
+    {
+      key: 'name',
+      component: 'input',
+      placeholder: 'نام',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'category',
+      component: 'select',
+      placeholder: 'دسته بندی',
+      type: 'text',
+      options: [],
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2 lg:w-1/4'
+    },
+    {
+      key: 'address',
+      component: 'input',
+      placeholder: 'آدرس',
+      type: 'text',
+      floating: true,
+      labelClassName: "w-full",
+      className: 'w-full md:w-1/2'
+    }
+  ],
+  initialValues: {
+    name: '',
+    category: '',
+    address: '',
+  },
+  validationSchema: Yup.object().shape({
+    name: Yup.string().required(REQUIERD_TEXT),
+    category: Yup.string().required(REQUIERD_TEXT),
+    address: Yup.string().required(REQUIERD_TEXT),
   })
 }
 

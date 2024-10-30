@@ -44,9 +44,9 @@
     --quartiery-foreground: 137, 100%, 32%;
     --quartiery-active: 137, 100%, 32%;
 
-    --info: 213, 37%, 89%;
-    --info-foreground: 218, 50%, 53%;
-    --info-active: 218, 50%, 53%;
+    --info: 35, 73%, 54%;
+    --info-foreground: 211, 24%, 17%    ;
+    --info-active: 35, 73%, 54%;
 
     --warning: 42, 86%, 89%;
     --warning-foreground: 42, 93%, 64%;
@@ -60,7 +60,7 @@
     --muted-foreground: 217, 16%, 23%;
     --muted-active: 208, 13%, 45%;
 
-    --border: 220, 6%, 85%;
+    --border: 210, 13%, 62%;
     --input: 0, 1%, 85%;
 
     --subtitle: 208, 13%, 45%;
@@ -75,7 +75,7 @@
     --ring: 222.2, 84%, 4.9%;
     --radius: 8px;
 
-    --background-active: 214.3, 31.8%, 91.4%;
+    --background-active: 0, 0%, 100%;
     --background-gradient: 214.3 31.8% 91.4%;
 
     --link-active: 214.3 31.8% 91.4%;
@@ -103,7 +103,7 @@
 
 @layer base {
   * {
-    @apply border-border leading-normal scroll-smooth;
+    @apply border-border/20 leading-normal scroll-smooth;
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--primary-foreground);
   }
@@ -123,13 +123,17 @@
     @apply text-foreground text-lg md:text-xl lg:text-3xl font-medium;
   }
 
+  h2 {
+    @apply text-foreground text-sm md:text-base lg:text-base font-bold;
+  }
+
   /* FloatingLabelInput */
   .input-container {
     @apply relative;
   }
 
   .floating-input {
-    @apply border border-border w-full p-3 outline-none transition-all duration-200 ease-in-out;
+    @apply border border-border/20 w-full p-3 outline-none transition-all duration-200 ease-in-out;
   }
 
   .floating-label {

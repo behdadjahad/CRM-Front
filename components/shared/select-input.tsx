@@ -39,7 +39,6 @@ const SelectInput = React.memo(function SelectInput({
         inputMode="search"
         className={cn(
           "text-subtitle",
-          { "[&>svg]:hidden": item.hideSelect },
           item.labelClassName
         )}
       >

@@ -67,7 +67,7 @@ export default function FormExtender({
             title={forms[0].id === form.id ? title : undefined}
           />
 
-          {index != forms.length - 1 ? <div className="w-full h-[0.5px] bg-border"></div> : <></>}
+          {index != forms.length - 1 ? <div className="w-full h-[0.5px] bg-border/20"></div> : <></>}
         </div>
       ))}
 
@@ -110,7 +110,7 @@ function FormikWrapper({
   return (
     <div key={id} className="w-full">
       <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
-        {title && <span className='px-2'>{title}</span>}
+        {title && <h2 className='px-2'>{title}</h2>}
 
         <FormMaker
           form={formik}

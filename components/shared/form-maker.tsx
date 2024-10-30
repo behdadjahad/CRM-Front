@@ -87,7 +87,7 @@ export default function FormMaker({
           <div
             key={item.key}
             className={cn(
-              "relative outline-none px-2",
+              "relative outline-none px-2 flex flex-col items-end",
               item.className
             )}
             style={item.style}
@@ -95,7 +95,7 @@ export default function FormMaker({
             {renderField(item)}
 
             {item.component !== "non-field" ? (
-              <small className="absolute text-destructive -bottom-2">
+              <small className=" text-destructive mt-2">
                 {form.errors[item.key] || form.touched[item.key]
                   ? form.errors[item.key]
                   : ""}

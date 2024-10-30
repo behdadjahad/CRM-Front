@@ -22,7 +22,7 @@ export default function PhoneNumberInput({
           "phone-floating-input h-11 bg-primary-foreground": item.floating,
         })}
         inputClass={cn(
-          "text-subtitle/80 max-w-full text-sm min-h-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
+          "text-subtitle/80 min-w-full !w-full text-sm min-h-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
           item.labelClassName,
           { "pr-9": item.icon }
         )}
