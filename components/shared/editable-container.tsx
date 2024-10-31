@@ -1,13 +1,17 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button';
+import CustomModal from './custom-modal';
+import { MdClose } from 'react-icons/md';
+import FormMaker from './form-maker';
+import { useFormik } from 'formik';
 
 export interface EditableContainerInterface {
   list: {
     label: string;
     value: string;
-  }[]
+  }[];
   action: {
     label: string;
     icon: React.ReactNode;
@@ -16,6 +20,19 @@ export interface EditableContainerInterface {
 }
 
 export default function EditableContainer({ action, list }: EditableContainerInterface) {
+  const [openModal, setOpenModal] = useState(false)
+
+  const formik = useFormik({
+    initialValues: {
+      number: '',
+      date: '',
+      subject: '',
+      accountant: '',
+      description: ''
+    },
+    onSubmit: async () => { }
+  })
+
   return (
     <div className='bg-city bg-full rounded-xl overflow-hidden min-h-fit'>
       <div className="bg-banner opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">
@@ -45,11 +62,87 @@ export default function EditableContainer({ action, list }: EditableContainerInt
           }
         </div>
 
-        <Button variant={"transparent"} onClick={action.click} className='gap-2'>
+        <Button
+          variant={"transparent"}
+          onClick={() => {
+            setOpenModal(true)
+            action.click()
+          }}
+          className='gap-2'>
           {action.icon}
           {action.label}
         </Button>
       </div>
+
+      <CustomModal isOpen={openModal} onRequestClose={() => setOpenModal(false)} contentLabel='ویرایش'>
+        <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+          <span>
+            ویرایش
+          </span>
+
+          <MdClose size={20} onClick={() => setOpenModal(false)} className='cursor-pointer' />
+        </div>
+
+
+        <div className="w-full flex flex-col items-end">
+          <FormMaker
+            form={formik}
+            fields={[
+              {
+                key: 'number',
+                component: 'input',
+                placeholder: 'شماره قرارداد',
+                type: 'text',
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
+                key: 'date',
+                component: 'input',
+                placeholder: 'تاریخ قرارداد',
+                type: 'text',
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
+                key: 'subject',
+                component: 'input',
+                placeholder: 'موضوع قرارداد',
+                type: 'text',
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
+                key: 'accountant',
+                component: 'input',
+                placeholder: 'مسئول قرارداد',
+                type: 'text',
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
+                key: 'description',
+                component: 'textarea',
+                placeholder: 'توضیحات',
+                type: 'text',
+                floating: true,
+                className: "w-full",
+              }
+            ]}
+            className='flex flex-row w-full' />
+
+          <div className="flex flex-row gap-4">
+            <Button variant={"info"}>
+              ثبت
+            </Button>
+            <Button
+              variant={"foreground"}
+              onClick={() => setOpenModal(false)}>
+              لغو
+            </Button>
+          </div>
+        </div>
+      </CustomModal>
     </div>
   )
 }

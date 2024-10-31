@@ -185,9 +185,8 @@ export const LivingInformationExtender: FormExtenderInterface = {
     },
     {
       key: 'category',
-      component: 'select',
+      component: 'Select',
       placeholder: 'دسته بندی',
-      type: 'text',
       options: [],
       floating: true,
       labelClassName: "w-full",
@@ -262,9 +261,8 @@ export const workInformationExtender: FormExtenderInterface = {
     },
     {
       key: 'category',
-      component: 'select',
+      component: 'Select',
       placeholder: 'دسته بندی',
-      type: 'text',
       options: [],
       floating: true,
       labelClassName: "w-full",
@@ -312,10 +310,14 @@ export const organizationInformationExtender: FormExtenderInterface = {
     },
     {
       key: 'category',
-      component: 'select',
+      component: 'Select',
       placeholder: 'دسته بندی',
-      type: 'text',
-      options: [],
+      options: [
+        {
+          label: "hi",
+          value: "hi"
+        }
+      ],
       floating: true,
       labelClassName: "w-full",
       className: 'w-full md:w-1/2 lg:w-1/4'

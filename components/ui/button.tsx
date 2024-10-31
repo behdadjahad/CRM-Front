@@ -15,7 +15,7 @@ const buttonVariants = cva(
         "primary-foreground":
           "border bg-transparent text-primary border-primary hover:text-secondary hover:border-secondary disabled:text-disable-mute disabled:border-disable-mute",
         foreground:
-          "bg-background-active text-foreground disabled:text-disable-foreground disabled:bg-disable",
+          "bg-background-active text-foreground border border-border/25 disabled:text-disable-foreground disabled:bg-disable",
         // based on design system.
         background: "bg-foreground text-background disabled:bg-disable",
         info:
@@ -39,7 +39,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "py-3 px-4",
+        default: "text-sm py-2.5 px-4",
         xs: "text-sm py-1.5 px-3 leading-5",
         sm: "text-sm py-2 px-[15px] leading-5",
         md: "text-base py-2.5 px-5 leading-6",

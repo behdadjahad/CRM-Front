@@ -5,7 +5,7 @@ import Search from "./search";
 
 export default function Header() {
   return (
-    <header className="shadow-header-bottom bg-header w-full flex flex-row items-center justify-between px-8 h-16">
+    <header className="shadow-header-bottom bg-header w-full flex flex-row items-center justify-between px-8 h-20">
       <div className="flex flex-row gap-2">
         <ProfileDropDown name="امیر مقدسی" avatar="/temp/avatar.png" />
 

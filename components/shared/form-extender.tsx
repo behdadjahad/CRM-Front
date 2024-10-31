@@ -131,12 +131,12 @@ function FormikWrapper({
                       />
                     </Button>
                   ),
-                  className: "col-span-12 md:col-span-6 lg:col-span-3",
+                  className: "w-full md:w-1/2 lg:w-1/4",
                 },
               ]
               : [...fields]
           }
-          className={cn("w-full p-0")}
+          className={cn("w-full p-0 flex flex-row-reverse")}
         />
       </div>
     </div>

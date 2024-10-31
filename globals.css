@@ -109,7 +109,7 @@
   }
 
   main {
-    @apply flex flex-col w-full h-[calc(100vh-64px)] overflow-auto p-8 gap-8;
+    @apply flex flex-col w-full h-[calc(100vh-80px)] overflow-auto p-8 gap-8;
   }
 
   body {
@@ -182,3 +182,14 @@
   
 }
 
+.react-tel-input .flag-dropdown {
+  @apply !bg-background-active !rounded-r-lg;
+}
+
+.react-tel-input .country-list {
+  @apply right-0;
+}
+
+.react-tel-input .form-control {
+  @apply !pr-12 !pl-3;
+}

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import SelectInput from "./select-input";
 import TextInput from "./text-input";
 import PhoneNumberInput from "./phone-input";
+import TextAreaInput from "./text-area-input";
 
 export interface OptionType {
   label: string;
@@ -37,12 +38,13 @@ export default function FormMaker({
   className,
 }: FormMakerInterface) {
 
-
   const renderField = useCallback(
     (item: any) => {
       switch (item.component) {
         case "Select":
+          console.log("here");
           return (
+
             <SelectInput
               form={form}
               item={item}
@@ -62,13 +64,9 @@ export default function FormMaker({
           );
         case "textarea":
           return (
-            <textarea
-              key={item.key}
-              placeholder={item.label}
-              onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
-              rows={5}
-              className={cn("text-subtitle", item.labelClassName)}
-            />
+            <TextAreaInput
+              item={item}
+              form={form} />
           );
         default:
           return null;
@@ -78,34 +76,32 @@ export default function FormMaker({
   );
 
   return (
-    <div className={cn("w-full", className)}>
-      <form
-        className="w-full gap-y-6 flex flex-row-reverse flex-wrap"
-        onSubmit={(e) => e?.preventDefault()}
-      >
-        {fields.map((item) => (
-          <div
-            key={item.key}
-            className={cn(
-              "relative outline-none px-2 flex flex-col items-end",
-              item.className
-            )}
-            style={item.style}
-          >
-            {renderField(item)}
+    <form
+      className={cn("w-full gap-y-6 flex flex-row flex-wrap", className)}
+      onSubmit={(e) => e?.preventDefault()}
+    >
+      {fields.map((item) => (
+        <div
+          key={item.key}
+          className={cn(
+            "relative outline-none px-2 flex flex-col items-end w-full",
+            item.className
+          )}
+          style={item.style}
+        >
+          {renderField(item)}
 
-            {item.component !== "non-field" ? (
-              <small className=" text-destructive mt-2">
-                {form.errors[item.key] || form.touched[item.key]
-                  ? form.errors[item.key]
-                  : ""}
-              </small>
-            ) : (
-              item.children
-            )}
-          </div>
-        ))}
-      </form>
-    </div>
+          {item.component !== "non-field" ? (
+            <small className=" text-destructive mt-2">
+              {form.errors[item.key] || form.touched[item.key]
+                ? form.errors[item.key]
+                : ""}
+            </small>
+          ) : (
+            item.children
+          )}
+        </div>
+      ))}
+    </form>
   );
 }
