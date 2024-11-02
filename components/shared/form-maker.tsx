@@ -42,9 +42,7 @@ export default function FormMaker({
     (item: any) => {
       switch (item.component) {
         case "Select":
-          console.log("here");
           return (
-
             <SelectInput
               form={form}
               item={item}

@@ -13,7 +13,6 @@ import { useState } from "react";
 export default function Home() {
   const [category, setCategory] = useState("personal")
 
-  console.log(category)
   return (
     <main>
       <div>
