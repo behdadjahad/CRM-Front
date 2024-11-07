@@ -124,6 +124,7 @@ const config: Config = {
           DEFAULT: "hsla(var(--badge))",
           foreground: "hsla(var(--badge-foreground))",
           active: "hsla(var(--badge-active))",
+          hover: "hsla(var(--badge-hover))",
         },
         header: "hsla(var(--header))",
         dark: "hsla(var(--subtitle-dark))",

@@ -18,8 +18,8 @@ export default function CallContracts({ contracts, className }: CallContractsInt
       </span>
       <div className='flex flex-col gap-6 w-full'>
         {
-          contracts.map(item => (
-            <div key={item.label} className='flex flex-row items-center justify-between w-full'>
+          contracts.map((item, index) => (
+            <div key={item.label + index} className='flex flex-row items-center justify-between w-full'>
               <div className="flex flex-col">
                 <span className='text-sm'>
                   {item.label}

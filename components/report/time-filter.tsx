@@ -51,7 +51,7 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
         ))
       }
 
-      <DateInput key={"startDate"} className='flex-1'>
+      <DateInput idKey={"startDate"} className='flex-1'>
         <Button
           variant={isActivePeriodTime ? "info" : "foreground"}
           onClick={() => setActiveTime(null)}
@@ -64,7 +64,7 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
         </Button>
       </DateInput>
 
-      <DateInput key={"endDate"} className='flex-1'>
+      <DateInput idKey={"endDate"} className='flex-1'>
         <Button
           variant={isActivePeriodTime ? "info" : "foreground"}
           onClick={() => setActiveTime(null)}

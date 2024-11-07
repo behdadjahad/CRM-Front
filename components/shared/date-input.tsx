@@ -14,6 +14,7 @@ interface DateInputProps {
   placeholder?: string;
   inputStyle?: React.CSSProperties;
   className?: string;
+  idKey: string;
   children?: any;
 }
 
@@ -21,6 +22,7 @@ export default function DateInput({
   placeholder = "Select a date",
   children,
   className,
+  idKey,
   inputStyle = {},
 }: DateInputProps) {
   const [calendar, setCalendar] = useState<DateCalendar>("persian");
@@ -46,7 +48,9 @@ export default function DateInput({
   };
 
   const updateButtonStyles = (calendarType: DateCalendar) => {
-    const buttons = document.querySelectorAll(".calendar-buttons button");
+    const container = document.querySelector(`#${idKey}`)
+    if (!container) return
+    const buttons = container.querySelectorAll(".calendar-buttons button");
     const calendarKey = calendars[calendarType].label
     const newButtons = []
     buttons.forEach((button: any) => {
@@ -65,7 +69,10 @@ export default function DateInput({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const wrapper = document.querySelector(".rmdp-wrapper");
+      const container = document.querySelector(`#${idKey}`)
+
+      if (!container) return
+      const wrapper = container.querySelector(".rmdp-wrapper");
       if (wrapper && !wrapper.querySelector(".calendar-buttons")) {
         // Create button container
         const buttonContainer = document.createElement("div");
@@ -92,7 +99,7 @@ export default function DateInput({
 
 
   return (
-    <div className={cn("[&>div]:w-full", className)}>
+    <div className={cn("[&>div]:w-full", className)} id={idKey}>
       <DatePicker
         calendar={calendars[calendar].calendar}
         locale={locale}
