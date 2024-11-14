@@ -24,15 +24,15 @@ export default function Report() {
   const [activeTime, setActiveTime] = useState<any>("today")
 
   return (
-    <main>
-      <div>
+    <main className="px-0">
+      <div className="px-8">
         <Title label="گزارش" />
 
         <Breadcrumb
           list={[
             {
               label: "داشبورد",
-              link: ""
+              link: "/"
             },
             {
               label: "گزارش"
@@ -41,25 +41,23 @@ export default function Report() {
         />
       </div>
 
-      <TimeFilter activeTime={activeTime} setActiveTime={setActiveTime} className="min-h-fit" />
+      <TimeFilter activeTime={activeTime} setActiveTime={setActiveTime} className="min-h-fit px-8" />
 
-      <div className="border rounded-lg p-6 flex flex-col gap-6">
-        <ReportOverview overviews={overviews} />
+      <ReportOverview overviews={overviews} className="px-8" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <CallContracts contracts={contracts} />
-          <MonthReport {...monthReportData} className="lg:col-span-2" />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-8">
+        <CallContracts contracts={contracts} className="bg-background-active" />
+        <MonthReport {...monthReportData} className="lg:col-span-2" />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <BarChartReport {...internationalBarChartData} />
-          <BarChartReport {...insideBarChartData} />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 px-8">
+        <BarChartReport {...internationalBarChartData} />
+        <BarChartReport {...insideBarChartData} />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <PieChartReport {...callFollowupsReport} />
-          <SatisfactionReport {...satisfactionReportData} className="lg:col-span-2" />
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-8">
+        <PieChartReport {...callFollowupsReport} />
+        <SatisfactionReport {...satisfactionReportData} className="lg:col-span-2" />
       </div>
 
     </main>

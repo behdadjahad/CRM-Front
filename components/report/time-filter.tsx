@@ -5,7 +5,7 @@ import DateInput from '../shared/date-input';
 import Image from 'next/image';
 
 export interface TimeFilterInterface {
-  activeTime: string;
+  activeTime: any;
   setActiveTime: (data: any) => any
   isActivePeriodTime?: boolean
   className?: string
@@ -43,7 +43,7 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
       {
         filters.map(item => (
           <Button key={item.label}
-            variant={activeTime == item.value ? "info" : "foreground"}
+            variant={activeTime == item.value ? "default" : "primary-foreground"}
             onClick={() => setActiveTime(item.value)}
             className='flex-1'>
             {item.label}
@@ -53,27 +53,27 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
 
       <DateInput idKey={"startDate"} className='flex-1'>
         <Button
-          variant={isActivePeriodTime ? "info" : "foreground"}
-          onClick={() => setActiveTime(null)}
-          className='flex flex-row gap-2.5 w-full'>
+          variant={activeTime['startDate'] ? "default" : "primary-foreground"}
+          onClick={() => setActiveTime((prev: any) => prev.endDate ? { ...prev, startDate: true } : { startDate: true })}
+          className='flex flex-row gap-1 w-full'>
           <span>
             از تاریخ
           </span>
 
-          <Image src={'/icons/calendar.png'} alt="edit" width={24} height={24} />
+          <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
         </Button>
       </DateInput>
 
       <DateInput idKey={"endDate"} className='flex-1'>
         <Button
-          variant={isActivePeriodTime ? "info" : "foreground"}
-          onClick={() => setActiveTime(null)}
-          className='flex flex-row gap-2.5 w-full'>
+          variant={activeTime['endDate'] ? "default" : "primary-foreground"}
+          onClick={() => setActiveTime((prev: any) => prev.startDate ? { ...prev, endDate: true } : { endDate: true })}
+          className='flex flex-row gap-1 w-full'>
           <span>
             تا تاریخ
           </span>
 
-          <Image src={'/icons/calendar.png'} alt="edit" width={24} height={24} />
+          <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
         </Button>
       </DateInput>
 

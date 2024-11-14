@@ -157,6 +157,7 @@ const config: Config = {
           DEFAULT: "hsla(var(--primary))",
           foreground: "hsla(var(--primary-foreground))",
           active: "hsla(var(--primary-active))",
+          muted: "hsla(var(--primary-muted))",
           hover: "hsla(var(--primary-hover))",
         },
         secondary: {
@@ -194,6 +195,7 @@ const config: Config = {
         muted: {
           DEFAULT: "hsla(var(--muted))",
           foreground: "hsla(var(--muted-foreground))",
+          active: "hsla(var(--muted-active))",
         },
         disable: {
           DEFAULT: "hsla(var(--disable))",

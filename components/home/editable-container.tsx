@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useState } from 'react'
-import { Button } from '../ui/button';
-import CustomModal from './custom-modal';
+import { Button } from '@/components/ui/button';
+import CustomModal from '@/components/shared/custom-modal';
 import { MdClose } from 'react-icons/md';
-import FormMaker from './form-maker';
+import FormMaker from '@/components/shared/form-maker';
 import { useFormik } from 'formik';
 
 export interface EditableContainerInterface {

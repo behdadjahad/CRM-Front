@@ -56,6 +56,18 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
       },
       {
+        label: "فروش",
+        link: "/sale",
+        icon: (
+          <Image
+            src={"/icons/report.png"}
+            alt="فروش"
+            width={22}
+            height={22}
+          />
+        ),
+      },
+      {
         label: "قرارداد ها",
         link: "/contract",
         icon: (

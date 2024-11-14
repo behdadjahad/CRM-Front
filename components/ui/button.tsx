@@ -11,9 +11,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-secondary disabled:text-secondary disabled:bg-secondary-foreground",
+          "bg-primary-foreground text-primary-active border border-primary-active disabled:text-secondary disabled:bg-secondary-foreground",
         "primary-foreground":
-          "border bg-transparent text-primary border-primary hover:text-secondary hover:border-secondary disabled:text-disable-mute disabled:border-disable-mute",
+          "border bg-primary-muted text-primary-active border-primary-active/20 hover:border-primary-active disabled:text-disable-mute disabled:border-disable-mute",
         foreground:
           "bg-background-active text-foreground border border-border/25 disabled:text-disable-foreground disabled:bg-disable",
         // based on design system.
@@ -35,7 +35,7 @@ const buttonVariants = cva(
         "tertiary-gradient":
           "bg-gradient-to-tr from-tertiary-active/80 to-tertiary/60 text-tertiary-foreground",
         transparent: "bg-transparent font-foreground",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-muted/5",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

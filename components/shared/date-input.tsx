@@ -55,7 +55,7 @@ export default function DateInput({
     const newButtons = []
     buttons.forEach((button: any) => {
       const buttonKey = button.innerText; // Get the button label
-      button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-foreground text-sm ${calendarKey == buttonKey ? 'bg-secondary-hover text-secondary font-bold' : ''}`;
+      button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${calendarKey == buttonKey ? 'bg-primary-muted text-primary-hover font-bold' : ''}`;
       newButtons.push(button)
     });
   };
@@ -85,7 +85,7 @@ export default function DateInput({
           button.onclick = () => {
             handleCalendarChange(key as DateCalendar)
           };
-          button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-foreground text-sm ${calendar === key ? 'bg-secondary-hover text-secondary font-bold' : ''}`; // Tailwind classes for styling
+          button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${calendar === key ? 'bg-primary-muted text-primary-hover font-bold' : ''}`; // Tailwind classes for styling
           buttonContainer.appendChild(button);
         });
 

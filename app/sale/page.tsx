@@ -1,0 +1,142 @@
+
+import CardContainer, { CardContainerInterface } from "@/components/sale/card-container";
+import ContractOverview, { ContractOverviewInterface } from "@/components/sale/contract-overview";
+import Filter from "@/components/sale/filter";
+import Breadcrumb from "@/components/shared/breadcrumb";
+import Title from "@/components/shared/title";
+import { Button } from "@/components/ui/button";
+import { FaPlus } from "react-icons/fa6";
+
+export default function Sale() {
+  const {
+    contractOverviewProps,
+    requestCount,
+    visaContainerList
+  } = getData()
+
+  return (
+    <main >
+      <div className="flex items-center justify-between">
+        <div>
+          <Title label="فروش" />
+
+          <Breadcrumb
+            list={[
+              {
+                label: "داشبورد",
+                link: "/"
+              },
+              {
+                label: "گزارش فروش"
+              }
+            ]}
+          />
+        </div>
+
+        <Button variant={"info"}>
+          <FaPlus size={16} />
+
+          <span>
+            قرارداد جدید
+          </span>
+        </Button>
+      </div>
+
+      <ContractOverview {...contractOverviewProps} />
+
+      <div className="flex items-center justify-between">
+        <Filter />
+
+        <span className="text-base font-bold">
+          {requestCount} درخواست
+        </span>
+      </div>
+
+
+      <div className="bg-background-active rounded-xl p-6">
+        <CardContainer {...visaContainerList} />
+      </div>
+    </main>
+  );
+}
+
+
+function getData() {
+  const contractOverviewProps: ContractOverviewInterface = {
+    list: [
+      {
+        label: " قرار داد کل",
+        value: "100"
+      },
+      {
+        label: "قرار داد تکمیل شده",
+        value: "94"
+      },
+      {
+        label: " قرار داد ناقص",
+        value: "8"
+      }
+    ]
+  }
+
+  const visaCardProps: CardContainerInterface['list'][0] = {
+    contract: {
+      date: "1360/01/20",
+      destination: "دبی",
+      submitter: "سام امیری",
+      unit: "دلار"
+    },
+    footer: {
+      cost: "1,234,568",
+      income: "1,234,568",
+      overall: "3,456,789"
+    },
+    header: {
+      contractNumber: "358067357101",
+      icon: "/icons/visa.png",
+      submitDate: "1360/01/20",
+      title: "ویزا"
+    },
+    score: {
+      final: 30,
+      totalVotes: 11
+    },
+    services: [
+      {
+        image: "/images/services/visa.png",
+        title: "ویزا"
+      },
+      {
+        image: "/images/services/international-airport.png",
+        title: "پرواز خارجی"
+      },
+      {
+        image: "/images/services/suitcase.png",
+        title: "تور خارجی"
+      },
+    ],
+    user: {
+      image: "/temp/avatar-2.png",
+      name: "مهدی میرزایی"
+    },
+  }
+
+  const visaContainerList: CardContainerInterface = {
+    list: [
+      visaCardProps,
+      visaCardProps,
+      visaCardProps,
+      visaCardProps,
+      visaCardProps,
+      visaCardProps,
+      visaCardProps,
+      visaCardProps
+    ]
+  }
+
+  return {
+    requestCount: 273,
+    contractOverviewProps,
+    visaContainerList,
+  }
+}

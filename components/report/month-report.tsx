@@ -29,7 +29,7 @@ export function MonthReport({ title, rows, headers, className }: MonthReportInte
       </span>
 
       <Table className="">
-        <TableHeader className="w-full bg-badge-foreground/10">
+        <TableHeader className="w-full bg-badge">
           <TableRow className="bg-transparent overflow-hidden rounded-md">
             {
               headers.map((item, index) => (

@@ -1,7 +1,7 @@
 "use client"
 
 import Breadcrumb from "@/components/shared/breadcrumb";
-import EditableContainer from "@/components/shared/editable-container";
+import EditableContainer from "@/components/home/editable-container";
 import ExtendableFormTabContainer from "@/components/shared/extendable-form-tab-container";
 import ServiceContainer from "@/components/shared/service-container";
 import Title from "@/components/shared/title";
@@ -22,7 +22,7 @@ export default function Home() {
           list={[
             {
               label: "داشبورد",
-              link: ""
+              link: "/"
             },
             {
               label: "قرارداد جدید"

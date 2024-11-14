@@ -13,7 +13,8 @@
     --primary: 226, 48%, 21%;
     --primary-foreground: 0, 0%, 100%;
     --primary-hover: 226, 41%, 25%;
-    --primary-active: 226, 41%, 25%;
+    --primary-active: 224, 60%, 40%;
+    --primary-muted: 228, 63%, 97%;
 
     --secondary: 218, 72%, 63%;
     --secondary-hover: 202, 96%, 36%;
