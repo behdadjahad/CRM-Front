@@ -5,6 +5,7 @@ import SelectInput from "./select-input";
 import TextInput from "./text-input";
 import PhoneNumberInput from "./phone-input";
 import TextAreaInput from "./text-area-input";
+import DateInput from "./date-input";
 
 export interface OptionType {
   label: string;
@@ -14,7 +15,7 @@ export interface OptionType {
 export interface FormMakerInterface {
   form: any;
   fields: {
-    component: "input" | "Select" | "phone" | "textarea" | "non-field";
+    component: "input" | "Select" | "date" | "phone" | "textarea" | "non-field";
     floating?: boolean;
     placeholder?: string;
     labelClassName?: string;
@@ -39,7 +40,7 @@ export default function FormMaker({
 }: FormMakerInterface) {
 
   const renderField = useCallback(
-    (item: any) => {
+    (item: FormMakerInterface['fields'][0]) => {
       switch (item.component) {
         case "Select":
           return (
@@ -60,6 +61,12 @@ export default function FormMaker({
               item={item}
               form={form} />
           );
+        case "date":
+          return (
+            <DateInput
+              item={item}
+              form={form} />
+          )
         case "textarea":
           return (
             <TextAreaInput

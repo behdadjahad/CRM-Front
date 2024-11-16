@@ -1,11 +1,10 @@
 
 import CardContainer, { CardContainerInterface } from "@/components/sale/card-container";
+import ContractCreation from "@/components/sale/contract-creation";
 import ContractOverview, { ContractOverviewInterface } from "@/components/sale/contract-overview";
 import Filter from "@/components/sale/filter";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
-import { Button } from "@/components/ui/button";
-import { FaPlus } from "react-icons/fa6";
 
 export default function Sale() {
   const {
@@ -33,13 +32,7 @@ export default function Sale() {
           />
         </div>
 
-        <Button variant={"info"}>
-          <FaPlus size={16} />
-
-          <span>
-            قرارداد جدید
-          </span>
-        </Button>
+        <ContractCreation />
       </div>
 
       <ContractOverview {...contractOverviewProps} />

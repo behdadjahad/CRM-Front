@@ -7,9 +7,17 @@ type CustomModalProps = {
   onRequestClose: () => void;
   contentLabel?: string;
   children?: React.ReactNode;
+  minWidth?: string;
+  maxWidth?: string;
 };
 
-const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, children, contentLabel }) => {
+const CustomModal: React.FC<CustomModalProps> = ({
+  isOpen,
+  onRequestClose,
+  children,
+  contentLabel,
+  minWidth = "0",
+  maxWidth = "600px" }) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -17,7 +25,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ isOpen, onRequestClose, child
       contentLabel={contentLabel || "Modal"}
       style={{
         overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-        content: { padding: '16px', borderRadius: '8px', minWidth: "600px", maxWidth: '600px', maxHeight: "fit-content", margin: 'auto' },
+        content: { padding: '16px', borderRadius: '8px', minWidth, maxWidth, height: "fit-content", maxHeight: "90vh", overflow: "auto", margin: 'auto' },
       }}
     >
       {children}

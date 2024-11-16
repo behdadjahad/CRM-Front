@@ -1,17 +1,16 @@
 import React from 'react'
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import DateInput from '../shared/date-input';
+import CustomeDatePicker from '../shared/custome-date-picker';
 import Image from 'next/image';
 
 export interface TimeFilterInterface {
   activeTime: any;
   setActiveTime: (data: any) => any
-  isActivePeriodTime?: boolean
   className?: string
 }
 
-export default function TimeFilter({ activeTime, setActiveTime, className, isActivePeriodTime }: TimeFilterInterface) {
+export default function TimeFilter({ activeTime, setActiveTime, className }: TimeFilterInterface) {
   const filters = [
     {
       label: "امروز",
@@ -51,7 +50,7 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
         ))
       }
 
-      <DateInput idKey={"startDate"} className='flex-1'>
+      <CustomeDatePicker idKey={"startDate"} className='flex-1'>
         <Button
           variant={activeTime['startDate'] ? "default" : "primary-foreground"}
           onClick={() => setActiveTime((prev: any) => prev.endDate ? { ...prev, startDate: true } : { startDate: true })}
@@ -62,9 +61,9 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
 
           <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
         </Button>
-      </DateInput>
+      </CustomeDatePicker>
 
-      <DateInput idKey={"endDate"} className='flex-1'>
+      <CustomeDatePicker idKey={"endDate"} className='flex-1'>
         <Button
           variant={activeTime['endDate'] ? "default" : "primary-foreground"}
           onClick={() => setActiveTime((prev: any) => prev.startDate ? { ...prev, endDate: true } : { endDate: true })}
@@ -75,7 +74,7 @@ export default function TimeFilter({ activeTime, setActiveTime, className, isAct
 
           <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
         </Button>
-      </DateInput>
+      </CustomeDatePicker>
 
     </div>
   )
