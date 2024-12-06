@@ -5,8 +5,10 @@ import ServiceCard, { ServiceCardInterface } from '../shared/service-card';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
 export interface VisaCardInterface {
+  id: string;
   header: {
     icon: string;
     title: string;
@@ -36,7 +38,7 @@ export interface VisaCardInterface {
   className?: string;
 }
 
-export default function VisaCard({ contract, footer, header, score, services, user, className }: VisaCardInterface) {
+export default function VisaCard({ id, contract, footer, header, score, services, user, className }: VisaCardInterface) {
   const contractData = [
     {
       icon: "/icons/calendar-mute.png",
@@ -119,14 +121,17 @@ export default function VisaCard({ contract, footer, header, score, services, us
               color="#FFA500"
             />
 
-            <span className='text-center text-[10px] relative -mt-2 flex items-center gap-1'>
+            <div className='text-center text-[10px] relative -mt-2 flex items-center gap-1'>
               از مجموع {score.totalVotes} امتیاز
-              <Image
-                src={'/icons/edit-pen.png'}
-                alt='ادیت'
-                width={16}
-                height={16} />
-            </span>
+
+              <Link href={`/sale/satisfaction/${id}`}>
+                <Image
+                  src={'/icons/edit-pen.png'}
+                  alt='ادیت'
+                  width={16}
+                  height={16} />
+              </Link>
+            </div>
           </div>
         </div>
 

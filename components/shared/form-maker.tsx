@@ -6,6 +6,9 @@ import TextInput from "./text-input";
 import PhoneNumberInput from "./phone-input";
 import TextAreaInput from "./text-area-input";
 import DateInput from "./date-input";
+import CheckboxInput from "./checkbox-input";
+import RadioInput from "./radio-input";
+import SliderInput from "./slider-input";
 
 export interface OptionType {
   label: string;
@@ -15,7 +18,7 @@ export interface OptionType {
 export interface FormMakerInterface {
   form: any;
   fields: {
-    component: "input" | "Select" | "date" | "phone" | "textarea" | "non-field";
+    component: "input" | "Select" | "date" | "phone" | "checkbox" | "radio" | "slider" | "textarea" | "non-field";
     floating?: boolean;
     placeholder?: string;
     labelClassName?: string;
@@ -29,6 +32,7 @@ export interface FormMakerInterface {
     icon?: string;
     defaultValue?: string | null;
     children?: React.ReactNode;
+    range?: { min: number; max: number; step: number; }
   }[];
   className?: string;
 }
@@ -67,6 +71,24 @@ export default function FormMaker({
               item={item}
               form={form} />
           )
+        case "checkbox":
+          return (
+            <CheckboxInput
+              item={item}
+              form={form} />
+          );
+        case "radio":
+          return (
+            <RadioInput
+              item={item}
+              form={form} />
+          );
+        case "slider":
+          return (
+            <SliderInput
+              item={item}
+              form={form} />
+          );
         case "textarea":
           return (
             <TextAreaInput

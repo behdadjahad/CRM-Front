@@ -98,7 +98,7 @@ export default function EditableContainer({ action, list }: EditableContainerInt
               },
               {
                 key: 'date',
-                component: 'input',
+                component: 'date',
                 placeholder: 'تاریخ قرارداد',
                 type: 'text',
                 floating: true,

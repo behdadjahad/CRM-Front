@@ -1,12 +1,15 @@
+"use client"
+
 import React from 'react';
 import Chart from 'react-apexcharts';
 
 export interface RatingChartInterface {
   value: number;
   color?: string;
+  height?: number;
 }
 
-export default function RatingChart({ value, color }: RatingChartInterface) {
+export default function RatingChart({ value, color, height = 96 }: RatingChartInterface) {
   const options = {
     chart: {
       type: 'radialBar',
@@ -57,12 +60,10 @@ export default function RatingChart({ value, color }: RatingChartInterface) {
   } as any;
 
   return (
-    <div>
-      <Chart
-        options={options}
-        series={[value]}
-        type="radialBar"
-        height={96} />
-    </div>
+    <Chart
+      options={options}
+      series={[value]}
+      type="radialBar"
+      height={height} />
   );
 }

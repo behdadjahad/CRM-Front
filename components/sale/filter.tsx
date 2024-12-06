@@ -1,11 +1,15 @@
+"use client"
+
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../ui/button'
+import LeftDrawer from '../shared/left-drawer'
 
 export default function Filter() {
+  const [openFilter, setOpenFilter] = useState(false)
   return (
     <div className='flex items-center gap-4 text-sm'>
-      <Button variant={"ghost"} className='flex items-center gap-2'>
+      <Button onClick={() => setOpenFilter(true)} variant={"ghost"} className='flex items-center gap-2'>
         <Image src={'/icons/filter.png'} alt='Filter' width={24} height={24} />
 
         <span>
@@ -20,6 +24,8 @@ export default function Filter() {
           مرتب سازی بر اساس
         </span>
       </Button>
+
+      <LeftDrawer setState={setOpenFilter} state={openFilter} />
     </div>
   )
 }

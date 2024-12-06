@@ -26,7 +26,7 @@ export const PersonalInfoFormExtender: FormExtenderInterface = {
     },
     {
       key: 'birthdate',
-      component: 'input',
+      component: 'date',
       placeholder: 'تاریخ تولد',
       type: 'text',
       floating: true,
