@@ -91,6 +91,7 @@ const config: Config = {
         xlx: "20px",
         xl: "22px",
         "2xl": "25px",
+        "2.5xl":"28px",
         "3xl": "32px",
         "4.5xl": "40px",
         "5xl": "48px",
@@ -105,6 +106,7 @@ const config: Config = {
         background: {
           DEFAULT: "hsla(var(--background))",
           active: "hsla(var(--background-active))",
+          
         },
         subtitle: {
           DEFAULT: "hsla(var(--subtitle))",
@@ -119,6 +121,7 @@ const config: Config = {
           DEFAULT: "hsla(var(--btn))",
           foreground: "hsla(var(--btn-foreground))",
           active: "hsla(var(--btn-active))",
+         
         },
         badge: {
           DEFAULT: "hsla(var(--badge))",
@@ -176,6 +179,7 @@ const config: Config = {
           DEFAULT: "hsla(var(--quartiery))",
           foreground: "hsla(var(--quartiery-foreground))",
           active: "hsla(var(--quartiery-active))",
+          background:"hsla(var(--quartiery-background))"
         },
         accent: {
           DEFAULT: "hsla(var(--accent))",

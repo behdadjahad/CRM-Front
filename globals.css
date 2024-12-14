@@ -38,12 +38,13 @@
 
     --tertiary: 207, 82%, 73%;
     --tertiary-foreground: 0, 0%, 100%;
-    --tertiary-active: 206, 92%, 46%;
     --tertiary-background: 209, 73%, 94%;
 
-    --quartiery: 171, 23%, 84%;
-    --quartiery-foreground: 137, 100%, 32%;
-    --quartiery-active: 137, 100%, 32%;
+    --quartiery: 210, 14%, 13%;
+    --quartiery-background:34 ,74% , 54%;
+    --quartiery-foreground: 210, 25%, 17%;
+    --quartiery-active: 224, 60%, 40%;
+
 
     --info: 35, 73%, 54%;
     --info-foreground: 211, 24%, 17%    ;
@@ -79,13 +80,15 @@
 
     --background-active: 0, 0%, 100%;
     --background-gradient: 214.3 31.8% 91.4%;
-
+ 
+    
     --link-active: 214.3 31.8% 91.4%;
     --link-active-background: 214.3 31.8% 91.4%;
 
     --btn: 214.3 31.8% 91.4%;
     --btn-foreground: 214.3 31.8% 91.4%;
     --btn-active: 214.3 31.8% 91.4%;
+ 
 
     --card-active: 214.3 31.8% 91.4%;
 

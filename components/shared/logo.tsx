@@ -26,7 +26,11 @@ export default function Logo({
         height="1080"
         alt={label}
         loading="eager"
-        className="w-9.5 h-9.5 object-contain"
+        //className="w-9.5 h-9.5 object-contain"
+        className={cn(
+          "w-9.5 h-9.5 object-contain",
+          className
+        )}
       />
       <span
         className={cn(

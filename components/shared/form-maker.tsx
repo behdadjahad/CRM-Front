@@ -9,6 +9,9 @@ import DateInput from "./date-input";
 import CheckboxInput from "./checkbox-input";
 import RadioInput from "./radio-input";
 import SliderInput from "./slider-input";
+import PasswordInput from "./password-input";
+import VerificationInput from "./verification-input";
+
 
 export interface OptionType {
   label: string;
@@ -18,7 +21,7 @@ export interface OptionType {
 export interface FormMakerInterface {
   form: any;
   fields: {
-    component: "input" | "Select" | "date" | "phone" | "checkbox" | "radio" | "slider" | "textarea" | "non-field";
+    component: "input" | "Select" | "date" | "phone" | "checkbox" | "radio" | "slider" | "textarea"|"password"| "verification" |"non-field"  ;
     floating?: boolean;
     placeholder?: string;
     labelClassName?: string;
@@ -32,9 +35,12 @@ export interface FormMakerInterface {
     icon?: string;
     defaultValue?: string | null;
     children?: React.ReactNode;
-    range?: { min: number; max: number; step: number; }
+    range?: { min: number; max: number; step: number; };
+    size?:number;
+    maxLength?:number;
   }[];
   className?: string;
+
 }
 
 export default function FormMaker({
@@ -95,6 +101,19 @@ export default function FormMaker({
               item={item}
               form={form} />
           );
+        case "password":
+          return (
+            <PasswordInput
+              item={item}
+              form={form} />
+          );
+        case "verification":
+          return (
+            <VerificationInput
+              item={item}
+              form={form} />
+          );
+       
         default:
           return null;
       }
