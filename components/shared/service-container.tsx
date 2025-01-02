@@ -1,75 +1,56 @@
-import { services } from '@/constants/services'
-import React, { useState } from 'react'
-import ServiceCard from './service-card'
-import FormMaker from './form-maker'
-import { useFormik } from 'formik'
-
-export default function ServiceContainer() {
-  const [activeItem, setActiveItem] = useState<any>(null)
-
-  const formik = useFormik({
-    initialValues: {
-      admitter: '',
-      accountant: '',
-      description: ''
-    },
-    onSubmit: async () => { }
-  })
+import React, { useState } from "react";
+import ServiceCard, { ServiceCardInterface } from "./service-card";
+import { Checkbox } from "../ui/checkbox";
+import { cn } from "@/lib/utils";
+export interface ServiceContainerInterface {
+  services: ServiceCardInterface[];
+  className?: string;
+  children?: any;
+  selectedItems?: ServiceCardInterface[];
+}
+export default function ServiceContainer({
+  services,
+  className,
+}: ServiceContainerInterface) {
+  const [activeItem, setActiveItem] = useState<any>(null);
 
   return (
-    <div className='flex flex-col items-end p-6 rounded-xl justify-between gap-8 bg-background-active'>
-      <h2>
-        سرویس ها
-      </h2>
+    <div
+      className={cn(
+        "flex flex-col items-end p-6 rounded-xl justify-between gap-8 bg-background-active",
+        className
+      )}
+    >
+      {activeItem && (
+        <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
+          <p className="text-negative text-xs font-bold">
+            اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
+          </p>
+          <div className="flex gap-4">
+            <Checkbox />
+            <Checkbox />
+          </div>
+        </div>
+      )}
+
+      <h2>سرویس ها</h2>
 
       <div className="flex flex-row-reverse flex-wrap items-center justify-start gap-3 w-full">
-        {
-          services.map(item => (
-            <ServiceCard
-              key={item.title}
-              {...item}
-              clickFunction={() => activeItem && activeItem.title === item.title ? setActiveItem(null) : setActiveItem(item)}
-              isActive={activeItem && activeItem.title == item.title}
-            />
-          ))
-        }
+        {services.map((item) => (
+          <ServiceCard
+            key={item.title}
+            {...item}
+            clickFunction={() =>
+              activeItem && activeItem.title === item.title
+                ? setActiveItem(null)
+                : setActiveItem(item)
+            }
+            isActive={activeItem && activeItem.title == item.title}
+          />
+        ))}
       </div>
 
-      {
-        activeItem ?
-          <div className="w-full flex flex-col items-end">
-            <FormMaker
-              form={formik}
-              fields={[
-                {
-                  key: 'admitter',
-                  component: 'input',
-                  placeholder: 'ثبت کننده',
-                  type: 'text',
-                  floating: true,
-                  className: "w-full md:w-1/2 lg:w-1/4",
-                },
-                {
-                  key: 'accountant',
-                  component: 'input',
-                  placeholder: 'مسئول قرارداد',
-                  type: 'text',
-                  floating: true,
-                  className: "w-full md:w-1/2 lg:w-1/4",
-                },
-                {
-                  key: 'description',
-                  component: 'input',
-                  placeholder: 'توضیحات',
-                  type: 'text',
-                  floating: true,
-                  className: "w-full md:w-1/2",
-                }
-              ]}
-              className='w-full flex-row-reverse' />
-          </div> :
-          <></>
-      }
+      {activeItem && activeItem.children}
     </div>
-  )
+  );
 }

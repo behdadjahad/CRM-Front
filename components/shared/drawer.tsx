@@ -1,6 +1,5 @@
 import React from "react";
 import Logo from "./logo";
-import { credentialData } from "@/constants/credentials";
 import { drawerLinks } from "@/constants/navigation-links";
 import { NavLink } from "./nav-link";
 import Image from "next/image";
@@ -15,15 +14,17 @@ export default function Drawer({ state, setState }: DrawerInterface) {
   return (
     <div
       className={cn(
-        "h-screen w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
+        "hidden lg:block absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
         {
-          "w-20.5": !state,
+          "lg:w-20.5": !state,
+        },
+        {
+          "z-50 block w-4/5 max-w-96": state,
         }
       )}
     >
       <div className="flex flex-col w-full h-full">
         <Logo
-          label={credentialData.name}
           labelClassName={!state ? "hidden" : ""}
           className={!state ? "gap-0 justify-center" : ""}
         />
@@ -37,7 +38,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
                     {item.category}
                   </span>
                 ) : (
-                    <div className="bg-muted-foreground pb-px w-full" />
+                  <div className="bg-muted-foreground pb-px w-full" />
                 )}
               </div>
 
@@ -63,7 +64,12 @@ export default function Drawer({ state, setState }: DrawerInterface) {
             { "gap-x-2.5": state }
           )}
         >
-          <Image src={"/icons/menu.png"} alt="منو" width={22} height={22} />
+          <Image
+            src={"/icons/menu-close.png"}
+            alt="منو"
+            width={22}
+            height={22}
+          />
           <span
             className={cn("w-auto line-clamp-1 transition-all duration-200", {
               " w-0": !state,

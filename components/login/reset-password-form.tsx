@@ -1,26 +1,22 @@
-import { useFormik } from "formik"
-import FormMaker from "../shared/form-maker"
-import { Button } from "../ui/button"
-import Link from "next/link"
-import * as Yup from 'yup';
+import FormMaker from "../shared/form-maker";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { StageInterface } from "@/app/(login-layout)/login/page";
 
-const REQUIERD_TEXT = "این فیلد ضروری است"
-export default function ResetPasswordForm() {
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-    },
-    validationSchema: Yup.object().shape({
-      email: Yup.string().required(REQUIERD_TEXT),
-    }),
-    onSubmit: async () => { }
-  })
+export default function ResetPasswordForm({
+  stageHandler,
+  formik,
+}: StageInterface) {
+  function resetHandler() {
+    stageHandler("verification");
+    console.log(formik.values);
+  }
   return (
-    <div className="w-full flex flex-col gap-4">
-      <h1 className="text-center text-2.5xl md:text-3xl font-primary-bold leading-9 text-gray-900">
+    <div className="w-full flex flex-col gap-4 items-center">
+      <h1 className="text-center text-2.5xl md:text-3xl font-primary-bold leading-9 text-tertiary">
         بازیابی رمز عبور
       </h1>
-      <p className='text-center text-base text-gray-500'>
+      <p className="text-center text-base text-tertiary-background">
         برای دریافت کد لطفا شماره همراه یا ایمیل خود را وارد کنید
       </p>
 
@@ -28,24 +24,31 @@ export default function ResetPasswordForm() {
         form={formik}
         fields={[
           {
-            key: 'email',
-            component: 'input',
-            placeholder: 'ایمیل یا شماره همراه',
-            type: 'email',
+            key: "resetEmail",
+            component: "input",
+            placeholder: "ایمیل یا شماره همراه",
+            type: "email",
             floating: true,
             className: "w-full",
           },
         ]}
-        className='flex flex-col w-full mt-8' />
+        className="flex flex-col w-full mt-8"
+      />
       <Button
-        type='submit'
+        type="submit"
         variant={"foreground"}
-        className="bg-quartiery-background m-2"
+        className="bg-quartiery-background m-2 w-full text-tertiary-foreground"
+        onClick={resetHandler}
       >
         ارسال کد تایید
       </Button>
-      <Link href="" className="text-center">بازگشت</Link>
+      <Link
+        href="/login"
+        className="text-center text-tertiary-foreground text-sm"
+        legacyBehavior
+      >
+        بازگشت
+      </Link>
     </div>
-
-  )
+  );
 }

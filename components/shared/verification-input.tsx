@@ -20,30 +20,30 @@ export default function VerificationInput({
 
 
   const handleChange = (value: string, index: number): void => {
-    if (!/^[0-9]?$/.test(value)) return; 
+    if (!/^[0-9]?$/.test(value)) return;
 
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
-
-   
+    form.setFieldValue(item.key, newCode);
     if (value && index < maxLength - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
-  
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>, index: number): void => {
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLInputElement>,
+    index: number
+  ): void => {
     if (e.key === "Backspace" && !code[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus(); 
+      inputRefs.current[index - 1]?.focus();
     } else if (e.key === "ArrowLeft" && index > 0) {
-      inputRefs.current[index - 1]?.focus(); 
+      inputRefs.current[index - 1]?.focus();
     } else if (e.key === "ArrowRight" && index < maxLength - 1) {
       inputRefs.current[index + 1]?.focus();
     }
   };
 
- 
   const handlePaste = (e: ClipboardEvent<HTMLDivElement>): void => {
     e.preventDefault();
 
@@ -55,6 +55,7 @@ export default function VerificationInput({
       .split("")
       .concat(Array(maxLength - pasteData.length).fill(""))
       .slice(0, maxLength);
+
     setCode(newCode);
     newCode.forEach((digit, idx) => {
       if (digit && inputRefs.current[idx]) {

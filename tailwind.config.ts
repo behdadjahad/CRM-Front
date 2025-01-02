@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -106,7 +107,6 @@ const config: Config = {
         background: {
           DEFAULT: "hsla(var(--background))",
           active: "hsla(var(--background-active))",
-          
         },
         subtitle: {
           DEFAULT: "hsla(var(--subtitle))",
@@ -121,7 +121,6 @@ const config: Config = {
           DEFAULT: "hsla(var(--btn))",
           foreground: "hsla(var(--btn-foreground))",
           active: "hsla(var(--btn-active))",
-         
         },
         badge: {
           DEFAULT: "hsla(var(--badge))",
@@ -132,7 +131,10 @@ const config: Config = {
         header: "hsla(var(--header))",
         dark: "hsla(var(--subtitle-dark))",
 
-        border: "hsla(var(--border))",
+        border: {
+          DEFAULT: "hsla(var(--border))",
+          mute: "hsla(var(--border-foreground))",
+        },
         input: "hsla(var(--input))",
         ring: "hsla(var(--ring))",
 
@@ -215,6 +217,7 @@ const config: Config = {
           foreground: "hsla(var(--card-foreground))",
           active: "hsla(var(--card-active))",
           gradient: "var(--card-gradient)",
+          mute: 'rgba(255, 255, 255, 0.1)'
         },
       },
       borderRadius: {

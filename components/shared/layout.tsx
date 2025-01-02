@@ -15,13 +15,22 @@ export default function Layout({
       <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} />
       <div
         className={cn(
-          "flex flex-col w-[calc(100vw-82px)] transition-all duration-250 ease-in-out",
+          "w-full h-full opacity-100 z-30 absolute bg-black/75 lg:hidden duration-200 transition-all",
           {
-            "w-calc(100vw-320px)": isDrawerOpen,
+            "opacity-0 -z-50": !isDrawerOpen,
+          }
+        )}
+        onClick={() => setIsDrawerOpen(false)}
+      />
+      <div
+        className={cn(
+          "flex flex-col lg:w-[calc(100vw-82px)] transition-all duration-250 ease-in-out",
+          {
+            "lg:w-calc(100vw-320px)": isDrawerOpen,
           }
         )}
       >
-        <Header />
+        <Header state={isDrawerOpen} setState={setIsDrawerOpen} />
         {children}
       </div>
     </div>
