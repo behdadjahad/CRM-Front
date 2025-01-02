@@ -9,6 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ContactInfoFormExtender, LivingInformationExtender, organizationInformationExtender, PersonalInfoFormExtender, workInformationExtender } from "@/constants/extendable-fields";
 import Image from "next/image";
 import { useState } from "react";
+import { services } from "@/constants/services";
 
 export default function Home() {
   const [category, setCategory] = useState("personal")
@@ -84,7 +85,7 @@ export default function Home() {
                   PersonalInfoFormExtender,
                   ContactInfoFormExtender,
                 ],
-                children: <ServiceContainer />
+                children: <ServiceContainer services={services}/>
               },
               {
                 title: "اطلاعات محل سکونت",
@@ -92,7 +93,7 @@ export default function Home() {
                   LivingInformationExtender,
                   PersonalInfoFormExtender,
                 ],
-                children: <ServiceContainer />
+                children: <ServiceContainer services={services}/>
               },
               {
                 title: "اطلاعات محل کار",
@@ -100,7 +101,7 @@ export default function Home() {
                   workInformationExtender,
                   PersonalInfoFormExtender,
                 ],
-                children: <ServiceContainer />
+                children: <ServiceContainer services={services}/>
               }
             ]} />
         ) : (
@@ -114,7 +115,7 @@ export default function Home() {
                   organizationInformationExtender,
                   ContactInfoFormExtender
                 ],
-                children: <ServiceContainer />
+                children: <ServiceContainer services={services}/>
               },
             ]}
           />

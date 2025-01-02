@@ -27,6 +27,7 @@
 
     --card: 0, 0%, 100%;
     --card-foreground: 220, 2%, 27%;
+    --card-active:0,0,100%,0.1;
 
     --accessible: 20, 91%, 53%;
     --accessible-foreground: 0, 0%, 100%;
@@ -36,17 +37,19 @@
     --accent-foreground: 347, 77%, 57%;
     --accent-active: 347, 77%, 57%;
 
-    --tertiary: 207, 82%, 73%;
-    --tertiary-foreground: 0, 0%, 100%;
-    --tertiary-active: 206, 92%, 46%;
-    --tertiary-background: 209, 73%, 94%;
+    --tertiary: 220, 24%, 12%;
+    --tertiary-foreground: 220 ,20% ,13%;
+    --tertiary-background: 220, 6%, 47%;
 
-    --quartiery: 171, 23%, 84%;
-    --quartiery-foreground: 137, 100%, 32%;
-    --quartiery-active: 137, 100%, 32%;
+    --quartiery: 210, 14%, 13%;
+    --quartiery-background:34 ,74% , 54%;
+    --quartiery-foreground: 210, 25%, 17%;
+    --quartiery-active: 224, 60%, 40%;
+    --border-foreground:hsl(220, 6.6%, 66.3%);
+
 
     --info: 35, 73%, 54%;
-    --info-foreground: 211, 24%, 17%    ;
+    --info-foreground: 211, 24%, 17%;
     --info-active: 35, 73%, 54%;
 
     --warning: 42, 86%, 89%;
@@ -80,12 +83,14 @@
     --background-active: 0, 0%, 100%;
     --background-gradient: 214.3 31.8% 91.4%;
 
+
     --link-active: 214.3 31.8% 91.4%;
     --link-active-background: 214.3 31.8% 91.4%;
 
     --btn: 214.3 31.8% 91.4%;
     --btn-foreground: 214.3 31.8% 91.4%;
     --btn-active: 214.3 31.8% 91.4%;
+
 
     --card-active: 214.3 31.8% 91.4%;
 
@@ -154,11 +159,11 @@
 
   /* Custom Scrollbar using TailwindCSS and @apply directive */
   *::-webkit-scrollbar {
-    @apply w-2 h-2; 
+    @apply w-2 h-2;
   }
 
   *::-webkit-scrollbar-track {
-    @apply bg-primary-hover rounded-lg; 
+    @apply bg-primary-hover rounded-lg;
   }
 
   *::-webkit-scrollbar-thumb {
@@ -166,22 +171,21 @@
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary; 
+    @apply bg-primary;
   }
 
   *::-webkit-scrollbar-corner {
     @apply bg-transparent;
   }
-  
+
   .phone-floating-label {
     @apply absolute top-1/2 right-3 -translate-y-1/2 text-base text-foreground-mute pointer-events-none transition-all duration-200 ease-in-out;
   }
-  
+
   .phone-floating-input:focus ~ .phone-floating-label,
   .phone-floating-input:not(:placeholder-shown) ~ .phone-floating-label {
     @apply text-foreground-mute px-2 bg-primary-foreground right-3 top-0;
   }
-  
 }
 
 .react-tel-input .flag-dropdown {

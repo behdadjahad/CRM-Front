@@ -100,7 +100,7 @@ function FormikWrapper({
   const formik = useFormik({
     initialValues: values,
     validationSchema,
-    onSubmit: () => { },
+    onSubmit: () => {},
   });
 
   useEffect(() => {
@@ -110,30 +110,30 @@ function FormikWrapper({
   return (
     <div key={id} className="w-full">
       <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
-        {title && <h2 className='px-2'>{title}</h2>}
+        {title && <h2 className="px-2">{title}</h2>}
 
         <FormMaker
           form={formik}
           fields={
             removeForm
               ? [
-                ...fields,
-                {
-                  component: "non-field",
-                  key: "delete",
-                  children: (
-                    <Button variant={"transparent"} onClick={removeForm}>
-                      <Image
-                        src={"/icons/trash.png"}
-                        alt="delete the item"
-                        width={28}
-                        height={28}
-                      />
-                    </Button>
-                  ),
-                  className: "w-full md:w-1/2 lg:w-1/4",
-                },
-              ]
+                  ...fields,
+                  {
+                    component: "non-field",
+                    key: "delete",
+                    children: (
+                      <Button variant={"transparent"} onClick={removeForm}>
+                        <Image
+                          src={"/icons/trash.png"}
+                          alt="delete the item"
+                          width={28}
+                          height={28}
+                        />
+                      </Button>
+                    ),
+                    className: "w-full md:w-1/2 lg:w-1/4",
+                  },
+                ]
               : [...fields]
           }
           className={cn("w-full p-0 flex flex-row-reverse")}

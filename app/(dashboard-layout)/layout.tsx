@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "../../globals.css";
 import Layout from "@/components/shared/layout";
 import localFont from "next/font/local";
-import "../globals.css";
+import "../../globals.css";
 
 const iranSansBold = localFont({
-  src: "../public/fonts/IRANSans(FaNum)_Bold.ttf",
+  src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
   weight: "700",
 });
 
 const iranSansMedium = localFont({
-  src: "../public/fonts/IRANSans(FaNum)_Medium.ttf",
+  src: "../../public/fonts/IRANSans(FaNum)_Medium.ttf",
   variable: "--font-iran-sans-medium",
   weight: "500",
 });
 
 const iranSans = localFont({
-  src: "../public/fonts/IRANSans(FaNum).ttf",
+  src: "../../public/fonts/IRANSans(FaNum).ttf",
   variable: "--font-iran-sans",
   weight: "400",
 });

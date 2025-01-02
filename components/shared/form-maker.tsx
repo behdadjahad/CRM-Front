@@ -9,6 +9,8 @@ import DateInput from "./date-input";
 import CheckboxInput from "./checkbox-input";
 import RadioInput from "./radio-input";
 import SliderInput from "./slider-input";
+import VerificationInput from "./verification-input";
+import FileInput from "./file-input";
 
 export interface OptionType {
   label: string;
@@ -18,7 +20,18 @@ export interface OptionType {
 export interface FormMakerInterface {
   form: any;
   fields: {
-    component: "input" | "Select" | "date" | "phone" | "checkbox" | "radio" | "slider" | "textarea" | "non-field";
+    component:
+      | "input"
+      | "Select"
+      | "date"
+      | "phone"
+      | "checkbox"
+      | "radio"
+      | "slider"
+      | "textarea"
+      | "verification"
+      | "file"
+      | "non-field";
     floating?: boolean;
     placeholder?: string;
     labelClassName?: string;
@@ -30,9 +43,15 @@ export interface FormMakerInterface {
     className?: string;
     style?: any;
     icon?: string;
+    passwordIcon?: string;
     defaultValue?: string | null;
     children?: React.ReactNode;
-    range?: { min: number; max: number; step: number; }
+    range?: { min: number; max: number; step: number };
+    size?: number;
+    maxLength?: number;
+    iconClassName?: string;
+    multiple?: boolean;
+    toggleVisibility?: () => void;
   }[];
   className?: string;
 }
@@ -42,59 +61,31 @@ export default function FormMaker({
   fields,
   className,
 }: FormMakerInterface) {
-
   const renderField = useCallback(
-    (item: FormMakerInterface['fields'][0]) => {
+    (item: FormMakerInterface["fields"][0]) => {
       switch (item.component) {
         case "Select":
-          return (
-            <SelectInput
-              form={form}
-              item={item}
-            />
-          );
+          return <SelectInput form={form} item={item} />;
         case "input":
-          return (
-            <TextInput
-              item={item}
-              form={form} />
-          );
+          return <TextInput item={item} form={form} />;
         case "phone":
-          return (
-            <PhoneNumberInput
-              item={item}
-              form={form} />
-          );
+          return <PhoneNumberInput item={item} form={form} />;
         case "date":
-          return (
-            <DateInput
-              item={item}
-              form={form} />
-          )
+          return <DateInput item={item} form={form} />;
         case "checkbox":
-          return (
-            <CheckboxInput
-              item={item}
-              form={form} />
-          );
+          return <CheckboxInput item={item} form={form} />;
         case "radio":
-          return (
-            <RadioInput
-              item={item}
-              form={form} />
-          );
+          return <RadioInput item={item} form={form} />;
         case "slider":
-          return (
-            <SliderInput
-              item={item}
-              form={form} />
-          );
+          return <SliderInput item={item} form={form} />;
         case "textarea":
-          return (
-            <TextAreaInput
-              item={item}
-              form={form} />
-          );
+          return <TextAreaInput item={item} form={form} />;
+
+        case "verification":
+          return <VerificationInput item={item} form={form} />;
+        case "file":
+          return <FileInput item={item} form={form} />;
+
         default:
           return null;
       }
