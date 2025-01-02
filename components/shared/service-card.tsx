@@ -49,8 +49,8 @@ export default function ServiceCard({
         height={1080}
         id="service-image"
         className={cn(
-          "min-w-21 rounded-lg h-21 border border-border/20 object-contain w-21",
-          { "border-success-default": isActive },
+          "min-w-21 rounded-lg h-21 border border-border/20 object-contain w-full",
+          { "border-success": isActive },
           { "border-primary": isSelected },
           imageClassName
         )}

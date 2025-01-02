@@ -9,7 +9,7 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   return (
     <div className="relative flex flex-row w-full overflow-hidden">
       <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} />
@@ -24,7 +24,7 @@ export default function Layout({
       />
       <div
         className={cn(
-          "flex flex-col lg:w-[calc(100vw-82px)] transition-all duration-250 ease-in-out",
+          "flex flex-col w-full lg:w-[calc(100vw-82px)] transition-all duration-250 ease-in-out",
           {
             "lg:w-calc(100vw-320px)": isDrawerOpen,
           }

@@ -3,76 +3,122 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import FormExtender, { FormExtenderInterface } from './form-extender';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 export interface ExtendableFormTabContainerInterface {
   tabs: {
     title: string;
-    forms?: FormExtenderInterface[]
-    children?: React.ReactNode
-  }[]
+    forms?: FormExtenderInterface[];
+    children?: React.ReactNode;
+  }[];
   defaultValue: string;
-  className?: string
+  className?: string;
 }
 
-export default function ExtendableFormTabContainer({ tabs, defaultValue, className }: ExtendableFormTabContainerInterface) {
-  const [activeTab, setActiveTab] = useState(defaultValue || tabs?.[0]?.title)
+export default function ExtendableFormTabContainer({
+  tabs,
+  defaultValue,
+  className,
+}: ExtendableFormTabContainerInterface) {
+  const [activeTab, setActiveTab] = useState(defaultValue || tabs?.[0]?.title);
 
   useEffect(() => {
-    setActiveTab(defaultValue || tabs?.[0]?.title)
-  }, [tabs, defaultValue])
+    setActiveTab(defaultValue || tabs?.[0]?.title);
+  }, [tabs, defaultValue]);
   return (
-    <Tabs defaultValue={defaultValue || tabs?.[0]?.title} value={activeTab} onValueChange={setActiveTab} className={cn("w-full", className)} activationMode='automatic' >
-      <TabsList className='w-full flex flex-row-reverse'>
-        {
-          tabs.map(item => (
+    <>
+      <Tabs
+        defaultValue={defaultValue || tabs?.[0]?.title}
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className={cn("w-full hidden md:block", className)}
+        activationMode="automatic"
+      >
+        <TabsList className="w-full flex flex-row-reverse">
+          {tabs.map((item) => (
             <TabsTrigger
               key={`trigger-${item.title}`}
               value={item.title}
-              className='w-full'>
+              className="w-full"
+            >
               {item.title}
             </TabsTrigger>
-          ))
-        }
-      </TabsList>
+          ))}
+        </TabsList>
 
-      {
-        tabs.map(item => (
+        {tabs.map((item) => (
           <TabsContent
             key={`content-${item.title}`}
             value={item.title}
-            className='w-full gap-8 p-0 flex flex-col'
+            className="w-full gap-8 p-0 flex flex-col"
           >
             {
               <>
-                {item.forms ?
+                {item.forms ? (
                   item.forms.map((form, formIndex) => (
                     <FormExtender
                       key={`form-${item.title}-${form.title}`}
                       {...form}
                       className={formIndex == 0 ? "rounded-t-none" : ""}
                     />
-                  )) : 
+                  ))
+                ) : (
                   <></>
-                }
+                )}
                 {item.children}
 
                 <div className="flex flex-row gap-4">
-                  <Button variant={"foreground"}>
-                    لغو
-                  </Button>
-                  <Button variant={"info"}>
-                    ثبت و تکمیل
-                  </Button>
-                  <Button variant={"info"}>
-                    ثبت و جدید
-                  </Button>
+                  <Button variant={"foreground"}>لغو</Button>
+                  <Button variant={"info"}>ثبت و تکمیل</Button>
+                  <Button variant={"info"}>ثبت و جدید</Button>
                 </div>
-
               </>
             }
           </TabsContent>
-        ))
-      }
-    </Tabs>
-  )
+        ))}
+      </Tabs>
+
+      <Accordion
+        defaultValue={tabs.map((item) => item.title)}
+        type="multiple"
+        className="flex flex-col w-full gap-4 md:hidden"
+      >
+        {tabs.map((item) => (
+          <AccordionItem
+            key={item.title}
+            value={item.title}
+            className="rounded-t-xl overflow-hidden"
+          >
+            <AccordionTrigger className="bg-[linear-gradient(360deg,_#1C284F_0.67%,_#2949A4_163.41%)] [&[data-state=close]]:rounded-xl px-6 text-primary-foreground">
+              {item.title}
+            </AccordionTrigger>
+            <AccordionContent className="w-full gap-4 p-0 flex flex-col">
+              {item.forms ? (
+                item.forms.map((form, formIndex) => (
+                  <FormExtender
+                    key={`form-${item.title}-${form.title}`}
+                    {...form}
+                    className={formIndex == 0 ? "rounded-t-none" : ""}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
+              {item.children}
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+        <div className="flex flex-row gap-4">
+          <Button variant={"foreground"}>لغو</Button>
+          <Button variant={"info"}>ثبت و تکمیل</Button>
+          <Button variant={"info"}>ثبت و جدید</Button>
+        </div>
+      </Accordion>
+    </>
+  );
 }

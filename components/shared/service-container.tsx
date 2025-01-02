@@ -7,10 +7,12 @@ export interface ServiceContainerInterface {
   className?: string;
   children?: any;
   selectedItems?: ServiceCardInterface[];
+  askQuestion?: boolean;
 }
 export default function ServiceContainer({
   services,
   className,
+  askQuestion = true,
 }: ServiceContainerInterface) {
   const [activeItem, setActiveItem] = useState<any>(null);
 
@@ -21,7 +23,7 @@ export default function ServiceContainer({
         className
       )}
     >
-      {activeItem && (
+      {activeItem && askQuestion && (
         <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
           <p className="text-negative text-xs font-bold">
             اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟

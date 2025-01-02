@@ -116,7 +116,7 @@
   }
 
   main {
-    @apply flex flex-col w-full h-[calc(100vh-80px)] overflow-auto p-8 gap-8;
+    @apply flex flex-col w-full h-[calc(100vh-80px)] overflow-auto p-5 md:p-8 gap-5 md:gap-8;
   }
 
   body {
@@ -127,7 +127,7 @@
   }
 
   h1 {
-    @apply text-foreground text-lg md:text-xl lg:text-3xl font-medium;
+    @apply text-foreground text-xl md:text-2xl lg:text-3xl font-medium leading-9;
   }
 
   h2 {
@@ -189,7 +189,7 @@
 }
 
 .react-tel-input .flag-dropdown {
-  @apply !bg-background-active !rounded-r-lg;
+  @apply !bg-background-active !rounded-r-lg right-0 pl-0;
 }
 
 .react-tel-input .country-list {
@@ -198,4 +198,12 @@
 
 .react-tel-input .form-control {
   @apply !pr-12 !pl-3;
+}
+
+.react-tel-input .selected-flag .flag {
+  @apply left-2;
+}
+
+.react-tel-input .selected-flag .arrow {
+  @apply !left-2.5 md:!left-5;
 }

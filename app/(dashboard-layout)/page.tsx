@@ -23,11 +23,11 @@ export default function Home() {
           list={[
             {
               label: "داشبورد",
-              link: "/"
+              link: "/",
             },
             {
-              label: "قرارداد جدید"
-            }
+              label: "قرارداد جدید",
+            },
           ]}
         />
       </div>
@@ -36,93 +36,98 @@ export default function Home() {
         list={[
           {
             label: "تاریخ درج",
-            value: "1403/04/23"
+            value: "1403/04/23",
           },
           {
             label: "تاریخ قرارداد",
-            value: "1403/05/02"
+            value: "1403/05/02",
           },
           {
             label: "شماره قرار داد",
-            value: "358067357101"
+            value: "358067357101",
           },
           {
             label: "موضوع قرار داد",
-            value: "تور داخلی"
+            value: "تور داخلی",
           },
           {
             label: "توضیحات",
-            value: "..."
-          }
+            value: "...",
+          },
         ]}
         action={{
           label: "ویرایش اطلاعات",
-          icon: <Image src={'/icons/edit.png'} alt="edit" width={24} height={24} />,
-          click: () => console.log("clicked")
+          icon: (
+            <Image src={"/icons/edit.png"} alt="edit" width={24} height={24} />
+          ),
+          click: () => console.log("clicked"),
         }}
       />
 
-      <RadioGroup defaultValue="personal" className="flex flex-row-reverse gap-4">
+      <RadioGroup
+        defaultValue="personal"
+        className="flex flex-row-reverse gap-4 min-h-10"
+      >
         <div className="flex items-center space-x-2">
           <label htmlFor="personal">شخصی</label>
-          <RadioGroupItem value="personal" id="personal" onClick={() => setCategory("personal")} />
+          <RadioGroupItem
+            value="personal"
+            id="personal"
+            onClick={() => setCategory("personal")}
+          />
         </div>
-        <div className="flex items-center space-x-2" >
+
+        <div className="flex items-center space-x-2">
           <label htmlFor="organization">سازمانی</label>
-          <RadioGroupItem value="organization" id="organization" onClick={() => setCategory("organization")} />
+          <RadioGroupItem
+            value="organization"
+            id="organization"
+            onClick={() => setCategory("organization")}
+          />
         </div>
       </RadioGroup>
 
-      {
-        category === "personal" ? (
-
-          <ExtendableFormTabContainer
-            defaultValue="اطلاعات مشتری"
-            tabs={[
-              {
-                title: "اطلاعات مشتری",
-                forms: [
-                  PersonalInfoFormExtender,
-                  ContactInfoFormExtender,
-                ],
-                children: <ServiceContainer services={services}/>
-              },
-              {
-                title: "اطلاعات محل سکونت",
-                forms: [
-                  LivingInformationExtender,
-                  PersonalInfoFormExtender,
-                ],
-                children: <ServiceContainer services={services}/>
-              },
-              {
-                title: "اطلاعات محل کار",
-                forms: [
-                  workInformationExtender,
-                  PersonalInfoFormExtender,
-                ],
-                children: <ServiceContainer services={services}/>
-              }
-            ]} />
-        ) : (
-
-          <ExtendableFormTabContainer
-            defaultValue="اطلاعات سازمان"
-            tabs={[
-              {
-                title: "اطلاعات سازمان",
-                forms: [
-                  organizationInformationExtender,
-                  ContactInfoFormExtender
-                ],
-                children: <ServiceContainer services={services}/>
-              },
-            ]}
-          />
-        )
-      }
-
-
+      {category === "personal" ? (
+        <ExtendableFormTabContainer
+          defaultValue="اطلاعات مشتری"
+          tabs={[
+            {
+              title: "اطلاعات مشتری",
+              forms: [PersonalInfoFormExtender, ContactInfoFormExtender],
+              children: (
+                <ServiceContainer askQuestion={false} services={services} />
+              ),
+            },
+            {
+              title: "اطلاعات محل سکونت",
+              forms: [LivingInformationExtender, PersonalInfoFormExtender],
+              children: (
+                <ServiceContainer askQuestion={false} services={services} />
+              ),
+            },
+            {
+              title: "اطلاعات محل کار",
+              forms: [workInformationExtender, PersonalInfoFormExtender],
+              children: (
+                <ServiceContainer askQuestion={false} services={services} />
+              ),
+            },
+          ]}
+        />
+      ) : (
+        <ExtendableFormTabContainer
+          defaultValue="اطلاعات سازمان"
+          tabs={[
+            {
+              title: "اطلاعات سازمان",
+              forms: [organizationInformationExtender, ContactInfoFormExtender],
+              children: (
+                <ServiceContainer askQuestion={false} services={services} />
+              ),
+            },
+          ]}
+        />
+      )}
     </main>
   );
 }

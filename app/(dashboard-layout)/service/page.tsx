@@ -2,10 +2,10 @@
 
 import ClientInfoContainer, {
   ClientInfoContainerInterface,
-} from "@/components/client/client-info-container";
+} from "@/components/service/client-info-container";
 import ContractExpenseContainer, {
   ExpenseContainerInterface,
-} from "@/components/expense/contract-expense-container";
+} from "@/components/service/contract-expense-container";
 import ContractInfoContainer, {
   ContractInfoInterface,
 } from "@/components/shared/contract-info-container";
