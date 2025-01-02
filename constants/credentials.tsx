@@ -1,4 +1,10 @@
 export const credentialData = {
   name: "چادکو",
-  phoneNumber:"09103387305"
+  login: {
+    label: "Travel Agency CRM",
+  },
+  phoneNumber: {
+    label: "09103387305",
+    link: "tel:09103387305",
+  },
 };

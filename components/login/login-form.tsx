@@ -53,16 +53,17 @@ export default function LoginForm({ formik }: StageInterface) {
       />
 
       <div className="flex items-center justify-between p-2">
-        <Link href="/login/auth">
-          <p className="text-quartiery text-sm">رمز عبور را فراموش کرده ام؟</p>
+        <Link href="/login/forget-password" className="text-quartiery text-sm">
+          رمز عبور را فراموش کرده ام؟
         </Link>
         <div className="flex items-center gap-2">
           <label htmlFor="htmlFor" className="text-sm text-quartiery">
             به یاد داشته باش
           </label>
-          <Checkbox />
+          <Checkbox className="border-input" />
         </div>
       </div>
+
       <Button
         type="submit"
         variant={"foreground"}
@@ -71,13 +72,6 @@ export default function LoginForm({ formik }: StageInterface) {
       >
         ورود
       </Button>
-
-      <div className="flex items-center justify-center ">
-        <p className="text-sm text-tertiary-foreground">حساب کاربری ندارید؟</p>
-        <Link href={""} className="text-sm text-quartiery-active">
-          شروع کنید
-        </Link>
-      </div>
     </div>
   );
 }
