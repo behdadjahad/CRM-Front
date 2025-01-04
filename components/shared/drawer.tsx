@@ -14,7 +14,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
   return (
     <div
       className={cn(
-        "hidden lg:block absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
+        "hidden lg:block w-0 absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
         {
           "lg:w-20.5": !state,
         },

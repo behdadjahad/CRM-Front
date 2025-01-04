@@ -21,10 +21,24 @@ import ServiceForm, {
 } from "@/components/shared/service-form";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
+import {
+  hotelInformationExtender,
+  internationalFlightExtender,
+  pickupExtender,
+  visaExtender,
+} from "@/constants/extendable-fields";
+import { purchaseInfo, recorderInfo } from "@/constants/service-form-fields";
+import { useFormik } from "formik";
 
 export default function Service() {
-  const { clientInfoProps, contractServices, expenses, expert, contractInfo } =
-    getData();
+  const {
+    clientInfoProps,
+    contractServices,
+    expenses,
+    expert,
+    contractInfo,
+    flightForm,
+  } = getData();
   return (
     <main className="flex flex-col lg:flex-row">
       <div className=" flex flex-col w-full lg:w-3/4">
@@ -213,61 +227,119 @@ function getData() {
     ],
   };
 
-  const serviceForm: ServiceFormInterface = {
+  const hotelForm: ServiceFormInterface = {
     radioButton: [
       { label: "هتل", value: "hotel" },
       { label: "آپارتمان", value: "apartment" },
     ],
-    formExtender: [
-      {
-        title: "سرویس هتل",
-        fields: [
-          {
-            key: "country",
-            component: "Select",
-            placeholder: "کشور",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
+    formExtender: hotelInformationExtender,
+    purchaseForm: {
+      title: "خرید",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            costPerNight: "",
+            currency: "",
+            broker: "",
           },
-          {
-            key: "city",
-            component: "input",
-            placeholder: "شهر",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
-          {
-            key: "hotelName",
-            component: "input",
-            placeholder: "نام هتل",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
-          {
-            key: "servicetype",
-            component: "Select",
-            placeholder: "نوع خدمات",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
-          {
-            key: "voucherFile",
-            component: "file",
-            placeholder: "",
-            type: "file",
-            floating: true,
-            icon: "/icons/upload.png",
-            className: "w-full",
-          },
-        ],
+          onSubmit: async () => {},
+        }),
+        fields: purchaseInfo,
       },
-    ],
-  };
+    },
 
+    recordForm: {
+      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            Registrar: "",
+            receptionist: "",
+            explanation: "",
+          },
+          onSubmit: async () => {},
+        }),
+        fields: recorderInfo,
+      },
+    },
+  };
+  const flightForm: ServiceFormInterface = {
+    radioButton: [
+      { label: "یک طرفه", value: "oneWayFlight" },
+      { label: "رفت و برگشت", value: "RoundTripFlight" },
+      { label: "چندمسیره", value: "multiRouteFlight" },
+    ],
+    formExtender: internationalFlightExtender,
+    purchaseForm: {
+      title: "خرید",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            costPerNight: "",
+            currency: "",
+            broker: "",
+          },
+          onSubmit: async () => {},
+        }),
+        fields: purchaseInfo,
+      },
+    },
+
+    recordForm: {
+      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            Registrar: "",
+            receptionist: "",
+            explanation: "",
+          },
+          onSubmit: async () => {},
+        }),
+        fields: recorderInfo,
+      },
+    },
+  };
+  const visaForm: ServiceFormInterface = {
+    formExtender: visaExtender,
+
+    recordForm: {
+      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            Registrar: "",
+            receptionist: "",
+            explanation: "",
+          },
+          onSubmit: async () => {},
+        }),
+        fields: recorderInfo,
+      },
+    },
+  };
+  const pickupForm: ServiceFormInterface = {
+    radioButton: [
+      { label: "یک طرفه", value: "oneWayPickup" },
+      { label: "رفت و برگشت", value: "RoundTripPickup" },
+    ],
+    formExtender: pickupExtender,
+
+    recordForm: {
+      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
+      formDetail: {
+        form: useFormik({
+          initialValues: {
+            Registrar: "",
+            receptionist: "",
+            explanation: "",
+          },
+          onSubmit: async () => {},
+        }),
+        fields: recorderInfo,
+      },
+    },
+  };
   const contractServices: ServiceContainerInterface = {
     services: [
       {
@@ -276,7 +348,7 @@ function getData() {
         isSelected: false,
         selectedImage: "/images/services/primary/primary-visa.png",
         activeImage: "/images/services/success/success-visa.png",
-        children: "",
+        children: <ServiceForm {...visaForm} />,
       },
       {
         image: "/images/services/international-airport.png",
@@ -286,6 +358,7 @@ function getData() {
           "/images/services/primary/primary-international-airport.png",
         activeImage:
           "/images/services/success/success-international-airport.png",
+        children: <ServiceForm {...flightForm} />,
       },
       {
         image: "/images/services/airport.png",
@@ -293,6 +366,7 @@ function getData() {
         isSelected: false,
         selectedImage: "/images/services/primary/primary-airport.png",
         activeImage: "/images/services/success/success-airport.png",
+        children: <ServiceForm {...flightForm} />,
       },
       {
         image: "/images/services/suitcase.png",
@@ -314,7 +388,7 @@ function getData() {
         isSelected: true,
         selectedImage: "/images/services/primary/primary-hotel.png",
         activeImage: "/images/services/success/success-hotel.png",
-        children: <ServiceForm {...serviceForm} />,
+        children: <ServiceForm {...hotelForm} />,
       },
       {
         image: "/images/services/hotel.png",
@@ -322,6 +396,7 @@ function getData() {
         isSelected: false,
         selectedImage: "/images/services/primary/primary-hotel.png",
         activeImage: "/images/services/success/success-hotel.png",
+        children: <ServiceForm {...hotelForm} />,
       },
       {
         image: "/images/services/train.png",
@@ -350,6 +425,7 @@ function getData() {
         isSelected: true,
         selectedImage: "/images/services/primary/primary-pickup.png",
         activeImage: "/images/services/success/success-pickup.png",
+        children: <ServiceForm {...pickupForm} />,
       },
       {
         image: "/images/services/nature.png",
@@ -499,6 +575,7 @@ function getData() {
     expenses,
     expert,
     contractInfo,
-    serviceForm,
+    hotelForm,
+    flightForm,
   };
 }

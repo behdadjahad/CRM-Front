@@ -92,9 +92,9 @@ export default function ExtendableFormTabContainer({
           <AccordionItem
             key={item.title}
             value={item.title}
-            className="rounded-t-xl overflow-hidden"
+            className="overflow-hidden rounded-xl"
           >
-            <AccordionTrigger className="bg-[linear-gradient(360deg,_#1C284F_0.67%,_#2949A4_163.41%)] [&[data-state=close]]:rounded-xl px-6 text-primary-foreground">
+            <AccordionTrigger className="bg-[linear-gradient(360deg,_#1C284F_0.67%,_#2949A4_163.41%)] px-6 text-primary-foreground">
               {item.title}
             </AccordionTrigger>
             <AccordionContent className="w-full gap-4 p-0 flex flex-col">
@@ -113,7 +113,7 @@ export default function ExtendableFormTabContainer({
             </AccordionContent>
           </AccordionItem>
         ))}
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row-reverse gap-4">
           <Button variant={"foreground"}>لغو</Button>
           <Button variant={"info"}>ثبت و تکمیل</Button>
           <Button variant={"info"}>ثبت و جدید</Button>

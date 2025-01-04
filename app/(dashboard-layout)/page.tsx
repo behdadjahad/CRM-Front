@@ -1,18 +1,25 @@
-"use client"
+"use client";
 
 import Breadcrumb from "@/components/shared/breadcrumb";
-import EditableContainer from "@/components/home/editable-container";
+import EditableContainer from "@/components/contract/editable-container";
 import ExtendableFormTabContainer from "@/components/shared/extendable-form-tab-container";
 import ServiceContainer from "@/components/shared/service-container";
 import Title from "@/components/shared/title";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ContactInfoFormExtender, LivingInformationExtender, organizationInformationExtender, PersonalInfoFormExtender, workInformationExtender } from "@/constants/extendable-fields";
+import {
+  ContactInfoFormExtender,
+  LivingInformationExtender,
+  organizationInformationExtender,
+  PersonalInfoFormExtender,
+  workInformationExtender,
+} from "@/constants/extendable-fields";
 import Image from "next/image";
 import { useState } from "react";
 import { services } from "@/constants/services";
+import RegisteryForm from "@/components/contract/registery-form";
 
 export default function Home() {
-  const [category, setCategory] = useState("personal")
+  const [category, setCategory] = useState("personal");
 
   return (
     <main>
@@ -122,7 +129,9 @@ export default function Home() {
               title: "اطلاعات سازمان",
               forms: [organizationInformationExtender, ContactInfoFormExtender],
               children: (
-                <ServiceContainer askQuestion={false} services={services} />
+                <ServiceContainer askQuestion={false} services={services}>
+                  <RegisteryForm />
+                </ServiceContainer>
               ),
             },
           ]}

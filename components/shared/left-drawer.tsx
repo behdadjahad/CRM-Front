@@ -14,123 +14,152 @@ export default function LeftDrawer({ state, setState }: LeftDrawerInterface) {
   const formik = useFormik({
     initialValues: {
       searchBy: [],
-      name: '',
-      gender: '',
-      birthdate: '',
-      socialNumber: '',
-      career: '',
-      location: '',
-      contractNumber: '',
-      contractDate: '',
-      startDate: '',
-      endDate: '',
+      contractStatus: [],
+      name: "",
+      gender: "",
+      birthdate: "",
+      socialNumber: "",
+      career: "",
+      location: "",
+      contractNumber: "",
+      contractDate: "",
+      startDate: "",
+      endDate: "",
       sellRange: [0, 10000],
-      buyRange: [0, 10000]
+      buyRange: [0, 10000],
     },
-    onSubmit: async () => { }
-  })
+    onSubmit: async () => {},
+  });
 
   const filterItems = [
     {
       title: "جستجو بر اساس",
-      component: <FormMaker
-        form={formik}
-        fields={[
-          {
-            key: 'searchBy',
-            component: 'checkbox',
-            placeholder: 'جست‌وجو بر اساس',
-            type: 'text',
-            className: "w-full items-start p-0",
-            options: [
-              { label: "درخواست", value: "request" },
-              { label: "قرارداد", value: "contract" }
-            ]
-          },
-        ]}
-        className='flex flex-row w-full' />
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "searchBy",
+              component: "checkbox",
+              placeholder: "جست‌وجو بر اساس",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: [
+                { label: "درخواست", value: "request" },
+                { label: "قرارداد", value: "contract" },
+              ],
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+    {
+      title: "وضعیت قرارداد",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "contractStatus",
+              component: "checkbox",
+              placeholder: "وضعیت قرارداد",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: [
+                { label: "باز", value: "open" },
+                { label: "بسته", value: "close" },
+              ],
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
     },
     {
       title: "اطلاعات مشتری",
-      component: <FormMaker
-        form={formik}
-        fields={[
-          {
-            key: 'gender',
-            component: 'radio',
-            placeholder: 'جنسیت',
-            type: 'text',
-            className: "w-full items-start p-0",
-            options: [
-              { label: "مرد", value: "female" },
-              { label: "زن", value: "male" },
-            ]
-          },
-          {
-            key: 'name',
-            component: 'input',
-            placeholder: 'نام و نام خانوادگی',
-            type: 'text',
-            floating: true,
-            labelClassName: "w-full",
-            className: 'w-full px-0'
-          },
-          {
-            key: 'birthdate',
-            component: 'date',
-            placeholder: 'تاریخ تولد',
-            type: 'text',
-            floating: true,
-            labelClassName: "w-full",
-            className: 'w-full px-0'
-          },
-          {
-            key: 'socialNumber',
-            component: 'input',
-            placeholder: 'کد ملی',
-            type: 'text',
-            floating: true,
-            labelClassName: "w-full",
-            className: 'w-full px-0'
-          },
-          {
-            key: 'career',
-            component: 'input',
-            placeholder: 'شغل',
-            type: 'text',
-            floating: true,
-            labelClassName: "w-full",
-            className: 'w-full px-0'
-          },
-          {
-            key: 'location',
-            component: 'input',
-            placeholder: 'محل سکونت',
-            type: 'text',
-            floating: true,
-            labelClassName: "w-full",
-            className: 'w-full px-0'
-          },
-          {
-            key: 'contractNumber',
-            component: 'input',
-            placeholder: 'شماره قرارداد',
-            type: 'text',
-            floating: true,
-            className: "w-full px-0",
-          },
-          {
-            key: 'contractDate',
-            component: 'date',
-            placeholder: 'تاریخ قرارداد',
-            type: 'text',
-            floating: true,
-            className: "w-full px-0",
-          },
-        ]}
-        className='flex flex-row w-full gap-y-2' />
-    }
-  ]
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "gender",
+              component: "radio",
+              placeholder: "جنسیت",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: [
+                { label: "مرد", value: "female" },
+                { label: "زن", value: "male" },
+              ],
+            },
+            {
+              key: "name",
+              component: "input",
+              placeholder: "نام و نام خانوادگی",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "birthdate",
+              component: "date",
+              placeholder: "تاریخ تولد",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "socialNumber",
+              component: "input",
+              placeholder: "کد ملی",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "career",
+              component: "input",
+              placeholder: "شغل",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "location",
+              component: "input",
+              placeholder: "محل سکونت",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "contractNumber",
+              component: "input",
+              placeholder: "شماره قرارداد",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+            {
+              key: "contractDate",
+              component: "date",
+              placeholder: "تاریخ قرارداد",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
+  ];
 
   const rangeItems = [
     {

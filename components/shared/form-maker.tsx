@@ -11,6 +11,7 @@ import RadioInput from "./radio-input";
 import SliderInput from "./slider-input";
 import VerificationInput from "./verification-input";
 import FileInput from "./file-input";
+import ToggleInput from "./toggle-input";
 
 export interface OptionType {
   label: string;
@@ -31,6 +32,7 @@ export interface FormMakerInterface {
       | "textarea"
       | "verification"
       | "file"
+      | "toggle"
       | "non-field";
     floating?: boolean;
     placeholder?: string;
@@ -52,6 +54,7 @@ export interface FormMakerInterface {
     iconClassName?: string;
     multiple?: boolean;
     toggleVisibility?: () => void;
+    onChange?: (checked: boolean) => void;
   }[];
   className?: string;
 }
@@ -85,7 +88,8 @@ export default function FormMaker({
           return <VerificationInput item={item} form={form} />;
         case "file":
           return <FileInput item={item} form={form} />;
-
+        case "toggle":
+          return <ToggleInput item={item} form={form} />;
         default:
           return null;
       }

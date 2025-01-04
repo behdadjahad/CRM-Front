@@ -13,6 +13,7 @@ export default function ServiceContainer({
   services,
   className,
   askQuestion = true,
+  children,
 }: ServiceContainerInterface) {
   const [activeItem, setActiveItem] = useState<any>(null);
 
@@ -29,8 +30,30 @@ export default function ServiceContainer({
             اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
           </p>
           <div className="flex gap-4">
-            <Checkbox />
-            <Checkbox />
+            <Checkbox
+              onClick={() => {
+                if (activeItem)
+                  setActiveItem({ ...activeItem, isSelected: true });
+              }}
+            />
+            <label
+              htmlFor=""
+              className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              بله
+            </label>
+
+            <Checkbox
+              onClick={() => {
+                setActiveItem(null);
+              }}
+            />
+            <label
+              htmlFor=""
+              className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              خیر
+            </label>
           </div>
         </div>
       )}
@@ -53,6 +76,8 @@ export default function ServiceContainer({
       </div>
 
       {activeItem && activeItem.children}
+
+      {children}
     </div>
   );
 }
