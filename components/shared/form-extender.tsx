@@ -1,18 +1,19 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import FormMaker, { FormMakerInterface } from './form-maker';
-import { useFormik } from 'formik';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import { Button } from '../ui/button';
-import { FaPlus } from 'react-icons/fa';
-import { debounce } from 'lodash';
+import React, { useState, useCallback, useEffect } from "react";
+import FormMaker, { FormMakerInterface } from "./form-maker";
+import { useFormik } from "formik";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { Button } from "../ui/button";
+import { FaPlus } from "react-icons/fa";
+import { debounce } from "lodash";
 
 export interface FormExtenderInterface {
-  fields: FormMakerInterface["fields"] | any;
+  fields: FormMakerInterface["fields"];
   initialValues: any;
   validationSchema: any;
   title: string;
   className?: string;
+  wrapperClassName?: string;
 }
 
 export default function FormExtender({
@@ -20,7 +21,8 @@ export default function FormExtender({
   fields,
   initialValues,
   validationSchema,
-  className
+  className,
+  wrapperClassName,
 }: FormExtenderInterface) {
   const [forms, setForms] = useState<{ id: string; values: any }[]>([
     { id: `${title}-0`, values: { ...initialValues } },
@@ -42,7 +44,9 @@ export default function FormExtender({
   const debouncedUpdate = useCallback(
     debounce((id: string, newValues: any) => {
       setForms((prevForms) =>
-        prevForms.map((form) => (form.id === id ? { ...form, values: newValues } : form))
+        prevForms.map((form) =>
+          form.id === id ? { ...form, values: newValues } : form
+        )
       );
     }, 300),
     []
@@ -53,25 +57,36 @@ export default function FormExtender({
   // }, [forms]);
 
   return (
-    <div className={cn("bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col justify-between items-end", className)}>
+    <div
+      className={cn(
+        "bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col justify-between items-end",
+        className
+      )}
+    >
       {forms.map((form, index) => (
-        <div className="w-full flex flex-col gap-5"
-          key={form.id}>
+        <div className="w-full flex flex-col gap-5" key={form.id}>
           <FormikWrapper
             id={form.id}
             values={form.values}
             validationSchema={validationSchema}
             fields={fields}
             updateValues={(newValues) => debouncedUpdate(form.id, newValues)}
-            removeForm={forms.length > 1 ? () => removeForm(form.id) : undefined}
+            removeForm={
+              forms.length > 1 ? () => removeForm(form.id) : undefined
+            }
             title={forms[0].id === form.id ? title : undefined}
+            className={wrapperClassName}
           />
 
-          {index != forms.length - 1 ? <div className="w-full h-[0.5px] bg-border/20"></div> : <></>}
+          {index != forms.length - 1 ? (
+            <div className="w-full h-[0.5px] bg-border/20"></div>
+          ) : (
+            <></>
+          )}
         </div>
       ))}
 
-      <Button variant={"transparent"} onClick={extendForm} className='mr-auto'>
+      <Button variant={"transparent"} onClick={extendForm} className="mr-auto">
         <FaPlus /> {title}
       </Button>
     </div>
@@ -86,6 +101,7 @@ interface FormikWrapperInterface {
   updateValues: (values: any) => void;
   removeForm?: () => void;
   title?: string;
+  className?: string;
 }
 
 function FormikWrapper({
@@ -96,6 +112,7 @@ function FormikWrapper({
   updateValues,
   removeForm,
   title,
+  className,
 }: FormikWrapperInterface) {
   const formik = useFormik({
     initialValues: values,
@@ -136,7 +153,7 @@ function FormikWrapper({
                 ]
               : [...fields]
           }
-          className={cn("w-full p-0 flex flex-row-reverse")}
+          className={cn("w-full p-0 flex flex-row-reverse", className)}
         />
       </div>
     </div>

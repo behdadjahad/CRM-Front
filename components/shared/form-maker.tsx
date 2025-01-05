@@ -12,6 +12,7 @@ import SliderInput from "./slider-input";
 import VerificationInput from "./verification-input";
 import FileInput from "./file-input";
 import ToggleInput from "./toggle-input";
+import FilePreview from "./file-preview";
 
 export interface OptionType {
   label: string;
@@ -33,6 +34,7 @@ export interface FormMakerInterface {
       | "verification"
       | "file"
       | "toggle"
+      | "file-preview"
       | "non-field";
     floating?: boolean;
     placeholder?: string;
@@ -40,6 +42,7 @@ export interface FormMakerInterface {
     hideSelect?: boolean;
     label?: string;
     key: string;
+    dependantKey?: string;
     type?: string;
     options?: OptionType[];
     className?: string;
@@ -90,6 +93,8 @@ export default function FormMaker({
           return <FileInput item={item} form={form} />;
         case "toggle":
           return <ToggleInput item={item} form={form} />;
+        case "file-preview":
+          return <FilePreview item={item} form={form} />;
         default:
           return null;
       }

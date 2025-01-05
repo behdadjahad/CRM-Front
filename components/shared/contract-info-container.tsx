@@ -7,8 +7,8 @@ export interface ContractInfoInterface {
 
 export default function ContractInfoContainer({ list }: ContractInfoInterface) {
   return (
-    <div className="bg-background-active min-h-fit overflow-hidden">
-      <div className=" opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">
+    <div className="bg-card min-h-fit rounded-bl-xl rounded-br-xl overflow-hidden">
+      <div className="opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">
         <div className="flex flex-col md:flex-row gap-8 flex-wrap justify-between w-full md:w-fit">
           {list.map((item, index) => (
             <div

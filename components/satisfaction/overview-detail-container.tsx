@@ -57,7 +57,7 @@ export default function OverviewDetailContainer({
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 items-end bg-background-active p-6 rounded-xl",
+        "flex flex-col gap-4 items-end bg-card p-6 rounded-xl",
         className
       )}
     >

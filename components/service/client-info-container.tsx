@@ -30,7 +30,7 @@ export default function ClientInfoContainer({
   const [category, setCategory] = useState("personal");
 
   return (
-    <div className="bg-background-active p-4 rounded-lg overflow-hidden flex flex-col gap-4">
+    <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
       <h2 className="text-foreground text-lg">اطلاعات مشتری</h2>
       <div className="flex flex-col gap-4">
         {clients.map((item, index) => (

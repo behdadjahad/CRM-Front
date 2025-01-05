@@ -29,20 +29,35 @@ import {
 } from "@/constants/extendable-fields";
 import { purchaseInfo, recorderInfo } from "@/constants/service-form-fields";
 import { useFormik } from "formik";
+import Breadcrumb from "@/components/shared/breadcrumb";
+import Title from "@/components/shared/title";
 
 export default function Service() {
-  const {
-    clientInfoProps,
-    contractServices,
-    expenses,
-    expert,
-    contractInfo,
-    flightForm,
-  } = getData();
+  const { clientInfoProps, contractServices, expenses, expert, contractInfo } =
+    getData();
   return (
     <main className="flex flex-col lg:flex-row">
-      <div className=" flex flex-col w-full lg:w-3/4">
-        <div className="rounded-lg">
+      <div className=" flex flex-col w-full lg:w-3/4 gap-4">
+        <div>
+          <Title label="ثبت سرویس هتل" />
+
+          <Breadcrumb
+            list={[
+              {
+                label: "داشبورد",
+                link: "/",
+              },
+              {
+                label: "درخواست های ثبت شده مشتری",
+                link: "/",
+              },
+              {
+                label: "سرویس",
+              },
+            ]}
+          />
+        </div>
+        <div className="flex flex-col gap-1 mt-12">
           <ExpertInfoContainer {...expert} />
           <ContractInfoContainer {...contractInfo} />
         </div>
@@ -263,6 +278,7 @@ function getData() {
       },
     },
   };
+
   const flightForm: ServiceFormInterface = {
     radioButton: [
       { label: "یک طرفه", value: "oneWayFlight" },
@@ -300,6 +316,7 @@ function getData() {
       },
     },
   };
+
   const visaForm: ServiceFormInterface = {
     formExtender: visaExtender,
 
@@ -318,6 +335,7 @@ function getData() {
       },
     },
   };
+
   const pickupForm: ServiceFormInterface = {
     radioButton: [
       { label: "یک طرفه", value: "oneWayPickup" },
@@ -340,6 +358,7 @@ function getData() {
       },
     },
   };
+
   const contractServices: ServiceContainerInterface = {
     services: [
       {

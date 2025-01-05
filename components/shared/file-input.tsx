@@ -1,5 +1,4 @@
-import React, { useRef, useState } from "react";
-import { FaFilePdf, FaTimes } from "react-icons/fa"; // PDF icon and remove icon (FaTimes) from React Icons
+import React, { useRef } from "react";
 import { FormMakerInterface } from "./form-maker";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -13,8 +12,6 @@ export default function FileInput({
   item: FormMakerInterface["fields"][0];
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previews, setPreviews] = useState<{ url: string; file: File }[]>([]);
-  const [files, setFiles] = useState<File[]>([]);
 
   // Trigger the file input when the button is clicked
   const handleButtonClick = () => {
@@ -39,17 +36,10 @@ export default function FileInput({
       })
       .filter((preview) => preview !== null) as { url: string; file: File }[]; // Remove any null entries and assert correct type
 
-    setPreviews((prevPreviews) => [...prevPreviews, ...updatedPreviews]); // Append new previews to existing ones
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]); // Store the actual files
-  };
-
-  // Handle file removal
-  const handleRemoveFile = (index: number) => {
-    const updatedPreviews = previews.filter((item, i) => i !== index);
-    const updatedFiles = files.filter((item, i) => i !== index);
-
-    setPreviews(updatedPreviews);
-    setFiles(updatedFiles);
+    form.setFieldValue(item.key, [
+      ...form.values["voucherFile"],
+      ...updatedPreviews,
+    ]);
   };
 
   return (
@@ -60,7 +50,7 @@ export default function FileInput({
           variant={"foreground"}
           onClick={handleButtonClick}
           className={cn(
-            "text-subtitle/80 text-sm h-11 w-full  outline-none p-3 rounded-lg text-right"
+            "text-subtitle/80 text-sm h-11 w-full  outline-none p-3 rounded-lg text-right flex items-center"
           )}
         >
           {item.icon && (
@@ -69,10 +59,10 @@ export default function FileInput({
               alt={"تصویر"}
               width={160}
               height={160}
-              className="h-5 w-6"
+              className="h-6 w-6"
             />
           )}
-          آپلود فایل
+          <span>آپلودفایل</span>
         </Button>
 
         {/* Hidden file input */}
@@ -84,42 +74,6 @@ export default function FileInput({
           accept="image/*,application/pdf" // Allow both images and PDFs
           multiple // Allow multiple file selection
         />
-      </div>
-      {/* Display selected files as previews */}
-      <div className="flex  flex-wrap gap-4 rounded-lg border-dashed border-gray-300 border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
-        {previews.map((preview, index) => (
-          <div
-            key={index}
-            className="relative bg-background  w-10 h-10 flex items-center justify-center rounded-full"
-          >
-            {/* Remove button */}
-            <Button
-              type="button"
-              onClick={() => handleRemoveFile(index)}
-              className="p-1 absolute -right-0.5 -top-0.5 z-20"
-            >
-              <FaTimes size={6} />
-            </Button>
-
-            {preview.file.type.startsWith("image/") ? (
-              // For images, show the image preview
-              <a href={preview.url} download={preview.file.name}>
-                <Image
-                  src={preview.url}
-                  alt={`Preview ${index}`}
-                  width={36}
-                  height={36}
-                  className="w-4.5 h-4.5 object-cover rounded border cursor-pointer"
-                />
-              </a>
-            ) : preview.file.type === "application/pdf" ? (
-              // For PDFs, show a PDF icon
-              <a href={preview.url} download={preview.file.name}>
-                <FaFilePdf size={18} color="red" className="cursor-pointer" />
-              </a>
-            ) : null}
-          </div>
-        ))}
       </div>
     </div>
   );

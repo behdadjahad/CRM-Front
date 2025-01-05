@@ -386,6 +386,12 @@ export const hotelInformationExtender: FormExtenderInterface[] = [
         type: "file",
         floating: true,
         icon: "/icons/upload.png",
+        className: "w-full md:w-1/3",
+      },
+      {
+        component: "file-preview",
+        key: "filePreview",
+        dependantKey: "voucherFile",
         className: "w-full",
       },
     ],

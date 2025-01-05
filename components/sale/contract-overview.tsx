@@ -13,7 +13,7 @@ export default function ContractOverview({ list, className }: ContractOverviewIn
   return (
     <div
       className={cn(
-        "bg-background-active grid grid-cols-1 md:grid-cols-3 shadow-[0px_12px_24px_-4px_#919EAB1F] gap-y-2 rounded-2xl p-4",
+        "bg-card grid grid-cols-1 md:grid-cols-3 shadow-[0px_12px_24px_-4px_#919EAB1F] gap-y-2 rounded-2xl p-4",
         className
       )}
     >

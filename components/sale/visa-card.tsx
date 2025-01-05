@@ -69,7 +69,7 @@ export default function VisaCard({ id, contract, footer, header, score, services
   return (
     <div
       className={cn(
-        "flex flex-col w-full bg-background-active rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F]",
+        "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F]",
         className
       )}
     >

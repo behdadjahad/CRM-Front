@@ -34,7 +34,7 @@ export default function Satisfaction() {
       </div>
 
       <div className="grid grid-cols-4 grid-rows-2 gap-6 w-full">
-        <div className="rounded-xl col-span-4 lg:col-span-1 p-6 bg-background-active items-center justify-center flex flex-col row-span-2 shadow-[0px_12px_24px_-4px_#919EAB1F]">
+        <div className="rounded-xl col-span-4 lg:col-span-1 p-6 bg-card items-center justify-center flex flex-col row-span-2 shadow-[0px_12px_24px_-4px_#919EAB1F]">
           <RatingChart value={score} color="#FFA500" height={200} />
           <span className="text-center relative -mt-2 text-sm">
             از مجموع {totalVotes} امتیاز

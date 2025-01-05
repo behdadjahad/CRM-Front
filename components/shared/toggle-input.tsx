@@ -12,7 +12,7 @@ export default function ToggleInput({
   const [isToggled, setIsToggled] = useState(false);
 
   return (
-    <label className="flex items-center space-x-3 cursor-pointer gap-2">
+    <div className="flex items-center justify-start cursor-pointer gap-4 w-full">
       <span className="text-gray-700">{item.label}</span>
       <input
         type="checkbox"
@@ -36,6 +36,6 @@ export default function ToggleInput({
           )}
         />
       </div>
-    </label>
+    </div>
   );
 }

@@ -22,13 +22,13 @@ export default function ServiceForm({
   const [category, setCategory] = useState(radioButton && radioButton[0].value);
 
   return (
-    <div className="w-full bg-background-active rounded-lg">
-      <div className="w-full py-6 px-4">
+    <div className="w-full bg-card rounded-lg">
+      <div className="w-full p-4">
         {radioButton && (
-          <div className="flex">
+          <div className="flex flex-row p-4">
             <RadioGroup
               defaultValue={radioButton[0].value}
-              className="flex flex-row-reverse gap-4"
+              className="flex flex-row-reverse gap-12 w-full"
             >
               {radioButton?.map((item) => (
                 <div key={item.label} className="flex items-center space-x-2">
@@ -43,15 +43,18 @@ export default function ServiceForm({
             </RadioGroup>
           </div>
         )}
+
         {formExtender?.map((item) => (
           <FormExtender
             key={item.title}
             title={item.title}
             fields={item.fields}
-            initialValues={undefined}
-            validationSchema={undefined}
+            initialValues={item.initialValues}
+            validationSchema={item.validationSchema}
+            wrapperClassName="flex-row flex-wrap"
           />
         ))}
+
         {purchaseForm && (
           <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
             <div className="px-2">{purchaseForm.title}</div>

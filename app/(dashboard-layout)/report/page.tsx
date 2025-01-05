@@ -32,21 +32,25 @@ export default function Report() {
           list={[
             {
               label: "داشبورد",
-              link: "/"
+              link: "/",
             },
             {
-              label: "گزارش"
-            }
+              label: "گزارش",
+            },
           ]}
         />
       </div>
 
-      <TimeFilter activeTime={activeTime} setActiveTime={setActiveTime} className="min-h-fit px-8" />
+      <TimeFilter
+        activeTime={activeTime}
+        setActiveTime={setActiveTime}
+        className="min-h-fit px-8"
+      />
 
       <ReportOverview overviews={overviews} className="px-8" />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-8">
-        <CallContracts contracts={contracts} className="bg-background-active" />
+        <CallContracts contracts={contracts} />
         <MonthReport {...monthReportData} className="lg:col-span-2" />
       </div>
 
@@ -57,9 +61,11 @@ export default function Report() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-8">
         <PieChartReport {...callFollowupsReport} />
-        <SatisfactionReport {...satisfactionReportData} className="lg:col-span-2" />
+        <SatisfactionReport
+          {...satisfactionReportData}
+          className="lg:col-span-2"
+        />
       </div>
-
     </main>
   );
 }

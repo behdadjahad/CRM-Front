@@ -11,17 +11,21 @@ export interface SatisfactionReportInterface {
 
 export default function SatisfactionReport({ successful, total, title, className }: SatisfactionReportInterface) {
   return (
-    <div className={cn("flex flex-col border rounded-lg w-full p-6 gap-6", className)}>
-      <span className="text-lg font-bold">
-        {title}
-      </span>
+    <div
+      className={cn(
+        "bg-card flex flex-col border rounded-lg w-full p-6 gap-6",
+        className
+      )}
+    >
+      <span className="text-lg font-bold">{title}</span>
 
       <ProgressBar
         label="رضایتمندی"
         value={successful}
         total={total}
         color="#00AB55"
-        backgroundColor="#00AB5533" />
+        backgroundColor="#00AB5533"
+      />
       <ProgressBar
         label="نارضایتی"
         value={total - successful}
@@ -30,5 +34,5 @@ export default function SatisfactionReport({ successful, total, title, className
         backgroundColor="#DB2E2E33"
       />
     </div>
-  )
+  );
 }

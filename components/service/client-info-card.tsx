@@ -72,7 +72,7 @@ export default function ClientInfoCard({
             {clientServices.map((item) => (
               <div
                 key={item.icon}
-                className="w-7 h-7 bg-background-active flex items-center justify-center"
+                className="w-7 h-7 bg-card flex items-center justify-center"
               >
                 <Image
                   src={item.icon}

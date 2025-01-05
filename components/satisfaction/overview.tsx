@@ -14,7 +14,7 @@ export default function Overview({ list, className }: OverviewInterface) {
   return (
     <div
       className={cn(
-        "rounded-xl p-6 bg-background-active shadow-[0px_12px_24px_-4px_#919EAB1F] w-full grid grid-cols-1 gap-y-5 md:grid-cols-2 items-center",
+        "rounded-xl p-6 bg-card shadow-[0px_12px_24px_-4px_#919EAB1F] w-full grid grid-cols-1 gap-y-5 md:grid-cols-2 items-center",
         className
       )}
     >

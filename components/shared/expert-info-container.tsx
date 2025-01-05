@@ -12,29 +12,25 @@ export interface ExpertInfoInterface {
 
 export default function ExpertInfoContainer({ list }: ExpertInfoInterface) {
   return (
-    <div className="bg-city   min-h-fit   rounded-xl">
-      <div className="bg-banner opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">
-        <div className="flex flex-col gap-12 items-center justify-between align-middle md:flex-row w-full md:w-fit">
-          {list.map((item, index) =>
-            item.children ? (
-              <div
-                key={index}
-                className="-translate-x-5 -translate-y-15 rounded-full overflow-hidden w-25 h-25"
-              >
-                {item.children}
-              </div>
-            ) : (
-              <div
-                key={item.label}
-                className="flex flex-row md:flex-col items-start gap-2.5 justify-between w-full md:w-fit"
-              >
-                <span className="text-sm font-normal">{item.label}</span>
-                <span className="font-bold text-sm">{item.value}</span>
-              </div>
-            )
-          )}
-        </div>
-      </div>
+    <div className="w-full bg-city bg-no-repeat bg-cover flex flex-col gap-4 md:gap-8 items-center  md:flex-row text-card rounded-tl-xl rounded-tr-xl min-h-30 px-6">
+      {list.map((item, index) =>
+        item.children ? (
+          <div
+            key={index}
+            className="-translate-y-10 md:-translate-y-10 rounded-full overflow-hidden w-25 h-25"
+          >
+            {item.children}
+          </div>
+        ) : (
+          <div
+            key={item.label}
+            className="flex flex-row md:flex-col items-start gap-2.5 justify-between w-full md:w-fit mx-8"
+          >
+            <span className="text-sm font-normal">{item.label}</span>
+            <span className="font-bold text-sm">{item.value}</span>
+          </div>
+        )
+      )}
     </div>
   );
 }

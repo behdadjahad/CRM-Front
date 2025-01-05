@@ -12,7 +12,7 @@ export default function SocialMedia({ className }: SocialMediaInterface) {
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row items-center justify-center w-full gap-x-8 gap-y-2 rounded-xl p-6 bg-background-active shadow-[0px_12px_24px_-4px_#919EAB1F]",
+        "flex flex-col md:flex-row items-center justify-center w-full gap-x-8 gap-y-2 rounded-xl p-6 bg-card shadow-[0px_12px_24px_-4px_#919EAB1F]",
         className
       )}
     >

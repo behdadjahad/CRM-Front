@@ -38,44 +38,64 @@ export default function TimeFilter({ activeTime, setActiveTime, className }: Tim
     },
   ]
   return (
-    <div className={cn('w-full flex flex-row flex-nowrap overflow-auto gap-3', className)}>
-      {
-        filters.map(item => (
-          <Button key={item.label}
-            variant={activeTime == item.value ? "default" : "primary-foreground"}
-            onClick={() => setActiveTime(item.value)}
-            className='flex-1'>
-            {item.label}
-          </Button>
-        ))
-      }
-
-      <CustomeDatePicker idKey={"startDate"} className='flex-1'>
+    <div
+      className={cn(
+        "w-full flex flex-row flex-nowrap overflow-auto gap-3",
+        className
+      )}
+    >
+      {filters.map((item) => (
         <Button
-          variant={activeTime['startDate'] ? "default" : "primary-foreground"}
-          onClick={() => setActiveTime((prev: any) => prev.endDate ? { ...prev, startDate: true } : { startDate: true })}
-          className='flex flex-row gap-1 w-full'>
-          <span>
-            از تاریخ
-          </span>
+          key={item.label}
+          variant={activeTime == item.value ? "default" : "primary-foreground"}
+          onClick={() => setActiveTime(item.value)}
+          className="flex-1 px-5 py-1 md:px-10 md:py-2"
+        >
+          {item.label}
+        </Button>
+      ))}
 
-          <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
+      <CustomeDatePicker idKey={"startDate"} className="flex-1">
+        <Button
+          variant={activeTime["startDate"] ? "default" : "primary-foreground"}
+          onClick={() =>
+            setActiveTime((prev: any) =>
+              prev.endDate ? { ...prev, startDate: true } : { startDate: true }
+            )
+          }
+          className="flex flex-row gap-1 w-full px-5 py-1 md:px-10 md:py-2"
+        >
+          <span>از تاریخ</span>
+
+          <Image
+            src={"/icons/calendar.png"}
+            alt="pick date"
+            width={12}
+            height={12}
+          />
         </Button>
       </CustomeDatePicker>
 
-      <CustomeDatePicker idKey={"endDate"} className='flex-1'>
+      <CustomeDatePicker idKey={"endDate"} className="flex-1">
         <Button
-          variant={activeTime['endDate'] ? "default" : "primary-foreground"}
-          onClick={() => setActiveTime((prev: any) => prev.startDate ? { ...prev, endDate: true } : { endDate: true })}
-          className='flex flex-row gap-1 w-full'>
-          <span>
-            تا تاریخ
-          </span>
+          variant={activeTime["endDate"] ? "default" : "primary-foreground"}
+          onClick={() =>
+            setActiveTime((prev: any) =>
+              prev.startDate ? { ...prev, endDate: true } : { endDate: true }
+            )
+          }
+          className="flex flex-row gap-1 w-full px-5 py-1 md:px-10 md:py-2"
+        >
+          <span>تا تاریخ</span>
 
-          <Image src={'/icons/calendar.png'} alt="pick date" width={12} height={12} />
+          <Image
+            src={"/icons/calendar.png"}
+            alt="pick date"
+            width={12}
+            height={12}
+          />
         </Button>
       </CustomeDatePicker>
-
     </div>
-  )
+  );
 }

@@ -38,8 +38,8 @@ export default function EditableContainer({
   });
 
   return (
-    <div className="bg-city bg-full rounded-xl overflow-hidden min-h-fit w-full">
-      <div className="bg-banner w-full opacity-90 p-6 md:p-8 text-primary-foreground flex flex-col lg:flex-row justify-between items-center">
+    <>
+      <div className="w-full bg-city bg-cover rounded-xl p-6 md:p-8 text-primary-foreground flex flex-col lg:flex-row justify-between items-center">
         <div className="flex flex-col lg:flex-row gap-8 w-full">
           {list.map((item, index) => (
             <div
@@ -160,6 +160,6 @@ export default function EditableContainer({
           </div>
         </div>
       </CustomModal>
-    </div>
+    </>
   );
 }

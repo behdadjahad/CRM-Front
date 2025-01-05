@@ -20,20 +20,19 @@ export default function ServiceContainer({
   return (
     <div
       className={cn(
-        "flex flex-col items-end p-6 rounded-xl justify-between gap-8 bg-background-active",
+        "flex flex-col items-end p-6 rounded-xl justify-between gap-8 bg-card",
         className
       )}
     >
       {activeItem && askQuestion && (
-        <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
+        <div className="flex justify-between w-full p-4 bg-card rounded-lg overflow-hidden">
           <p className="text-negative text-xs font-bold">
             اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
           </p>
           <div className="flex gap-4">
             <Checkbox
               onClick={() => {
-                if (activeItem)
-                  setActiveItem({ ...activeItem, isSelected: true });
+                setActiveItem({ ...activeItem, isSelected: true });
               }}
             />
             <label
