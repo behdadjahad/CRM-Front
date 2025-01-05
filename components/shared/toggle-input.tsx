@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FormMakerInterface } from "./form-maker";
 import { cn } from "@/lib/utils";
 
@@ -9,29 +9,25 @@ export default function ToggleInput({
   form: any;
   item: FormMakerInterface["fields"][0];
 }) {
-  const [isToggled, setIsToggled] = useState(false);
-
   return (
     <div className="flex items-center justify-start cursor-pointer gap-4 w-full">
-      <span className="text-gray-700">{item.label}</span>
-      <input
-        type="checkbox"
-        checked={isToggled}
-        onChange={() => setIsToggled(!isToggled)}
-        className="sr-only peer"
-      />
+      <span className="text-subtitle">{item.label}</span>
 
       <div
-        className={cn("w-10 h-5 bg-gray-300 rounded-full relative", {
-          "transition duration-300 bg-blue-600": isToggled,
-        })}
+        className={cn(
+          "w-10 h-5 transition-all duration-200 bg-subtitle rounded-full relative",
+          {
+            "bg-primary": form.values[item.key],
+          }
+        )}
+        onClick={() => form.setFieldValue(item.key, !form.values[item.key])}
       >
         <div
           className={cn(
-            "absolute w-6 h-6 bg-white rounded-full -top-0.5  shadow-md  transition duration-300",
+            "absolute w-6 h-6 bg-background-active rounded-full -top-0.5 shadow-md transition-all duration-200",
             {
-              "-right-0.5": isToggled,
-              "-left-0.5": !isToggled,
+              "-right-0.5": form.values[item.key],
+              "-left-0.5": !form.values[item.key],
             }
           )}
         />
