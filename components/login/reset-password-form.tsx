@@ -1,10 +1,9 @@
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
-import { useState } from "react";
 import { resetPassword } from "@/api/auth";
 import { StageInterface } from "@/types/globals";
 
-export default function RenewPasswordForm({
+export default function ResetPasswordForm({
   stageHandler,
   formik,
 }: StageInterface) {
@@ -43,16 +42,16 @@ export default function RenewPasswordForm({
             floating: true,
             className: "m-0 w-full",
           },
-        ]}
-        className="flex flex-col w-full"
-      />
-      <p className="text-center text-base text-tertiary-background">
-        لطفا رمز عبور جدید خودرا مجددا وارد کنید
-      </p>
-
-      <FormMaker
-        form={formik}
-        fields={[
+          {
+            key: "info",
+            component: "non-field",
+            children: (
+              <p className="text-center text-base text-tertiary-background">
+                "لطفا رمز عبور جدید خودرا مجددا وارد کنید"
+              </p>
+            ),
+            className: "w-full",
+          },
           {
             key: "retypeResetPassword",
             component: "input",
