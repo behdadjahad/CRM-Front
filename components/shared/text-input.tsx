@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormMakerInterface } from "./form-maker";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -11,6 +11,12 @@ export default function TextInput({
   form: any;
   item: FormMakerInterface["fields"][0];
 }) {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
+
   return (
     <div
       className={cn("relative w-full", { "input-container": item.floating })}
@@ -19,7 +25,7 @@ export default function TextInput({
         key={item.key}
         placeholder={item.floating ? " " : item.placeholder}
         value={form.values[item.key]}
-        type={item.type}
+        type={passwordVisible ? "text" : item.type}
         multiple={true}
         onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
@@ -51,13 +57,13 @@ export default function TextInput({
       ) : (
         <></>
       )}
-      {item.passwordIcon ? (
+      {item.type == "password" ? (
         <Button
           className="p-0 bg-transparent border-none cursor-pointer absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary-background hover:text-subtitle outline-none w-10 h-7"
-          onClick={item.toggleVisibility}
+          onClick={toggleVisibility}
         >
           <Image
-            src={item.passwordIcon}
+            src={passwordVisible ? "/images/x-eye.png" : "/images/eye.png"}
             alt={item.key}
             width={40}
             height={40}

@@ -8,12 +8,6 @@ export default function RenewPasswordForm({
   stageHandler,
   formik,
 }: StageInterface) {
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
-  const toggleVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-
   function resetPasswordHandler() {
     if (
       formik.values["resetPassword"] === formik.values["retypeResetPassword"]
@@ -45,13 +39,9 @@ export default function RenewPasswordForm({
             key: "resetPassword",
             component: "input",
             placeholder: "رمزعبور",
-            type: passwordVisible ? "text" : "password",
+            type: "password",
             floating: true,
-            passwordIcon: passwordVisible
-              ? "/images/x-eye.png"
-              : "/images/eye.png",
             className: "m-0 w-full",
-            toggleVisibility: toggleVisibility,
           },
         ]}
         className="flex flex-col w-full"
@@ -67,13 +57,9 @@ export default function RenewPasswordForm({
             key: "retypeResetPassword",
             component: "input",
             placeholder: "رمزعبور",
-            type: passwordVisible ? "text" : "password",
+            type: "password",
             floating: true,
-            passwordIcon: passwordVisible
-              ? "/images/x-eye.png"
-              : "/images/eye.png",
             className: "m-0 w-full",
-            toggleVisibility: toggleVisibility,
           },
         ]}
         className="flex flex-col w-full"

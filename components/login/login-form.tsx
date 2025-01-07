@@ -1,20 +1,43 @@
+"use client";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
-import { useState } from "react";
 import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { REQUIRED_TEXT } from "@/lib/utils";
 
-export default function LoginForm({ formik }: any) {
+export default function LoginForm() {
   const router = useRouter();
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
-  const toggleVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      resetEmail: "",
+      verification: Array(6).fill(""),
+      resetPassword: "",
+      retypeResetPassword: "",
+    },
+    validationSchema: Yup.object().shape({
+      email: Yup.string().required(REQUIRED_TEXT),
+      password: Yup.string().required(REQUIRED_TEXT),
+      resetEmail: Yup.string().required(REQUIRED_TEXT),
+      resetPassword: Yup.string().required(REQUIRED_TEXT),
+      retypeResetPassword: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: async () => {},
+  });
 
   async function loginHandler() {
+    const isValid = await formik.validateForm();
+    if (!isValid) {
+      // toast
+      return;
+    }
+
     const result = await login({
       usernameOrUniqueId: formik.values["email"],
       password: formik.values["password"],
@@ -33,6 +56,7 @@ export default function LoginForm({ formik }: any) {
       <h1 className="text-center text-2.5xl md:text-3xl font-primary-bold leading-9 text-tertiary">
         ورود به حساب
       </h1>
+
       <p className="text-center text-base text-tertiary-background">
         مشخصات خود را وارد کنید
       </p>
@@ -52,13 +76,9 @@ export default function LoginForm({ formik }: any) {
             key: "password",
             component: "input",
             placeholder: "رمزعبور",
-            type: passwordVisible ? "text" : "password",
+            type: "password",
             floating: true,
-            passwordIcon: passwordVisible
-              ? "/images/x-eye.png"
-              : "/images/eye.png",
             className: "m-0 w-full",
-            toggleVisibility: toggleVisibility,
           },
         ]}
         className="flex flex-col w-full"

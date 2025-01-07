@@ -48,7 +48,6 @@ export interface FormMakerInterface {
     className?: string;
     style?: any;
     icon?: string;
-    passwordIcon?: string;
     defaultValue?: string | null;
     children?: React.ReactNode;
     range?: { min: number; max: number; step: number };
