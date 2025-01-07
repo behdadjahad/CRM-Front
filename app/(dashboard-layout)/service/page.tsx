@@ -87,7 +87,7 @@ function getData() {
             alt={"تصویر"}
             width={107}
             height={107}
-            className="h-full w-full"
+            className="h-full w-full border-4 border-primary-foreground rounded-full"
           />
         ),
       },
@@ -123,10 +123,6 @@ function getData() {
       {
         label: "شماره قرارداد",
         value: "7042851799",
-      },
-      {
-        label: "موضوع قرارداد",
-        value: "تور داخلی",
       },
       {
         label: "موضوع قرارداد",
@@ -170,11 +166,11 @@ function getData() {
         ],
         action: [
           {
-            icon: { src: "/icons/edit-primary.png", width: 16, height: 16 },
+            icon: { src: "/icons/trash.png", className: "w-5.5 h-5.5" },
             click: () => console.log("clicked"),
           },
           {
-            icon: { src: "/icons/trash.png", width: 20, height: 20 },
+            icon: { src: "/icons/edit-primary.png", className: "w-4 h-4" },
             click: () => console.log("clicked"),
           },
         ],
@@ -218,17 +214,15 @@ function getData() {
         action: [
           {
             icon: {
-              src: "/icons/edit-primary.png",
-              width: 16,
-              height: 16,
+              src: "/icons/trash.png",
+              className: "w-5.5 h-5.5",
             },
             click: () => console.log("clicked"),
           },
           {
             icon: {
-              src: "/icons/trash.png",
-              width: 20,
-              height: 20,
+              src: "/icons/edit-primary.png",
+              className: "w-4 h-4",
             },
             click: () => console.log("clicked"),
           },
@@ -454,7 +448,7 @@ function getData() {
         activeImage: "/images/services/success/success-nature.png",
       },
       {
-        image: "",
+        image: "/images/services/more.png",
         title: "...",
         isSelected: false,
         selectedImage: "",

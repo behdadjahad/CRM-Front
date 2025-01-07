@@ -14,8 +14,7 @@ export interface ClientInfoCardInterface {
     label?: string;
     icon: {
       src: string;
-      width: number;
-      height: number;
+      className?: string;
     };
     click: () => any;
   }[];
@@ -50,7 +49,7 @@ export default function ClientInfoCard({
           ))}
         </div>
 
-        <div className="w-1/5">
+        <div className="w-1/5 flex flex-col gap-2">
           <div className="flex items-center justify-center gap-0.5">
             {action.map((item) => (
               <Button
@@ -61,9 +60,9 @@ export default function ClientInfoCard({
                 <Image
                   src={item.icon.src}
                   alt=""
-                  width={item.icon.width}
-                  height={item.icon.height}
-                  className="object-cover"
+                  width={1024}
+                  height={1024}
+                  className={cn("object-cover", item.icon.className)}
                 />
               </Button>
             ))}
@@ -72,7 +71,7 @@ export default function ClientInfoCard({
             {clientServices.map((item) => (
               <div
                 key={item.icon}
-                className="w-7 h-7 bg-card flex items-center justify-center"
+                className="w-7 h-7 bg-background-active flex items-center justify-center"
               >
                 <Image
                   src={item.icon}

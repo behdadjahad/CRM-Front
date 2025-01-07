@@ -1,54 +1,92 @@
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
-import Link from "next/link";
-import { StageInterface } from "@/app/(login-layout)/login/page";
+import { useState } from "react";
+import { resetPassword } from "@/api/auth";
+import { StageInterface } from "@/types/globals";
 
-export default function ResetPasswordForm({
+export default function RenewPasswordForm({
   stageHandler,
   formik,
 }: StageInterface) {
-  function resetHandler() {
-    stageHandler("verification");
-    console.log(formik.values);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+
+  const toggleVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  function resetPasswordHandler() {
+    if (
+      formik.values["resetPassword"] === formik.values["retypeResetPassword"]
+    ) {
+      alert("true");
+      resetPassword({
+        resetCode: formik.values["verification"].join(""),
+        identifier: formik.values["resetEmail"],
+        resetPassword: formik.values["resetPassword"],
+      });
+    } else {
+      alert("false");
+    }
   }
+
   return (
-    <div className="w-full flex flex-col gap-4 items-center">
+    <div className="flex flex-col gap-4 w-full">
       <h1 className="text-center text-2.5xl md:text-3xl font-primary-bold leading-9 text-tertiary">
-        بازیابی رمز عبور
+        انتخاب رمزعبور
       </h1>
       <p className="text-center text-base text-tertiary-background">
-        برای دریافت کد لطفا شماره همراه یا ایمیل خود را وارد کنید
+        لطفا رمز عبور جدید خودراوارد کنید
       </p>
 
       <FormMaker
         form={formik}
         fields={[
           {
-            key: "resetEmail",
+            key: "resetPassword",
             component: "input",
-            placeholder: "ایمیل یا شماره همراه",
-            type: "email",
+            placeholder: "رمزعبور",
+            type: passwordVisible ? "text" : "password",
             floating: true,
-            className: "w-full",
+            passwordIcon: passwordVisible
+              ? "/images/x-eye.png"
+              : "/images/eye.png",
+            className: "m-0 w-full",
+            toggleVisibility: toggleVisibility,
           },
         ]}
-        className="flex flex-col w-full mt-8"
+        className="flex flex-col w-full"
       />
+      <p className="text-center text-base text-tertiary-background">
+        لطفا رمز عبور جدید خودرا مجددا وارد کنید
+      </p>
+
+      <FormMaker
+        form={formik}
+        fields={[
+          {
+            key: "retypeResetPassword",
+            component: "input",
+            placeholder: "رمزعبور",
+            type: passwordVisible ? "text" : "password",
+            floating: true,
+            passwordIcon: passwordVisible
+              ? "/images/x-eye.png"
+              : "/images/eye.png",
+            className: "m-0 w-full",
+            toggleVisibility: toggleVisibility,
+          },
+        ]}
+        className="flex flex-col w-full"
+      />
+
       <Button
         type="submit"
         variant={"foreground"}
-        className="bg-quartiery-background m-2 w-full text-tertiary-foreground"
-        onClick={resetHandler}
+        className="bg-quartiery-background m-2 text-tertiary-foreground"
+        onClick={resetPasswordHandler}
       >
-        ارسال کد تایید
+        ورود
       </Button>
-      <Link
-        href="/login"
-        className="text-center text-tertiary-foreground text-sm"
-        legacyBehavior
-      >
-        بازگشت
-      </Link>
     </div>
   );
 }

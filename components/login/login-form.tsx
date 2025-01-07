@@ -3,17 +3,29 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import Link from "next/link";
 import { useState } from "react";
-import { StageInterface } from "@/app/(login-layout)/login/page";
+import { login } from "@/api/auth";
+import { useRouter } from "next/navigation";
 
-export default function LoginForm({ formik }: StageInterface) {
+export default function LoginForm({ formik }: any) {
+  const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const toggleVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
 
-  function loginHandler() {
-    console.log(formik.values);
+  async function loginHandler() {
+    const result = await login({
+      usernameOrUniqueId: formik.values["email"],
+      password: formik.values["password"],
+    });
+
+    if (result.success) {
+      router.push("/sale");
+      localStorage.setItem("token", result.data.accessToken);
+    } else {
+      // toast
+    }
   }
 
   return (

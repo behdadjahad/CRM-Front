@@ -1,7 +1,7 @@
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { StageInterface } from "@/app/(login-layout)/login/page";
+import { StageInterface } from "@/types/globals";
 import { useState, useEffect } from "react";
 
 export default function VerificationForm({
@@ -28,6 +28,7 @@ export default function VerificationForm({
   const seconds = count % 60;
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   function verificationHandler() {
+    stageHandler("user-reset-password");
     console.log(formik.values);
   }
 
@@ -75,7 +76,7 @@ export default function VerificationForm({
       >
         <a
           onClick={() => {
-            stageHandler("reset");
+            stageHandler("user-recovery");
           }}
         >
           بازگشت

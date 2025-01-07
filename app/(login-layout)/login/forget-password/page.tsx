@@ -1,5 +1,5 @@
 "use client";
-import ResetPasswordForm from "@/components/login/reset-password-form";
+
 import VerificationForm from "@/components/login/verificartion-form";
 import Logo from "@/components/shared/logo";
 import { useReducer } from "react";
@@ -7,18 +7,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import OrganizationInformation from "@/components/login/organization-information";
 import { REQUIRED_TEXT } from "@/lib/utils";
+import UserRecoveryForm from "@/components/login/user-recovery-form";
+import ResetPasswordForm from "@/components/login/reset-password-form";
+import { StageAction, StageInterface } from "@/types/globals";
 
-type StageAction = {
-  type: "enter" | "reset" | "verification";
-};
-
-export interface StageInterface {
-  stage: StageAction["type"];
-  stageHandler: (type: StageAction["type"]) => any;
-  formik: any;
-}
-
-function stageReducer(
+export function stageReducer(
   state: StageInterface,
   action: StageAction
 ): StageInterface {
@@ -28,25 +21,30 @@ function stageReducer(
         ...state,
         stage: "enter",
       };
-    case "reset":
+    case "user-recovery":
       return {
         ...state,
-        stage: "reset",
+        stage: "user-recovery",
       };
 
-    case "verification":
+    case "user-verification":
       return {
         ...state,
-        stage: "verification",
+        stage: "user-verification",
+      };
+    case "user-reset-password":
+      return {
+        ...state,
+        stage: "user-reset-password",
       };
   }
 }
 
-export default function Login() {
+export default function ForgetPassword() {
   const initialState: StageInterface = {
-    formik: {},
-    stage: "reset",
+    stage: "user-recovery",
     stageHandler: () => {},
+    formik: {},
   };
 
   const formik = useFormik({
@@ -66,6 +64,7 @@ export default function Login() {
   const [state, dispatch] = useReducer<
     React.Reducer<StageInterface, StageAction>
   >(stageReducer, initialState);
+
   function stageHandler(type: StageAction["type"]) {
     dispatch({ type: type });
   }
@@ -78,16 +77,23 @@ export default function Login() {
           className="object-contain w-24 h-24 mb-2"
         />
 
-        {state.stage == "reset" && (
-          <ResetPasswordForm
+        {state.stage == "user-recovery" && (
+          <UserRecoveryForm
             {...initialState}
             stageHandler={stageHandler}
             formik={formik}
           />
         )}
 
-        {state.stage == "verification" && (
+        {state.stage == "user-verification" && (
           <VerificationForm
+            {...initialState}
+            stageHandler={stageHandler}
+            formik={formik}
+          />
+        )}
+        {state.stage == "user-reset-password" && (
+          <ResetPasswordForm
             {...initialState}
             stageHandler={stageHandler}
             formik={formik}

@@ -24,8 +24,8 @@ export default function ContractExpenseCard({
           <Image
             src={icon}
             alt={title}
-            width={12}
-            height={12}
+            width={1024}
+            height={1024}
             className="w-3.5 h-3"
           />
         </div>

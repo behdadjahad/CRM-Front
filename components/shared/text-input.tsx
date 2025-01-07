@@ -53,9 +53,7 @@ export default function TextInput({
       )}
       {item.passwordIcon ? (
         <Button
-          className="p-0 bg-transparent border-none cursor-pointer 
-          absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary-background
-           hover:text-gray-700 outline-none w-10 h-7"
+          className="p-0 bg-transparent border-none cursor-pointer absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary-background hover:text-subtitle outline-none w-10 h-7"
           onClick={item.toggleVisibility}
         >
           <Image

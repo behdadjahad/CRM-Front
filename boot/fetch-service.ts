@@ -24,7 +24,8 @@ export async function fetchService(
     body = null,
     additionalHeaders = {},
     additionalOptions = {},
-  }: FetchServiceType = {}
+  }: FetchServiceType = {},
+  version = "api/v1"
 ) {
   const headers = makeHeaders(additionalHeaders);
   const options: any = {
@@ -37,7 +38,10 @@ export async function fetchService(
     options.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`${config.ServerAddress}/${url}`, options);
+  const response = await fetch(
+    `${config.ServerAddress}/${version}/${url}`,
+    options
+  );
   const data = await response.json();
 
   if (data.error) {

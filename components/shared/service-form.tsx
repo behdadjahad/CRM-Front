@@ -25,10 +25,10 @@ export default function ServiceForm({
     <div className="w-full bg-card rounded-lg">
       <div className="w-full p-4">
         {radioButton && (
-          <div className="flex flex-row p-4">
+          <div className="flex flex-row text-xs md:text-sm md:p-4 md:gap-4 font-foreground">
             <RadioGroup
               defaultValue={radioButton[0].value}
-              className="flex flex-row-reverse gap-12 w-full"
+              className="flex flex-row-reverse w-full"
             >
               {radioButton?.map((item) => (
                 <div key={item.label} className="flex items-center space-x-2">
@@ -54,19 +54,24 @@ export default function ServiceForm({
             wrapperClassName="flex-row flex-wrap"
           />
         ))}
-
-        {purchaseForm && (
-          <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
-            <div className="px-2">{purchaseForm.title}</div>
-            <FormMaker {...purchaseForm.formDetail} />
-          </div>
-        )}
-        {recordForm && (
-          <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
-            <div className="px-2">{recordForm.title}</div>
-            <FormMaker {...recordForm.formDetail} />
-          </div>
-        )}
+        <div className="flex flex-col gap-4">
+          {purchaseForm && (
+            <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
+              <div className="px-2 font-foreground font-semibold">
+                {purchaseForm.title}
+              </div>
+              <FormMaker {...purchaseForm.formDetail} />
+            </div>
+          )}
+          {recordForm && (
+            <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
+              <div className="px-2 font-foreground font-semibold">
+                {recordForm.title}
+              </div>
+              <FormMaker {...recordForm.formDetail} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
