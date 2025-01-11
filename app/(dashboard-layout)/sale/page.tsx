@@ -1,13 +1,26 @@
-
-import CardContainer, { CardContainerInterface } from "@/components/sale/card-container";
+"use client";
+import { getServices } from "@/api/contract";
+import CardContainer, {
+  CardContainerInterface,
+} from "@/components/sale/card-container";
 import ContractCreation from "@/components/sale/contract-creation";
-import ContractOverview, { ContractOverviewInterface } from "@/components/sale/contract-overview";
+import ContractOverview, {
+  ContractOverviewInterface,
+} from "@/components/sale/contract-overview";
 import Filter from "@/components/sale/filter";
 import Breadcrumb from "@/components/shared/breadcrumb";
+import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
 export default function Sale() {
-  const { contractOverviewProps, requestCount, visaContainerList } = getData();
+  const {
+    contractOverviewProps,
+    requestCount,
+    visaContainerList,
+    formServices,
+  } = getData();
 
   return (
     <main>
@@ -28,7 +41,7 @@ export default function Sale() {
           />
         </div>
 
-        <ContractCreation />
+        <ContractCreation formServices={formServices} />
       </div>
 
       <ContractOverview {...contractOverviewProps} />
@@ -49,6 +62,23 @@ export default function Sale() {
 }
 
 function getData() {
+  const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+
+  const { data } = useQuery({
+    queryKey: ["serviceQuery"],
+    queryFn: () => getServices(),
+  });
+
+  useEffect(() => {
+    if (data?.success && data?.data)
+      setFormServices(
+        data.data.map((item) => ({
+          image: item.iconFile,
+          title: item.name,
+        }))
+      );
+  }, [data]);
+
   const contractOverviewProps: ContractOverviewInterface = {
     list: [
       {
@@ -126,5 +156,6 @@ function getData() {
     requestCount: 273,
     contractOverviewProps,
     visaContainerList,
+    formServices,
   };
 }

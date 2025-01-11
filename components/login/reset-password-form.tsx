@@ -1,3 +1,4 @@
+import Link from "next/link";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { resetPassword } from "@/api/auth";
@@ -13,9 +14,9 @@ export default function ResetPasswordForm({
     ) {
       alert("true");
       resetPassword({
-        resetCode: formik.values["verification"].join(""),
+        resetCode: Number(formik.values["verification"].join("")),
         identifier: formik.values["resetEmail"],
-        resetPassword: formik.values["resetPassword"],
+        newPassword: formik.values["resetPassword"].toString(),
       });
     } else {
       alert("false");
@@ -27,13 +28,20 @@ export default function ResetPasswordForm({
       <h1 className="text-center text-2.5xl md:text-3xl font-primary-bold leading-9 text-tertiary">
         انتخاب رمزعبور
       </h1>
-      <p className="text-center text-base text-tertiary-background">
-        لطفا رمز عبور جدید خودراوارد کنید
-      </p>
 
       <FormMaker
         form={formik}
         fields={[
+          {
+            key: "info",
+            component: "non-field",
+            children: (
+              <p className=" text-base text-tertiary-background w-full">
+                لطفا رمز عبور جدید خودرا وارد کنید
+              </p>
+            ),
+            className: "w-full text-right",
+          },
           {
             key: "resetPassword",
             component: "input",
@@ -46,11 +54,11 @@ export default function ResetPasswordForm({
             key: "info",
             component: "non-field",
             children: (
-              <p className="text-center text-base text-tertiary-background">
-                "لطفا رمز عبور جدید خودرا مجددا وارد کنید"
+              <p className=" text-base text-tertiary-background w-full">
+                لطفا رمز عبور جدید خودرا مجددا وارد کنید
               </p>
             ),
-            className: "w-full",
+            className: "w-full text-right",
           },
           {
             key: "retypeResetPassword",
@@ -72,6 +80,19 @@ export default function ResetPasswordForm({
       >
         ورود
       </Button>
+      <Link
+        href=""
+        className="text-center text-tertiary-foreground text-sm"
+        legacyBehavior
+      >
+        <a
+          onClick={() => {
+            stageHandler("user-verification");
+          }}
+        >
+          بازگشت
+        </a>
+      </Link>
     </div>
   );
 }

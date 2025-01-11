@@ -7,26 +7,21 @@ import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { REQUIRED_TEXT } from "@/lib/utils";
+import { cn, REQUIRED_TEXT } from "@/lib/utils";
+import { useState } from "react";
 
 export default function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
-      resetEmail: "",
-      verification: Array(6).fill(""),
-      resetPassword: "",
-      retypeResetPassword: "",
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required(REQUIRED_TEXT),
       password: Yup.string().required(REQUIRED_TEXT),
-      resetEmail: Yup.string().required(REQUIRED_TEXT),
-      resetPassword: Yup.string().required(REQUIRED_TEXT),
-      retypeResetPassword: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: async () => {},
   });
@@ -37,7 +32,7 @@ export default function LoginForm() {
       // toast
       return;
     }
-
+    setIsLoading(true);
     const result = await login({
       usernameOrUniqueId: formik.values["email"],
       password: formik.values["password"],
@@ -49,6 +44,7 @@ export default function LoginForm() {
     } else {
       // toast
     }
+    setIsLoading(false);
   }
 
   return (
@@ -99,7 +95,10 @@ export default function LoginForm() {
       <Button
         type="submit"
         variant={"foreground"}
-        className="bg-quartiery-background m-2 text-tertiary-foreground"
+        disabled={isLoading}
+        className={cn("bg-quartiery-background m-2 text-tertiary-foreground", {
+          "opacity-50 cursor-not-allowed": isLoading,
+        })}
         onClick={loginHandler}
       >
         ورود

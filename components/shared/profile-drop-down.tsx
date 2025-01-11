@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,6 +8,10 @@ import {
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { fetchUserData } from "@/store/user-slice";
 
 export interface ProfileDropDownInterface {
   name: string;
@@ -18,6 +24,14 @@ export default function ProfileDropDown({
   name,
   className,
 }: ProfileDropDownInterface) {
+  const userData = useSelector((state: RootState) => state.user);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserData() as any), [userData, dispatch];
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -35,7 +49,7 @@ export default function ProfileDropDown({
             className="shadow-[0px_4px_4px_0px_#00000040] rounded-full"
           />
 
-          <span className="text-xs">{name}</span>
+          <span className="text-xs">{userData.fullName}</span>
         </div>
 
         <ChevronDown size={16} />

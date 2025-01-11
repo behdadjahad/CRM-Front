@@ -64,7 +64,7 @@ export const services: ServiceCardInterface[] = [
   },
 ];
 
-export const formServinces: ServiceCardInterface[] = [
+export const formServices: ServiceCardInterface[] = [
   {
     image: "/images/services/visa.png",
     title: "ویزا",

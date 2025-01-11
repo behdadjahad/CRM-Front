@@ -49,14 +49,15 @@ export default function ForgetPassword() {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
       resetEmail: "",
       verification: Array(6).fill(""),
+      resetPassword: "",
+      retypeResetPassword: "",
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required(REQUIRED_TEXT),
-      password: Yup.string().required(REQUIRED_TEXT),
+      resetEmail: Yup.string().required(REQUIRED_TEXT),
+      resetPassword: Yup.string().required(REQUIRED_TEXT),
+      retypeResetPassword: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
   });

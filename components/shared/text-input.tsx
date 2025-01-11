@@ -24,7 +24,7 @@ export default function TextInput({
       <input
         key={item.key}
         placeholder={item.floating ? " " : item.placeholder}
-        value={form.values[item.key]}
+        value={item.defaultValue ? item.defaultValue : form.values[item.key]}
         type={passwordVisible ? "text" : item.type}
         multiple={true}
         onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
@@ -38,6 +38,7 @@ export default function TextInput({
             "pr-9": item.icon,
           }
         )}
+        readOnly={item.readonly}
       />
 
       {item.floating ? (

@@ -45,8 +45,8 @@ export async function resetPassword(
 
 export interface resetPasswordInput {
   identifier: string;
-  resetCode: string;
-  resetPassword: string;
+  resetCode: number;
+  newPassword: string;
 }
 
 export interface resetPasswordOutput {}
