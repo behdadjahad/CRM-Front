@@ -1,4 +1,5 @@
 import { fetchService } from "@/boot/fetch-service";
+import { UserData } from "@/store/user-slice";
 
 export async function login(data: LoginInput): Promise<LoginOutput> {
   try {
@@ -28,9 +29,7 @@ export async function forgetPassword(
   }
 }
 
-export async function resetPassword(
-  data: resetPasswordInput
-): Promise<resetPasswordOutput> {
+export async function resetPassword(data: resetPasswordInput) {
   try {
     const result = await fetchService("auth/reset-password", {
       method: "POST",
@@ -39,7 +38,16 @@ export async function resetPassword(
 
     return result;
   } catch {
-    return resetPasswordStaticOutput;
+    return;
+  }
+}
+
+export async function getUsers(): Promise<UserData[]> {
+  try {
+    const result = await fetchService("user/all-users");
+    return result;
+  } catch {
+    return [];
   }
 }
 
@@ -48,10 +56,6 @@ export interface resetPasswordInput {
   resetCode: number;
   newPassword: string;
 }
-
-export interface resetPasswordOutput {}
-
-const resetPasswordStaticOutput: resetPasswordOutput = {};
 
 export interface forgotPasswordInput {
   identifier: string;

@@ -39,6 +39,7 @@ export default function TextInput({
           }
         )}
         readOnly={item.readonly}
+        disabled={item.disabled ? item.disabled : false}
       />
 
       {item.floating ? (

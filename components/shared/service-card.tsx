@@ -5,6 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 export interface ServiceCardInterface {
+  id: number;
   title: string;
   isActive?: boolean;
   clickFunction?: any;

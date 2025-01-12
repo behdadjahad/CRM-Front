@@ -58,6 +58,7 @@ export interface FormMakerInterface {
     toggleVisibility?: () => void;
     onChange?: (checked: boolean) => void;
     readonly?: boolean;
+    disabled?: boolean;
   }[];
   className?: string;
 }

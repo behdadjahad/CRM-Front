@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomModal from "@/components/shared/custom-modal";
 import { MdClose } from "react-icons/md";
-import FormMaker from "@/components/shared/form-maker";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
 import { FaPlus } from "react-icons/fa";
 import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
@@ -12,6 +12,13 @@ import { RootState } from "@/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "@/store/user-slice";
+import {
+  ContractCreationInput,
+  createContract,
+  getContractNumber,
+} from "@/api/contract";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getUsers } from "@/api/auth";
 
 export interface ContractCreationInterface {
   formServices: ServiceCardInterface[];
@@ -22,14 +29,43 @@ export default function ContractCreation({
 }: ContractCreationInterface) {
   const [openModal, setOpenModal] = useState(false);
   const [activeItem, setActiveItem] = useState<any>(null);
+  const [userOptions, setUserOptions] = useState<OptionType[]>([]);
   const userData = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+
+  useEffect(() => {
+    if (users) {
+      const userOption: OptionType[] = users.map((item) => ({
+        label: item.fullName,
+        value: item.id.toString(),
+      }));
+      setUserOptions(userOption);
+    }
+  }, [users]);
 
   useEffect(() => {
     dispatch(fetchUserData() as any);
   }, [dispatch, userData]);
+
+  const { mutate } = useMutation({
+    mutationFn: (id: number) => {
+      return getContractNumber(id);
+    },
+    onSuccess: ({ data }) => {
+      formik.setFieldValue("contractId", data?.contractId);
+      formik.setFieldValue("number", data?.suggestedContractNo);
+      console.log(65, data);
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
+      contractId: undefined,
       number: "",
       contractDate: "",
       submitter: "",
@@ -38,6 +74,33 @@ export default function ContractCreation({
     },
     onSubmit: async () => {},
   });
+
+  const { mutate: createContractMutation } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: ContractCreationInput }) => {
+      return createContract(id, data);
+    },
+    onSuccess: () => {
+      setOpenModal(false);
+      formik.resetForm();
+      setActiveItem(null);
+    },
+  });
+  function contractSubmitHandler() {
+    if (!formik.values.contractId) return;
+
+    createContractMutation({
+      id: formik.values.contractId,
+      data: {
+        contractTypeId: activeItem.id,
+        contractDate: formik.values.contractDate,
+        //contractDate: "2000-01-01T00:00:00Z",
+        dateType: "Geregorian",
+        description: formik.values.description,
+        userSubmitterId: userData.id,
+        userResponsibleId: Number(formik.values.accountant),
+      },
+    });
+  }
 
   return (
     <>
@@ -70,13 +133,17 @@ export default function ContractCreation({
             <div className="flex flex-row flex-wrap items-center gap-3 w-full">
               {formServices.map((item) => (
                 <ServiceCard
-                  key={item.title}
+                  key={item.id}
                   {...item}
-                  clickFunction={() =>
-                    activeItem && activeItem.title === item.title
-                      ? setActiveItem(null)
-                      : setActiveItem(item)
-                  }
+                  clickFunction={() => {
+                    if (activeItem && activeItem.title === item.title) {
+                      setActiveItem(null);
+                      formik.setFieldValue("number", " ");
+                    } else {
+                      setActiveItem(item);
+                      mutate(item.id);
+                    }
+                  }}
                   isActive={activeItem && activeItem.title == item.title}
                   className="min-w-18 w-18 max-w-18 h-auto text-[8px] text-right items-start "
                   imageClassName="min-w-0 h-15"
@@ -96,6 +163,8 @@ export default function ContractCreation({
                 floating: true,
                 className: "w-full md:w-1/2",
                 readonly: true,
+                disabled: true,
+                defaultValue: formik.values.number,
               },
               {
                 key: "contractDate",
@@ -116,11 +185,12 @@ export default function ContractCreation({
               },
               {
                 key: "accountant",
-                component: "input",
+                component: "Select",
                 placeholder: "مسئول قرارداد",
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                options: userOptions,
               },
               {
                 key: "description",
@@ -135,8 +205,18 @@ export default function ContractCreation({
           />
 
           <div className="flex flex-row gap-4">
-            <Button variant={"info"}>ثبت و جدید</Button>
-            <Button variant={"info"}>ثبت و تکمیل</Button>
+            <Button
+              variant={"info"}
+              onClick={() => {
+                contractSubmitHandler();
+                setOpenModal(true);
+              }}
+            >
+              ثبت و جدید
+            </Button>
+            <Button variant={"info"} onClick={contractSubmitHandler}>
+              ثبت و تکمیل
+            </Button>
             <Button variant={"foreground"} onClick={() => setOpenModal(false)}>
               لغو
             </Button>

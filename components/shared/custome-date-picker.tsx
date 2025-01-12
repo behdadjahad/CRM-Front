@@ -70,7 +70,7 @@ export default function CustomeDatePicker({
     setCalendar(calendarType);
     setLocale(calendars[calendarType].locale);
 
-    updateButtonStyles(calendarType)
+    updateButtonStyles(calendarType);
   };
 
   useEffect(() => {

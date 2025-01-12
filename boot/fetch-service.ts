@@ -1,7 +1,7 @@
 import { config } from "@/config/config";
 import { toast } from "react-toastify";
 
-type MehtodType = "GET" | "POST" | "PATCH" | "DELETE";
+type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
 export interface FetchServiceType {
   method?: MehtodType;
@@ -11,11 +11,11 @@ export interface FetchServiceType {
 }
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token")
   return {
     "Content-Type": "application/json",
     ...additionalHeaders,
-    Authorization: `Bearer ${token}`,
+    "Authorization": `Bearer ${token}`
   };
 }
 

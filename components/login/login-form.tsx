@@ -7,7 +7,7 @@ import { login } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { cn, REQUIRED_TEXT } from "@/lib/utils";
+import { REQUIRED_TEXT } from "@/lib/utils";
 import { useState } from "react";
 
 export default function LoginForm() {
@@ -96,9 +96,9 @@ export default function LoginForm() {
         type="submit"
         variant={"foreground"}
         disabled={isLoading}
-        className={cn("bg-quartiery-background m-2 text-tertiary-foreground", {
-          "opacity-50 cursor-not-allowed": isLoading,
-        })}
+        className={`bg-quartiery-background m-2 text-tertiary-foreground ${
+          isLoading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
         onClick={loginHandler}
       >
         ورود

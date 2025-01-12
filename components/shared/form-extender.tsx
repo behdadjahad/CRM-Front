@@ -14,6 +14,8 @@ export interface FormExtenderInterface {
   title: string;
   className?: string;
   wrapperClassName?: string;
+  fetchFormValues: boolean;
+  callbackSubmit: (key: string, data: any[]) => void;
 }
 
 export default function FormExtender({
@@ -23,6 +25,8 @@ export default function FormExtender({
   validationSchema,
   className,
   wrapperClassName,
+  fetchFormValues,
+  callbackSubmit,
 }: FormExtenderInterface) {
   const [forms, setForms] = useState<{ id: string; values: any }[]>([
     { id: `${title}-0`, values: { ...initialValues } },
@@ -52,9 +56,11 @@ export default function FormExtender({
     []
   );
 
-  // const handleSubmit = useCallback(() => {
-  //   console.log("All Form Values:", forms.map((form) => form.values));
-  // }, [forms]);
+  useEffect(() => {
+    if (fetchFormValues) {
+      callbackSubmit(title, forms);
+    }
+  }, [fetchFormValues]);
 
   return (
     <div

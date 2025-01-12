@@ -1,5 +1,5 @@
 "use client";
-import { getServices } from "@/api/contract";
+import { getContracts, getServices } from "@/api/contract";
 import CardContainer, {
   CardContainerInterface,
 } from "@/components/sale/card-container";
@@ -21,7 +21,7 @@ export default function Sale() {
     visaContainerList,
     formServices,
   } = getData();
-
+  getContracts();
   return (
     <main>
       <div className="flex items-center justify-between">
@@ -63,6 +63,34 @@ export default function Sale() {
 
 function getData() {
   const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+  const { data: contractInformation } = useQuery({
+    queryKey: ["contractInformation"],
+    queryFn: () => getContracts(),
+  });
+
+  const contractOverviewProps: ContractOverviewInterface = {
+    list: [
+      {
+        label: " قرار داد کل",
+        value:
+          contractInformation?.doneCount !== undefined &&
+          contractInformation?.inProgressCount !== undefined
+            ? (
+                contractInformation.doneCount +
+                contractInformation.inProgressCount
+              ).toString()
+            : "",
+      },
+      {
+        label: "قرار داد تکمیل شده",
+        value: (contractInformation?.doneCount ?? "").toString(),
+      },
+      {
+        label: " قرار داد ناقص",
+        value: (contractInformation?.inProgressCount ?? "").toString(),
+      },
+    ],
+  };
 
   const { data } = useQuery({
     queryKey: ["serviceQuery"],
@@ -70,31 +98,16 @@ function getData() {
   });
 
   useEffect(() => {
-    if (data?.success && data?.data)
+    if (data?.success && data?.data) {
       setFormServices(
-        data.data.map((item) => ({
+        data.data.map((item: any) => ({
+          id: item.id,
           image: item.iconFile,
           title: item.name,
         }))
       );
+    }
   }, [data]);
-
-  const contractOverviewProps: ContractOverviewInterface = {
-    list: [
-      {
-        label: " قرار داد کل",
-        value: "100",
-      },
-      {
-        label: "قرار داد تکمیل شده",
-        value: "94",
-      },
-      {
-        label: " قرار داد ناقص",
-        value: "8",
-      },
-    ],
-  };
 
   const visaCardProps: CardContainerInterface["list"][0] = {
     id: "1",
@@ -120,18 +133,13 @@ function getData() {
       totalVotes: 11,
     },
     services: [
+      { id: 1, image: "/images/services/visa.png", title: "ویزا" },
       {
-        image: "/images/services/visa.png",
-        title: "ویزا",
-      },
-      {
+        id: 2,
         image: "/images/services/international-airport.png",
         title: "پرواز خارجی",
       },
-      {
-        image: "/images/services/suitcase.png",
-        title: "تور خارجی",
-      },
+      { id: 3, image: "/images/services/suitcase.png", title: "تور خارجی" },
     ],
     user: {
       image: "/temp/avatar-2.png",

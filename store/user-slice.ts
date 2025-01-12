@@ -1,8 +1,10 @@
 import { fetchService } from "@/boot/fetch-service";
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-interface UserData {
+export interface UserData {
   fullName: string;
+  id: number;
+  chadcoCustomerId: number;
   userRole: {
     role: {
       name: string;
@@ -12,6 +14,8 @@ interface UserData {
 
 const initialState: UserData = {
   fullName: "",
+  id: 0,
+  chadcoCustomerId: 0,
   userRole: [
     {
       role: {
@@ -23,12 +27,12 @@ const initialState: UserData = {
 
 export const fetchUserData = createAsyncThunk<UserData>(
   "user/fetchUserData",
-  async (_, { dispatch }) => {
+  async (inputData, { dispatch }) => {
     try {
       const data = await fetchService("user");
-      dispatch(setUser(data));
+      dispatch(setUser(data))
       return data;
-    } catch (error) {}
+    } catch { }
   }
 );
 const userSlice = createSlice({
@@ -37,6 +41,8 @@ const userSlice = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<UserData>) {
       state.fullName = action.payload.fullName;
+      state.id = action.payload.id;
+      state.chadcoCustomerId = action.payload.chadcoCustomerId;
     },
   },
 });

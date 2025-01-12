@@ -2,6 +2,7 @@ import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import FormExtender, { FormExtenderInterface } from "../shared/form-extender";
 import FormMaker, { FormMakerInterface } from "./form-maker";
+import { Button } from "../ui/button";
 
 export interface ServiceFormInterface {
   radioButton?: {
@@ -20,6 +21,17 @@ export default function ServiceForm({
   recordForm,
 }: ServiceFormInterface) {
   const [category, setCategory] = useState(radioButton && radioButton[0].value);
+  let formValues = {};
+  const [fetchFormValues, setFetchFormValues] = useState(false);
+
+  function submitForm(key: string, data: any) {
+    formValues = {
+      ...formValues,
+      [key]: data,
+    };
+    console.log({ formValues });
+    setFetchFormValues(false);
+  }
 
   return (
     <div className="w-full bg-card rounded-lg">
@@ -51,6 +63,8 @@ export default function ServiceForm({
             fields={item.fields}
             initialValues={item.initialValues}
             validationSchema={item.validationSchema}
+            callbackSubmit={submitForm}
+            fetchFormValues={fetchFormValues}
             wrapperClassName="flex-row flex-wrap"
           />
         ))}
@@ -71,6 +85,14 @@ export default function ServiceForm({
               <FormMaker {...recordForm.formDetail} />
             </div>
           )}
+
+          <div className="flex flex-row gap-4">
+            <Button variant={"foreground"}>لغو</Button>
+            <Button variant={"info"} onClick={() => setFetchFormValues(true)}>
+              ثبت و تکمیل
+            </Button>
+            <Button variant={"info"}>ثبت و جدید</Button>
+          </div>
         </div>
       </div>
     </div>

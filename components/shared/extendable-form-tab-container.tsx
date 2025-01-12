@@ -26,10 +26,22 @@ export default function ExtendableFormTabContainer({
   className,
 }: ExtendableFormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue || tabs?.[0]?.title);
+  let formValues = {};
+  const [fetchFormValues, setFetchFormValues] = useState(false);
+
+  function submitForm(key: string, data: any) {
+    formValues = {
+      ...formValues,
+      [key]: data,
+    };
+    console.log({ formValues });
+    setFetchFormValues(false);
+  }
 
   useEffect(() => {
     setActiveTab(defaultValue || tabs?.[0]?.title);
   }, [tabs, defaultValue]);
+
   return (
     <>
       <Tabs
@@ -57,28 +69,28 @@ export default function ExtendableFormTabContainer({
             value={item.title}
             className="w-full gap-8 p-0 flex flex-col"
           >
-            {
-              <>
-                {item.forms ? (
-                  item.forms.map((form, formIndex) => (
-                    <FormExtender
-                      key={`form-${item.title}-${form.title}`}
-                      {...form}
-                      className={formIndex == 0 ? "rounded-t-none" : ""}
-                    />
-                  ))
-                ) : (
-                  <></>
-                )}
-                {item.children}
+            {item.forms ? (
+              item.forms.map((form, formIndex) => (
+                <FormExtender
+                  key={`form-${item.title}-${form.title}`}
+                  {...form}
+                  callbackSubmit={submitForm}
+                  fetchFormValues={fetchFormValues}
+                  className={formIndex == 0 ? "rounded-t-none" : ""}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+            {item.children}
 
-                <div className="flex flex-row gap-4">
-                  <Button variant={"foreground"}>لغو</Button>
-                  <Button variant={"info"}>ثبت و تکمیل</Button>
-                  <Button variant={"info"}>ثبت و جدید</Button>
-                </div>
-              </>
-            }
+            <div className="flex flex-row gap-4">
+              <Button variant={"foreground"}>لغو</Button>
+              <Button variant={"info"} onClick={() => setFetchFormValues(true)}>
+                ثبت و تکمیل
+              </Button>
+              <Button variant={"info"}>ثبت و جدید</Button>
+            </div>
           </TabsContent>
         ))}
       </Tabs>
@@ -103,6 +115,8 @@ export default function ExtendableFormTabContainer({
                   <FormExtender
                     key={`form-${item.title}-${form.title}`}
                     {...form}
+                    callbackSubmit={submitForm}
+                    fetchFormValues={fetchFormValues}
                     className={formIndex == 0 ? "rounded-t-none" : ""}
                   />
                 ))

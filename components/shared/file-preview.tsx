@@ -21,8 +21,6 @@ export default function FilePreview({
 
     form.setFieldValue(item.dependantKey, updatedPreviews);
   };
-  const list = form.values[item.dependantKey as string];
-  console.log(list);
 
   return (
     <div className="flex  flex-wrap gap-4 rounded-lg border-dashed border-gray-300 border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
