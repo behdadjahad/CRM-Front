@@ -142,7 +142,6 @@ export async function getContracts(): Promise<ContractInformationOutput> {
     const result: ContractInformationOutput = await fetchService(
       "contract-chadco-customer"
     );
-    console.log(118, result);
     return result;
   } catch {
     return {

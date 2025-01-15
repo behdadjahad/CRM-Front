@@ -1,8 +1,9 @@
 "use client";
+import { getUsers } from "@/api/auth";
 import { getContracts, getServices } from "@/api/contract";
-import CardContainer, {
-  CardContainerInterface,
-} from "@/components/sale/card-container";
+import ContractContainer, {
+  ContractContainerInterface,
+} from "@/components/contract/contract-container";
 import ContractCreation from "@/components/sale/contract-creation";
 import ContractOverview, {
   ContractOverviewInterface,
@@ -11,17 +12,14 @@ import Filter from "@/components/sale/filter";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
+import { convertGregorianToSolarWithTimeZone } from "@/constants/time";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export default function Sale() {
-  const {
-    contractOverviewProps,
-    requestCount,
-    visaContainerList,
-    formServices,
-  } = getData();
-  getContracts();
+  const { requestCount, contractOverviewProps, contractList, formServices } =
+    getData();
+
   return (
     <main>
       <div className="flex items-center justify-between">
@@ -55,7 +53,7 @@ export default function Sale() {
       </div>
 
       <div className="md:bg-background-active rounded-xl md:p-6">
-        <CardContainer {...visaContainerList} />
+        <ContractContainer list={contractList} />
       </div>
     </main>
   );
@@ -63,10 +61,56 @@ export default function Sale() {
 
 function getData() {
   const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+
   const { data: contractInformation } = useQuery({
     queryKey: ["contractInformation"],
     queryFn: () => getContracts(),
   });
+
+  const contractList: ContractContainerInterface["list"] =
+    contractInformation?.data
+      ? contractInformation?.data.map((item: any) => ({
+          id: item.id,
+          contract: {
+            date: convertGregorianToSolarWithTimeZone(item.contractDate),
+            destination: "",
+            submitter:
+              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
+              "",
+            unit: "",
+          },
+          footer: {
+            cost: item.buyPrice.toString(),
+            income: item.sellPrice.toString(),
+            overall: (item.sellPrice - item.buyPrice).toString(),
+          },
+          header: {
+            contractNumber: item.contractNo,
+            icon: "",
+            submitDate: convertGregorianToSolarWithTimeZone(
+              item.submitDateTime
+            ),
+            title:
+              formServices.find((obj) => obj.id === item.contractTypeId)
+                ?.title ?? "",
+          },
+          score: {
+            final: 30,
+            totalVotes: 11,
+          },
+          services: item.avServices ? item.avServices : [],
+          user: {
+            image: "",
+            name:
+              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
+              "",
+          },
+        }))
+      : [];
 
   const contractOverviewProps: ContractOverviewInterface = {
     list: [
@@ -102,68 +146,16 @@ function getData() {
       setFormServices(
         data.data.map((item: any) => ({
           id: item.id,
-          image: item.iconFile,
+          image: "public/" + item.iconFile,
           title: item.name,
         }))
       );
     }
   }, [data]);
-
-  const visaCardProps: CardContainerInterface["list"][0] = {
-    id: "1",
-    contract: {
-      date: "1360/01/20",
-      destination: "دبی",
-      submitter: "سام امیری",
-      unit: "دلار",
-    },
-    footer: {
-      cost: "1,234,568",
-      income: "1,234,568",
-      overall: "3,456,789",
-    },
-    header: {
-      contractNumber: "358067357101",
-      icon: "/icons/visa-white.png",
-      submitDate: "1360/01/20",
-      title: "ویزا",
-    },
-    score: {
-      final: 30,
-      totalVotes: 11,
-    },
-    services: [
-      { id: 1, image: "/images/services/visa.png", title: "ویزا" },
-      {
-        id: 2,
-        image: "/images/services/international-airport.png",
-        title: "پرواز خارجی",
-      },
-      { id: 3, image: "/images/services/suitcase.png", title: "تور خارجی" },
-    ],
-    user: {
-      image: "/temp/avatar-2.png",
-      name: "مهدی میرزایی",
-    },
-  };
-
-  const visaContainerList: CardContainerInterface = {
-    list: [
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-      visaCardProps,
-    ],
-  };
-
   return {
     requestCount: 273,
     contractOverviewProps,
-    visaContainerList,
+    contractList,
     formServices,
   };
 }

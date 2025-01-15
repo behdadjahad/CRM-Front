@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
-import FormExtender, { FormExtenderInterface } from './form-extender';
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import React, { useEffect, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import FormExtender, { FormExtenderInterface } from "./form-extender";
+import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useMutation } from "@tanstack/react-query";
+import { createContractClient } from "@/api/client";
+import { debounce } from "lodash";
 
 export interface ExtendableFormTabContainerInterface {
   tabs: {
@@ -26,16 +29,33 @@ export default function ExtendableFormTabContainer({
   className,
 }: ExtendableFormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue || tabs?.[0]?.title);
-  let formValues = {};
+  let formValues: any = {};
   const [fetchFormValues, setFetchFormValues] = useState(false);
 
+  const { mutate: contractClientHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return createContractClient(data);
+    },
+  });
+
+  const debouncedUpdate = debounce((data) => {
+    contractClientHandler(data);
+  }, 500);
+
   function submitForm(key: string, data: any) {
+    const prevData: any = formValues[key];
     formValues = {
       ...formValues,
-      [key]: data,
+      [key]: {
+        data,
+        ...prevData,
+      },
     };
-    console.log({ formValues });
     setFetchFormValues(false);
+    debouncedUpdate({ formValues });
+    debounce(({ formValues }) => {
+      contractClientHandler({ formValues });
+    }, 500);
   }
 
   useEffect(() => {

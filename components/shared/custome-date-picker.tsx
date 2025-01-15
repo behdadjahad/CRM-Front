@@ -69,8 +69,7 @@ export default function CustomeDatePicker({
   const handleCalendarChange = (calendarType: DateCalendar) => {
     setCalendar(calendarType);
     setLocale(calendars[calendarType].locale);
-
-    updateButtonStyles(calendarType);
+   updateButtonStyles(calendarType);
   };
 
   useEffect(() => {

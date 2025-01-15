@@ -19,6 +19,8 @@ import {
 } from "@/api/contract";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
+import { useRouter } from "next/navigation";
+import { convertToTimezone } from "@/constants/time";
 
 export interface ContractCreationInterface {
   formServices: ServiceCardInterface[];
@@ -47,11 +49,11 @@ export default function ContractCreation({
       setUserOptions(userOption);
     }
   }, [users]);
-
   useEffect(() => {
     dispatch(fetchUserData() as any);
   }, [dispatch, userData]);
 
+  const router = useRouter();
   const { mutate } = useMutation({
     mutationFn: (id: number) => {
       return getContractNumber(id);
@@ -59,7 +61,6 @@ export default function ContractCreation({
     onSuccess: ({ data }) => {
       formik.setFieldValue("contractId", data?.contractId);
       formik.setFieldValue("number", data?.suggestedContractNo);
-      console.log(65, data);
     },
   });
 
@@ -79,10 +80,11 @@ export default function ContractCreation({
     mutationFn: ({ id, data }: { id: number; data: ContractCreationInput }) => {
       return createContract(id, data);
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
+      router.push(`/contract/${data.id}`);
     },
   });
   function contractSubmitHandler() {
@@ -92,8 +94,7 @@ export default function ContractCreation({
       id: formik.values.contractId,
       data: {
         contractTypeId: activeItem.id,
-        contractDate: formik.values.contractDate,
-        //contractDate: "2000-01-01T00:00:00Z",
+        contractDate: convertToTimezone(formik.values.contractDate),
         dateType: "Geregorian",
         description: formik.values.description,
         userSubmitterId: userData.id,
@@ -122,7 +123,10 @@ export default function ContractCreation({
 
           <MdClose
             size={20}
-            onClick={() => setOpenModal(false)}
+            onClick={() => {
+              setOpenModal(false);
+              formik.resetForm();
+            }}
             className="cursor-pointer"
           />
         </div>
@@ -193,6 +197,22 @@ export default function ContractCreation({
                 options: userOptions,
               },
               {
+                key: "contractCountry",
+                component: "Select",
+                placeholder: "کشور",
+                type: "text",
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
+                key: "contractCity",
+                component: "Select",
+                placeholder: "شهر",
+                type: "text",
+                floating: true,
+                className: "w-full md:w-1/2",
+              },
+              {
                 key: "description",
                 component: "textarea",
                 placeholder: "توضیحات",
@@ -217,7 +237,13 @@ export default function ContractCreation({
             <Button variant={"info"} onClick={contractSubmitHandler}>
               ثبت و تکمیل
             </Button>
-            <Button variant={"foreground"} onClick={() => setOpenModal(false)}>
+            <Button
+              variant={"foreground"}
+              onClick={() => {
+                setOpenModal(false);
+                formik.resetForm();
+              }}
+            >
               لغو
             </Button>
           </div>

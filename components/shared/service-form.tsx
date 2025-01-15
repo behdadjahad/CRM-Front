@@ -29,7 +29,6 @@ export default function ServiceForm({
       ...formValues,
       [key]: data,
     };
-    console.log({ formValues });
     setFetchFormValues(false);
   }
 

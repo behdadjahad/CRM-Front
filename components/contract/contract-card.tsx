@@ -1,13 +1,13 @@
-"use client"
+"use client";
 
-import React from 'react'
-import ServiceCard, { ServiceCardInterface } from '../shared/service-card';
-import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
+import React from "react";
+import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+import Link from "next/link";
 
-export interface VisaCardInterface {
+export interface ContractCardInterface {
   id: string;
   header: {
     icon: string;
@@ -38,7 +38,16 @@ export interface VisaCardInterface {
   className?: string;
 }
 
-export default function VisaCard({ id, contract, footer, header, score, services, user, className }: VisaCardInterface) {
+export default function ContractCard({
+  id,
+  contract,
+  footer,
+  header,
+  score,
+  services,
+  user,
+  className,
+}: ContractCardInterface) {
   const contractData = [
     {
       icon: "/icons/calendar-mute.png",
@@ -47,7 +56,7 @@ export default function VisaCard({ id, contract, footer, header, score, services
     },
     {
       icon: "/icons/user-mute.png",
-      label: "اقدام کننده",
+      label: "ثبت کننده",
       value: contract.submitter,
     },
     {

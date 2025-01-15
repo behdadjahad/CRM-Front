@@ -1,142 +1,160 @@
 "use client";
-
+import { getUsers } from "@/api/auth";
+import { getContracts, getServices } from "@/api/contract";
+import ContractContainer, {
+  ContractContainerInterface,
+} from "@/components/contract/contract-container";
+import ContractCreation from "@/components/sale/contract-creation";
+import ContractOverview, {
+  ContractOverviewInterface,
+} from "@/components/sale/contract-overview";
+import Filter from "@/components/sale/filter";
 import Breadcrumb from "@/components/shared/breadcrumb";
-import EditableContainer from "@/components/contract/editable-container";
-import ExtendableFormTabContainer from "@/components/shared/extendable-form-tab-container";
-import ServiceContainer from "@/components/shared/service-container";
+import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  ContactInfoFormExtender,
-  LivingInformationExtender,
-  organizationInformationExtender,
-  PersonalInfoFormExtender,
-  workInformationExtender,
-} from "@/constants/extendable-fields";
-import Image from "next/image";
-import { useState } from "react";
-import { services } from "@/constants/services";
-import RegisteryForm from "@/components/contract/registery-form";
+import { convertGregorianToSolarWithTimeZone } from "@/constants/time";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [category, setCategory] = useState("personal");
+export default function Sale() {
+  const { requestCount, contractOverviewProps, contractList, formServices } =
+    getData();
 
   return (
     <main>
-      <div>
-        <Title label="ثبت قرارداد" />
+      <div className="flex items-center justify-between">
+        <div>
+          <Title label="فروش" />
 
-        <Breadcrumb
-          list={[
-            {
-              label: "داشبورد",
-              link: "/",
-            },
-            {
-              label: "قرارداد جدید",
-            },
-          ]}
-        />
+          <Breadcrumb
+            list={[
+              {
+                label: "داشبورد",
+                link: "/",
+              },
+              {
+                label: "گزارش فروش",
+              },
+            ]}
+          />
+        </div>
+
+        <ContractCreation formServices={formServices} />
       </div>
 
-      <EditableContainer
-        list={[
-          {
-            label: "تاریخ درج",
-            value: "1403/04/23",
-          },
-          {
-            label: "تاریخ قرارداد",
-            value: "1403/05/02",
-          },
-          {
-            label: "شماره قرار داد",
-            value: "358067357101",
-          },
-          {
-            label: "موضوع قرار داد",
-            value: "تور داخلی",
-          },
-          {
-            label: "توضیحات",
-            value: "...",
-          },
-        ]}
-        action={{
-          label: "ویرایش اطلاعات",
-          icon: (
-            <Image src={"/icons/edit.png"} alt="edit" width={24} height={24} />
-          ),
-          click: () => console.log("clicked"),
-        }}
-      />
+      <ContractOverview {...contractOverviewProps} />
 
-      <RadioGroup
-        defaultValue="personal"
-        className="flex flex-row-reverse gap-4 min-h-10"
-      >
-        <div className="flex items-center space-x-2">
-          <label htmlFor="personal">شخصی</label>
-          <RadioGroupItem
-            value="personal"
-            id="personal"
-            onClick={() => setCategory("personal")}
-          />
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-y-4">
+        <Filter />
+
+        <div className="text-base font-bold h-9 flex items-center justify-center">
+          {requestCount} درخواست
         </div>
+      </div>
 
-        <div className="flex items-center space-x-2">
-          <label htmlFor="organization">سازمانی</label>
-          <RadioGroupItem
-            value="organization"
-            id="organization"
-            onClick={() => setCategory("organization")}
-          />
-        </div>
-      </RadioGroup>
-
-      {category === "personal" ? (
-        <ExtendableFormTabContainer
-          defaultValue="اطلاعات مشتری"
-          tabs={[
-            {
-              title: "اطلاعات مشتری",
-              forms: [PersonalInfoFormExtender, ContactInfoFormExtender],
-              children: (
-                <ServiceContainer askQuestion={false} services={services} />
-              ),
-            },
-            {
-              title: "اطلاعات محل سکونت",
-              forms: [LivingInformationExtender, PersonalInfoFormExtender],
-              children: (
-                <ServiceContainer askQuestion={false} services={services} />
-              ),
-            },
-            {
-              title: "اطلاعات محل کار",
-              forms: [workInformationExtender, PersonalInfoFormExtender],
-              children: (
-                <ServiceContainer askQuestion={false} services={services} />
-              ),
-            },
-          ]}
-        />
-      ) : (
-        <ExtendableFormTabContainer
-          defaultValue="اطلاعات سازمان"
-          tabs={[
-            {
-              title: "اطلاعات سازمان",
-              forms: [organizationInformationExtender, ContactInfoFormExtender],
-              children: (
-                <ServiceContainer askQuestion={false} services={services}>
-                  <RegisteryForm />
-                </ServiceContainer>
-              ),
-            },
-          ]}
-        />
-      )}
+      <div className="md:bg-background-active rounded-xl md:p-6">
+        <ContractContainer list={contractList} />
+      </div>
     </main>
   );
+}
+
+function getData() {
+  const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+  const { data: contractInformation } = useQuery({
+    queryKey: ["contractInformation"],
+    queryFn: () => getContracts(),
+  });
+
+  const contractList: ContractContainerInterface["list"] =
+    contractInformation?.data
+      ? contractInformation?.data.map((item: any) => ({
+          id: item.id,
+          contract: {
+            date: convertGregorianToSolarWithTimeZone(item.contractDate),
+            destination: "",
+            submitter:
+              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
+              "",
+            unit: "",
+          },
+          footer: {
+            cost: item.buyPrice.toString(),
+            income: item.sellPrice.toString(),
+            overall: (item.sellPrice - item.buyPrice).toString(),
+          },
+          header: {
+            contractNumber: item.contractNo,
+            icon: "",
+            submitDate: convertGregorianToSolarWithTimeZone(
+              item.submitDateTime
+            ),
+            title:
+              formServices.find((obj) => obj.id === item.contractTypeId)
+                ?.title ?? "",
+          },
+          score: {
+            final: 30,
+            totalVotes: 11,
+          },
+          services: item.avServices ? item.avServices : [],
+          user: {
+            image: "",
+            name:
+              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
+              "",
+          },
+        }))
+      : [];
+
+  const contractOverviewProps: ContractOverviewInterface = {
+    list: [
+      {
+        label: " قرار داد کل",
+        value:
+          contractInformation?.doneCount !== undefined &&
+          contractInformation?.inProgressCount !== undefined
+            ? (
+                contractInformation.doneCount +
+                contractInformation.inProgressCount
+              ).toString()
+            : "",
+      },
+      {
+        label: "قرار داد تکمیل شده",
+        value: (contractInformation?.doneCount ?? "").toString(),
+      },
+      {
+        label: " قرار داد ناقص",
+        value: (contractInformation?.inProgressCount ?? "").toString(),
+      },
+    ],
+  };
+
+  const { data } = useQuery({
+    queryKey: ["serviceQuery"],
+    queryFn: () => getServices(),
+  });
+
+  useEffect(() => {
+    if (data?.success && data?.data) {
+      setFormServices(
+        data.data.map((item: any) => ({
+          id: item.id,
+          image: "public/" + item.iconFile,
+          title: item.name,
+        }))
+      );
+    }
+  }, [data]);
+  return {
+    requestCount: 273,
+    contractOverviewProps,
+    contractList,
+    formServices,
+  };
 }

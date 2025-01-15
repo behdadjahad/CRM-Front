@@ -29,7 +29,6 @@ export default function VerificationForm({
   const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   function verificationHandler() {
     stageHandler("user-reset-password");
-    console.log(formik.values);
   }
 
   return (

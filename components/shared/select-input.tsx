@@ -1,25 +1,17 @@
-import React, { useEffect, useCallback, useState } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
+import React, { useEffect, useCallback } from "react";
+import Creatable from "react-select/creatable";
 import { FormMakerInterface } from "./form-maker";
-import { cn } from "@/lib/utils";
 
 const SelectInput = React.memo(function SelectInput({
   form,
   item,
 }: {
   form: any;
-    item: FormMakerInterface["fields"][0];
+  item: FormMakerInterface["fields"][0];
 }) {
-  const [isSelected, setIsSelected] = useState(false)
   const handleValueChange = useCallback(
-    (value: string) => {
-      form.setFieldValue(item.key, value);
+    (value: any) => {
+      form.setFieldValue(item.key, value.value);
     },
     [item.key, form]
   );
@@ -33,46 +25,30 @@ const SelectInput = React.memo(function SelectInput({
       form.setFieldValue(item.key, item.defaultValue);
     }
   }, [item.defaultValue, form, item.key, form.values[item.key]]);
-
   return (
-    <div className="relative w-full group">
-      <Select onValueChange={handleValueChange}>
-        <SelectTrigger
-          inputMode="search"
-          className={cn(
-            "text-subtitle border border-border/20 group bg-transparent text-base h-11 w-full outline-none p-2 rounded-lg text-right",
-            {
-              "border-foreground": isSelected && !form.values[item.key]
-            },
-            item.labelClassName,
-          )}
-          onClick={() => setIsSelected(true)}
-          onBlur={() => setIsSelected(false)}
-        >
-          <SelectValue />
-
-          {item.floating && (
-            <label
-              className={cn(
-                "absolute right-3 top-[10px] bg-background-active transition-all duration-200 text-muted px-2",
-                {
-                  "-top-3 text-foreground-mute": form.values[item.key] || isSelected,
-                }
-              )}
-            >
-              {item.placeholder}
-            </label>
-          )}
-        </SelectTrigger>
-        <SelectContent>
-          {item.options?.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
-              {opt.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <Creatable
+      isClearable
+      isValidNewOption={() => false}
+      options={item.options}
+      onChange={(item: any) => handleValueChange(item)}
+      placeholder={
+        item.options?.find((optItem) => optItem.value === form.values[item.key])
+          ?.label ||
+        item.placeholder ||
+        item.label
+      }
+      classNames={{
+        container: () =>
+          "w-full  rounded-md outline-none border-none  text-popover-foreground text-subtitle/80",
+        control: () =>
+          "outline-none h-11 w-full rounded-md  bg-background text-sm outline-none !text-subtitle/80 placeholder:text-subtitle/80",
+        input: () => "w-full h-full outline-none text-subtitle/80",
+        menuList: () =>
+          "flex flex-col relative w-full cursor-default select-none items-center rounded-sm py-1.5 px-0 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md bg-popover text-popover-foreground  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        valueContainer: () =>
+          "outline-none relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      }}
+    />
   );
 });
 

@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import ServiceCard, { ServiceCardInterface } from "./service-card";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
+
 export interface ServiceContainerInterface {
   services: ServiceCardInterface[];
   className?: string;
   children?: any;
   selectedItems?: ServiceCardInterface[];
   askQuestion?: boolean;
+  multiChosen?: boolean;
 }
+
 export default function ServiceContainer({
   services,
   className,
   askQuestion = true,
+  multiChosen,
   children,
 }: ServiceContainerInterface) {
-  const [activeItem, setActiveItem] = useState<any>(null);
+  const [activeItem, setActiveItem] = useState<any>([]);
 
   return (
     <div
@@ -30,11 +34,7 @@ export default function ServiceContainer({
             اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
           </p>
           <div className="flex gap-4">
-            <Checkbox
-              onClick={() => {
-                setActiveItem({ ...activeItem, isSelected: true });
-              }}
-            />
+            <Checkbox onClick={() => console.log("clicked")} />
             <label
               htmlFor=""
               className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -62,14 +62,31 @@ export default function ServiceContainer({
       <div className="flex flex-row-reverse flex-wrap items-center justify-start gap-3 w-full">
         {services.map((item) => (
           <ServiceCard
-            key={item.title}
+            key={item.id}
             {...item}
-            clickFunction={() =>
-              activeItem && activeItem.title === item.title
-                ? setActiveItem(null)
-                : setActiveItem(item)
+            clickFunction={() => {
+              if (multiChosen) {
+                const isExist = activeItem.some(
+                  (obj: any) => obj.id === item.id
+                );
+                if (isExist) {
+                  setActiveItem(
+                    activeItem.filter((obj: any) => obj.id !== item.id)
+                  );
+                } else {
+                  setActiveItem([...activeItem, item]);
+                }
+              } else if (activeItem && activeItem.title === item.title) {
+                setActiveItem(null);
+              } else {
+                setActiveItem(item);
+              }
+            }}
+            isActive={
+              multiChosen
+                ? activeItem.some((obj: any) => obj.id === item.id)
+                : activeItem && activeItem.id == item.id
             }
-            isActive={activeItem && activeItem.title == item.title}
           />
         ))}
       </div>

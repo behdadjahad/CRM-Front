@@ -16,21 +16,22 @@ import ServiceContainer, {
   ServiceContainerInterface,
 } from "@/components/shared/service-container";
 import Image from "next/image";
-import ServiceForm, {
-  ServiceFormInterface,
-} from "@/components/shared/service-form";
+import { ServiceFormInterface } from "@/components/shared/service-form";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import {
   hotelInformationExtender,
   internationalFlightExtender,
-  pickupExtender,
-  visaExtender,
 } from "@/constants/extendable-fields";
 import { purchaseInfo, recorderInfo } from "@/constants/service-form-fields";
 import { useFormik } from "formik";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getServices } from "@/api/contract";
+import { ServiceCardInterface } from "@/components/shared/service-card";
+import RegisteryForm from "@/components/contract/registery-form";
 
 export default function Service() {
   const { clientInfoProps, contractServices, expenses, expert, contractInfo } =
@@ -76,6 +77,27 @@ export default function Service() {
 }
 
 function getData() {
+  const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+  const { data } = useQuery({
+    queryKey: ["serviceQuery"],
+    queryFn: () => getServices(),
+  });
+
+  useEffect(() => {
+    if (data?.success && data?.data) {
+      setFormServices(
+        data.data.map((item: any) => ({
+          id: item.id,
+          image: item.iconFile,
+          title: item.name,
+        }))
+      );
+    }
+  }, [data]);
+  const contractServices: ServiceContainerInterface = {
+    services: formServices,
+    children: <RegisteryForm />,
+  };
   const expert: ExpertInfoInterface = {
     list: [
       {
@@ -309,160 +331,6 @@ function getData() {
         fields: recorderInfo,
       },
     },
-  };
-
-  const visaForm: ServiceFormInterface = {
-    formExtender: visaExtender,
-
-    recordForm: {
-      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            Registrar: "",
-            receptionist: "",
-            explanation: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: recorderInfo,
-      },
-    },
-  };
-
-  const pickupForm: ServiceFormInterface = {
-    radioButton: [
-      { label: "یک طرفه", value: "oneWayPickup" },
-      { label: "رفت و برگشت", value: "RoundTripPickup" },
-    ],
-    formExtender: pickupExtender,
-
-    recordForm: {
-      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            Registrar: "",
-            receptionist: "",
-            explanation: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: recorderInfo,
-      },
-    },
-  };
-
-  const contractServices: ServiceContainerInterface = {
-    services: [
-      {
-        image: "/images/services/visa.png",
-        title: "ویزا",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-visa.png",
-        activeImage: "/images/services/success/success-visa.png",
-        children: <ServiceForm {...visaForm} />,
-      },
-      {
-        image: "/images/services/international-airport.png",
-        title: "پرواز خارجی",
-        isSelected: false,
-        selectedImage:
-          "/images/services/primary/primary-international-airport.png",
-        activeImage:
-          "/images/services/success/success-international-airport.png",
-        children: <ServiceForm {...flightForm} />,
-      },
-      {
-        image: "/images/services/airport.png",
-        title: "پرواز داخلی",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-airport.png",
-        activeImage: "/images/services/success/success-airport.png",
-        children: <ServiceForm {...flightForm} />,
-      },
-      {
-        image: "/images/services/suitcase.png",
-        title: "تور داخلی",
-        isSelected: true,
-        selectedImage: "/images/services/primary/primary-suitcase.png",
-        activeImage: "/images/services/success/success-suit-case.png",
-      },
-      {
-        image: "/images/services/suitcase.png",
-        title: "تور خارجی",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-suitcase.png",
-        activeImage: "/images/services/success/success-suit-case.png",
-      },
-      {
-        image: "/images/services/hotel.png",
-        title: "هتل داخلی",
-        isSelected: true,
-        selectedImage: "/images/services/primary/primary-hotel.png",
-        activeImage: "/images/services/success/success-hotel.png",
-        children: <ServiceForm {...hotelForm} />,
-      },
-      {
-        image: "/images/services/hotel.png",
-        title: "هتل خارجی",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-hotel.png",
-        activeImage: "/images/services/success/success-hotel.png",
-        children: <ServiceForm {...hotelForm} />,
-      },
-      {
-        image: "/images/services/train.png",
-        title: "قطار",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-train.png",
-        activeImage: "/images/services/success/success-train.png",
-      },
-      {
-        image: "/images/services/bus.png",
-        title: "اتوبوس",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-bus.png",
-        activeImage: "/images/services/success/success-bus.png",
-      },
-      {
-        image: "/images/services/car.png",
-        title: "خودرو",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-car.png",
-        activeImage: "/images/services/success/success-car.png",
-      },
-      {
-        image: "/images/services/pipcup.png",
-        title: "پیکاپ",
-        isSelected: true,
-        selectedImage: "/images/services/primary/primary-pickup.png",
-        activeImage: "/images/services/success/success-pickup.png",
-        children: <ServiceForm {...pickupForm} />,
-      },
-      {
-        image: "/images/services/nature.png",
-        title: "طبیعت",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-nature.png",
-        activeImage: "/images/services/success/success-nature.png",
-      },
-      {
-        image: "/images/services/more.png",
-        title: "...",
-        isSelected: false,
-        selectedImage: "",
-        activeImage: "",
-      },
-      {
-        image: "/images/services/more.png",
-        title: "سایر",
-        isSelected: false,
-        selectedImage: "/images/services/primary/primary-others.png",
-        activeImage: "/images/services/success/success-others.png",
-      },
-    ],
-    className: "bg-transparent",
   };
 
   const expenses: ExpenseContainerInterface = {
