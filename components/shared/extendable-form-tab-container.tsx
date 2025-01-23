@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { useMutation } from "@tanstack/react-query";
-import { createContractClient } from "@/api/client";
+import { createClient } from "@/api/client";
 import { debounce } from "lodash";
 
 export interface ExtendableFormTabContainerInterface {
@@ -34,7 +34,7 @@ export default function ExtendableFormTabContainer({
 
   const { mutate: contractClientHandler } = useMutation({
     mutationFn: (data: any) => {
-      return createContractClient(data);
+      return createClient(data);
     },
   });
 
@@ -106,7 +106,12 @@ export default function ExtendableFormTabContainer({
 
             <div className="flex flex-row gap-4">
               <Button variant={"foreground"}>لغو</Button>
-              <Button variant={"info"} onClick={() => setFetchFormValues(true)}>
+              <Button
+                variant={"info"}
+                onClick={() => {
+                  setFetchFormValues(true);
+                }}
+              >
                 ثبت و تکمیل
               </Button>
               <Button variant={"info"}>ثبت و جدید</Button>

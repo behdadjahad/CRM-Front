@@ -15,7 +15,7 @@ export interface ServiceContainerInterface {
 export default function ServiceContainer({
   services,
   className,
-  askQuestion = true,
+  askQuestion,
   multiChosen,
   children,
 }: ServiceContainerInterface) {

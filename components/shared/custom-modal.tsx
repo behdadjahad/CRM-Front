@@ -8,6 +8,7 @@ type CustomModalProps = {
   children?: React.ReactNode;
   minWidth?: string;
   maxWidth?: string;
+  overflow?: string;
 };
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -16,8 +17,9 @@ const CustomModal: React.FC<CustomModalProps> = ({
   children,
   contentLabel,
   minWidth = "0",
-  maxWidth = "600px" }
-) => {
+  maxWidth = "600px",
+  overflow = "auto",
+}) => {
   return (
     <Modal
       isOpen={isOpen}
@@ -25,8 +27,17 @@ const CustomModal: React.FC<CustomModalProps> = ({
       contentLabel={contentLabel || "Modal"}
       ariaHideApp={false}
       style={{
-        overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-        content: { padding: '16px', borderRadius: '8px', minWidth, maxWidth, height: "fit-content", maxHeight: "90vh", overflow: "auto", margin: 'auto' },
+        overlay: { backgroundColor: "rgba(0, 0, 0, 0.5)" },
+        content: {
+          padding: "16px",
+          borderRadius: "8px",
+          minWidth,
+          maxWidth,
+          height: "fit-content",
+          maxHeight: "90vh",
+          overflow,
+          margin: "auto",
+        },
       }}
     >
       {children}

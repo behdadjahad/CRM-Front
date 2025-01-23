@@ -12,25 +12,46 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { fetchUserData } from "@/store/user-slice";
+import { Button } from "../ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { getMe, logOut } from "@/api/auth";
+import { useRouter } from "next/navigation";
 
 export interface ProfileDropDownInterface {
-  name: string;
-  avatar: string;
   className?: string;
 }
 
 export default function ProfileDropDown({
-  avatar,
-  name,
   className,
 }: ProfileDropDownInterface) {
   const userData = useSelector((state: RootState) => state.user);
-
+  const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserData() as any), [userData, dispatch];
+    dispatch(fetchUserData() as any);
+  }, [userData, dispatch]);
+
+  const { mutate: fetchMe } = useMutation({
+    mutationFn: getMe,
+    onError: () => {
+      router.push("/login");
+    },
   });
+
+  const { mutate: logOutHandler } = useMutation({
+    mutationFn: () => {
+      return logOut();
+    },
+    onSuccess: () => {
+      localStorage.removeItem("token");
+      router.push("/login");
+    },
+  });
+
+  useEffect(() => {
+    fetchMe();
+  }, []);
 
   return (
     <DropdownMenu>
@@ -42,8 +63,8 @@ export default function ProfileDropDown({
       >
         <div className="flex flex-row items-center gap-2 text-badge-foreground">
           <Image
-            src={avatar}
-            alt={name}
+            src={"/temp/avatar.png"}
+            alt={userData.fullName}
             width={24}
             height={24}
             className="shadow-[0px_4px_4px_0px_#00000040] rounded-full"
@@ -55,7 +76,16 @@ export default function ProfileDropDown({
         <ChevronDown size={16} />
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent></DropdownMenuContent>
+      <DropdownMenuContent>
+        <Button
+          className="text-center text-badge-foreground text-xs outline-none w-full border-none"
+          onClick={() => {
+            logOutHandler();
+          }}
+        >
+          خروج
+        </Button>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }

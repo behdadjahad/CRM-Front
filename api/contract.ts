@@ -142,6 +142,7 @@ export async function getContracts(): Promise<ContractInformationOutput> {
     const result: ContractInformationOutput = await fetchService(
       "contract-chadco-customer"
     );
+
     return result;
   } catch {
     return {
@@ -162,4 +163,55 @@ export interface ContractInformationOutput {
   };
   doneCount: number;
   inProgressCount: number;
+}
+
+export async function getContractById(id: number): Promise<ContractOutput | undefined> {
+  try {
+    const result = await fetchService(
+      `contract-chadco-customer/${id}`
+    );
+
+    return result;
+  } catch { }
+}
+
+export interface ContractOutput {
+  id: number;
+  submitDateTime: string;
+  userResponsibleId: number;
+  contractNo: string;
+  avServices: any;
+  state: string;
+  destinationCity: string;
+  destinationCountry: string;
+  userResponsible: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    fullName: string;
+  };
+  dateType: string;
+  userSubmitter: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    middleName: string;
+    fullName: string;
+  };
+  contractDate: string;
+  contractType: {
+    id: number;
+    name: string;
+  };
+  contractCurrency: string;
+  chadcoCustomerId: number;
+  description: string;
+  contractPayments: any;
+  returnDate: string;
+  mainCustomerSoldto: string;
+  totalBenefit: string;
+  contractFile: string;
+  isItFinalized: boolean;
+  contractStatus: string;
 }

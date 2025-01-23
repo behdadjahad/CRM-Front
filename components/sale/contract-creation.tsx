@@ -21,6 +21,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import { convertToTimezone } from "@/constants/time";
+import { getCities, getCountries } from "@/api/location";
 
 export interface ContractCreationInterface {
   formServices: ServiceCardInterface[];
@@ -32,13 +33,68 @@ export default function ContractCreation({
   const [openModal, setOpenModal] = useState(false);
   const [activeItem, setActiveItem] = useState<any>(null);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+  const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
+  const [cityOptions, setCityOptions] = useState<OptionType[]>([]);
+
   const userData = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      contractId: undefined,
+      number: "",
+      contractDate: "",
+      contractDateType: "",
+      submitter: "",
+      accountant: "",
+      description: "",
+      country: undefined,
+      city: undefined,
+    },
+    onSubmit: async () => {},
+  });
 
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
   });
+  const { data: countryData } = useQuery({
+    queryKey: ["countries"],
+    queryFn: async () => await getCountries(),
+  });
+  const { data: cityData } = useQuery({
+    queryKey: ["cities"],
+    queryFn: async () => await getCities(),
+  });
+  useEffect(() => {
+    if (countryData) {
+      const countryOptions: OptionType[] = countryData?.data.map((item) => ({
+        label: item.name,
+        value: item.id.toString(),
+      }));
+      setCountryOptions(countryOptions);
+    }
+  }, [countryData]);
+
+  useEffect(() => {
+    if (cityData) {
+      if (!formik.values.country) {
+        const cities: OptionType[] = cityData?.data.map((item) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setCityOptions(cities);
+      } else {
+        const cities: OptionType[] = cityData?.data
+          ?.filter((item) => item.countryId === formik.values.country)
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((item) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setCityOptions(cities);
+      }
+    }
+  }, [cityData, formik.values.country]);
 
   useEffect(() => {
     if (users) {
@@ -49,10 +105,10 @@ export default function ContractCreation({
       setUserOptions(userOption);
     }
   }, [users]);
+
   useEffect(() => {
     dispatch(fetchUserData() as any);
   }, [dispatch, userData]);
-
   const router = useRouter();
   const { mutate } = useMutation({
     mutationFn: (id: number) => {
@@ -64,18 +120,6 @@ export default function ContractCreation({
     },
   });
 
-  const formik = useFormik({
-    initialValues: {
-      contractId: undefined,
-      number: "",
-      contractDate: "",
-      submitter: "",
-      accountant: "",
-      description: "",
-    },
-    onSubmit: async () => {},
-  });
-
   const { mutate: createContractMutation } = useMutation({
     mutationFn: ({ id, data }: { id: number; data: ContractCreationInput }) => {
       return createContract(id, data);
@@ -84,18 +128,18 @@ export default function ContractCreation({
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
+
       router.push(`/contract/${data.id}`);
     },
   });
   function contractSubmitHandler() {
     if (!formik.values.contractId) return;
-
     createContractMutation({
       id: formik.values.contractId,
       data: {
         contractTypeId: activeItem.id,
         contractDate: convertToTimezone(formik.values.contractDate),
-        dateType: "Geregorian",
+        dateType: formik.values.contractDateType,
         description: formik.values.description,
         userSubmitterId: userData.id,
         userResponsibleId: Number(formik.values.accountant),
@@ -117,6 +161,7 @@ export default function ContractCreation({
         isOpen={openModal}
         onRequestClose={() => setOpenModal(false)}
         contentLabel="ویرایش"
+        overflow="visible"
       >
         <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
           <span className="text-lg font-bold">ثبت قرارداد</span>
@@ -126,6 +171,7 @@ export default function ContractCreation({
             onClick={() => {
               setOpenModal(false);
               formik.resetForm();
+              setActiveItem(null);
             }}
             className="cursor-pointer"
           />
@@ -172,6 +218,7 @@ export default function ContractCreation({
               },
               {
                 key: "contractDate",
+                dependantKey: "contractDateType",
                 component: "date",
                 placeholder: "تاریخ قرارداد",
                 type: "text",
@@ -197,20 +244,22 @@ export default function ContractCreation({
                 options: userOptions,
               },
               {
-                key: "contractCountry",
+                key: "country",
                 component: "Select",
                 placeholder: "کشور",
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                options: countryOptions,
               },
               {
-                key: "contractCity",
+                key: "city",
                 component: "Select",
                 placeholder: "شهر",
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                options: cityOptions,
               },
               {
                 key: "description",
@@ -242,6 +291,7 @@ export default function ContractCreation({
               onClick={() => {
                 setOpenModal(false);
                 formik.resetForm();
+                setActiveItem(null);
               }}
             >
               لغو

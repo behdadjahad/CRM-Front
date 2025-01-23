@@ -16,26 +16,17 @@ import ServiceContainer, {
   ServiceContainerInterface,
 } from "@/components/shared/service-container";
 import Image from "next/image";
-import { ServiceFormInterface } from "@/components/shared/service-form";
 import { FaPlus } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import {
-  hotelInformationExtender,
-  internationalFlightExtender,
-} from "@/constants/extendable-fields";
-import { purchaseInfo, recorderInfo } from "@/constants/service-form-fields";
-import { useFormik } from "formik";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getServices } from "@/api/contract";
-import { ServiceCardInterface } from "@/components/shared/service-card";
-import RegisteryForm from "@/components/contract/registery-form";
+import HotelForm from "@/components/service-forms/hotel-form";
+import { services } from "@/constants/services";
 
 export default function Service() {
   const { clientInfoProps, contractServices, expenses, expert, contractInfo } =
     getData();
+
   return (
     <main className="flex flex-col lg:flex-row">
       <div className=" flex flex-col w-full lg:w-3/4 gap-4">
@@ -64,6 +55,7 @@ export default function Service() {
         </div>
 
         <ServiceContainer {...contractServices} />
+        <HotelForm />
       </div>
 
       <div className="w-full lg:w-1/4 flex flex-col">
@@ -77,26 +69,8 @@ export default function Service() {
 }
 
 function getData() {
-  const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
-  const { data } = useQuery({
-    queryKey: ["serviceQuery"],
-    queryFn: () => getServices(),
-  });
-
-  useEffect(() => {
-    if (data?.success && data?.data) {
-      setFormServices(
-        data.data.map((item: any) => ({
-          id: item.id,
-          image: item.iconFile,
-          title: item.name,
-        }))
-      );
-    }
-  }, [data]);
   const contractServices: ServiceContainerInterface = {
-    services: formServices,
-    children: <RegisteryForm />,
+    services: services,
   };
   const expert: ExpertInfoInterface = {
     list: [
@@ -258,81 +232,6 @@ function getData() {
     ],
   };
 
-  const hotelForm: ServiceFormInterface = {
-    radioButton: [
-      { label: "هتل", value: "hotel" },
-      { label: "آپارتمان", value: "apartment" },
-    ],
-    formExtender: hotelInformationExtender,
-    purchaseForm: {
-      title: "خرید",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            costPerNight: "",
-            currency: "",
-            broker: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: purchaseInfo,
-      },
-    },
-
-    recordForm: {
-      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            Registrar: "",
-            receptionist: "",
-            explanation: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: recorderInfo,
-      },
-    },
-  };
-
-  const flightForm: ServiceFormInterface = {
-    radioButton: [
-      { label: "یک طرفه", value: "oneWayFlight" },
-      { label: "رفت و برگشت", value: "RoundTripFlight" },
-      { label: "چندمسیره", value: "multiRouteFlight" },
-    ],
-    formExtender: internationalFlightExtender,
-    purchaseForm: {
-      title: "خرید",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            costPerNight: "",
-            currency: "",
-            broker: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: purchaseInfo,
-      },
-    },
-
-    recordForm: {
-      title: "اطلاعات مشتری (اطلاعات ثبت کننده)",
-      formDetail: {
-        form: useFormik({
-          initialValues: {
-            Registrar: "",
-            receptionist: "",
-            explanation: "",
-          },
-          onSubmit: async () => {},
-        }),
-        fields: recorderInfo,
-      },
-    },
-  };
-
   const expenses: ExpenseContainerInterface = {
     expenseList: [
       {
@@ -456,7 +355,5 @@ function getData() {
     expenses,
     expert,
     contractInfo,
-    hotelForm,
-    flightForm,
   };
 }

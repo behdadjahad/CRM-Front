@@ -8,7 +8,13 @@ export default function UserRecoveryForm({
   stageHandler,
   formik,
 }: StageInterface) {
-  function forgotPasswordHandler() {
+  async function forgotPasswordHandler() {
+    const isValid = await formik.validateForm();
+    if (!isValid) {
+      // toast
+      return;
+    }
+
     stageHandler("user-verification");
     forgetPassword({ identifier: formik.values["resetEmail"] });
   }

@@ -20,7 +20,6 @@ export default function ServiceForm({
   purchaseForm,
   recordForm,
 }: ServiceFormInterface) {
-  const [category, setCategory] = useState(radioButton && radioButton[0].value);
   let formValues = {};
   const [fetchFormValues, setFetchFormValues] = useState(false);
 
@@ -44,11 +43,7 @@ export default function ServiceForm({
               {radioButton?.map((item) => (
                 <div key={item.label} className="flex items-center space-x-2">
                   <label htmlFor={item.value}>{item.label}</label>
-                  <RadioGroupItem
-                    value={item.value}
-                    id={item.value}
-                    onClick={() => setCategory(item.value)}
-                  />
+                  <RadioGroupItem value={item.value} id={item.value} />
                 </div>
               ))}
             </RadioGroup>

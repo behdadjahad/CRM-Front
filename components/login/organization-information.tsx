@@ -20,6 +20,7 @@ export default function OrganizationInformation({
         height={900}
         className="object-cover h-full w-full absolute bottom-0 left-0 top-0"
       />
+
       <h1 className="absolute left-10 top-1/4 text-primary-foreground text-5xl">
         {credentialData.login.label}
       </h1>

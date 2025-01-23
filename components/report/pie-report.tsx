@@ -1,6 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils';
-import PieChart, { PieChartInterface } from '../shared/pie-chart';
+import { PieChartInterface } from "../shared/pie-chart";
+import dynamic from "next/dynamic";
 
 export interface PieChartReportInterface {
   title: string;
@@ -8,7 +9,15 @@ export interface PieChartReportInterface {
   className?: string;
 }
 
-export default function PieChartReport({ barData, title, className }: PieChartReportInterface) {
+export default function PieChartReport({
+  barData,
+  title,
+  className,
+}: PieChartReportInterface) {
+  const PieChart = dynamic(() => import("@/components/shared/pie-chart"), {
+    ssr: false,
+  });
+
   return (
     <div
       className={cn(

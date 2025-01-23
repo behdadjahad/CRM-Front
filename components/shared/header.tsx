@@ -26,11 +26,7 @@ export default function Header({ setState }: HeaderInterface) {
         />
       </Button>
 
-      <ProfileDropDown
-        name="امیر مقدسی"
-        avatar="/temp/avatar.png"
-        className="hidden lg:flex"
-      />
+      <ProfileDropDown className="hidden lg:flex" />
 
       <Notification unread={true} className="mr-auto lg:mr-0 lg:ml-auto" />
 

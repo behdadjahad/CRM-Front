@@ -11,36 +11,25 @@ import UserRecoveryForm from "@/components/login/user-recovery-form";
 import ResetPasswordForm from "@/components/login/reset-password-form";
 import { StageAction, StageInterface } from "@/types/globals";
 
-export function stageReducer(
-  state: StageInterface,
-  action: StageAction
-): StageInterface {
-  switch (action.type) {
-    case "enter":
-      return {
-        ...state,
-        stage: "enter",
-      };
-    case "user-recovery":
-      return {
-        ...state,
-        stage: "user-recovery",
-      };
+function ForgetPassword() {
+  const stageReducer = (
+    state: StageInterface,
+    action: StageAction
+  ): StageInterface => {
+    switch (action.type) {
+      case "enter":
+      case "user-recovery":
+      case "user-verification":
+      case "user-reset-password":
+        return {
+          ...state,
+          stage: action.type,
+        };
+      default:
+        throw new Error(`Unhandled action type: ${action.type}`);
+    }
+  };
 
-    case "user-verification":
-      return {
-        ...state,
-        stage: "user-verification",
-      };
-    case "user-reset-password":
-      return {
-        ...state,
-        stage: "user-reset-password",
-      };
-  }
-}
-
-export default function ForgetPassword() {
   const initialState: StageInterface = {
     stage: "user-recovery",
     stageHandler: () => {},
@@ -62,13 +51,11 @@ export default function ForgetPassword() {
     onSubmit: () => {},
   });
 
-  const [state, dispatch] = useReducer<
-    React.Reducer<StageInterface, StageAction>
-  >(stageReducer, initialState);
+  const [state, dispatch] = useReducer(stageReducer, initialState);
 
-  function stageHandler(type: StageAction["type"]) {
-    dispatch({ type: type });
-  }
+  const stageHandler = (type: StageAction["type"]) => {
+    dispatch({ type });
+  };
 
   return (
     <div className="flex bg-background-active h-screen flex-col lg:flex-row justify-center lg:justify-between">
@@ -78,7 +65,7 @@ export default function ForgetPassword() {
           className="object-contain w-24 h-24 mb-2"
         />
 
-        {state.stage == "user-recovery" && (
+        {state.stage === "user-recovery" && (
           <UserRecoveryForm
             {...initialState}
             stageHandler={stageHandler}
@@ -86,14 +73,15 @@ export default function ForgetPassword() {
           />
         )}
 
-        {state.stage == "user-verification" && (
+        {state.stage === "user-verification" && (
           <VerificationForm
             {...initialState}
             stageHandler={stageHandler}
             formik={formik}
           />
         )}
-        {state.stage == "user-reset-password" && (
+
+        {state.stage === "user-reset-password" && (
           <ResetPasswordForm
             {...initialState}
             stageHandler={stageHandler}
@@ -106,3 +94,5 @@ export default function ForgetPassword() {
     </div>
   );
 }
+
+export default ForgetPassword;

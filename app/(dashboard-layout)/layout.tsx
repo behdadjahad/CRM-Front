@@ -7,7 +7,7 @@ import "../../globals.css";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -42,7 +42,6 @@ export default function RootLayout({
           <Provider store={store}>
             <Layout>{children}</Layout>
           </Provider>
-          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>
     </html>

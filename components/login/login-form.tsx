@@ -41,10 +41,10 @@ export default function LoginForm() {
     if (result.success) {
       router.push("/sale");
       localStorage.setItem("token", result.data.accessToken);
+      setIsLoading(false);
     } else {
       // toast
     }
-    setIsLoading(false);
   }
 
   return (
@@ -95,13 +95,12 @@ export default function LoginForm() {
       <Button
         type="submit"
         variant={"foreground"}
-        disabled={isLoading}
         className={`bg-quartiery-background m-2 text-tertiary-foreground ${
-          isLoading ? "opacity-50 cursor-not-allowed" : ""
+          isLoading ? "cursor-not-allowed" : ""
         }`}
         onClick={loginHandler}
       >
-        ورود
+        {isLoading ? <div className="loader" /> : "ورود"}
       </Button>
     </div>
   );

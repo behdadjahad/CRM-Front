@@ -11,11 +11,12 @@ export interface FetchServiceType {
 }
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
+
   return {
     "Content-Type": "application/json",
     ...additionalHeaders,
-    "Authorization": `Bearer ${token}`
+    Authorization: `Bearer ${token}`,
   };
 }
 

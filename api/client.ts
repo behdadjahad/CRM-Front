@@ -1,13 +1,24 @@
-export async function createContractClient(data: any) {
+import { fetchService } from "@/boot/fetch-service";
 
-  // try {
-  //  const result:  = await fetchService("", {
-  //  method: "",
-  // body: data,
-  // });
+export async function createClient(data: any) {
+  try {
+    const result = await fetchService("person", {
+      method: "POST",
+      body: data,
+    });
 
-  //return result;
-  // } catch {
-  // return {};
-  // }
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+export async function getPerson() {
+  try {
+    const result = await fetchService("person");
+
+    return result;
+  } catch {
+    return {};
+  }
 }

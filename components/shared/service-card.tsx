@@ -32,7 +32,7 @@ export default function ServiceCard({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg flex-1 min-w-24 h-32 bg-card",
+        "flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg flex-1 w-24 h-32 bg-card",
         className
       )}
       onClick={clickFunction}
@@ -50,7 +50,7 @@ export default function ServiceCard({
         height={1080}
         id="service-image"
         className={cn(
-          "min-w-21 rounded-lg h-21 border border-border/20 object-cover w-full",
+          "w-21 rounded-lg h-21 border border-border/20 object-cover",
           { "border-success": isActive },
           { "border-primary": isSelected },
           imageClassName

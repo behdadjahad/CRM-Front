@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomModal from "@/components/shared/custom-modal";
 import { MdClose } from "react-icons/md";
-import FormMaker from "@/components/shared/form-maker";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
 import { cn } from "@/lib/utils";
+import { ContractOutput } from "@/api/contract";
+import { getUsers } from "@/api/auth";
+import { useQuery } from "@tanstack/react-query";
+import { getCities, getCountries } from "@/api/location";
 
 export interface EditableContainerInterface {
   list: {
@@ -18,24 +22,84 @@ export interface EditableContainerInterface {
     icon: React.ReactNode;
     click: () => any;
   };
+  contract: ContractOutput;
 }
 
 export default function EditableContainer({
   action,
   list,
+  contract,
 }: EditableContainerInterface) {
   const [openModal, setOpenModal] = useState(false);
+  const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+  const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
+  const [cityOptions, setCityOptions] = useState<OptionType[]>([]);
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+
+  useEffect(() => {
+    if (users) {
+      const userOption: OptionType[] = users.map((item) => ({
+        label: item.fullName,
+        value: item.id.toString(),
+      }));
+      setUserOptions(userOption);
+    }
+  }, [users]);
 
   const formik = useFormik({
     initialValues: {
-      number: "",
-      date: "",
-      subject: "",
-      accountant: "",
-      description: "",
+      number: contract?.contractNo ?? "",
+      date: contract?.contractDate ?? "",
+      subject: contract?.contractType?.name ?? "",
+      accountant: contract?.userResponsible?.id ?? "",
+      description: contract?.description ?? "",
+      country: undefined,
+      city: undefined,
     },
     onSubmit: async () => {},
   });
+
+  const { data: countryData } = useQuery({
+    queryKey: ["countries"],
+    queryFn: async () => await getCountries(),
+  });
+  const { data: cityData } = useQuery({
+    queryKey: ["cities"],
+    queryFn: async () => await getCities(),
+  });
+  useEffect(() => {
+    if (countryData) {
+      const countryOptions: OptionType[] = countryData?.data.map((item) => ({
+        label: item.name,
+        value: item.id.toString(),
+      }));
+      setCountryOptions(countryOptions);
+    }
+  }, [countryData]);
+
+  useEffect(() => {
+    if (cityData) {
+      if (!formik.values.country) {
+        const cities: OptionType[] = cityData?.data.map((item) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setCityOptions(cities);
+      } else {
+        const cities: OptionType[] = cityData?.data
+          ?.filter((item) => item.countryId === formik.values.country)
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((item) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setCityOptions(cities);
+      }
+    }
+  }, [cityData, formik.values.country]);
 
   return (
     <>
@@ -134,11 +198,30 @@ export default function EditableContainer({
               },
               {
                 key: "accountant",
-                component: "input",
+                component: "Select",
                 placeholder: "مسئول قرارداد",
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                options: userOptions,
+              },
+              {
+                key: "country",
+                component: "Select",
+                placeholder: "کشور",
+                type: "text",
+                floating: true,
+                className: "w-full md:w-1/2",
+                options: countryOptions,
+              },
+              {
+                key: "city",
+                component: "Select",
+                placeholder: "شهر",
+                type: "text",
+                floating: true,
+                className: "w-full md:w-1/2",
+                options: cityOptions,
               },
               {
                 key: "description",

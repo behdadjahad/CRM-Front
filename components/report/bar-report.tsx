@@ -1,6 +1,7 @@
-import React from 'react'
-import BarChart, { BarChartInterface } from '../shared/bar-chart';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { BarChartInterface } from "../shared/bar-chart";
+import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
 
 export interface BarChartReportInterface {
   title: string;
@@ -9,7 +10,16 @@ export interface BarChartReportInterface {
   className?: string;
 }
 
-export default function BarChartReport({ barData, subtitle, title, className }: BarChartReportInterface) {
+export default function BarChartReport({
+  barData,
+  subtitle,
+  title,
+  className,
+}: BarChartReportInterface) {
+  const BarChart = dynamic(() => import("@/components/shared/bar-chart"), {
+    ssr: false,
+  });
+
   return (
     <div
       className={cn(

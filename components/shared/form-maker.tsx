@@ -19,47 +19,49 @@ export interface OptionType {
   value: string;
 }
 
+export interface FieldType {
+  component:
+    | "input"
+    | "Select"
+    | "date"
+    | "phone"
+    | "checkbox"
+    | "radio"
+    | "slider"
+    | "textarea"
+    | "verification"
+    | "file"
+    | "toggle"
+    | "file-preview"
+    | "non-field";
+  floating?: boolean;
+  placeholder?: string;
+  labelClassName?: string;
+  hideSelect?: boolean;
+  label?: string;
+  key: string;
+  dependantKey?: string;
+  type?: string;
+  options?: OptionType[];
+  className?: string;
+  style?: any;
+  icon?: string;
+  defaultValue?: string | null;
+  children?: React.ReactNode;
+  range?: { min: number; max: number; step: number };
+  size?: number;
+  maxLength?: number;
+  iconClassName?: string;
+  multiple?: boolean;
+  toggleVisibility?: () => void;
+  onChange?: (checked: boolean) => void;
+  readonly?: boolean;
+  disabled?: boolean;
+}
+
 export interface FormMakerInterface {
   form: any;
-  fields: {
-    component:
-      | "input"
-      | "Select"
-      | "date"
-      | "phone"
-      | "checkbox"
-      | "radio"
-      | "slider"
-      | "textarea"
-      | "verification"
-      | "file"
-      | "toggle"
-      | "file-preview"
-      | "non-field";
-    floating?: boolean;
-    placeholder?: string;
-    labelClassName?: string;
-    hideSelect?: boolean;
-    label?: string;
-    key: string;
-    dependantKey?: string;
-    type?: string;
-    options?: OptionType[];
-    className?: string;
-    style?: any;
-    icon?: string;
-    defaultValue?: string | null;
-    children?: React.ReactNode;
-    range?: { min: number; max: number; step: number };
-    size?: number;
-    maxLength?: number;
-    iconClassName?: string;
-    multiple?: boolean;
-    toggleVisibility?: () => void;
-    onChange?: (checked: boolean) => void;
-    readonly?: boolean;
-    disabled?: boolean;
-  }[];
+  fields: FieldType[];
   className?: string;
 }
 
@@ -108,7 +110,7 @@ export default function FormMaker({
       className={cn("w-full gap-y-6 flex flex-row flex-wrap", className)}
       onSubmit={(e) => e?.preventDefault()}
     >
-      {fields.map((item) => (
+      {fields?.map((item) => (
         <div
           key={item.key}
           className={cn(

@@ -41,6 +41,26 @@ export async function resetPassword(data: resetPasswordInput) {
     return;
   }
 }
+export async function logOut() {
+  try {
+    const result = await fetchService("auth/logout", {
+      method: "POST",
+    });
+
+    return result;
+  } catch {
+    return;
+  }
+}
+
+export async function getMe(): Promise<UserData> {
+  try {
+    const result = await fetchService("user");
+    return result;
+  } catch {
+    throw new Error("You need to log in")
+  }
+}
 
 export async function getUsers(): Promise<UserData[]> {
   try {

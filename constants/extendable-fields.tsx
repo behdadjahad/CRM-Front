@@ -76,6 +76,10 @@ export const PersonalInfoFormExtender: FormExtenderInterface = {
     idNumber: Yup.string().required(REQUIRED_TEXT),
     career: Yup.string().required(REQUIRED_TEXT),
   }),
+  fetchFormValues: false,
+  callbackSubmit: function (key: string, data: any[]): void {
+    console.log(key, data);
+  },
 };
 
 export const ContactInfoFormExtender: FormExtenderInterface = {
@@ -141,6 +145,10 @@ export const ContactInfoFormExtender: FormExtenderInterface = {
     email: Yup.string().email().required(REQUIRED_TEXT),
     website: Yup.string().required(REQUIRED_TEXT),
   }),
+  fetchFormValues: false,
+  callbackSubmit: function (key: string, data: any[]): void {
+    console.log(key, data);
+  },
 };
 
 export const LivingInformationExtender: FormExtenderInterface = {
@@ -217,6 +225,10 @@ export const LivingInformationExtender: FormExtenderInterface = {
     category: Yup.string().required(REQUIRED_TEXT),
     address: Yup.string().required(REQUIRED_TEXT),
   }),
+  fetchFormValues: false,
+  callbackSubmit: function (key: string, data: any[]): void {
+    console.log(key, data);
+  },
 };
 
 export const workInformationExtender: FormExtenderInterface = {
@@ -293,6 +305,10 @@ export const workInformationExtender: FormExtenderInterface = {
     category: Yup.string().required(REQUIRED_TEXT),
     address: Yup.string().required(REQUIRED_TEXT),
   }),
+  fetchFormValues: false,
+  callbackSubmit: function (key: string, data: any[]): void {
+    console.log(key, data);
+  },
 };
 
 export const organizationInformationExtender: FormExtenderInterface = {
@@ -341,9 +357,13 @@ export const organizationInformationExtender: FormExtenderInterface = {
     category: Yup.string().required(REQUIRED_TEXT),
     address: Yup.string().required(REQUIRED_TEXT),
   }),
+  fetchFormValues: false,
+  callbackSubmit: function (key: string, data: any[]): void {
+    console.log(key, data);
+  },
 };
 
-export const hotelInformationExtender: FormExtenderInterface[] = [
+export const hotelExtender: Partial<FormExtenderInterface>[] = [
   {
     title: "سرویس هتل",
     fields: [
@@ -462,7 +482,7 @@ export const hotelInformationExtender: FormExtenderInterface[] = [
     }),
   },
 ];
-export const internationalFlightExtender: FormExtenderInterface[] = [
+export const internationalFlightExtender: Partial<FormExtenderInterface>[] = [
   {
     title: "سرویس پرواز خارجی",
     fields: [
@@ -586,7 +606,7 @@ export const internationalFlightExtender: FormExtenderInterface[] = [
     }),
   },
 ];
-export const visaExtender: FormExtenderInterface[] = [
+export const visaExtender: Partial<FormExtenderInterface>[] = [
   {
     title: "سرویس ویزا",
     fields: [
@@ -636,7 +656,8 @@ export const visaExtender: FormExtenderInterface[] = [
     }),
   },
 ];
-export const pickupExtender: FormExtenderInterface[] = [
+
+export const pickupExtender: Partial<FormExtenderInterface>[] = [
   {
     title: "سرویس پیکاپ",
     fields: [
