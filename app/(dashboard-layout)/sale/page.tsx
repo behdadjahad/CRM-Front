@@ -1,6 +1,6 @@
 "use client";
 import { getUsers } from "@/api/auth";
-import { getContracts, getServices } from "@/api/contract";
+import { getContracts, getContractTypes } from "@/api/contract";
 import ContractContainer, {
   ContractContainerInterface,
 } from "@/components/contract/contract-container";
@@ -12,12 +12,13 @@ import Filter from "@/components/sale/filter";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
+import { services } from "@/constants/services";
 import { convertGregorianToSolarWithTimeZone } from "@/constants/time";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 export default function Sale() {
-  const { requestCount, contractOverviewProps, contractList, formServices } =
+  const { requestCount, contractOverviewProps, contractList, contractTypes } =
     getData();
 
   return (
@@ -39,7 +40,7 @@ export default function Sale() {
           />
         </div>
 
-        <ContractCreation formServices={formServices} />
+        <ContractCreation contractTypes={contractTypes} />
       </div>
 
       <ContractOverview {...contractOverviewProps} />
@@ -60,7 +61,10 @@ export default function Sale() {
 }
 
 function getData() {
-  const [formServices, setFormServices] = useState<ServiceCardInterface[]>([]);
+  const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
+    []
+  );
+  const [contractItems, setContractItems] = useState<any[]>([]);
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
@@ -70,47 +74,50 @@ function getData() {
     queryKey: ["contractInformation"],
     queryFn: () => getContracts(),
   });
-
-  const contractList: ContractContainerInterface["list"] =
-    contractInformation?.data
-      ? contractInformation?.data.map((item: any) => ({
-          id: item.id,
-          contract: {
-            date: convertGregorianToSolarWithTimeZone(item.contractDate),
-            destination: "",
-            submitter:
-              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
-              "",
-            unit: "",
-          },
-          footer: {
-            cost: item.buyPrice.toString(),
-            income: item.sellPrice.toString(),
-            overall: (item.sellPrice - item.buyPrice).toString(),
-          },
-          header: {
-            contractNumber: item.contractNo,
-            icon: "",
-            submitDate: convertGregorianToSolarWithTimeZone(
-              item.submitDateTime
-            ),
-            title:
-              formServices.find((obj) => obj.id === item.contractTypeId)
-                ?.title ?? "",
-          },
-          score: {
-            final: 30,
-            totalVotes: 11,
-          },
-          services: item.avServices ? item.avServices : [],
-          user: {
-            image: "",
-            name:
-              users?.find((obj) => obj.id === item.contractTypeId)?.fullName ??
-              "",
-          },
-        }))
-      : [];
+  useEffect(() => {
+    if (contractInformation?.data) {
+      setContractItems(contractInformation?.data);
+    }
+  }, [contractInformation?.data]);
+  const contractList: ContractContainerInterface["list"] = contractItems
+    ? contractItems.map((item: any) => ({
+        id: item.id,
+        contract: {
+          date: convertGregorianToSolarWithTimeZone(item.contractDate),
+          destination: "",
+          submitter:
+            users?.find((obj) => obj.id === item.userSubmitterId)?.fullName ??
+            "",
+          unit: "",
+        },
+        footer: {
+          cost: item.buyPrice.toString(),
+          income: item.sellPrice.toString(),
+          overall: (item.sellPrice - item.buyPrice).toString(),
+        },
+        header: {
+          contractNumber: item.contractNo,
+          icon: "/icons/visa-white.png",
+          submitDate: convertGregorianToSolarWithTimeZone(item.submitDateTime),
+          title:
+            contractTypes.find((obj) => obj.id === item.contractTypeId)
+              ?.title ?? "",
+        },
+        score: {
+          final: 30,
+          totalVotes: 11,
+        },
+        services: item.avServices
+          ? services.filter((obj) => item.avServices.includes(obj.name))
+          : [],
+        user: {
+          image: "/images/expert.png",
+          name:
+            users?.find((obj) => obj.id === item.userResponsibleId)?.fullName ??
+            "",
+        },
+      }))
+    : [];
 
   const contractOverviewProps: ContractOverviewInterface = {
     list: [
@@ -137,13 +144,13 @@ function getData() {
   };
 
   const { data } = useQuery({
-    queryKey: ["serviceQuery"],
-    queryFn: () => getServices(),
+    queryKey: ["contractTypeQuery"],
+    queryFn: () => getContractTypes(),
   });
 
   useEffect(() => {
     if (data?.success && data?.data) {
-      setFormServices(
+      setContractTypes(
         data.data.map((item: any) => ({
           id: item.id,
           image: "public/" + item.iconFile,
@@ -156,6 +163,6 @@ function getData() {
     requestCount: 273,
     contractOverviewProps,
     contractList,
-    formServices,
+    contractTypes,
   };
 }

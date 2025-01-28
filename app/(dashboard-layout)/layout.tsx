@@ -7,6 +7,7 @@ import "../../globals.css";
 import { store } from "../../store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
@@ -43,6 +44,7 @@ export default function RootLayout({
             <Layout>{children}</Layout>
           </Provider>
         </QueryClientProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -54,10 +54,10 @@ export default function EditableContainer({
       number: contract?.contractNo ?? "",
       date: contract?.contractDate ?? "",
       subject: contract?.contractType?.name ?? "",
-      accountant: contract?.userResponsible?.id ?? "",
+      accountant: contract?.userResponsible?.id.toString() ?? "",
       description: contract?.description ?? "",
-      country: undefined,
-      city: undefined,
+      country: contract?.destinationCountry?.toString() ?? "",
+      city: contract?.destinationCity?.toString() ?? "",
     },
     onSubmit: async () => {},
   });
@@ -90,7 +90,7 @@ export default function EditableContainer({
         setCityOptions(cities);
       } else {
         const cities: OptionType[] = cityData?.data
-          ?.filter((item) => item.countryId === formik.values.country)
+          ?.filter((item) => item.countryId === Number(formik.values.country))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((item) => ({
             label: item.name,

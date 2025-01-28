@@ -78,3 +78,13 @@ const CityOutputStatic = {
     },
   ],
 };
+
+export async function getProvinces() {
+  try {
+    const result = await fetchService('province');
+
+    return result;
+  } catch {
+    return;
+  }
+}

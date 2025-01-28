@@ -2,8 +2,9 @@ import { FieldType, OptionType } from "@/components/shared/form-maker";
 
 export function createFormFields(
   formType: string,
-  cityOptions?: OptionType[],
-  countryOptions?: OptionType[]
+  countryOptions?: OptionType[],
+  provinceOptions?: OptionType[],
+  cityOptions?: OptionType[]
 ): FieldType[] {
   switch (formType) {
     case "personalFormik":
@@ -66,22 +67,34 @@ export function createFormFields(
     case "workFormik":
       return [
         {
+          key: "workCountry",
+          component: "Select",
+          placeholder: "کشور",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+          options: countryOptions,
+        },
+        {
           key: "workProvince",
-          component: "input",
+          component: "Select",
           placeholder: "استان",
           type: "text",
           floating: true,
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
+          options: provinceOptions,
         },
         {
           key: "workCity",
-          component: "input",
+          component: "Select",
           placeholder: "شهر",
           type: "text",
           floating: true,
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
+          options: cityOptions,
         },
         {
           key: "workStreet",
@@ -101,15 +114,15 @@ export function createFormFields(
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
         },
-        {
-          key: "workCategory",
-          component: "Select",
-          placeholder: "دسته بندی",
-          options: [],
-          floating: true,
-          labelClassName: "w-full",
-          className: "w-full md:w-1/2 lg:w-1/4",
-        },
+        // {
+        //   key: "workCategory",
+        //   component: "Select",
+        //   placeholder: "دسته بندی",
+        //   options: [],
+        //   floating: true,
+        //   labelClassName: "w-full",
+        //   className: "w-full md:w-1/2 lg:w-1/4",
+        // },
         {
           key: "workAddress",
           component: "input",
@@ -134,12 +147,13 @@ export function createFormFields(
         },
         {
           key: "province",
-          component: "input",
+          component: "Select",
           placeholder: "استان",
           type: "text",
           floating: true,
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
+          options: provinceOptions,
         },
         {
           key: "city",
@@ -169,15 +183,15 @@ export function createFormFields(
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
         },
-        {
-          key: "category",
-          component: "Select",
-          placeholder: "دسته بندی",
-          options: [],
-          floating: true,
-          labelClassName: "w-full",
-          className: "w-full md:w-1/2 lg:w-1/4",
-        },
+        // {
+        //   key: "category",
+        //   component: "Select",
+        //   placeholder: "دسته بندی",
+        //   options: [],
+        //   floating: true,
+        //   labelClassName: "w-full",
+        //   className: "w-full md:w-1/2 lg:w-1/4",
+        // },
         {
           key: "address",
           component: "input",
@@ -188,7 +202,7 @@ export function createFormFields(
           className: "w-full md:w-1/2",
         },
       ];
-    case "organizatonFormik":
+    case "organizationFormik":
       return [
         {
           key: "organizationName",
@@ -199,16 +213,76 @@ export function createFormFields(
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
         },
+        // {
+        //   key: "organizationCategory",
+        //   component: "Select",
+        //   placeholder: "دسته بندی",
+        //   options: [
+        //     {
+        //       label: "hi",
+        //       value: "hi",
+        //     },
+        //   ],
+        //   floating: true,
+        //   labelClassName: "w-full",
+        //   className: "w-full md:w-1/2 lg:w-1/4",
+        // },
+        // {
+        //   key: "organizationAddress",
+        //   component: "input",
+        //   placeholder: "آدرس",
+        //   type: "text",
+        //   floating: true,
+        //   labelClassName: "w-full",
+        //   className: "w-full md:w-1/2",
+        // },
+      ];
+    case "organizationAddressFormik":
+      return [
         {
-          key: "organizationCategory",
+          key: "organizationCountry",
           component: "Select",
-          placeholder: "دسته بندی",
-          options: [
-            {
-              label: "hi",
-              value: "hi",
-            },
-          ],
+          placeholder: "کشور",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+          options: countryOptions,
+        },
+        {
+          key: "organizationProvince",
+          component: "Select",
+          placeholder: "استان",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+          options: provinceOptions,
+        },
+        {
+          key: "organizationCity",
+          component: "Select",
+          placeholder: "شهر",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+          options: cityOptions,
+        },
+        {
+          key: "organizationStreet",
+          component: "input",
+          placeholder: "خیابان",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+        },
+        {
+          key: "organizationPostalCode",
+          component: "input",
+          placeholder: "کد پستی",
+          type: "text",
           floating: true,
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
@@ -284,6 +358,36 @@ export function createFormFields(
         },
         {
           key: "website",
+          component: "input",
+          placeholder: "وب سایت",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+        },
+      ];
+    case "organizationContactFormik":
+      return [
+        {
+          key: "organizationPhone",
+          component: "input",
+          placeholder: "تلفن محل کار",
+          type: "text",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+        },
+        {
+          key: "organizationEmail",
+          component: "input",
+          placeholder: "ایمیل",
+          type: "email",
+          floating: true,
+          labelClassName: "w-full",
+          className: "w-full md:w-1/2 lg:w-1/4",
+        },
+        {
+          key: "organizationWebsite",
           component: "input",
           placeholder: "وب سایت",
           type: "text",

@@ -60,6 +60,11 @@ export default function ContractCard({
       value: contract.submitter,
     },
     {
+      icon: "/icons/user-mute.png",
+      label: "مشتری",
+      value: "",
+    },
+    {
       icon: "/icons/map.png",
       label: "مقصد",
       value: contract.destination,

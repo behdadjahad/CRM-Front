@@ -20,15 +20,15 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { convertToTimezone } from "@/constants/time";
+import { convertToGregorian } from "@/lib/date";
 import { getCities, getCountries } from "@/api/location";
 
 export interface ContractCreationInterface {
-  formServices: ServiceCardInterface[];
+  contractTypes: ServiceCardInterface[];
 }
 
 export default function ContractCreation({
-  formServices,
+  contractTypes,
 }: ContractCreationInterface) {
   const [openModal, setOpenModal] = useState(false);
   const [activeItem, setActiveItem] = useState<any>(null);
@@ -47,8 +47,8 @@ export default function ContractCreation({
       submitter: "",
       accountant: "",
       description: "",
-      country: undefined,
-      city: undefined,
+      country: 0,
+      city: 0,
     },
     onSubmit: async () => {},
   });
@@ -138,11 +138,16 @@ export default function ContractCreation({
       id: formik.values.contractId,
       data: {
         contractTypeId: activeItem.id,
-        contractDate: convertToTimezone(formik.values.contractDate),
+        contractDate: convertToGregorian(
+          formik.values.contractDate,
+          formik.values.contractDateType
+        ),
         dateType: formik.values.contractDateType,
         description: formik.values.description,
         userSubmitterId: userData.id,
         userResponsibleId: Number(formik.values.accountant),
+        destinationCity: formik.values.city,
+        destinationCountry: formik.values.country,
       },
     });
   }
@@ -163,7 +168,7 @@ export default function ContractCreation({
         contentLabel="ویرایش"
         overflow="visible"
       >
-        <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+        <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-3">
           <span className="text-lg font-bold">ثبت قرارداد</span>
 
           <MdClose
@@ -177,11 +182,11 @@ export default function ContractCreation({
           />
         </div>
 
-        <div className="w-full flex flex-col gap-8">
-          <div className="flex flex-col gap-3 text-base">
+        <div className="w-full flex flex-col gap-2">
+          <div className="flex flex-col gap-2 text-base">
             <span>موضوع قرارداد</span>
-            <div className="flex flex-row flex-wrap items-center gap-3 w-full">
-              {formServices.map((item) => (
+            <div className="flex flex-row flex-wrap items-center gap-2 w-full">
+              {contractTypes.map((item) => (
                 <ServiceCard
                   key={item.id}
                   {...item}
@@ -273,7 +278,7 @@ export default function ContractCreation({
             className="flex flex-row w-full"
           />
 
-          <div className="flex flex-row gap-4">
+          <div className="flex flex-row gap-2">
             <Button
               variant={"info"}
               onClick={() => {

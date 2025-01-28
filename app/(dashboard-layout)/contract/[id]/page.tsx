@@ -18,19 +18,56 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import { createFormFields } from "@/constants/client-form-fields";
-import { createClient } from "@/api/client";
-import { getCities, getCountries } from "@/api/location";
+import {
+  createClient,
+  createOrganization,
+  insertAddressData,
+  insertCommunicationData,
+} from "@/api/client";
+import { getCities, getCountries, getProvinces } from "@/api/location";
 import { OptionType } from "@/components/shared/form-maker";
+import {
+  clientAddress,
+  Communicater,
+  CommunicationType,
+} from "@/types/globals";
+import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { toast } from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { sendServiceData } from "@/api/service";
 
 export default function Contract() {
+  const router = useRouter();
+  const [contractServices, setContractServices] = useState<OptionType[]>([]);
   const [category, setCategory] = useState("personal");
   const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
+  const [provinceOptions, setProvinceOptions] = useState<OptionType[]>([]);
   const [cityOptions, setCityOptions] = useState<OptionType[]>([]);
+  const [workCountryOptions, setWorkCountryOptions] = useState<OptionType[]>(
+    []
+  );
+  const [workProvinceOptions, setWorkProvinceOptions] = useState<OptionType[]>(
+    []
+  );
+  const [workCityOptions, setWorkCityOptions] = useState<OptionType[]>([]);
+  const [agencyCountryOptions, setAgencyCountryOptions] = useState<
+    OptionType[]
+  >([]);
+  const [agencyProvinceOptions, setAgencyProvinceOptions] = useState<
+    OptionType[]
+  >([]);
+  const [agencyCityOptions, setAgencyCityOptions] = useState<OptionType[]>([]);
+  //contractId
   const { id } = useParams();
+
+  const searchParams = useSearchParams();
+  const customerId = searchParams.get("customerId");
+  const organizationId = searchParams.get("organizationId");
 
   const { data: contract } = useQuery({
     queryKey: ["contract"],
-    queryFn: () => getContractById(id as any),
+    queryFn: () => getContractById(Number(id) as number),
   });
   const personalFormik = useFormik({
     initialValues: {
@@ -52,35 +89,48 @@ export default function Contract() {
     onSubmit: () => {},
   });
 
-  // const livingContactFormik = useFormik({
-  //   initialValues: {
-  //     personalPhone: "",
-  //     homePhone: "",
-  //     email: "",
-  //     website: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     personalPhone: Yup.string().required(REQUIRED_TEXT),
-  //     homePhone: Yup.string().required(REQUIRED_TEXT),
-  //     email: Yup.string().required(REQUIRED_TEXT),
-  //     website: Yup.string().required(REQUIRED_TEXT),
-  //   }),
-  //   onSubmit: () => {},
-  // });
+  const livingContactFormik = useFormik({
+    initialValues: {
+      personalPhone: "",
+      homePhone: "",
+      email: "",
+      website: "",
+    },
+    validationSchema: Yup.object().shape({
+      personalPhone: Yup.string().required(REQUIRED_TEXT),
+      homePhone: Yup.string().required(REQUIRED_TEXT),
+      email: Yup.string().required(REQUIRED_TEXT),
+      website: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
 
-  // const workContactFormik = useFormik({
-  //   initialValues: {
-  //     jobPhone: "",
-  //     email: "",
-  //     website: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     jobPhone: Yup.string().required(REQUIRED_TEXT),
-  //     email: Yup.string().required(REQUIRED_TEXT),
-  //     website: Yup.string().required(REQUIRED_TEXT),
-  //   }),
-  //   onSubmit: () => {},
-  // });
+  const workContactFormik = useFormik({
+    initialValues: {
+      jobPhone: "",
+      email: "",
+      website: "",
+    },
+    validationSchema: Yup.object().shape({
+      jobPhone: Yup.string().required(REQUIRED_TEXT),
+      email: Yup.string().required(REQUIRED_TEXT),
+      website: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
+  const organizationContactFormik = useFormik({
+    initialValues: {
+      organizationPhone: "",
+      organizationEmail: "",
+      organizationWebsite: "",
+    },
+    validationSchema: Yup.object().shape({
+      organizationPhone: Yup.string().required(REQUIRED_TEXT),
+      organizationEmail: Yup.string().required(REQUIRED_TEXT),
+      organizationWebsite: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
 
   const livingFormik = useFormik({
     initialValues: {
@@ -104,43 +154,105 @@ export default function Contract() {
     onSubmit: () => {},
   });
 
-  // const workFormik = useFormik({
-  //   initialValues: {
-  //     workProvince: "",
-  //     workCity: "",
-  //     WorkStreet: "",
-  //     wrkPostalCode: "",
-  //     workCategory: "",
-  //     workAddress: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     workProvince: Yup.string().required(REQUIRED_TEXT),
-  //     workCity: Yup.string().required(REQUIRED_TEXT),
-  //     WorkStreet: Yup.string().required(REQUIRED_TEXT),
-  //     workPostalCode: Yup.string().required(REQUIRED_TEXT),
-  //     workCategory: Yup.string().required(REQUIRED_TEXT),
-  //     workAddress: Yup.string().required(REQUIRED_TEXT),
-  //   }),
-  //   onSubmit: () => {},
-  // });
+  const workFormik = useFormik({
+    initialValues: {
+      workProvince: "",
+      workCity: "",
+      workStreet: "",
+      workPostalCode: "",
+      workCategory: "",
+      workAddress: "",
+      workCountry: undefined,
+    },
+    validationSchema: Yup.object().shape({
+      workProvince: Yup.string().required(REQUIRED_TEXT),
+      workCity: Yup.string().required(REQUIRED_TEXT),
+      workStreet: Yup.string().required(REQUIRED_TEXT),
+      workPostalCode: Yup.string().required(REQUIRED_TEXT),
+      workCategory: Yup.string().required(REQUIRED_TEXT),
+      workAddress: Yup.string().required(REQUIRED_TEXT),
+      workCountry: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
 
-  // const organizatonFormik = useFormik({
-  //   initialValues: {
-  //     organizationName: "",
-  //     organizationCategory: "",
-  //     organizationAddress: "",
-  //   },
-  //   validationSchema: Yup.object().shape({
-  //     organizationName: Yup.string().required(REQUIRED_TEXT),
-  //     organizationCategory: Yup.string().required(REQUIRED_TEXT),
-  //     WorkStreet: Yup.string().required(REQUIRED_TEXT),
-  //   }),
-  //   onSubmit: () => {},
-  // });
+  const organizationFormik = useFormik({
+    initialValues: {
+      organizationName: "",
+      // organizationCategory: "",
+      // organizationAddress: "",
+    },
+    validationSchema: Yup.object().shape({
+      organizationName: Yup.string().required(REQUIRED_TEXT),
+      // organizationCategory: Yup.string().required(REQUIRED_TEXT),
+      // organizationAddress: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
+  const organizationAddressFormik = useFormik({
+    initialValues: {
+      organizationCountry: undefined,
+      organizationProvince: undefined,
+      organizationCity: undefined,
+      organizationStreet: "",
+      organizationPostalCode: "",
+      organizationAddress: "",
+    },
+    validationSchema: Yup.object().shape({
+      organizationCountry: Yup.string().required(REQUIRED_TEXT),
+      organizationProvince: Yup.string().required(REQUIRED_TEXT),
+      organizationCity: Yup.string().required(REQUIRED_TEXT),
+      organizationStreet: Yup.string().required(REQUIRED_TEXT),
+      organizationPostalCode: Yup.string().required(REQUIRED_TEXT),
+      organizationAddress: Yup.string().required(REQUIRED_TEXT),
+    }),
+    onSubmit: () => {},
+  });
 
   const { mutate: personalSubmitHandler } = useMutation({
     mutationFn: (data: any) => {
       return createClient(data);
+    },
+    onSuccess: (result) => {
+      const customerId = result.customerId;
+      const url = organizationId
+        ? `?customerId=${customerId}&organizationId=${organizationId}`
+        : `?organizationId=${customerId}`;
+      router.push(url);
+      toast.success("اطلاعات با موفقیت ثبت شد", {
+        duration: 4000, // Duration in ms
+        position: "top-center", // Position: top-right, top-center, etc.
+      });
+    },
+  });
+  const { mutate: organizationSubmitHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return createOrganization(data);
+    },
+    onSuccess: (result) => {
+      const organizationId = result.data.id;
+      const url = customerId
+        ? `?customerId=${customerId}&organizationId=${organizationId}`
+        : `?organizationId=${organizationId}`;
+      router.push(url);
+    },
+  });
+  const { mutate: addressInfoHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return insertAddressData(data);
+    },
+    onSuccess: () => {},
+  });
+
+  const { mutate: communicateHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return insertCommunicationData(data);
+    },
+    onSuccess: () => {},
+  });
+  const { mutate: submitService } = useMutation({
+    mutationFn: (data: any) => {
+      return sendServiceData(data, Number(id));
     },
     onSuccess: () => {},
   });
@@ -148,6 +260,10 @@ export default function Contract() {
   const { data: countryData } = useQuery({
     queryKey: ["countries"],
     queryFn: async () => await getCountries(),
+  });
+  const { data: provinceData } = useQuery({
+    queryKey: ["provinces"],
+    queryFn: async () => await getProvinces(),
   });
 
   const { data: cityData } = useQuery({
@@ -161,16 +277,87 @@ export default function Contract() {
         value: item.id.toString(),
       }));
       setCountryOptions(countryOptions);
+      setWorkCountryOptions(countryOptions);
+      setAgencyCountryOptions(countryOptions);
     }
   }, [countryData]);
+  useEffect(() => {
+    if (provinceData) {
+      if (!livingFormik.values.country) {
+        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+
+        setProvinceOptions(provinces);
+      } else {
+        const provinces: OptionType[] = provinceData?.data
+          ?.filter(
+            (item: any) => item.countryId === livingFormik.values.country
+          )
+          .map((item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setProvinceOptions(provinces);
+      }
+    }
+  }, [provinceData, livingFormik.values.country]);
+  useEffect(() => {
+    if (provinceData) {
+      if (!workFormik.values.workCountry) {
+        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+
+        setWorkProvinceOptions(provinces);
+      } else {
+        const provinces: OptionType[] = provinceData?.data
+          ?.filter(
+            (item: any) => item.countryId === workFormik.values.workCountry
+          )
+          .map((item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setWorkProvinceOptions(provinces);
+      }
+    }
+  }, [provinceData, workFormik.values.workCountry]);
+  useEffect(() => {
+    if (provinceData) {
+      if (!organizationAddressFormik.values.organizationCountry) {
+        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+
+        setAgencyProvinceOptions(provinces);
+      } else {
+        const provinces: OptionType[] = provinceData?.data
+          ?.filter(
+            (item: any) =>
+              item.countryId ===
+              organizationAddressFormik.values.organizationCountry
+          )
+          .map((item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setAgencyProvinceOptions(provinces);
+      }
+    }
+  }, [provinceData, organizationAddressFormik.values.organizationCountry]);
 
   useEffect(() => {
     if (cityData) {
-      if (!livingFormik.values.country) {
+      if (!livingFormik.values.province) {
         const cities: OptionType[] = cityData?.data.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));
+
         setCityOptions(cities);
       } else {
         const cities: OptionType[] = cityData?.data
@@ -184,6 +371,54 @@ export default function Contract() {
       }
     }
   }, [cityData, livingFormik.values.country]);
+  useEffect(() => {
+    if (cityData) {
+      if (!workFormik.values.workCountry) {
+        const cities: OptionType[] = cityData?.data.map((item) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setWorkCityOptions(cities);
+      } else {
+        const cities: OptionType[] = cityData?.data
+          ?.filter((item) => item.countryId === workFormik.values.workCountry)
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((item) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setWorkCityOptions(cities);
+      }
+    }
+  }, [cityData, workFormik.values.workCountry]);
+  useEffect(() => {
+    if (cityData) {
+      if (!organizationAddressFormik.values.organizationProvince) {
+        const cities: OptionType[] = cityData?.data.map((item) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setAgencyCityOptions(cities);
+      } else {
+        const cities: OptionType[] = cityData?.data
+          ?.filter(
+            (item) =>
+              item.provinceId ===
+              organizationAddressFormik.values.organizationProvince
+          )
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((item) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }));
+        setAgencyCityOptions(cities);
+      }
+    }
+  }, [cityData, organizationAddressFormik.values.organizationProvince]);
+
+  function serviceHandler(services: any) {
+    setContractServices(services.map((obj: any) => obj.name));
+  }
   return (
     <main>
       <div>
@@ -264,7 +499,7 @@ export default function Contract() {
         </div>
       </RadioGroup>
 
-      {category === "personal" ? (
+      <div className={category === "organization" ? "hidden" : ""}>
         <FormTabContainer
           defaultValue="اطلاعات مشتری"
           tabs={[
@@ -282,7 +517,8 @@ export default function Contract() {
                     personalSubmitHandler({
                       firstName: personalFormik.values.name,
                       lastName: personalFormik.values.familyName,
-                      birthdate: personalFormik.values.birthdate,
+                      // birthdate: personalFormik.values.birthdate,
+                      birthdate: "2012-12-28T18:12:33+01:00",
                       socialNumber: personalFormik.values.socialNumber,
                       idNumber: personalFormik.values.idNumber,
                       career: personalFormik.values.career,
@@ -296,110 +532,357 @@ export default function Contract() {
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
-                />
+                  onActiveItemChange={serviceHandler}
+                >
+                  <RegisteryForm />
+                  <Button
+                    variant={"info"}
+                    className="w-24 mx-2"
+                    onClick={() => {
+                      submitService({ avServices: contractServices });
+                    }}
+                  >
+                    ثبت
+                  </Button>
+                </ServiceContainer>
               ),
             },
 
-            // {
-            //   title: "اطلاعات محل سکونت",
-            //   forms: [
-            //     {
-            //       title: "اطلاعات محل سکونت",
-            //       formInfo: {
-            //         form: livingFormik,
-            //         fields: createFormFields(
-            //           "livingFormik",
-            //           cityOptions,
-            //           countryOptions
-            //         ),
-            //         className: "flex flex-row-reverse",
-            //       },
-            //       formValues: {
-            //         province: livingFormik.values.province,
-            //         city: livingFormik.values.city,
-            //         street: livingFormik.values.street,
-            //         postalCode: livingFormik.values.postalCode,
-            //         category: livingFormik.values.category,
-            //         address: livingFormik.values.address,
-            //       },
-            //     },
-            //     {
-            //       title: "اطلاعات تماس",
-            //       formInfo: {
-            //         form: livingContactFormik,
-            //         fields: createFormFields("livingContactFormik"),
-            //         className: "flex flex-row-reverse",
-            //       },
-            //     },
-            //   ],
-
-            //   children: (
-            //     <ServiceContainer
-            //       askQuestion={false}
-            //       services={services}
-            //       multiChosen={true}
-            //     />
-            //   ),
-            // },
-            // {
-            //   title: "اطلاعات محل کار",
-            //   forms: [
-            //     {
-            //       title: "اطلاعات محل کار",
-            //       formInfo: {
-            //         form: workFormik,
-            //         fields: createFormFields("workFormik"),
-            //         className: "flex flex-row-reverse",
-            //       },
-            //     },
-            //     {
-            //       title: "اطلاعات تماس",
-            //       formInfo: {
-            //         form: workContactFormik,
-            //         fields: createFormFields("workContactFormik"),
-            //         className: "flex flex-row-reverse",
-            //       },
-            //     },
-            //   ],
-            //   children: (
-            //     <ServiceContainer
-            //       askQuestion={false}
-            //       services={services}
-            //       multiChosen={true}
-            //     />
-            //   ),
-            // },
-          ]}
-        />
-      ) : (
-        <FormTabContainer
-          defaultValue="اطلاعات سازمان"
-          tabs={[
             {
-              title: "اطلاعات سازمان",
+              title: "اطلاعات محل سکونت",
               forms: [
-                // {
-                //   title: "اطلاعات سازمان",
-                //   formInfo: {
-                //     form: organizatonFormik,
-                //     fields: createFormFields("organizatonFormik"),
-                //     className: "flex flex-row-reverse",
-                //   },
-                // },
+                {
+                  title: "اطلاعات محل سکونت",
+                  formInfo: {
+                    form: livingFormik,
+                    fields: createFormFields(
+                      "livingFormik",
+                      countryOptions,
+                      provinceOptions,
+                      cityOptions
+                    ),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    addressInfoHandler({
+                      address: livingFormik.values.address,
+                      postalCode: livingFormik.values.postalCode,
+                      //apartmentNo: "string",
+                      //longitude: 1,
+                      //latitude: 1,
+                      //googleUrl: "string",
+                      street: livingFormik.values.street,
+                      //district: "string",
+                      cityId: livingFormik.values.city,
+                      countryId: livingFormik.values.country,
+                      customerId: customerId,
+                      addressTypeId: clientAddress.livingAddress,
+                    });
+                  },
+                },
+                {
+                  title: "اطلاعات تماس",
+                  formInfo: {
+                    form: livingContactFormik,
+                    fields: createFormFields("livingContactFormik"),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    communicateHandler([
+                      {
+                        communicationDetails:
+                          livingContactFormik.values.personalPhone,
+                        communicationType: CommunicationType.mobile,
+                        communicater: Communicater.home,
+                        customerId: Number(customerId),
+
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails:
+                          livingContactFormik.values.homePhone,
+                        communicationType: CommunicationType.home,
+                        communicater: Communicater.home,
+                        customerId: Number(customerId),
+
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails: livingContactFormik.values.email,
+                        communicationType: CommunicationType.email,
+                        communicater: Communicater.home,
+                        customerId: Number(customerId),
+
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails:
+                          livingContactFormik.values.website,
+                        communicationType: CommunicationType.website,
+                        communicater: Communicater.home,
+                        customerId: Number(customerId),
+
+                        // contractId: Number(id),
+                      },
+                    ]);
+                  },
+                },
+              ],
+
+              children: (
+                <ServiceContainer
+                  askQuestion={false}
+                  services={services}
+                  multiChosen={true}
+                  onActiveItemChange={serviceHandler}
+                >
+                  <RegisteryForm />
+                  <Button
+                    variant={"info"}
+                    className="w-24 mx-2"
+                    onClick={() => { submitService({ avServices: contractServices }) }}
+                  >
+                    ثبت
+                  </Button>
+                </ServiceContainer>
+              ),
+            },
+            {
+              title: "اطلاعات محل کار",
+              forms: [
+                {
+                  title: "اطلاعات محل کار",
+                  formInfo: {
+                    form: workFormik,
+                    fields: createFormFields(
+                      "workFormik",
+                      workCountryOptions,
+                      workProvinceOptions,
+                      workCityOptions
+                    ),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    addressInfoHandler({
+                      address: workFormik.values.workAddress,
+                      postalCode: workFormik.values.workPostalCode,
+                      //apartmentNo: "string",
+                      // longitude: 1,
+                      //latitude: 1,
+                      //googleUrl: "string",
+                      street: workFormik.values.workStreet,
+                      //"district": "string",
+                      cityId: workFormik.values.workCity,
+                      countryId: workFormik.values.workCountry,
+                      customerId: customerId,
+                      addressTypeId: clientAddress.workAddress,
+                    });
+                  },
+                },
+                {
+                  title: "اطلاعات تماس",
+                  formInfo: {
+                    form: workContactFormik,
+                    fields: createFormFields("workContactFormik"),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    communicateHandler([
+                      {
+                        communicationDetails: workContactFormik.values.jobPhone,
+                        communicationType: CommunicationType.business,
+                        communicater: Communicater.business,
+                        customerId: Number(customerId),
+                        //  organizationId: null,
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails: workContactFormik.values.email,
+                        communicationType: CommunicationType.email,
+                        communicater: Communicater.business,
+                        customerId: Number(customerId),
+                        // organizationId: null,
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails: workContactFormik.values.website,
+                        communicationType: CommunicationType.website,
+                        communicater: Communicater.business,
+                        customerId: Number(customerId),
+                        // organizationId: null,
+                        // contractId: Number(id),
+                      },
+                    ]);
+                  },
+                },
               ],
               children: (
                 <ServiceContainer
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
+                  onActiveItemChange={serviceHandler}
                 >
                   <RegisteryForm />
+                  <Button
+                    variant={"info"}
+                    className="w-24 mx-2"
+                    onClick={() => { submitService({ avServices: contractServices }) }}
+                  >
+                    ثبت
+                  </Button>
                 </ServiceContainer>
               ),
             },
           ]}
         />
-      )}
+      </div>
+
+      <div className={category === "personal" ? "hidden" : ""}>
+        <FormTabContainer
+          defaultValue="اطلاعات سازمان"
+          tabs={[
+            {
+              title: "اطلاعات سازمان",
+              forms: [
+                {
+                  title: "اطلاعات سازمان",
+                  formInfo: {
+                    form: organizationFormik,
+                    fields: createFormFields("organizationFormik"),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    organizationSubmitHandler({
+                      businessName: organizationFormik.values.organizationName,
+                      // dba: "string",
+                      // licenceNo: "string",
+                      // organizationStatusId: 1,
+                      // uniqueId: "string",
+                      // complexId: 1,
+                      // containerName: "string",
+                      // personOwnerId: 1,
+                    });
+                  },
+                },
+              ],
+              children: (
+                <ServiceContainer
+                  askQuestion={false}
+                  services={services}
+                  multiChosen={true}
+                  onActiveItemChange={serviceHandler}
+                >
+                  <RegisteryForm />
+                  <Button
+                    variant={"info"}
+                    className="w-24 mx-2"
+                    onClick={() => { submitService({ avServices: contractServices }) }}
+                  >
+                    ثبت
+                  </Button>
+                </ServiceContainer>
+              ),
+            },
+            {
+              title: "آدرس سازمان",
+              forms: [
+                {
+                  title: "آدرس سازمان",
+                  formInfo: {
+                    form: organizationAddressFormik,
+                    fields: createFormFields(
+                      "organizationAddressFormik",
+                      agencyCountryOptions,
+                      agencyProvinceOptions,
+                      agencyCityOptions
+                    ),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    addressInfoHandler({
+                      address:
+                        organizationAddressFormik.values.organizationAddress,
+                      postalCode:
+                        organizationAddressFormik.values.organizationPostalCode,
+                      //apartmentNo: "string",
+                      //longitude: 1,
+                      // latitude: 1,
+                      //googleUrl: "string",
+                      street:
+                        organizationAddressFormik.values.organizationStreet,
+                      // district: "string",
+                      cityId: organizationAddressFormik.values.organizationCity,
+                      countryId:
+                        organizationAddressFormik.values.organizationCountry,
+                      // customerId: 1,
+                      organizationId: organizationId,
+                      addressTypeId: clientAddress.workAddress,
+                    });
+                  },
+                },
+                {
+                  title: "اطلاعات تماس",
+                  formInfo: {
+                    form: organizationContactFormik,
+                    fields: createFormFields("organizationContactFormik"),
+                    className: "flex flex-row-reverse",
+                  },
+                  submitForm: () => {
+                    communicateHandler([
+                      {
+                        communicationDetails:
+                          organizationContactFormik.values.organizationPhone,
+                        communicationType: CommunicationType.business,
+                        communicater: Communicater.organization,
+                        //customerId: Number(customerId),
+                        organizationId: organizationId,
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails:
+                          organizationContactFormik.values.organizationEmail,
+                        communicationType: CommunicationType.email,
+                        communicater: Communicater.organization,
+                        //customerId: Number(customerId),
+                        organizationId: organizationId,
+                        // contractId: Number(id),
+                      },
+                      {
+                        communicationDetails:
+                          organizationContactFormik.values.organizationWebsite,
+                        communicationType: CommunicationType.website,
+                        communicater: Communicater.organization,
+                        customerId: Number(customerId),
+                        organizationId: organizationId,
+                        // contractId: Number(id),
+                      },
+                    ]);
+                  },
+                },
+              ],
+              children: (
+                <ServiceContainer
+                  askQuestion={false}
+                  services={services}
+                  multiChosen={true}
+                  onActiveItemChange={serviceHandler}
+                >
+                  <RegisteryForm />
+                  <Button
+                    variant={"info"}
+                    className="w-24 mx-2"
+                    onClick={() => { submitService({ avServices: contractServices }) }}
+                  >
+                    ثبت
+                  </Button>
+                </ServiceContainer>
+              ),
+            },
+          ]}
+        />
+      </div>
+      {/* )} */}
     </main>
   );
 }

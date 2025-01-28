@@ -14,7 +14,7 @@ const SelectInput = React.memo(function SelectInput({
       if (data === null) {
         form.setFieldValue(item.key, null);
       } else {
-        form.setFieldValue(item.key, data.value);
+        form.setFieldValue(item.key, Number(data.value));
       }
     },
     [item.key, form]

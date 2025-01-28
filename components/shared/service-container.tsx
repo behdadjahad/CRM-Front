@@ -10,6 +10,7 @@ export interface ServiceContainerInterface {
   selectedItems?: ServiceCardInterface[];
   askQuestion?: boolean;
   multiChosen?: boolean;
+  onActiveItemChange?: any;
 }
 
 export default function ServiceContainer({
@@ -18,6 +19,7 @@ export default function ServiceContainer({
   askQuestion,
   multiChosen,
   children,
+  onActiveItemChange
 }: ServiceContainerInterface) {
   const [activeItem, setActiveItem] = useState<any>([]);
 
@@ -73,14 +75,19 @@ export default function ServiceContainer({
                   setActiveItem(
                     activeItem.filter((obj: any) => obj.id !== item.id)
                   );
+                  onActiveItemChange(activeItem.filter((obj: any) => obj.id !== item.id))
                 } else {
                   setActiveItem([...activeItem, item]);
+                  onActiveItemChange([...activeItem, item])
                 }
               } else if (activeItem && activeItem.title === item.title) {
                 setActiveItem(null);
+                onActiveItemChange(null)
               } else {
                 setActiveItem(item);
+                onActiveItemChange(item)
               }
+              
             }}
             isActive={
               multiChosen

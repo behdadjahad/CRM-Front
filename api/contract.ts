@@ -1,6 +1,6 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function getServices(): Promise<ServiceOutput> {
+export async function getContractTypes(): Promise<ServiceOutput> {
   try {
     const result: ServiceOutput = await fetchService("contract-type");
     return result;
@@ -110,6 +110,8 @@ export interface ContractCreationInput {
   description: string;
   userSubmitterId: number;
   userResponsibleId: number;
+  destinationCity: number;
+  destinationCountry: number;
 }
 
 export interface ContractCreationOutput {

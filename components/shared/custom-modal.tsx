@@ -34,7 +34,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           minWidth,
           maxWidth,
           height: "fit-content",
-          maxHeight: "90vh",
+          maxHeight: "auto",
           overflow,
           margin: "auto",
         },
