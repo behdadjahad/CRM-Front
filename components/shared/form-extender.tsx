@@ -16,6 +16,8 @@ export interface FormExtenderInterface {
   wrapperClassName?: string;
   fetchFormValues: boolean;
   callbackSubmit: (key: string, data: any[]) => void;
+  children?: any;
+  childrenClassName?: string;
 }
 
 export default function FormExtender({
@@ -26,7 +28,9 @@ export default function FormExtender({
   className,
   wrapperClassName,
   fetchFormValues,
+  children,
   callbackSubmit,
+  childrenClassName,
 }: FormExtenderInterface) {
   const [forms, setForms] = useState<{ id: string; values: any }[]>([
     { id: `${title}-0`, values: { ...initialValues } },
@@ -63,38 +67,64 @@ export default function FormExtender({
   }, [fetchFormValues]);
 
   return (
-    <div
-      className={cn(
-        "bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col justify-between items-end",
-        className
-      )}
-    >
-      {forms.map((form, index) => (
-        <div className="w-full flex flex-col gap-5" key={form.id}>
-          <FormikWrapper
-            id={form.id}
-            values={form.values}
-            validationSchema={validationSchema}
-            fields={fields}
-            updateValues={(newValues) => debouncedUpdate(form.id, newValues)}
-            removeForm={
-              forms.length > 1 ? () => removeForm(form.id) : undefined
-            }
-            title={forms[0].id === form.id ? title : undefined}
-            className={wrapperClassName}
-          />
+    <div>
+      <div className="flex flex-row justify-between p-4">
+        {title && <h2 className="px-2">{title}</h2>}
+        <Button
+          variant={"transparent"}
+          onClick={extendForm}
+          className="mr-auto"
+        >
+          <FaPlus /> {title}
+        </Button>
+      </div>
+      <div
+        className={cn(
+          "bg-primary-foreground p-4 rounded-xl gap-5 flex flex-col justify-between items-end",
+          className
+        )}
+      >
+        {forms.map((form, index) => (
+          <div className="w-full flex flex-col gap-5" key={form.id}>
+            <FormikWrapper
+              id={form.id}
+              values={form.values}
+              validationSchema={validationSchema}
+              fields={fields}
+              updateValues={(newValues) => debouncedUpdate(form.id, newValues)}
+              removeForm={
+                forms.length > 1 ? () => removeForm(form.id) : undefined
+              }
+              title={forms[0].id === form.id ? title : undefined}
+              className={wrapperClassName}
+            />
+            <div className="flex flex-col">
+              <Button
+                variant={"info"}
+                className={cn("w-24 mx-2 flex", {
+                  "order-first": childrenClassName == "order-last",
+                  "order-last": childrenClassName != "order-last",
+                })}
+                onClick={() => {
+                  console.log("hi");
+                }}
+              >
+                ثبت
+              </Button>
+              <div className={childrenClassName}> {children && children}</div>
+            </div>
+            {index != forms.length - 1 ? (
+              <div className="w-full h-[0.5px] bg-border/20"></div>
+            ) : (
+              <></>
+            )}
+          </div>
+        ))}
 
-          {index != forms.length - 1 ? (
-            <div className="w-full h-[0.5px] bg-border/20"></div>
-          ) : (
-            <></>
-          )}
-        </div>
-      ))}
-
-      <Button variant={"transparent"} onClick={extendForm} className="mr-auto">
+        {/* <Button variant={"transparent"} onClick={extendForm} className="mr-auto">
         <FaPlus /> {title}
-      </Button>
+      </Button> */}
+      </div>
     </div>
   );
 }
@@ -117,7 +147,7 @@ function FormikWrapper({
   fields,
   updateValues,
   removeForm,
-  title,
+  //title,
   className,
 }: FormikWrapperInterface) {
   const formik = useFormik({
@@ -133,7 +163,7 @@ function FormikWrapper({
   return (
     <div key={id} className="w-full">
       <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
-        {title && <h2 className="px-2">{title}</h2>}
+        {/* {title && <h2 className="px-2">{title}</h2>}  */}
 
         <FormMaker
           form={formik}

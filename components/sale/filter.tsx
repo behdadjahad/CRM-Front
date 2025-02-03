@@ -4,6 +4,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import LeftDrawer from '../shared/left-drawer'
+import SortDropDown from '../shared/sort-drop-down'
 
 export default function Filter() {
   const [openFilter, setOpenFilter] = useState(false)
@@ -17,13 +18,14 @@ export default function Filter() {
         </span>
       </Button>
 
-      <Button variant={"ghost"} className='flex items-center gap-2'>
+      {/* <Button variant={"ghost"} className='flex items-center gap-2'>
         <Image src={'/icons/sort-ascending.png'} alt='Sort' width={24} height={24} />
 
         <span>
           مرتب سازی بر اساس
         </span>
-      </Button>
+      </Button> */}
+      <SortDropDown />
 
       <LeftDrawer setState={setOpenFilter} state={openFilter} />
     </div>

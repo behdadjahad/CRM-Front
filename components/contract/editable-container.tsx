@@ -7,10 +7,15 @@ import { MdClose } from "react-icons/md";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
 import { cn } from "@/lib/utils";
-import { ContractOutput } from "@/api/contract";
+import {
+  ContractCreationInput,
+  ContractOutput,
+  createContract,
+} from "@/api/contract";
 import { getUsers } from "@/api/auth";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCities, getCountries } from "@/api/location";
+import { convertDate, convertToGregorian } from "@/lib/date";
 
 export interface EditableContainerInterface {
   list: {
@@ -30,10 +35,12 @@ export default function EditableContainer({
   list,
   contract,
 }: EditableContainerInterface) {
+  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
   const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
   const [cityOptions, setCityOptions] = useState<OptionType[]>([]);
+
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
@@ -52,14 +59,15 @@ export default function EditableContainer({
   const formik = useFormik({
     initialValues: {
       number: contract?.contractNo ?? "",
-      date: contract?.contractDate ?? "",
+      date: convertDate(contract?.contractDate, contract.dateType) ?? "",
       subject: contract?.contractType?.name ?? "",
       accountant: contract?.userResponsible?.id.toString() ?? "",
       description: contract?.description ?? "",
-      country: contract?.destinationCountry?.toString() ?? "",
-      city: contract?.destinationCity?.toString() ?? "",
+      country: contract?.destinationCountry?.id.toString() ?? "",
+      city: contract?.destinationCity?.id.toString() ?? "",
     },
     onSubmit: async () => {},
+    enableReinitialize: true,
   });
 
   const { data: countryData } = useQuery({
@@ -100,6 +108,22 @@ export default function EditableContainer({
       }
     }
   }, [cityData, formik.values.country]);
+  const { mutate: EditContractMutation } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: ContractCreationInput }) => {
+      return createContract(id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["contract"],
+      });
+
+      setOpenModal(false);
+      formik.resetForm();
+      // setContract(data.data)
+      // setActiveItem(null);
+      // router.push(`/contract/${data.id}`);
+    },
+  });
 
   return (
     <>
@@ -236,8 +260,36 @@ export default function EditableContainer({
           />
 
           <div className="flex flex-row gap-4">
-            <Button variant={"info"}>ثبت</Button>
-            <Button variant={"foreground"} onClick={() => setOpenModal(false)}>
+            <Button
+              variant={"info"}
+              onClick={() => {
+                EditContractMutation({
+                  id: contract.id,
+                  data: {
+                    contractTypeId: contract.contractType.id,
+                    contractDate: convertToGregorian(
+                      formik.values.date,
+                      contract.dateType
+                    ),
+                    dateType: contract.dateType,
+                    description: formik.values.description,
+                    userSubmitterId: Number(contract.userSubmitter.id),
+                    userResponsibleId: Number(formik.values.accountant),
+                    destinationCityId: Number(formik.values.city),
+                    destinationCountryId: Number(formik.values.country),
+                  },
+                });
+              }}
+            >
+              ثبت
+            </Button>
+            <Button
+              variant={"foreground"}
+              onClick={() => {
+                setOpenModal(false);
+                formik.resetForm();
+              }}
+            >
               لغو
             </Button>
           </div>

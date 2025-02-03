@@ -23,6 +23,7 @@ import {
   createOrganization,
   insertAddressData,
   insertCommunicationData,
+  insertSubmitterData,
 } from "@/api/client";
 import { getCities, getCountries, getProvinces } from "@/api/location";
 import { OptionType } from "@/components/shared/form-maker";
@@ -36,6 +37,9 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { sendServiceData } from "@/api/service";
+import { convertDate, convertToGregorian } from "@/lib/date";
+
+import { getUsers } from "@/api/auth";
 
 export default function Contract() {
   const router = useRouter();
@@ -47,6 +51,7 @@ export default function Contract() {
   const [workCountryOptions, setWorkCountryOptions] = useState<OptionType[]>(
     []
   );
+  const [userOptions, setUserOptions] = useState<OptionType[]>([]);
   const [workProvinceOptions, setWorkProvinceOptions] = useState<OptionType[]>(
     []
   );
@@ -58,6 +63,7 @@ export default function Contract() {
     OptionType[]
   >([]);
   const [agencyCityOptions, setAgencyCityOptions] = useState<OptionType[]>([]);
+
   //contractId
   const { id } = useParams();
 
@@ -69,6 +75,19 @@ export default function Contract() {
     queryKey: ["contract"],
     queryFn: () => getContractById(Number(id) as number),
   });
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+  useEffect(() => {
+    if (users) {
+      const userOption: OptionType[] = users.map((item) => ({
+        label: item.fullName,
+        value: item.id.toString(),
+      }));
+      setUserOptions(userOption);
+    }
+  }, [users]);
   const personalFormik = useFormik({
     initialValues: {
       name: "",
@@ -77,6 +96,7 @@ export default function Contract() {
       socialNumber: "",
       idNumber: "",
       career: "",
+      birthdateType: "",
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().required(REQUIRED_TEXT),
@@ -208,16 +228,22 @@ export default function Contract() {
     }),
     onSubmit: () => {},
   });
+  const { mutate: SubmitterHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return insertSubmitterData(data,Number(id));
+    },
+    onSuccess: () => {},
+  });
 
   const { mutate: personalSubmitHandler } = useMutation({
     mutationFn: (data: any) => {
-      return createClient(data);
+      return createClient(data, Number(id));
     },
     onSuccess: (result) => {
       const customerId = result.customerId;
       const url = organizationId
         ? `?customerId=${customerId}&organizationId=${organizationId}`
-        : `?organizationId=${customerId}`;
+        : `?customerId=${customerId}`;
       router.push(url);
       toast.success("اطلاعات با موفقیت ثبت شد", {
         duration: 4000, // Duration in ms
@@ -254,7 +280,9 @@ export default function Contract() {
     mutationFn: (data: any) => {
       return sendServiceData(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      router.push(`/contract/service/${id}`);
+    },
   });
 
   const { data: countryData } = useQuery({
@@ -441,12 +469,13 @@ export default function Contract() {
           list={[
             {
               label: "تاریخ درج",
-              value: contract?.submitDateTime ?? "",
-              // value:convertTime(contract?.submitDateTime,"Gregorian","Solar")
+
+              value: convertDate(contract?.submitDateTime, contract.dateType),
             },
             {
               label: "تاریخ قرارداد",
-              value: contract?.contractDate ?? "",
+
+              value: convertDate(contract?.contractDate, contract.dateType),
             },
             {
               label: "شماره قرار داد",
@@ -517,12 +546,16 @@ export default function Contract() {
                     personalSubmitHandler({
                       firstName: personalFormik.values.name,
                       lastName: personalFormik.values.familyName,
-                      // birthdate: personalFormik.values.birthdate,
-                      birthdate: "2012-12-28T18:12:33+01:00",
+                      birthdate: convertToGregorian(
+                        personalFormik.values.birthdate,
+                        personalFormik.values.birthdateType
+                      ),
+
                       socialNumber: personalFormik.values.socialNumber,
                       idNumber: personalFormik.values.idNumber,
                       career: personalFormik.values.career,
                       isMainCustomer: true,
+                      contractId: Number(id),
                     });
                   },
                 },
@@ -534,7 +567,7 @@ export default function Contract() {
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
-                  <RegisteryForm />
+                  {" "}
                   <Button
                     variant={"info"}
                     className="w-24 mx-2"
@@ -544,6 +577,15 @@ export default function Contract() {
                   >
                     ثبت
                   </Button>
+                  <RegisteryForm
+                    submitForm={SubmitterHandler}
+                    accountant={
+                      contract?.userResponsible?.id
+                        ? contract?.userResponsible?.id.toString()
+                        : ""
+                    }
+                    accountantOptions={userOptions}
+                  />
                 </ServiceContainer>
               ),
             },
@@ -636,14 +678,25 @@ export default function Contract() {
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
-                  <RegisteryForm />
+                  {" "}
                   <Button
                     variant={"info"}
                     className="w-24 mx-2"
-                    onClick={() => { submitService({ avServices: contractServices }) }}
+                    onClick={() => {
+                      submitService({ avServices: contractServices });
+                    }}
                   >
                     ثبت
                   </Button>
+                  <RegisteryForm
+                    submitForm={SubmitterHandler}
+                    accountant={
+                      contract?.userResponsible?.id
+                        ? contract?.userResponsible?.id.toString()
+                        : ""
+                    }
+                    accountantOptions={userOptions}
+                  />
                 </ServiceContainer>
               ),
             },
@@ -723,14 +776,25 @@ export default function Contract() {
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
-                  <RegisteryForm />
+                  {" "}
                   <Button
                     variant={"info"}
                     className="w-24 mx-2"
-                    onClick={() => { submitService({ avServices: contractServices }) }}
+                    onClick={() => {
+                      submitService({ avServices: contractServices });
+                    }}
                   >
                     ثبت
                   </Button>
+                  <RegisteryForm
+                    submitForm={SubmitterHandler}
+                    accountant={
+                      contract?.userResponsible?.id
+                        ? contract?.userResponsible?.id.toString()
+                        : ""
+                    }
+                    accountantOptions={userOptions}
+                  />
                 </ServiceContainer>
               ),
             },
@@ -773,14 +837,25 @@ export default function Contract() {
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
-                  <RegisteryForm />
+                  {" "}
                   <Button
                     variant={"info"}
                     className="w-24 mx-2"
-                    onClick={() => { submitService({ avServices: contractServices }) }}
+                    onClick={() => {
+                      submitService({ avServices: contractServices });
+                    }}
                   >
                     ثبت
                   </Button>
+                  <RegisteryForm
+                    submitForm={SubmitterHandler}
+                    accountant={
+                      contract?.userResponsible?.id
+                        ? contract?.userResponsible?.id.toString()
+                        : ""
+                    }
+                    accountantOptions={userOptions}
+                  />
                 </ServiceContainer>
               ),
             },
@@ -868,14 +943,25 @@ export default function Contract() {
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
-                  <RegisteryForm />
+                  {" "}
                   <Button
                     variant={"info"}
                     className="w-24 mx-2"
-                    onClick={() => { submitService({ avServices: contractServices }) }}
+                    onClick={() => {
+                      submitService({ avServices: contractServices });
+                    }}
                   >
                     ثبت
                   </Button>
+                  <RegisteryForm
+                    submitForm={SubmitterHandler}
+                    accountant={
+                      contract?.userResponsible?.id
+                        ? contract?.userResponsible?.id.toString()
+                        : ""
+                    }
+                    accountantOptions={userOptions}
+                  />
                 </ServiceContainer>
               ),
             },

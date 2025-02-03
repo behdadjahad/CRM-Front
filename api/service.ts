@@ -12,3 +12,29 @@ export async function sendServiceData(data: any, id: number) {
     return {};
   }
 }
+export async function sendSingleServiceData(data: any, id: number) {
+  console.log(16,data)
+  try {
+    const result = await fetchService(`contract-chadco-customer/service/single/${id}`, {
+      method: "PATCH",
+      body: data,
+    });
+
+    return result;
+  } catch {
+    return {};
+  }
+}
+export async function getServiceType() {
+ 
+  try {
+    const result = await fetchService("service-type");
+
+    return result;
+  } catch {
+    return {};
+  }
+}
+
+
+

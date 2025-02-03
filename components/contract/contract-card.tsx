@@ -48,6 +48,7 @@ export default function ContractCard({
   user,
   className,
 }: ContractCardInterface) {
+
   const contractData = [
     {
       icon: "/icons/calendar-mute.png",

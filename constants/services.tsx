@@ -1,3 +1,4 @@
+import HotelForm from "@/components/service-forms/hotel-form";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 
 export const services: ServiceCardInterface[] = [
@@ -10,6 +11,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-visa.png",
     // children: <ServiceForm {...visaForm} />,
     name: "Visa",
+    form:<>visa Form</>
   },
   {
     id: 2,
@@ -20,6 +22,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-international-airport.png",
     //children: <ServiceForm {...flightForm} />,
     name: "Ticket",
+    form:<>flight Form</>
   },
   {
     id: 3,
@@ -30,6 +33,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-airport.png",
     // children: <ServiceForm {...flightForm} />,
     name: "Ticket",
+    form:<>flight Form</>
   },
   {
     id: 4,
@@ -39,6 +43,7 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-suitcase.png",
     activeImage: "/images/services/success/success-suit-case.png",
     name: "Ticket",
+    form:<>Tour Form</>
   },
   {
     id: 5,
@@ -48,6 +53,7 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-suitcase.png",
     activeImage: "/images/services/success/success-suit-case.png",
     name: "Ticket",
+    form:<>Tour Form</>
   },
   {
     id: 6,
@@ -58,6 +64,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-hotel.png",
     // children: <ServiceForm {...hotelForm} />,
     name: "Accommodation",
+   form:<HotelForm />, 
   },
   {
     id: 7,
@@ -68,6 +75,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-hotel.png",
     // children: <ServiceForm {...hotelForm} />,
     name: "Accommodation",
+    form:<HotelForm />,
   },
   {
     id: 8,
@@ -77,6 +85,7 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-train.png",
     activeImage: "/images/services/success/success-train.png",
     name: "Other",
+    form:<>Tour Form</>
   },
   {
     id: 9,
@@ -86,6 +95,7 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-bus.png",
     activeImage: "/images/services/success/success-bus.png",
     name: "Other",
+    form:<>Bus Form</>
   },
   {
     id: 10,
@@ -95,6 +105,7 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-car.png",
     activeImage: "/images/services/success/success-car.png",
     name: "Other",
+    form:<>car Form</>
   },
   {
     id: 11,
@@ -105,6 +116,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-pickup.png",
     //children: <ServiceForm {...pickupForm} />,
     name: "Pickup",
+    form:<>Pickup Form</>
   },
   {
     id: 12,
@@ -114,5 +126,6 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-nature.png",
     activeImage: "/images/services/success/success-nature.png",
     name: "Other",
+    form:<>Nature Form</>
   },
 ];

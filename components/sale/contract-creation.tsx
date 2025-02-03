@@ -20,8 +20,9 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import { convertToGregorian } from "@/lib/date";
+
 import { getCities, getCountries } from "@/api/location";
+import { convertToGregorian } from "@/lib/date";
 
 export interface ContractCreationInterface {
   contractTypes: ServiceCardInterface[];
@@ -138,16 +139,14 @@ export default function ContractCreation({
       id: formik.values.contractId,
       data: {
         contractTypeId: activeItem.id,
-        contractDate: convertToGregorian(
-          formik.values.contractDate,
-          formik.values.contractDateType
-        ),
+        contractDate: convertToGregorian(formik.values.contractDate,formik.values.contractDateType),
         dateType: formik.values.contractDateType,
         description: formik.values.description,
         userSubmitterId: userData.id,
         userResponsibleId: Number(formik.values.accountant),
-        destinationCity: formik.values.city,
-        destinationCountry: formik.values.country,
+        destinationCityId:formik.values.city,
+        destinationCountryId:formik.values.country
+
       },
     });
   }
@@ -284,6 +283,7 @@ export default function ContractCreation({
               onClick={() => {
                 contractSubmitHandler();
                 setOpenModal(true);
+
               }}
             >
               ثبت و جدید

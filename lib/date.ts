@@ -3,18 +3,20 @@ import { toJalaali, toGregorian } from "jalaali-js";
 import MomentTimezone from "moment-timezone";
 import momentHijri from "moment-hijri";
 
-type DateType = "Lunar" | "Solar" | "Gregorian";
+//type DateType = "Lunar" | "Solar" | "Gregorian";
 
-export function convertDate(dateStr: string, targetType: DateType): string {
+export function convertDate(dateStr: string, targetType: string): string {
+ 
   // Parse the input date in YYYY/MM/DD format
+  dateStr=dateStr.split('T')[0].replace(/-/g, '/');
   const [year, month, day] = dateStr.split("/").map(Number);
 
   // Convert based on the target type
-  if (targetType.toLowerCase() === "hijri") {
+  if (targetType.toLowerCase() === "lunar") {
     // Convert to Hijri (Islamic) date using moment-hijri
     const hijriDate = moment([year, month - 1, day]).format("iYYYY/iMM/iDD");
     return hijriDate;
-  } else if (targetType.toLowerCase() === "jalali") {
+  } else if (targetType.toLowerCase() === "solar") {
     // Convert to Jalali (Persian) date using jalaali-js
     const jalaliDate = toJalaali(year, month, day);
     return `${jalaliDate.jy}/${String(jalaliDate.jm).padStart(2, "0")}/${String(
@@ -24,9 +26,7 @@ export function convertDate(dateStr: string, targetType: DateType): string {
     // Return the Gregorian date as is
     return dateStr;
   } else {
-    throw new Error(
-      "Invalid target type. Please choose 'Hijri', 'Jalali', or 'Gregorian'."
-    );
+    return ""
   }
 }
 

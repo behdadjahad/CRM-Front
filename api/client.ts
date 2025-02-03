@@ -1,19 +1,25 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function createClient(data: any) {
+
+export async function createClient(data: any, id: number) {
+
+  const person = await getPerson(id);
+  console.log(person)
+
   try {
     const result = await fetchService("person", {
-      method: "POST",
+      // method: person ? "PUT":"POST",
+      method:"POST",
       body: data,
     });
-
+  
     return result;
   } catch {
     return {};
   }
 }
 
-export async function getPerson(id: number) {
+export async function getPerson(id:number) {
   try {
     const result = await fetchService(`person/${id}`);
 
@@ -22,7 +28,6 @@ export async function getPerson(id: number) {
     return {};
   }
 }
-
 export async function insertAddressData(data: any) {
   try {
     const result = await fetchService("address", {
@@ -35,7 +40,6 @@ export async function insertAddressData(data: any) {
     return {};
   }
 }
-
 export async function insertCommunicationData(data: any) {
   try {
     const result = await fetchService("communication/many", {
@@ -48,15 +52,28 @@ export async function insertCommunicationData(data: any) {
     return {};
   }
 }
-
 export async function createOrganization(data: any) {
-  try {
+ try {
     const result = await fetchService("organization", {
-
-      method: "POST",
+  
+      method:"POST",
       body: data,
     });
-
+  
+    return result;
+  } catch {
+    return {};
+  }
+}
+export async function insertSubmitterData(data: any,id:number) {
+  console.log(data)
+ try {
+    const result = await fetchService(`contract-chadco-customer/${id}`, {
+  
+      method:"PUT",
+      body: data,
+    });
+  
     return result;
   } catch {
     return {};

@@ -110,8 +110,8 @@ export interface ContractCreationInput {
   description: string;
   userSubmitterId: number;
   userResponsibleId: number;
-  destinationCity: number;
-  destinationCountry: number;
+  destinationCityId:number;
+  destinationCountryId:number;
 }
 
 export interface ContractCreationOutput {
@@ -184,8 +184,8 @@ export interface ContractOutput {
   contractNo: string;
   avServices: any;
   state: string;
-  destinationCity: string;
-  destinationCountry: string;
+  destinationCity: {id:number,name:string};
+  destinationCountry: {id:number,name:string};
   userResponsible: {
     id: number;
     firstName: string;

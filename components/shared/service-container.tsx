@@ -19,7 +19,7 @@ export default function ServiceContainer({
   askQuestion,
   multiChosen,
   children,
-  onActiveItemChange
+  onActiveItemChange,
 }: ServiceContainerInterface) {
   const [activeItem, setActiveItem] = useState<any>([]);
 
@@ -30,34 +30,43 @@ export default function ServiceContainer({
         className
       )}
     >
-      {activeItem && askQuestion && (
-        <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
-          <p className="text-negative text-xs font-bold">
-            اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
-          </p>
-          <div className="flex gap-4">
-            <Checkbox onClick={() => console.log("clicked")} />
-            <label
-              htmlFor=""
-              className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              بله
-            </label>
+      {(Array.isArray(activeItem)
+        ? activeItem.length > 0 &&
+          activeItem.every((item) => item.isSelected === false)
+        : activeItem && activeItem.isSelected === false) &&
+        askQuestion && (
+          <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
+            <p className="text-negative text-xs font-bold">
+              اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
+            </p>
+            <div className="flex gap-4">
+              <Checkbox
+                onClick={() => {
+                  onActiveItemChange(activeItem);
+                  setActiveItem(null);
+                }}
+              />
+              <label
+                htmlFor=""
+                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                بله
+              </label>
 
-            <Checkbox
-              onClick={() => {
-                setActiveItem(null);
-              }}
-            />
-            <label
-              htmlFor=""
-              className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              خیر
-            </label>
+              <Checkbox
+                onClick={() => {
+                  setActiveItem(null);
+                }}
+              />
+              <label
+                htmlFor=""
+                className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                خیر
+              </label>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       <h2>سرویس ها</h2>
 
@@ -75,19 +84,21 @@ export default function ServiceContainer({
                   setActiveItem(
                     activeItem.filter((obj: any) => obj.id !== item.id)
                   );
-                  onActiveItemChange(activeItem.filter((obj: any) => obj.id !== item.id))
+                  onActiveItemChange(
+                    activeItem.filter((obj: any) => obj.id !== item.id)
+                  );
                 } else {
                   setActiveItem([...activeItem, item]);
-                  onActiveItemChange([...activeItem, item])
+                  onActiveItemChange([...activeItem, item]);
                 }
               } else if (activeItem && activeItem.title === item.title) {
                 setActiveItem(null);
-                onActiveItemChange(null)
+                onActiveItemChange(item)
               } else {
                 setActiveItem(item);
-                onActiveItemChange(item)
+                 onActiveItemChange(item);
+                
               }
-              
             }}
             isActive={
               multiChosen
@@ -101,6 +112,7 @@ export default function ServiceContainer({
       {activeItem && activeItem.children}
 
       {children}
+      
     </div>
   );
 }

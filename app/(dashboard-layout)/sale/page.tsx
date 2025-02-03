@@ -13,7 +13,8 @@ import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
 import { services } from "@/constants/services";
-import { convertGregorianToSolarWithTimeZone } from "@/constants/time";
+
+import { convertDate } from "@/lib/date";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
@@ -79,11 +80,16 @@ function getData() {
       setContractItems(contractInformation?.data);
     }
   }, [contractInformation?.data]);
+
   const contractList: ContractContainerInterface["list"] = contractItems
     ? contractItems.map((item: any) => ({
         id: item.id,
         contract: {
-          date: convertGregorianToSolarWithTimeZone(item.contractDate),
+          date:
+            item?.contractDate && item?.dateType
+              ? convertDate(item?.contractDate, item?.dateType)
+              : "",
+
           destination: "",
           submitter:
             users?.find((obj) => obj.id === item.userSubmitterId)?.fullName ??
@@ -98,7 +104,12 @@ function getData() {
         header: {
           contractNumber: item.contractNo,
           icon: "/icons/visa-white.png",
-          submitDate: convertGregorianToSolarWithTimeZone(item.submitDateTime),
+
+          submitDate:
+            item?.submitDateTime && item?.dateType
+              ? convertDate(item?.submitDateTime, item?.dateType)
+              : "",
+
           title:
             contractTypes.find((obj) => obj.id === item.contractTypeId)
               ?.title ?? "",
@@ -150,11 +161,14 @@ function getData() {
 
   useEffect(() => {
     if (data?.success && data?.data) {
+      console.log(data.data[0]);
       setContractTypes(
         data.data.map((item: any) => ({
           id: item.id,
-          image: "public/" + item.iconFile,
+          image: "http://185.126.203.246:3000/public/" + item.iconFile,
           title: item.name,
+          activeImage:
+            "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
     }
