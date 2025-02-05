@@ -161,7 +161,6 @@ function getData() {
 
   useEffect(() => {
     if (data?.success && data?.data) {
-      console.log(data.data[0]);
       setContractTypes(
         data.data.map((item: any) => ({
           id: item.id,

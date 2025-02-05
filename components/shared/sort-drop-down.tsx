@@ -20,7 +20,7 @@ export default function SortDropDown() {
     { label: "جدید ترین ها", value: "Newest" },
     { label: "قدیمی ترین ها", value: "Oldest" },
   ];
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger

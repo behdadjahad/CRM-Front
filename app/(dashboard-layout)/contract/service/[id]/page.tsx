@@ -93,7 +93,6 @@ function getData() {
   });
   useEffect(() => {
     if (contract) {
-      console.log(86, contract);
       const updatedServices = services.map((obj) => ({
         ...obj,
         isSelected: contract.avServices.includes(obj.name)
@@ -119,17 +118,12 @@ function getData() {
       setServiceList(updatedServices);
     },
   });
-  console.log(clientInfo);
   const contractServices: ServiceContainerInterface = {
     services: serviceList,
     onActiveItemChange: (service: any) => {
-      console.log(service.id);
-      console.log(serviceList);
-
       const item = serviceList.find((obj) => obj.id === service.id);
       if (item?.isSelected) {
         if (activeItemForm && item.id === activeItemForm.id) {
-          console.log(activeItemForm);
           setActiveItemForm(null);
         } else {
           setActiveItemForm(item);
@@ -215,7 +209,7 @@ function getData() {
           },
           {
             label: "نام ونام خانوادگی",
-          
+
             value:
               clientInfo?.person?.firstName && clientInfo?.person?.lastName
                 ? `${clientInfo?.person?.firstName}${clientInfo?.person?.lastName}`
@@ -223,7 +217,7 @@ function getData() {
           },
           {
             label: "تاریخ تولد",
-          
+
             value:
               contract?.dateType && clientInfo?.person?.birthdate
                 ? convertDate(clientInfo?.person?.birthdate, contract?.dateType)

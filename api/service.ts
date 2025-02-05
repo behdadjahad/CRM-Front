@@ -2,10 +2,13 @@ import { fetchService } from "@/boot/fetch-service";
 
 export async function sendServiceData(data: any, id: number) {
   try {
-    const result = await fetchService(`contract-chadco-customer/service/${id}`, {
-      method: "PATCH",
-      body: data,
-    });
+    const result = await fetchService(
+      `contract-chadco-customer/service/${id}`,
+      {
+        method: "PATCH",
+        body: data,
+      }
+    );
 
     return result;
   } catch {
@@ -13,12 +16,14 @@ export async function sendServiceData(data: any, id: number) {
   }
 }
 export async function sendSingleServiceData(data: any, id: number) {
-  console.log(16,data)
   try {
-    const result = await fetchService(`contract-chadco-customer/service/single/${id}`, {
-      method: "PATCH",
-      body: data,
-    });
+    const result = await fetchService(
+      `contract-chadco-customer/service/single/${id}`,
+      {
+        method: "PATCH",
+        body: data,
+      }
+    );
 
     return result;
   } catch {
@@ -26,7 +31,6 @@ export async function sendSingleServiceData(data: any, id: number) {
   }
 }
 export async function getServiceType() {
- 
   try {
     const result = await fetchService("service-type");
 
@@ -35,6 +39,3 @@ export async function getServiceType() {
     return {};
   }
 }
-
-
-

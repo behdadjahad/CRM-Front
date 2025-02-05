@@ -10,3 +10,13 @@ export async function getHotels() {
     return {};
   }
 }
+export async function getServiceTypes() {
+
+  try {
+    const result = await fetchService('service-type');
+
+    return result;
+  } catch {
+    return {};
+  }
+}

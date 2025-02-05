@@ -13,10 +13,12 @@ import VerificationInput from "./verification-input";
 import FileInput from "./file-input";
 import ToggleInput from "./toggle-input";
 import FilePreview from "./file-preview";
+import ListPreview from "./list-preview";
 
 export interface OptionType {
   label: string;
   value: string;
+  [key: string]: any;
 }
 
 export interface FieldType {
@@ -33,6 +35,7 @@ export interface FieldType {
     | "file"
     | "toggle"
     | "file-preview"
+    | "list-preview"
     | "non-field";
   floating?: boolean;
   placeholder?: string;
@@ -57,6 +60,8 @@ export interface FieldType {
   onChange?: (checked: boolean) => void;
   readonly?: boolean;
   disabled?: boolean;
+
+  title?: string;
 }
 
 export interface FormMakerInterface {
@@ -98,6 +103,8 @@ export default function FormMaker({
           return <ToggleInput item={item} form={form} />;
         case "file-preview":
           return <FilePreview item={item} form={form} />;
+        case "list-preview":
+          return <ListPreview item={item} form={form} />;
         default:
           return null;
       }

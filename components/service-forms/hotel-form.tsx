@@ -1,22 +1,74 @@
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
-
-import { useEffect, useState } from "react";
 import FormExtender, { FormExtenderInterface } from "../shared/form-extender";
-//import RegisteryForm from "../contract/registery-form";
-import FormMaker, { OptionType } from "../shared/form-maker";
-import { purchaseInfo } from "@/constants/service-form-fields";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { getServiceTypes } from "@/api/hotel";
 import { getHotels } from "@/api/hotel";
+import { OptionType } from "../shared/form-maker";
 
 export default function HotelForm() {
-  const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
-  const [fetchFormValues, setFetchFormValues] = useState(false);
+  const [serviceTypes, setServiceTypes] = useState<OptionType[]>([]);
+  const [countries, setCountries] = useState<OptionType[]>([]);
+  const [cities, setCities] = useState<OptionType[]>([]);
+  const [hotels, setHotels] = useState<OptionType[]>([]);
 
-  const roomForm: FormExtenderInterface = {
+  const { data: serviceTypesData } = useQuery({
+    queryKey: ["serviceTypes"],
+    queryFn: async () => await getServiceTypes(),
+  });
+
+  useEffect(() => {
+    if (serviceTypesData) {
+      const serviceOptions = serviceTypesData.data.map((item: any) => ({
+        label: item.name,
+        value: item.id.toString(),
+      }));
+      setServiceTypes(serviceOptions);
+    }
+  }, [serviceTypesData]);
+  const { data: hotelsData, isLoading } = useQuery({
+    queryKey: ["hotels"],
+    queryFn: async () => await getHotels(),
+  });
+  useEffect(() => {
+    if (hotelsData) {
+      const countryOptions: OptionType[] = hotelsData.data.map((item: any) => ({
+        value: item.country.id.toString(),
+        label: item.country.name,
+        cities: item.country.city.map((item: any) => ({
+          label: item.name,
+          value: item.id,
+        })),
+      }));
+      const cityOptions = hotelsData.data.flatMap((item: any) =>
+        item.country.city.map((city: any) => ({
+          value: city.id.toString(),
+          label: city.name,
+          hotels: city.hotel.map((item: any) => ({
+            value: item.id,
+            label: item.name,
+          })),
+        }))
+      );
+      const hotelOptions = hotelsData.data.flatMap((item: any) =>
+        item.country.city.flatMap((city: any) =>
+          city.hotel.map((item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          }))
+        )
+      );
+      setCountries(countryOptions);
+      setCities(cityOptions);
+      setHotels(hotelOptions);
+    }
+  }, [hotelsData]);
+
+  const roomForm: any = {
     title: "مدت اقامت (رزرو اتاق)",
+    name: "room",
     fields: [
       {
         key: "roomType",
@@ -42,11 +94,32 @@ export default function HotelForm() {
         floating: true,
         className: "w-full md:w-1/3",
       },
-
       {
-        key: "clientName",
+        key: "purchaseTitle",
+        component: "non-field",
+        children: <h2 className="w-full">خرید</h2>,
+        className: "w-full text-right",
+      },
+      {
+        key: "costPerNight",
         component: "input",
-        placeholder: "نام مشتری",
+        placeholder: "هرشب اقامت",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
+      },
+      {
+        key: "currency",
+        component: "input",
+        placeholder: "ارز هزینه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
+      },
+      {
+        key: "broker",
+        component: "Select",
+        placeholder: "کارگزار",
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
@@ -56,20 +129,28 @@ export default function HotelForm() {
       roomType: "",
       contractDateIn: "",
       contractDateOut: "",
-      clientName: "",
     },
     validationSchema: Yup.object().shape({
       roomType: Yup.string().required(REQUIRED_TEXT),
       contractDateIn: Yup.string().required(REQUIRED_TEXT),
       contractDateOut: Yup.string().required(REQUIRED_TEXT),
-      clientName: Yup.string().required(REQUIRED_TEXT),
     }),
     fetchFormValues: false,
     callbackSubmit: submitForm,
+    form: useFormik({
+      initialValues: {
+        roomType: "",
+        contractDateIn: "",
+        contractDateOut: "",
+        clientName: "",
+      },
+      onSubmit: async () => {},
+    }),
   };
 
   const hotelForm: FormExtenderInterface = {
-    title: "سرویس هتل",
+    title: "اقامتگاه",
+    name: "accommodation",
     fields: [
       {
         key: "country",
@@ -78,7 +159,7 @@ export default function HotelForm() {
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
-        options: countryOptions,
+        options: countries,
       },
       {
         key: "city",
@@ -87,23 +168,32 @@ export default function HotelForm() {
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
+        options: cities,
+      },
+      {
+        key: "accommodationType",
+        component: "Select",
+        placeholder: "نوع اقامت",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
       },
       {
         key: "hotelName",
-        component: "input",
+        component: "Select",
         placeholder: "نام هتل",
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
+        options: hotels,
       },
       {
         key: "serviceType",
-        component: "Select",
-        placeholder: "نوع خدمات",
-        type: "text",
-        floating: true,
-        className: "w-full md:w-1/3",
+        component: "list-preview",
+        title: "نوع خدمات",
+        options: serviceTypes,
       },
+
       {
         key: "voucherFile",
         component: "file",
@@ -111,7 +201,7 @@ export default function HotelForm() {
         type: "file",
         floating: true,
         icon: "/icons/upload.png",
-        className: "w-full md:w-1/3",
+        className: "w-full",
       },
       {
         component: "file-preview",
@@ -138,93 +228,54 @@ export default function HotelForm() {
     fetchFormValues: false,
     callbackSubmit: submitForm,
   };
-  const { data: hotels } = useQuery({
-    queryKey: ["hotels"],
-    queryFn: async () => await getHotels(),
-  });
 
-  useEffect(() => {
-    if (hotels) {
-      const countries = hotels.data.map((item: any) => ({
-        value: item.country.id.toString(),
-        label: item.country.name,
-        city: []
-      }));
-      
-      setCountryOptions(countries);
-    }
-  }, [hotels]);
-
-  const { data: serviceTypes } = useQuery({
-    queryKey: ["serviceTypes"],
-    queryFn: async () => await getHotels(),
-  });
-
-  useEffect(() => {
-    if (serviceTypes) {
-      console.log(serviceTypes);
-    }
-  }, [hotels]);
-  let formValues = {};
-
-  function submitForm(key: string, data: any) {
-    formValues = {
-      ...formValues,
-      [key]: data,
-    };
-    console.log(formValues);
-    setFetchFormValues(false);
-  }
-
-  const purchaseFormik = useFormik({
-    initialValues: {
-      costPerNight: "",
-      currency: "",
-      broker: "",
-    },
-    onSubmit: async () => {},
-  });
+  // function submitForm(key: string, data: any) {
+  //   formValues = {
+  //     ...formValues,
+  //     [key]: data,
+  //   };
+  //   setFetchFormValues(false);
+  // }
+  function submitForm(data: any, name: string) {}
+  // const purchaseFormik = useFormik({
+  //   initialValues: {
+  //     costPerNight: "",
+  //     currency: "",
+  //     broker: "",
+  //   },
+  //   onSubmit: async () => {},
+  // });
 
   return (
     <div className="w-full bg-card rounded-lg">
       <div className="w-full p-4">
-        <div className="flex flex-row text-xs md:text-sm md:p-4 md:gap-4 font-foreground">
-          <RadioGroup
-            defaultValue="hotel"
-            className="flex flex-row-reverse gap-4 min-h-10"
-          >
-            <div className="flex items-center space-x-2">
-              <label htmlFor="hotel">هتل</label>
-              <RadioGroupItem value="hotel" id="hotel" />
-            </div>
+        <div className="flex flex-row text-xs md:text-sm md:p-4 md:gap-4 font-foreground"></div>
 
-            <div className="flex items-center space-x-2">
-              <label htmlFor="apartment">آپارتمان</label>
-              <RadioGroupItem value="apartment" id="apartment" />
-            </div>
-          </RadioGroup>
-        </div>
-
-        <FormExtender
-          key={hotelForm.title}
-          {...hotelForm}
-          fetchFormValues={fetchFormValues}
-          wrapperClassName="flex-row flex-wrap"
-          childrenClassName="order-last"
-        >
+        {!isLoading ? (
           <FormExtender
+            key={hotelForm.title}
+            {...hotelForm}
+            // fetchFormValues={fetchFormValues}
+            wrapperClassName="flex-row flex-wrap"
+            childrenClassName="order-last"
+            childrenData={roomForm}
+          />
+        ) : (
+          <></>
+        )}
+        {/* <FormExtender
             key={roomForm.title}
             {...roomForm}
             fetchFormValues={fetchFormValues}
             wrapperClassName="flex-row flex-wrap"
             childrenClassName="order-first"
+            extenderBtnClassName="hidden"
           >
             <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">
               <div className="px-2 font-foreground font-semibold">خرید</div>
               <FormMaker form={purchaseFormik} fields={purchaseInfo} />
             </div>
-          </FormExtender>
-        </FormExtender>
+          </FormExtender> */}
 
         <div className="flex flex-col gap-4 px-4">
           {/* <div className="border py-4 px-2 rounded-lg gap-6 flex flex-col w-full">

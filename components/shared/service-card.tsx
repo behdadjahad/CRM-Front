@@ -52,7 +52,7 @@ export default function ServiceCard({
         height={1080}
         id="service-image"
         className={cn(
-          "w-21 rounded-lg h-21 border border-border/20 object-cover",
+          "w-21 rounded-lg h-21 border border-border/20",
           { "border-success": isActive },
           { "border-primary": isSelected },
           imageClassName
