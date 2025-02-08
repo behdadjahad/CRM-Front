@@ -20,6 +20,7 @@ export default function ListPreview({
             key={optItem.value}
             onClick={() => {
               console.log(Number(optItem.value), item.key);
+              form.setFieldValue(item.key, Number(optItem.value));
             }}
             className="cursor-pointer"
           >

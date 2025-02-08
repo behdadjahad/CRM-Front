@@ -3,17 +3,18 @@ import * as Yup from "yup";
 import FormExtender, { FormExtenderInterface } from "../shared/form-extender";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getServiceTypes } from "@/api/hotel";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getServiceTypes, sendHotelData } from "@/api/hotel";
 import { getHotels } from "@/api/hotel";
 import { OptionType } from "../shared/form-maker";
+import { useParams } from "next/navigation";
 
 export default function HotelForm() {
   const [serviceTypes, setServiceTypes] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
   const [hotels, setHotels] = useState<OptionType[]>([]);
-
+  const { id } = useParams();
   const { data: serviceTypesData } = useQuery({
     queryKey: ["serviceTypes"],
     queryFn: async () => await getServiceTypes(),
@@ -40,6 +41,10 @@ export default function HotelForm() {
         cities: item.country.city.map((item: any) => ({
           label: item.name,
           value: item.id,
+          hotels: item.hotel.map((item: any) => ({
+            value: item.id,
+            label: item.name,
+          })),
         })),
       }));
       const cityOptions = hotelsData.data.flatMap((item: any) =>
@@ -60,6 +65,7 @@ export default function HotelForm() {
           }))
         )
       );
+ 
       setCountries(countryOptions);
       setCities(cityOptions);
       setHotels(hotelOptions);
@@ -236,7 +242,28 @@ export default function HotelForm() {
   //   };
   //   setFetchFormValues(false);
   // }
-  function submitForm(data: any, name: string) {}
+  const { mutate: hotelSubmitter } = useMutation({
+mutationFn: (data: any) => {
+      return sendHotelData(data, Number(id));
+    },
+    onSuccess: () => {},
+  });
+  function submitForm(data: any, name: string) {
+    if (name === "accommodation") {
+      console.log("accommodation")
+      hotelSubmitter({
+        accommodationId:data.hotelName,
+        acServiceTypeId: data.serviceType,
+        files:data.voucherFile
+      })
+      
+    } else 
+      if (name === "room") {
+        console.log("room")
+        
+      }
+   
+  }
   // const purchaseFormik = useFormik({
   //   initialValues: {
   //     costPerNight: "",
