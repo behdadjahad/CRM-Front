@@ -93,7 +93,6 @@ export default function HotelForm() {
           }))
         )
       );
-
       setCountries(countryOptions);
       setCities(cityOptions);
       setHotels(hotelOptions);

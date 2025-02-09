@@ -34,7 +34,6 @@ export async function sendHotelData(data: any, id: number) {
       }
     }
 
-
     if (Array.isArray(data.files)) {
       data.files.forEach((fileObj: any) => {
         if (fileObj?.file instanceof File) {
@@ -42,7 +41,7 @@ export async function sendHotelData(data: any, id: number) {
         }
       });
     }
-    
+
     const result = await fetchService(`accommodation-contract/${id}`, {
       method: "POST",
       body: formData,

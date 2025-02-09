@@ -39,7 +39,7 @@ export async function fetchService(
 
   if (body && method !== "GET") {
     if (body instanceof FormData) {
-      delete headers["Content-Type"]; 
+      delete headers["Content-Type"];
       options.body = body;
     } else {
       options.body = JSON.stringify(body);
@@ -71,9 +71,3 @@ export async function fetchService(
 
   return data;
 }
-
-
-
-  
-
-  
