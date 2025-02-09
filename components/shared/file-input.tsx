@@ -45,12 +45,12 @@ export default function FileInput({
   return (
     <div className="w-full flex flex-row flex-wrap">
       {/* Custom button with upload icon */}
-      <div className="w-full">
+      <div className="w-full h-34">
         <Button
           variant={"foreground"}
           onClick={handleButtonClick}
           className={cn(
-            "text-subtitle/80 text-sm h-11 w-full  outline-none p-3 rounded-lg text-right flex items-center"
+            "text-subtitle/80 text-sm  w-full  outline-none rounded-lg text-center items-center min-h-36 flex flex-col gap-2 border-dashed border-slate border-2"
           )}
         >
           {item.icon && (
@@ -59,10 +59,13 @@ export default function FileInput({
               alt={"تصویر"}
               width={160}
               height={160}
-              className="h-6 w-6"
+              className="h-5 w-7"
             />
           )}
-          <span>آپلودفایل</span>
+          <div className="flex flex-col gap-2">
+            <span className="text-sm text-aqua-foreground">لطفاً فایل خود را بارگذاری کنید</span>
+            <span> (حداکثر اندازه 10 مگابایت)PNG، JPG یا GIF</span>
+            </div>
         </Button>
 
         {/* Hidden file input */}

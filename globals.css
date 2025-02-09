@@ -4,6 +4,15 @@
 
 @layer base {
   :root {
+    /*blue colors*/
+    --aqua: 221, 69%, 53%;
+    --aqua-foreground: 224, 59%, 40%;
+    --aqua-active: 237, 52%, 48%;
+    --aqua-mute: 225, 66%, 87%;
+    
+    /*gray colors*/
+    --slate: 220, 12%, 85%;
+
     --background: 224, 85%, 97%;
     --foreground: 220, 24%, 12%;
     --foreground-mute: 220, 6%, 66%;
@@ -27,7 +36,7 @@
 
     --card: 0, 0%, 100%;
     --card-foreground: 220, 2%, 27%;
-    --card-active:0,0,100%,0.1;
+    --card-active: 0, 0, 100%, 0.1;
 
     --accessible: 20, 91%, 53%;
     --accessible-foreground: 0, 0%, 100%;
@@ -38,15 +47,14 @@
     --accent-active: 347, 77%, 57%;
 
     --tertiary: 220, 24%, 12%;
-    --tertiary-foreground: 220 ,20% ,13%;
+    --tertiary-foreground: 220, 20%, 13%;
     --tertiary-background: 220, 6%, 47%;
 
     --quartiery: 210, 14%, 13%;
-    --quartiery-background:34 ,74% , 54%;
+    --quartiery-background: 34, 74%, 54%;
     --quartiery-foreground: 210, 25%, 17%;
-    --quartiery-active: 224, 61%, 40%;
-    --border-foreground:hsl(220, 6.6%, 66.3%);
-
+    /* --quartiery-active: 224, 61%, 40%; */
+    --border-foreground: 220, 6.6%, 66.3%;
 
     --info: 35, 73%, 54%;
     --info-foreground: 211, 24%, 17%;
@@ -83,14 +91,12 @@
     --background-active: 0, 0%, 100%;
     --background-gradient: 214.3 31.8% 91.4%;
 
-
     --link-active: 214.3 31.8% 91.4%;
     --link-active-background: 214.3 31.8% 91.4%;
 
     --btn: 214.3 31.8% 91.4%;
     --btn-foreground: 214.3 31.8% 91.4%;
     --btn-active: 214.3 31.8% 91.4%;
-
 
     --card-active: 214.3 31.8% 91.4%;
 
@@ -210,14 +216,16 @@
 
 .loader {
   @apply w-6 h-6 p-2 rounded-full bg-card;
-  --_m:
-    conic-gradient(#0000 10%,#000),
-    linear-gradient(#000 0 0) content-box;
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
   -webkit-mask: var(--_m);
-          mask: var(--_m);
+  mask: var(--_m);
   -webkit-mask-composite: source-out;
-          mask-composite: subtract;
+  mask-composite: subtract;
   animation: l3 1s infinite linear;
 }
 
-@keyframes l3 {to{transform: rotate(1turn)}}
+@keyframes l3 {
+  to {
+    transform: rotate(1turn);
+  }
+}

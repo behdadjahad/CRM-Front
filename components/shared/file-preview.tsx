@@ -23,7 +23,7 @@ export default function FilePreview({
   };
 
   return (
-    <div className="flex  flex-wrap gap-4 rounded-lg border-dashed border-gray-300 border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
+    <div className="flex  flex-wrap gap-4 rounded-lg border-dashed border-slate border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
       {form.values[item.dependantKey as string] &&
         form.values[item.dependantKey as string].map(
           (preview: any, index: any) => (

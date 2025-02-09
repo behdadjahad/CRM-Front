@@ -3,17 +3,46 @@ import * as Yup from "yup";
 import FormExtender, { FormExtenderInterface } from "../shared/form-extender";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getServiceTypes } from "@/api/hotel";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getServiceTypes, sendHotelData } from "@/api/hotel";
 import { getHotels } from "@/api/hotel";
 import { OptionType } from "../shared/form-maker";
+import { useParams } from "next/navigation";
+import RegisteryForm from "../contract/registery-form";
+import { insertSubmitterData } from "@/api/client";
+import { getUsers } from "@/api/auth";
+import { getContractById } from "@/api/contract";
 
 export default function HotelForm() {
   const [serviceTypes, setServiceTypes] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
   const [hotels, setHotels] = useState<OptionType[]>([]);
-
+  const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+  const { id } = useParams();
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+  const { data: contract } = useQuery({
+    queryKey: ["contract"],
+    queryFn: () => getContractById(Number(id) as number),
+  });
+  useEffect(() => {
+    if (users) {
+      const userOption: OptionType[] = users.map((item) => ({
+        label: item.fullName,
+        value: item.id.toString(),
+      }));
+      setUserOptions(userOption);
+    }
+  }, [users]);
+  const { mutate: SubmitterHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return insertSubmitterData(data, Number(id));
+    },
+    onSuccess: () => {},
+  });
   const { data: serviceTypesData } = useQuery({
     queryKey: ["serviceTypes"],
     queryFn: async () => await getServiceTypes(),
@@ -40,6 +69,10 @@ export default function HotelForm() {
         cities: item.country.city.map((item: any) => ({
           label: item.name,
           value: item.id,
+          hotels: item.hotel.map((item: any) => ({
+            value: item.id,
+            label: item.name,
+          })),
         })),
       }));
       const cityOptions = hotelsData.data.flatMap((item: any) =>
@@ -60,6 +93,7 @@ export default function HotelForm() {
           }))
         )
       );
+
       setCountries(countryOptions);
       setCities(cityOptions);
       setHotels(hotelOptions);
@@ -200,7 +234,7 @@ export default function HotelForm() {
         placeholder: "",
         type: "file",
         floating: true,
-        icon: "/icons/upload.png",
+        icon: "/icons/vector.png",
         className: "w-full",
       },
       {
@@ -236,7 +270,26 @@ export default function HotelForm() {
   //   };
   //   setFetchFormValues(false);
   // }
-  function submitForm(data: any, name: string) {}
+  const { mutate: hotelSubmitter } = useMutation({
+    mutationFn: (data: any) => {
+      return sendHotelData(data, Number(id));
+    },
+    onSuccess: () => {},
+  });
+  function submitForm(data: any, name: string) {
+    if (name === "accommodation") {
+      console.log("accommodation");
+      console.log("🚀 ~ submitForm ~ data.voucherFile:", data.voucherFile[0]);
+      hotelSubmitter({
+        accommodationId: data.hotelName,
+
+        serviceTypeId: data.serviceType,
+        files: data.voucherFile,
+      });
+    } else if (name === "room") {
+      console.log("room");
+    }
+  }
   // const purchaseFormik = useFormik({
   //   initialValues: {
   //     costPerNight: "",
@@ -286,8 +339,16 @@ export default function HotelForm() {
             <div className="px-2 font-foreground font-semibold">
               اطلاعات مشتری (ثبت کننده)
             </div>
-
-            {/* <RegisteryForm /> */}
+            <RegisteryForm
+              submitForm={SubmitterHandler}
+              accountant={
+                contract?.userResponsible?.id
+                  ? contract?.userResponsible?.id.toString()
+                  : ""
+              }
+              accountantOptions={userOptions}
+              className="flex-row"
+            />
           </div>
         </div>
       </div>

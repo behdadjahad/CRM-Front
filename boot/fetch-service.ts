@@ -14,7 +14,7 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = localStorage.getItem("token");
 
   return {
-    "Content-Type": "application/json",
+    "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
   };
@@ -38,7 +38,12 @@ export async function fetchService(
   };
 
   if (body && method !== "GET") {
-    options.body = JSON.stringify(body);
+    if (body instanceof FormData) {
+      delete headers["Content-Type"]; 
+      options.body = body;
+    } else {
+      options.body = JSON.stringify(body);
+    }
   }
 
   const response = await fetch(
@@ -66,3 +71,9 @@ export async function fetchService(
 
   return data;
 }
+
+
+
+  
+
+  

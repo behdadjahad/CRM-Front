@@ -127,7 +127,7 @@ export default function FormExtender({
       <Button
         variant={"transparent"}
         onClick={extendForm}
-        className={cn("mr-auto text-quartiery-active", extenderBtnClassName)}
+        className={cn("mr-auto text-aqua-foreground", extenderBtnClassName)}
       >
         <FaPlus /> {"اضافه کردن" + " " + title}
       </Button>
@@ -159,7 +159,7 @@ export default function FormExtender({
               }}
               name={form.name}
             />
-            <div className="flex">
+            <div className="flex flex-col">
               {form.children.map((item) => (
                 <div key={item.id}>
                   <FormikWrapper
@@ -260,10 +260,33 @@ function FormikWrapper({
   }, [formik.values.country]);
 
   useEffect(() => {
+    if (!formik.values.city) return;
+
+    const selectedCity = formFields.find((field) => field.key === "city");
+
+    const selectedOption = selectedCity?.options?.find(
+      (item) => item.value == formik.values.city
+    );
+
+    const updatedFields = fields.map((field) => {
+      if (field.key === "hotelName") {
+        return {
+          ...field,
+          options: selectedOption?.hotels || [],
+        };
+      }
+      return field;
+    });
+
+    setFormFields(updatedFields);
+  }, [formik.values.city]);
+
+  useEffect(() => {
     const findItemWithOptions = fields.find(
       (item) => item.options && item.options.length
     );
     if (findItemWithOptions) setFormFields(fields);
+    setFormFields(fields)
   }, [fields]);
 
   return (
@@ -277,9 +300,9 @@ function FormikWrapper({
               onClick={() => {
                 extendChildren?.(id);
               }}
-              className={cn("mr-auto", extendChildrenBtnClassName)}
+              className={cn("mr-auto w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua", extendChildrenBtnClassName)}
             >
-              <FaPlus />
+              <FaPlus className="text-white"/>
             </Button>
           </div>
         </div>

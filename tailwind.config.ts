@@ -219,6 +219,18 @@ const config: Config = {
           gradient: "var(--card-gradient)",
           mute: 'rgba(255, 255, 255, 0.1)'
         },
+        aqua: {
+          DEFAULT: "hsla(var(--aqua))",
+          foreground: "hsla(var(--aqua-foreground))",
+          active: "hsla(var(--aqua-active))",
+          mute:"hsla(var(--aqua-mute))",
+        
+        },
+        slate: {
+          DEFAULT: "hsla(var(--slate))",
+        
+        
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

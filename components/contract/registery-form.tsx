@@ -3,15 +3,17 @@ import FormMaker, { OptionType } from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import { cn } from "@/lib/utils";
 export interface RegisteryFormInterface {
   accountant: string;
   accountantOptions: OptionType[];
   submitForm: (values: any) => void;
+  className?: string;
 }
 
 export default function RegisteryForm({
   submitForm,
-
+ className,
   accountant,
   accountantOptions,
 }: RegisteryFormInterface) {
@@ -63,7 +65,7 @@ export default function RegisteryForm({
             className: "w-full md:w-1/2",
           },
         ]}
-        className="w-full flex-row-reverse"
+        className={cn("w-full flex-row-reverse",className)}
       />
       <Button
         variant={"info"}
