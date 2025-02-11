@@ -15,6 +15,7 @@ import ToggleInput from "./toggle-input";
 import FilePreview from "./file-preview";
 import ListPreview from "./list-preview";
 
+
 export interface OptionType {
   label: string;
   value: string;
@@ -36,6 +37,7 @@ export interface FieldType {
     | "toggle"
     | "file-preview"
     | "list-preview"
+    | "range-input"
     | "non-field";
   floating?: boolean;
   placeholder?: string;
@@ -60,7 +62,6 @@ export interface FieldType {
   onChange?: (checked: boolean) => void;
   readonly?: boolean;
   disabled?: boolean;
-
   title?: string;
 }
 
@@ -94,7 +95,6 @@ export default function FormMaker({
           return <SliderInput item={item} form={form} />;
         case "textarea":
           return <TextAreaInput item={item} form={form} />;
-
         case "verification":
           return <VerificationInput item={item} form={form} />;
         case "file":

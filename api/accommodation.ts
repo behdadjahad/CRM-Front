@@ -37,7 +37,7 @@ export async function sendHotelData(data: any, id: number) {
     if (Array.isArray(data.files)) {
       data.files.forEach((fileObj: any) => {
         if (fileObj?.file instanceof File) {
-          formData.append("files", fileObj.file); // ✅ Append with the same key
+          formData.append("files", fileObj.file); 
         }
       });
     }
@@ -49,4 +49,34 @@ export async function sendHotelData(data: any, id: number) {
 
     return result;
   } catch {}
+}
+export async function getAccommodationTypes() {
+  try {
+    const result = await fetchService("accommodation-type");
+    console.log(result)
+    return result;
+  } catch {
+    return {};
+  }
+}
+export async function sendRoomData(data: any, id: number) {
+  try {
+    const result = await fetchService(`accommodation-contract-room/${id}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  }
+ catch { }
+
+}
+export async function getRooms() {
+  try {
+    const result = await fetchService("room-type");
+    console.log(result)
+    return result;
+  } catch {
+    return {};
+  }
 }

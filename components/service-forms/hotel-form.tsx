@@ -1,17 +1,25 @@
 import { REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
 import FormExtender, { FormExtenderInterface } from "../shared/form-extender";
-import { useFormik } from "formik";
+
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getServiceTypes, sendHotelData } from "@/api/hotel";
-import { getHotels } from "@/api/hotel";
+import {
+  getAccommodationTypes,
+  getRooms,
+  getServiceTypes,
+  sendHotelData,
+  sendRoomData,
+} from "@/api/accommodation";
+import { getHotels } from "@/api/accommodation";
 import { OptionType } from "../shared/form-maker";
 import { useParams } from "next/navigation";
 import RegisteryForm from "../contract/registery-form";
 import { insertSubmitterData } from "@/api/client";
 import { getUsers } from "@/api/auth";
 import { getContractById } from "@/api/contract";
+import { getCurrencies } from "@/api/currency";
+import { convertToGregorian } from "@/lib/date";
 
 export default function HotelForm() {
   const [serviceTypes, setServiceTypes] = useState<OptionType[]>([]);
@@ -19,7 +27,14 @@ export default function HotelForm() {
   const [cities, setCities] = useState<OptionType[]>([]);
   const [hotels, setHotels] = useState<OptionType[]>([]);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+  const [accommodationTypes, setAccommodationTypes] = useState<OptionType[]>(
+    []
+  );
+  const [currencies, setCurrencies] = useState<OptionType[]>([]);
+  const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
   const { id } = useParams();
+ 
+
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
@@ -61,6 +76,47 @@ export default function HotelForm() {
     queryKey: ["hotels"],
     queryFn: async () => await getHotels(),
   });
+  const { data: accommodationType } = useQuery({
+    queryKey: ["accomodationType"],
+    queryFn: () => getAccommodationTypes(),
+  });
+  const { data: currency } = useQuery({
+    queryKey: ["Currency"],
+    queryFn: () => getCurrencies(),
+  });
+  useEffect(() => {
+    if (currency) {
+      const currencyOptions = currency.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setCurrencies(currencyOptions);
+      console.log(90, currency);
+    }
+  }, [currency]);
+  const { data: roomType } = useQuery({
+    queryKey: ["roomType"],
+    queryFn: () => getRooms(),
+  });
+  useEffect(() => {
+    if (roomType) {
+      const roomOptions = roomType.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setRoomTypes(roomOptions);
+      console.log(90, roomType);
+    }
+  }, [roomType]);
+  useEffect(() => {
+    if (accommodationType) {
+      const accommodationOptions = accommodationType.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setAccommodationTypes(accommodationOptions);
+    }
+  }, [accommodationType]);
   useEffect(() => {
     if (hotelsData) {
       const countryOptions: OptionType[] = hotelsData.data.map((item: any) => ({
@@ -104,28 +160,39 @@ export default function HotelForm() {
     name: "room",
     fields: [
       {
+        key: "roomCount",
+        component: "input",
+        type: "number",
+        placeholder: "تعداد اتاق",
+        floating: true,
+        className: "w-full md:w-1/4",
+      },
+      {
         key: "roomType",
         component: "Select",
         placeholder: "نوع اتاق",
         type: "text",
         floating: true,
-        className: "w-full md:w-1/3",
+        className: "w-full md:w-1/4",
+        options: roomTypes,
       },
       {
         key: "contractDateIn",
+        dependantKey: "checkInDateType",
         component: "date",
-        placeholder: "چک کردن",
+        placeholder: "چک این",
         type: "text",
         floating: true,
-        className: "w-full md:w-1/3",
+        className: "w-full md:w-1/4",
       },
       {
         key: "contractDateOut",
+        dependantKey: "checkOutDateType",
         component: "date",
-        placeholder: "چک کردن",
+        placeholder: "چک اوت",
         type: "text",
         floating: true,
-        className: "w-full md:w-1/3",
+        className: "w-full md:w-1/4",
       },
       {
         key: "purchaseTitle",
@@ -143,11 +210,12 @@ export default function HotelForm() {
       },
       {
         key: "currency",
-        component: "input",
+        component: "Select",
         placeholder: "ارز هزینه",
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
+        options: currencies,
       },
       {
         key: "broker",
@@ -159,26 +227,37 @@ export default function HotelForm() {
       },
     ],
     initialValues: {
+      roomCount: "",
       roomType: "",
       contractDateIn: "",
       contractDateOut: "",
+      costPerNight: "",
+      currency: "",
+      broker: "",
+      hotelId: "",
     },
     validationSchema: Yup.object().shape({
       roomType: Yup.string().required(REQUIRED_TEXT),
       contractDateIn: Yup.string().required(REQUIRED_TEXT),
       contractDateOut: Yup.string().required(REQUIRED_TEXT),
+      costPerNight: Yup.string().required(REQUIRED_TEXT),
+      currency: Yup.string().required(REQUIRED_TEXT),
+      broker: Yup.string().required(REQUIRED_TEXT),
     }),
     fetchFormValues: false,
     callbackSubmit: submitForm,
-    form: useFormik({
-      initialValues: {
-        roomType: "",
-        contractDateIn: "",
-        contractDateOut: "",
-        clientName: "",
-      },
-      onSubmit: async () => {},
-    }),
+    // form: useFormik({
+    //   initialValues: {
+    //     roomType: "",
+    //     contractDateIn: "",
+    //     contractDateOut: "",
+    //     costPerNight: "",
+    //     currency: "",
+    //     broker: "",
+    //     hotelId:"",
+    //   },
+    //   onSubmit: async () => {},
+    // }),
   };
 
   const hotelForm: FormExtenderInterface = {
@@ -210,6 +289,7 @@ export default function HotelForm() {
         type: "text",
         floating: true,
         className: "w-full md:w-1/3",
+        options: accommodationTypes,
       },
       {
         key: "hotelName",
@@ -273,21 +353,59 @@ export default function HotelForm() {
     mutationFn: (data: any) => {
       return sendHotelData(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: (data) => {
+      console.log(data.id);
+      roomForm.initialValues.hotelId = data.id;
+    },
+  });
+  const { mutate: roomSubmitter } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) =>
+      sendRoomData(data, id),
+    onSuccess: (data) => {
+      console.log("Success:", data);
+    },
   });
   function submitForm(data: any, name: string) {
     if (name === "accommodation") {
-      console.log("accommodation");
-      console.log("🚀 ~ submitForm ~ data.voucherFile:", data.voucherFile[0]);
       hotelSubmitter({
         accommodationId: data.hotelName,
-
         serviceTypeId: data.serviceType,
         files: data.voucherFile,
       });
     } else if (name === "room") {
-      console.log("room");
+      roomSubmitter({
+        data: {
+          acRoomTypeId: data.roomType,
+          numberOfRooms: Number(data.roomCount),
+          // numberOfNights: 1,
+          checkInDate: convertToGregorian(data.contractDateIn,data.checkInDateType),
+          checkOutDate: convertToGregorian(data.contractDateOut,data.checkOutDateType),
+          // voucherNo: "string",
+          // voucherPdf: "string",
+          // priceWeBuyPerNight: 1,
+          // currencyWeBuyExchangeRate: 1,
+          // priceWeBuyPerNightInContractCurrency: 1,
+          // totalBuyPrice: 1,
+          // priceWeSell: 1,
+          // currencyWeSellExchangeRate: 1,
+          // priceWeSellInContractCurrency: 1,
+          // totalSellPrice: 1,
+          // currencyWeBuyId: 1,
+          // currencyWeSellId: 1,
+          contractCurrencyId: data.currency,
+        },
+        id: 10,
+      });
     }
+    // roomCount:"",
+    // roomType: "",
+    // contractDateIn: "",
+    // contractDateOut: "",
+    // costPerNight: "",
+    // currency: "",
+    // broker: "",
+    // hotelId:"",
+    console.log(data)
   }
   // const purchaseFormik = useFormik({
   //   initialValues: {

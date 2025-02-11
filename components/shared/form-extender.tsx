@@ -227,10 +227,13 @@ function FormikWrapper({
   submitForm,
   name,
 }: FormikWrapperInterface) {
+  console.log(values)
   const formik = useFormik({
     initialValues: values,
     validationSchema,
-    onSubmit: () => {},
+    onSubmit: () => { },
+    enableReinitialize: true,
+
   });
   const [formFields, setFormFields] = useState<
     FormikWrapperInterface["fields"]
