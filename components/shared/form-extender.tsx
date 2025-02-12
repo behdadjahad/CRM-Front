@@ -22,6 +22,7 @@ export interface FormExtenderInterface {
   childrenClassName?: string;
   extenderBtnClassName?: string;
   childrenData?: any;
+  hotelId?: number;
 }
 
 export default function FormExtender({
@@ -38,15 +39,23 @@ export default function FormExtender({
   extenderBtnClassName,
   childrenData,
   name,
+
 }: FormExtenderInterface) {
   const [forms, setForms] = useState<
-    { id: string; values: any; children: any[]; name: string }[]
+    {
+      id: string;
+      values: any;
+      children: any[];
+      name: string;
+
+    }[]
   >([
     {
       id: `${title}-0`,
       values: { ...initialValues },
       name: name,
       children: [],
+
     },
   ]);
 
@@ -60,6 +69,7 @@ export default function FormExtender({
         values: { ...initialValues },
         children: [],
         name: name,
+   
       },
     ]);
     setFormCount((prevCount) => prevCount + 1);
@@ -99,7 +109,10 @@ export default function FormExtender({
                   ...form.children,
                   {
                     id: `${formId}-child-${form.children.length}`,
-                    values: { ...childrenData.initialValues },
+                    values: {
+                      ...childrenData.initialValues,
+                  
+                    },
                     name: childrenData.name,
                   },
                 ],
@@ -108,7 +121,7 @@ export default function FormExtender({
         )
       );
     },
-    [forms, childrenData]
+    [childrenData]
   );
   const removeChildrenForm = useCallback((formId: string, childId: string) => {
     setForms((prevForms) =>
@@ -227,13 +240,11 @@ function FormikWrapper({
   submitForm,
   name,
 }: FormikWrapperInterface) {
-  console.log(values)
   const formik = useFormik({
     initialValues: values,
     validationSchema,
-    onSubmit: () => { },
+    onSubmit: () => {},
     enableReinitialize: true,
-
   });
   const [formFields, setFormFields] = useState<
     FormikWrapperInterface["fields"]
@@ -289,7 +300,7 @@ function FormikWrapper({
       (item) => item.options && item.options.length
     );
     if (findItemWithOptions) setFormFields(fields);
-    setFormFields(fields)
+    setFormFields(fields);
   }, [fields]);
 
   return (
@@ -303,9 +314,12 @@ function FormikWrapper({
               onClick={() => {
                 extendChildren?.(id);
               }}
-              className={cn("mr-auto w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua", extendChildrenBtnClassName)}
+              className={cn(
+                "mr-auto w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua",
+                extendChildrenBtnClassName
+              )}
             >
-              <FaPlus className="text-white"/>
+              <FaPlus className="text-white" />
             </Button>
           </div>
         </div>

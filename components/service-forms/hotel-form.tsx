@@ -32,8 +32,8 @@ export default function HotelForm() {
   );
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
+  const [hotelId, setHotelId] = useState<number>();
   const { id } = useParams();
- 
 
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
@@ -91,7 +91,7 @@ export default function HotelForm() {
         label: item.name,
       }));
       setCurrencies(currencyOptions);
-      console.log(90, currency);
+    
     }
   }, [currency]);
   const { data: roomType } = useQuery({
@@ -105,7 +105,7 @@ export default function HotelForm() {
         label: item.name,
       }));
       setRoomTypes(roomOptions);
-      console.log(90, roomType);
+ 
     }
   }, [roomType]);
   useEffect(() => {
@@ -234,7 +234,6 @@ export default function HotelForm() {
       costPerNight: "",
       currency: "",
       broker: "",
-      hotelId: "",
     },
     validationSchema: Yup.object().shape({
       roomType: Yup.string().required(REQUIRED_TEXT),
@@ -354,7 +353,8 @@ export default function HotelForm() {
       return sendHotelData(data, Number(id));
     },
     onSuccess: (data) => {
-      console.log(data.id);
+    
+      setHotelId(data.id);
       roomForm.initialValues.hotelId = data.id;
     },
   });
@@ -362,7 +362,7 @@ export default function HotelForm() {
     mutationFn: ({ data, id }: { data: any; id: number }) =>
       sendRoomData(data, id),
     onSuccess: (data) => {
-      console.log("Success:", data);
+   console.log(data)
     },
   });
   function submitForm(data: any, name: string) {
@@ -373,29 +373,36 @@ export default function HotelForm() {
         files: data.voucherFile,
       });
     } else if (name === "room") {
-      roomSubmitter({
-        data: {
-          acRoomTypeId: data.roomType,
-          numberOfRooms: Number(data.roomCount),
-          // numberOfNights: 1,
-          checkInDate: convertToGregorian(data.contractDateIn,data.checkInDateType),
-          checkOutDate: convertToGregorian(data.contractDateOut,data.checkOutDateType),
-          // voucherNo: "string",
-          // voucherPdf: "string",
-          // priceWeBuyPerNight: 1,
-          // currencyWeBuyExchangeRate: 1,
-          // priceWeBuyPerNightInContractCurrency: 1,
-          // totalBuyPrice: 1,
-          // priceWeSell: 1,
-          // currencyWeSellExchangeRate: 1,
-          // priceWeSellInContractCurrency: 1,
-          // totalSellPrice: 1,
-          // currencyWeBuyId: 1,
-          // currencyWeSellId: 1,
-          contractCurrencyId: data.currency,
-        },
-        id: 10,
-      });
+      // roomSubmitter({
+      //   data: {
+      //     acRoomTypeId: data.roomType,
+      //     numberOfRooms: Number(data.roomCount),
+      //     // numberOfNights: 1,
+      //     checkInDate: convertToGregorian(
+      //       data.contractDateIn,
+      //       data.checkInDateType
+      //     ),
+      //     checkOutDate: convertToGregorian(
+      //       data.contractDateOut,
+      //       data.checkOutDateType
+      //     ),
+      //     // voucherNo: "string",
+      //     // voucherPdf: "string",
+      //     // priceWeBuyPerNight: 1,
+      //     // currencyWeBuyExchangeRate: 1,
+      //     // priceWeBuyPerNightInContractCurrency: 1,
+      //     // totalBuyPrice: 1,
+      //     // priceWeSell: 1,
+      //     // currencyWeSellExchangeRate: 1,
+      //     // priceWeSellInContractCurrency: 1,
+      //     // totalSellPrice: 1,
+      //     // currencyWeBuyId: 1,
+      //     // currencyWeSellId: 1,
+      //     contractCurrencyId: data.currency,
+      //   },
+      //   id: 10,
+      // });
+      console.log(data)
     }
     // roomCount:"",
     // roomType: "",
@@ -405,7 +412,7 @@ export default function HotelForm() {
     // currency: "",
     // broker: "",
     // hotelId:"",
-    console.log(data)
+
   }
   // const purchaseFormik = useFormik({
   //   initialValues: {
@@ -429,6 +436,7 @@ export default function HotelForm() {
             wrapperClassName="flex-row flex-wrap"
             childrenClassName="order-last"
             childrenData={roomForm}
+            hotelId={hotelId}
           />
         ) : (
           <></>

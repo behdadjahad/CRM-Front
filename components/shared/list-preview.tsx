@@ -8,7 +8,8 @@ export default function ListPreview({
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-}) {
+  }) {
+  console.log(item.options)
   const [activeItem, setActiveItem] = useState<OptionType>(null);
   return (
     <div className="flex flex-col md:flex-row items-center  w-full justify-between gap-4">

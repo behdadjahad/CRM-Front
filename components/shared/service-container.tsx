@@ -70,7 +70,7 @@ export default function ServiceContainer({
 
       <h2>سرویس ها</h2>
 
-      <div className="flex flex-row-reverse flex-wrap items-center justify-start gap-3 w-full">
+      <div className="flex flex-row flex-wrap items-center justify-start gap-2 w-full">
         {services.map((item) => (
           <ServiceCard
             key={item.id}

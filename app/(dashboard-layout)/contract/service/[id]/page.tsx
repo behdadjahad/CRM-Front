@@ -30,6 +30,7 @@ import { useEffect, useState } from "react";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import { sendSingleServiceData } from "@/api/service";
 import { convertDate } from "@/lib/date";
+import { getExpenses } from "@/api/expense";
 
 export default function Service() {
   const {
@@ -105,6 +106,15 @@ function getData() {
     }
   }, [contract]);
 
+  const { data: expenseData } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: () => getExpenses(Number(id) as number),
+  });
+  useEffect(() => {
+    if (expenseData) {
+   console.log(115,expenseData)
+    }
+  }, [expenseData]);
   const { mutate: submitService } = useMutation({
     mutationFn: (data: any) => {
       return sendSingleServiceData(data, Number(id));
