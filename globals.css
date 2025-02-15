@@ -9,13 +9,16 @@
     --aqua-foreground: 224, 59%, 40%;
     --aqua-active: 237, 52%, 48%;
     --aqua-mute: 225, 66%, 87%;
-    
+
     /*gray colors*/
     --slate: 220, 12%, 85%;
 
     --background: 224, 85%, 97%;
     --foreground: 220, 24%, 12%;
     --foreground-mute: 220, 6%, 66%;
+
+    /*red colors*/
+    --danger: 348, 88%, 45%;
 
     --header: 0, 0%, 100%;
 

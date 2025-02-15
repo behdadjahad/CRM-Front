@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { FormMakerInterface, OptionType } from "./form-maker";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ListPreview({
   form,
@@ -8,9 +8,15 @@ export default function ListPreview({
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-  }) {
-  console.log(item.options)
-  const [activeItem, setActiveItem] = useState<OptionType>(null);
+}) {
+  const [activeItem, setActiveItem] = useState<any>();
+  useEffect(() => {
+    if (item?.options) {
+      setActiveItem(
+        item?.options?.find((opt) => opt.value == form.values[item.key])
+      );
+    }
+  }, [form.values[item.key]]);
   return (
     <div className="flex flex-col md:flex-row items-center  w-full justify-between gap-4">
       <div className="">{item.title}</div>
@@ -21,7 +27,7 @@ export default function ListPreview({
           item.options.map((optItem) => (
             <div
               key={optItem.value}
-              onClick={() =>  {
+              onClick={() => {
                 if (activeItem && activeItem.value === optItem.value) {
                   setActiveItem(null);
                   form.setFieldValue(item.key, null);
@@ -29,7 +35,6 @@ export default function ListPreview({
                   setActiveItem(optItem);
                   form.setFieldValue(item.key, Number(optItem.value));
                 }
-               
               }}
               className={cn(
                 "cursor-pointer text-sm font-semibold border  rounded-md h-9 w-18 flex items-center justify-center text-subtitle/80",

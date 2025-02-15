@@ -112,7 +112,7 @@ function getData() {
   });
   useEffect(() => {
     if (expenseData) {
-   console.log(115,expenseData)
+
     }
   }, [expenseData]);
   const { mutate: submitService } = useMutation({

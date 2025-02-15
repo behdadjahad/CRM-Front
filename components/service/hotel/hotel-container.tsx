@@ -9,6 +9,7 @@ import {
   getAccommodationTypes,
   getHotels,
   getServiceTypes,
+  getSubmittedHotels,
 } from "@/api/accommodation";
 import { OptionType } from "@/components/shared/form-maker";
 import { useParams } from "next/navigation";
@@ -19,7 +20,7 @@ import { getUsers } from "@/api/auth";
 export default function HotelContainer() {
   const { id } = useParams();
 
-  const [formKeys, setFormKeys] = useState<string[]>([`new-hotel-form-1`]);
+  const [addedHotels, setAddedHotels] = useState<any[]>([]);
 
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
@@ -90,7 +91,7 @@ export default function HotelContainer() {
       setAccommodationTypes(accommodationOptions);
     }
   }, [accommodationType]);
-  const { data: serviceTypesData} = useQuery({
+  const { data: serviceTypesData } = useQuery({
     queryKey: ["serviceTypes"],
     queryFn: async () => await getServiceTypes(),
   });
@@ -111,54 +112,99 @@ export default function HotelContainer() {
       setUserOptions(userOption);
     }
   }, [users]);
+
   useEffect(() => {
     if (serviceTypesData?.data) {
       const serviceOptions = serviceTypesData.data.map((item: any) => ({
         label: item.name,
         value: item.id.toString(),
       }));
-      console.log(serviceOptions);
       setServiceTypes(serviceOptions);
     }
   }, [serviceTypesData]);
 
+  const { data: submittedHotels, isLoading: isHotelLoading } = useQuery({
+    queryKey: ["submittedHotels"],
+    queryFn: () => getSubmittedHotels(Number(id) as number),
+  });
+
+  useEffect(() => {
+    if (isHotelLoading) return;
+    if (submittedHotels?.data?.length) {
+      setAddedHotels(
+        submittedHotels.data.map((item: any) => ({
+          city: item?.accommodation?.cityId.toString(),
+          country: item?.accommodation?.countryId.toString(),
+          hotel: item?.accommodation?.id.toString(),
+          serviceType: item.serviceTypeId,
+          id: item.id,
+        }))
+      );
+    } else {
+      setAddedHotels([
+        {
+          city: null,
+          country: null,
+          hotel: null,
+          serviceType: null,
+          // accommodationType:item.
+          id: "new-hotel-form",
+          key: "new-hotel-form",
+        },
+      ]);
+    }
+  }, [submittedHotels, isHotelLoading]);
+
   function addHotelForm() {
-    const key = `new-hotel-form-${formKeys.length + 1}`;
-    setFormKeys([...formKeys, key]);
+    const key = `new-hotel-form-${addedHotels.length + 1}`;
+    setAddedHotels([...addedHotels, key]);
+  }
+
+  function removeHandler(formId: string) {
+    if (addedHotels.length > 1) {
+      const updatedFormKeys = addedHotels.filter((key) => key != formId);
+      setAddedHotels(updatedFormKeys);
+    } else return;
   }
 
   return (
-    <div>
+    <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <Button
         variant={"transparent"}
         onClick={addHotelForm}
-        className={cn("mr-auto text-aqua-foreground")}
+        className={cn("text-aqua-foreground flex justify-end w-full")}
       >
         <FaPlus />
-          اضافه کردن اقامتگاه
+        اضافه کردن اقامتگاه
       </Button>
 
-      { formKeys.map((item) => (
+      {addedHotels.map((item, index) => (
         <HotelForm
-          key={item}
-          id={item}
+          key={`hotel-${item.id}-${index}`}
+          id={item.id}
           cities={cities}
           countries={countries}
           serviceTypes={serviceTypes}
           hotels={hotels}
           accommodationTypes={accommodationTypes}
+          onRemoveHandler={removeHandler}
+          hotel={addedHotels[index]}
         />
       ))}
-      <RegisteryForm
-        submitForm={SubmitterHandler}
-        accountant={
-          contract?.userResponsible?.id
-            ? contract?.userResponsible?.id.toString()
-            : ""
-        }
-        accountantOptions={userOptions}
-        className="flex-row"
-      />
+
+      <div className="flex flex-col gap-4">
+        <h2>اطلاعات ثبت کننده</h2>
+        <RegisteryForm
+          submitForm={SubmitterHandler}
+          accountant={
+            contract?.userResponsible?.id
+              ? contract?.userResponsible?.id.toString()
+              : ""
+          }
+          accountantOptions={userOptions}
+          className="flex-row"
+        />
+      </div>
     </div>
   );
 }

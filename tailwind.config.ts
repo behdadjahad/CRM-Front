@@ -224,14 +224,16 @@ const config: Config = {
           foreground: "hsla(var(--aqua-foreground))",
           active: "hsla(var(--aqua-active))",
           mute:"hsla(var(--aqua-mute))",
-        
+
         },
         slate: {
           DEFAULT: "hsla(var(--slate))",
-        
-        
+        },
+        danger: {
+          DEFAULT: "hsla(var(--danger))",
         },
       },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

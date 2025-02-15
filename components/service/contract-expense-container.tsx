@@ -6,6 +6,7 @@ import ContractExpenseCard, {
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { formatPrice } from "@/lib/utils";
 
+import CurrencyDropDown from "../shared/currency-drop-down";
 export interface ExpenseContainerInterface {
   expenseList: ExpenseCardInterface[];
   overalExpense: {
@@ -30,7 +31,10 @@ export default function ContractExpenseContainer({
         <h2 className="text-lg text-gray-900 font-bold">
           واحد ارزی کل قرارداد
         </h2>
-        <span>دلار</span>
+        <div className="flex items-center justify-between">
+          <div>هزینه های قرارداد</div>
+       <CurrencyDropDown />
+        </div>
       </div>
       {expenseList.map((item) => (
         <ContractExpenseCard key={item.title} {...item} />

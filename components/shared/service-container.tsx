@@ -37,7 +37,7 @@ export default function ServiceContainer({
         askQuestion && (
           <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
             <p className="text-negative text-xs font-bold">
-              اکنون پرواز خارجی به عنوان قرارداد به سرویس اضافه شود؟
+              اکنون این سرویس به قرارداد اضافه شود؟
             </p>
             <div className="flex gap-4">
               <Checkbox
@@ -93,11 +93,10 @@ export default function ServiceContainer({
                 }
               } else if (activeItem && activeItem.title === item.title) {
                 setActiveItem(null);
-                onActiveItemChange(item)
+                onActiveItemChange(item);
               } else {
                 setActiveItem(item);
-                 onActiveItemChange(item);
-                
+                onActiveItemChange(item);
               }
             }}
             isActive={
@@ -112,7 +111,6 @@ export default function ServiceContainer({
       {activeItem && activeItem.children}
 
       {children}
-      
     </div>
   );
 }
