@@ -1,10 +1,11 @@
 import {
+  deleteRoomData,
   editHotelData,
   getSubmittedRooms,
   sendHotelData,
 } from "@/api/accommodation";
-import FormMaker from "@/components/shared/form-maker";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
+import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { cn, REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
@@ -12,9 +13,10 @@ import { useFormik } from "formik";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import RoomForm from "./room-form";
+import { useParams } from "next/navigation";
 
 export default function HotelForm({
-  id,
+  itemId,
   countries,
   cities,
   hotels,
@@ -22,9 +24,13 @@ export default function HotelForm({
   accommodationTypes,
   onRemoveHandler,
   hotel,
+  className,
 }: any) {
   const [hotelId, setHotelId] = useState<number>();
   const [addedRooms, setAddedRooms] = useState<any[]>([]);
+  const [cityOptions, setCityOptions] = useState<OptionType[]>(cities);
+  const [hotelOptions, setHotelOptions] = useState<OptionType[]>(hotels);
+  const { id } = useParams();
 
   const formik = useFormik({
     initialValues: {
@@ -32,9 +38,10 @@ export default function HotelForm({
       city: hotel?.city,
       hotelName: hotel?.hotel,
       serviceType: hotel?.serviceType,
-      accommodationType: "",
+      accommodationType: hotel?.accommodationType,
       voucherFile: "",
       id: hotel?.id,
+      isSubmitted: hotel.isSubmitted,
     },
     validationSchema: Yup.object().shape({
       city: Yup.string().required(REQUIRED_TEXT),
@@ -55,13 +62,14 @@ export default function HotelForm({
           priceWeBuyPerNight: item?.priceWeBuyPerNight,
           id: item?.id,
           roomTypeId: item?.acRoomTypeId,
+          isSubmitted: true,
         }))
       );
     },
   });
 
   useEffect(() => {
-    if (hotel?.id) roomMutation(hotel?.id);
+    if (hotel?.id && hotel.isSubmitted) roomMutation(hotel?.id);
   }, []);
 
   const { mutate: hotelSubmitter } = useMutation({
@@ -80,7 +88,7 @@ export default function HotelForm({
   });
 
   function submitForm(data: any) {
-    if (data.id) {
+    if (data.isSubmitted) {
       hotelEditor({
         data: {
           accommodationId: data.hotelName,
@@ -99,28 +107,87 @@ export default function HotelForm({
   }
 
   function addRoomForm() {
-    const key = `new-hotel-form-${addedRooms.length + 1}`;
-    setAddedRooms([...addedRooms, key]);
+    setAddedRooms([...addedRooms, {
+      checkInDate: null,
+      checkOutDate: null,
+      numberOfRooms: null,
+      priceWeBuyPerNight: null,
+      id:`room-${addedRooms.length + 1}` ,
+      roomTypeId: null,
+      isSubmitted:false
+    }]);
   }
 
   function removeForm(formId: string) {
     onRemoveHandler(formId);
   }
 
-  function removeHandler(formId: string) {
-    const updatedRoomKeys = addedRooms.filter((key) => key != formId);
-    setAddedRooms(updatedRoomKeys);
+  // function removeRoomHandler(formId: string) {
+  //   const updatedRoomKeys = addedRooms.filter((item) => item.id != formId);
+  //   setAddedRooms(updatedRoomKeys);
+  // }
+    const { mutate: removeRoom } = useMutation({
+      mutationFn: (id: number) => {
+        return deleteRoomData(id);
+      },
+      onSuccess: () => {},
+    });
+  function removeRoomHandler(formId: string | number) {
+    const selectedRoom = addedRooms.find((item) => item.id == formId);
+    if (selectedRoom.isSubmitted) {
+      removeRoom(selectedRoom.id);
+      const updatedAddedHotels = addedRooms.filter(
+        (item) => item.id != formId
+      );
+      setAddedRooms(updatedAddedHotels);
+    } else  {
+      const updatedAddedHotels = addedRooms.filter(
+        (item) => item.id != formId
+      );
+      setAddedRooms(updatedAddedHotels);
+    } 
   }
+  useEffect(() => {
+    if (!formik.values.country) {
+      setCityOptions(cities);
+    } else {
+      const updatedCities = countries.find(
+        (item: any) => item.value == formik.values.country
+      )?.cities;
+
+      setCityOptions(() => updatedCities);
+    }
+  }, [formik.values.country]);
+
+  useEffect(() => {
+    if (!formik.values.accommodationType) {
+      setHotelOptions(hotels);
+    } else {
+      const updatedHotels = cities
+        .find((item: any) => item.value == formik.values.city)
+        ?.hotels.filter(
+          (hotel: any) =>
+            hotel.accommodationId == formik.values.accommodationType
+        );
+
+      console.log({
+        updatedHotels,
+        accommodationType: formik.values.accommodationType,
+      });
+
+      setHotelOptions(updatedHotels);
+    }
+  }, [formik.values.accommodationType, formik.values.city]);
 
   return (
-    <div className="bg-card flex flex-col gap-4">
+    <div className={cn("flex flex-col gap-4", className)}>
       <div className="flex flex-row items-center gap-4 p-2">
         <h2>اقامتگاه</h2>
         <Button
           variant={"transparent"}
           onClick={addRoomForm}
           className={cn(
-            " w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
+            "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
           )}
         >
           <FaPlus className="text-white" />
@@ -146,7 +213,7 @@ export default function HotelForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options: cities,
+            options: cityOptions,
           },
           {
             key: "accommodationType",
@@ -164,8 +231,9 @@ export default function HotelForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options: hotels,
+            options: hotelOptions,
           },
+
           {
             key: "serviceType",
             component: "list-preview",
@@ -202,7 +270,7 @@ export default function HotelForm({
                 </Button>
                 <Button
                   onClick={() => {
-                    removeForm(id);
+                    removeForm(itemId);
                   }}
                   className="text-danger border-danger"
                 >
@@ -218,9 +286,9 @@ export default function HotelForm({
       {addedRooms.map((item: any, index: any) => (
         <RoomForm
           id={item.id}
-          key={`room-${item.id}-${index}`}
+          key={item.id}
           hotelId={hotel ? hotel.id : hotelId}
-          onRemoveHandler={removeHandler}
+          onRemoveHandler={removeRoomHandler}
           room={addedRooms[index]}
         />
       ))}

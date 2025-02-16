@@ -8,8 +8,8 @@ import momentHijri from "moment-hijri";
 export function convertDate(dateStr: string, targetType: string): string {
  
   // Parse the input date in YYYY/MM/DD format
-  dateStr=dateStr?.split('T')[0].replace(/-/g, '/');
-  const [year, month, day] = dateStr?.split("/").map(Number);
+  dateStr=dateStr.split('T')[0].replace(/-/g, '/');
+  const [year, month, day] = dateStr.split("/").map(Number);
 
   // Convert based on the target type
   if (targetType.toLowerCase() === "lunar") {

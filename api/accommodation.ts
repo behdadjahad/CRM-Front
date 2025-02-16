@@ -51,7 +51,6 @@ export async function sendHotelData(data: any, id: number) {
   } catch {}
 }
 export async function editHotelData(data: any, id: number) {
- 
   try {
     if (!data || Object.keys(data).length === 0) {
       console.warn("sendHotelData: No data provided!");
@@ -82,10 +81,19 @@ export async function editHotelData(data: any, id: number) {
     return result;
   } catch {}
 }
+export async function deleteHotelData(id: number) {
+  try {
+    const result = await fetchService(`accommodation-contract/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}
 export async function getAccommodationTypes() {
   try {
     const result = await fetchService("accommodation-type");
- 
+
     return result;
   } catch {
     return {};
@@ -101,6 +109,8 @@ export async function sendRoomData(data: any, id: number) {
     return result;
   } catch {}
 }
+
+
 export async function editRoomData(data: any, id: number) {
   try {
     const result = await fetchService(`accommodation-contract-room/${id}`, {
@@ -111,10 +121,19 @@ export async function editRoomData(data: any, id: number) {
     return result;
   } catch {}
 }
+export async function deleteRoomData(id: number) {
+  try {
+    const result = await fetchService(`accommodation-contract-room/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch { }
+}
 export async function getRooms() {
   try {
     const result = await fetchService("room-type");
-  
+
     return result;
   } catch {
     return {};
@@ -128,10 +147,9 @@ export async function getSubmittedHotels(id: number) {
   } catch {}
 }
 export async function getSubmittedRooms(id: number) {
-  console.log(id)
   try {
     const result = await fetchService(`accommodation-contract-room/${id}`);
-    console.log(result)
+
     return result;
   } catch {}
 }

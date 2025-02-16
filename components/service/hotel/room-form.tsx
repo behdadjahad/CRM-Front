@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getRooms, sendRoomData } from "@/api/accommodation";
+import { editRoomData, getRooms, sendRoomData } from "@/api/accommodation";
 import { useEffect, useState } from "react";
 import { getCurrencies } from "@/api/currency";
 
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 export interface RoomInterface {
   hotelId: number;
 }
+// http://185.126.203.246:3000/public
 export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
@@ -44,8 +45,8 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   const formik = useFormik({
     initialValues: {
       roomType: room?.roomTypeId?.toString(),
-      contractDateIn: convertDate(room?.checkInDate, "Solar"),
-      contractDateOut: convertDate(room?.checkOutDate, "Solar"),
+      contractDateIn: room?.checkInDate ? convertDate(room?.checkInDate,"Solar"): "",
+      contractDateOut: room?.contractDateOut? convertDate(room?.checkOutDate,"Solar") :"",
       costPerNight: room?.priceWeBuyPerNight,
       currency: "",
       broker: "",
@@ -68,47 +69,54 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
     mutationFn: ({ data, id }: { data: any; id: number }) =>
       sendRoomData(data, id),
   });
-  function submitForm(data: any) {
-    if (data.id) {
-      roomSubmitter({
+  const { mutate: roomEditor } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) =>
+      editRoomData(data, id),
+  });
+
+  function submitRoom(data: any) {
+    console.log(room.isSubmitted)
+    if (room.isSubmitted) {
+      roomEditor({
         data: {
           roomTypeId: data.roomType,
           numberOfRooms: Number(data.roomCount),
-          checkInDate: convertToGregorian(
-            data?.contractDateIn,
-            data?.checkInDateType
-          ),
-          checkOutDate: convertToGregorian(
-            data?.contractDateOut,
-            data?.checkOutDateType
-          ),
+          // checkInDate: convertToGregorian(
+          //   data?.contractDateIn,
+          //   data?.checkInDateType
+          // ),
+          // checkOutDate: convertToGregorian(
+          //   data?.contractDateOut,
+          //   data?.checkOutDateType
+          // ),
           priceWeBuyPerNight: Number(data.costPerNight),
           currencyWeBuyExchangeRate: 10,
           currencyWeBuyId: data.currency,
         },
         id: data.id,
-      });
-    } else {
-      roomSubmitter({
-        data: {
-          roomTypeId: data.roomType,
-          numberOfRooms: Number(data.roomCount),
-          checkInDate: convertToGregorian(
-            data.contractDateIn,
-            data.checkInDateType
-          ),
-          checkOutDate: convertToGregorian(
-            data.contractDateOut,
-            data.checkOutDateType
-          ),
-          priceWeBuyPerNight: Number(data.costPerNight),
-          currencyWeBuyExchangeRate: 10,
-          currencyWeBuyId: data.currency,
-        },
-        id: hotelId,
-      });
+      })
     }
-  }
+      else {
+        roomSubmitter({
+          data: {
+            roomTypeId: data.roomType,
+            numberOfRooms: Number(data.roomCount),
+            checkInDate: convertToGregorian(
+              data.contractDateIn,
+              data.checkInDateType
+            ),
+            checkOutDate: convertToGregorian(
+              data.contractDateOut,
+              data.checkOutDateType
+            ),
+            priceWeBuyPerNight: Number(data.costPerNight),
+            currencyWeBuyExchangeRate: 10,
+            currencyWeBuyId: data.currency,
+          },
+          id: hotelId,
+        });
+      }
+     }
 
   function removeForm(formId: string) {
     onRemoveHandler(formId);
@@ -193,7 +201,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
                 <Button
                   variant="info"
                   onClick={() => {
-                    submitForm(formik.values);
+                    submitRoom(formik.values);
                   }}
                 >
                   ثبت اتاق

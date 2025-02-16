@@ -6,6 +6,7 @@ import { FaPlus } from "react-icons/fa";
 import HotelForm from "./hotel-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  deleteHotelData,
   getAccommodationTypes,
   getHotels,
   getServiceTypes,
@@ -46,12 +47,13 @@ export default function HotelContainer() {
       const countryOptions: OptionType[] = hotelsData.data.map((item: any) => ({
         value: item.country.id.toString(),
         label: item.country.name,
-        cities: item.country.city.map((item: any) => ({
-          label: item.name,
-          value: item.id,
-          hotels: item.hotel.map((item: any) => ({
-            value: item.id,
-            label: item.name,
+        cities: item.country.city.map((city: any) => ({
+          label: city.name,
+          value: city.id,
+          hotels: city.hotel.map((hotel: any) => ({
+            label: hotel.name,
+            value: hotel.id,
+            accommodationId: hotel.AccommodationAcType.accomodationType.id, // Optional chaining in case it's undefined
           })),
         })),
       }));
@@ -59,20 +61,25 @@ export default function HotelContainer() {
         item.country.city.map((city: any) => ({
           value: city.id.toString(),
           label: city.name,
+
           hotels: city.hotel.map((item: any) => ({
             value: item.id,
             label: item.name,
+            accommodationId: item.AccommodationAcType.accomodationType.id,
           })),
         }))
       );
+
       const hotelOptions = hotelsData.data.flatMap((item: any) =>
         item.country.city.flatMap((city: any) =>
-          city.hotel.map((item: any) => ({
-            label: item.name,
-            value: item.id.toString(),
+          city.hotel.map((hotel: any) => ({
+            label: hotel.name,
+            value: hotel.id.toString(),
+            accommodationId: hotel.AccommodationAcType.accomodationType.id,
           }))
         )
       );
+
       setCountries(countryOptions);
       setCities(cityOptions);
       setHotels(hotelOptions);
@@ -138,37 +145,62 @@ export default function HotelContainer() {
           hotel: item?.accommodation?.id.toString(),
           serviceType: item.serviceTypeId,
           id: item.id,
+          isSubmitted: true,
+          accommodationType:
+            item.accommodation.AccommodationAcType.accomodationType.id.toString(),
         }))
       );
     } else {
       setAddedHotels([
         {
+          id: `hotel-1`,
           city: null,
           country: null,
           hotel: null,
           serviceType: null,
-          // accommodationType:item.
-          id: "new-hotel-form",
-          key: "new-hotel-form",
+          isSubmitted: false,
         },
       ]);
     }
   }, [submittedHotels, isHotelLoading]);
 
   function addHotelForm() {
-    const key = `new-hotel-form-${addedHotels.length + 1}`;
-    setAddedHotels([...addedHotels, key]);
+    setAddedHotels([
+      ...addedHotels,
+      {
+        id: `hotel-${addedHotels.length + 1}`,
+        city: null,
+        country: null,
+        hotel: null,
+        serviceType: null,
+        isSubmitted: false,
+      },
+    ]);
   }
-
-  function removeHandler(formId: string) {
-    if (addedHotels.length > 1) {
-      const updatedFormKeys = addedHotels.filter((key) => key != formId);
-      setAddedHotels(updatedFormKeys);
+  const { mutate: removeHotel } = useMutation({
+    mutationFn: (id: number) => {
+      return deleteHotelData(id);
+    },
+    onSuccess: () => {},
+  });
+  function removeHandler(formId: string | number) {
+    const selectedHotel = addedHotels.find((item) => item.id == formId);
+    if (selectedHotel.isSubmitted) {
+      removeHotel(selectedHotel.id);
+      const updatedAddedHotels = addedHotels.filter(
+        (item) => item.id != formId
+      );
+      setAddedHotels(updatedAddedHotels);
+    } else if (addedHotels.length > 1) {
+      const updatedAddedHotels = addedHotels.filter(
+        (item) => item.id != formId
+      );
+      setAddedHotels(updatedAddedHotels);
     } else return;
   }
 
   return (
-    <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
+    <div className="bg-transparent p-6 rounded-xl flex flex-col gap-4">
       <Button
         variant={"transparent"}
         onClick={addHotelForm}
@@ -177,21 +209,22 @@ export default function HotelContainer() {
         <FaPlus />
         اضافه کردن اقامتگاه
       </Button>
-
-      {addedHotels.map((item, index) => (
-        <HotelForm
-          key={`hotel-${item.id}-${index}`}
-          id={item.id}
-          cities={cities}
-          countries={countries}
-          serviceTypes={serviceTypes}
-          hotels={hotels}
-          accommodationTypes={accommodationTypes}
-          onRemoveHandler={removeHandler}
-          hotel={addedHotels[index]}
-        />
-      ))}
-
+      <div className="flex flex-col-reverse">
+        {addedHotels.map((item, index) => (
+          <HotelForm
+            key={item.id}
+            itemId={item.id}
+            cities={cities}
+            countries={countries}
+            serviceTypes={serviceTypes}
+            hotels={hotels}
+            accommodationTypes={accommodationTypes}
+            onRemoveHandler={removeHandler}
+            hotel={addedHotels[index]}
+            className=""
+          />
+        ))}
+      </div>
       <div className="flex flex-col gap-4">
         <h2>اطلاعات ثبت کننده</h2>
         <RegisteryForm

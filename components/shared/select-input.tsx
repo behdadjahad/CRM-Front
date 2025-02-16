@@ -27,7 +27,7 @@ const SelectInput = React.memo(function SelectInput({
       options={item.options}
       onChange={(item: any) => handleValueChange(item)}
       placeholder={
-        item.options?.find((optItem) => optItem.value === form.values[item.key])
+        item.options?.find((optItem) => optItem.value == form.values[item.key])
           ?.label ||
         item.placeholder ||
         item.label
