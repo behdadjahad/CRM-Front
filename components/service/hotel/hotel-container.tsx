@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-
+//import { config } from "@/config/config";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import HotelForm from "./hotel-form";
@@ -20,7 +20,7 @@ import { getContractById } from "@/api/contract";
 import { getUsers } from "@/api/auth";
 export default function HotelContainer() {
   const { id } = useParams();
-
+  //const staticUrl = `${config.ServerAddress}/public/`;
   const [addedHotels, setAddedHotels] = useState<any[]>([]);
 
   const [countries, setCountries] = useState<OptionType[]>([]);
@@ -138,6 +138,7 @@ export default function HotelContainer() {
   useEffect(() => {
     if (isHotelLoading) return;
     if (submittedHotels?.data?.length) {
+
       setAddedHotels(
         submittedHotels.data.map((item: any) => ({
           city: item?.accommodation?.cityId.toString(),
@@ -147,7 +148,13 @@ export default function HotelContainer() {
           id: item.id,
           isSubmitted: true,
           accommodationType:
-            item.accommodation.AccommodationAcType.accomodationType.id.toString(),
+          item.accommodation.AccommodationAcType.accomodationType.id.toString(),
+          // files: item.voucherPDF.map((item:any) => ({
+          //   // url:`blob:${staticUrl}${item}`
+          //   //url: "blob:http://185.126.203.246:3000/public/file-storage/0ddbaf91-fee4-488b-a448-842253ae912d",
+          //   //file:
+      
+          // }))
         }))
       );
     } else {
@@ -159,6 +166,7 @@ export default function HotelContainer() {
           hotel: null,
           serviceType: null,
           isSubmitted: false,
+         // files:[]
         },
       ]);
     }
@@ -174,6 +182,7 @@ export default function HotelContainer() {
         hotel: null,
         serviceType: null,
         isSubmitted: false,
+       // files:[]
       },
     ]);
   }

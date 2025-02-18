@@ -4,7 +4,7 @@ import ClientInfoContainer, {
   ClientInfoContainerInterface,
 } from "@/components/service/client-info-container";
 import ContractExpenseContainer, {
-  ExpenseContainerInterface,
+
 } from "@/components/service/contract-expense-container";
 import ContractInfoContainer, {
   ContractInfoInterface,
@@ -16,8 +16,7 @@ import ServiceContainer, {
   ServiceContainerInterface,
 } from "@/components/shared/service-container";
 import Image from "next/image";
-import { FaPlus } from "react-icons/fa";
-import { Button } from "@/components/ui/button";
+
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 
@@ -30,13 +29,13 @@ import { useEffect, useState } from "react";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import { sendSingleServiceData } from "@/api/service";
 import { convertDate } from "@/lib/date";
-import { getExpenses } from "@/api/expense";
+
 
 export default function Service() {
   const {
     clientInfoProps,
     contractServices,
-    expenses,
+   // expenses,
     expert,
     contractInfo,
     activeItemForm,
@@ -74,7 +73,7 @@ export default function Service() {
       </div>
 
       <div className="w-full lg:w-1/4 flex flex-col">
-        <ContractExpenseContainer {...expenses} />
+        <ContractExpenseContainer/>
         <div className="mt-4">
           <ClientInfoContainer {...clientInfoProps} />
         </div>
@@ -106,15 +105,15 @@ function getData() {
     }
   }, [contract]);
 
-  const { data: expenseData } = useQuery({
-    queryKey: ["expenses"],
-    queryFn: () => getExpenses(Number(id) as number),
-  });
-  useEffect(() => {
-    if (expenseData) {
+  // const { data: expenseData } = useQuery({
+  //   queryKey: ["expenses"],
+  //   queryFn: () => getExpenses(Number(id) as number),
+  // });
+  // useEffect(() => {
+  //   if (expenseData) {
 
-    }
-  }, [expenseData]);
+  //   }
+  // }, [expenseData]);
   const { mutate: submitService } = useMutation({
     mutationFn: (data: any) => {
       return sendSingleServiceData(data, Number(id));
@@ -269,127 +268,105 @@ function getData() {
     ],
   };
 
-  const expenses: ExpenseContainerInterface = {
-    expenseList: [
-      {
-        title: "هتل",
-        icon: "/icons/hotel.png",
-        expenseInfo: [
-          {
-            price: "60000000",
-            pricePostFix: "ریال",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "دلار",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "یورو",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-        ],
-      },
-      {
-        title: "ویزا",
-        icon: "/icons/visa.png",
-        expenseInfo: [
-          {
-            price: "60000000",
-            pricePostFix: "ریال",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "دلار",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "یورو",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-        ],
-      },
-      {
-        title: "پرواز",
-        icon: "/icons/airport.png",
-        expenseInfo: [
-          {
-            price: "60000000",
-            pricePostFix: "ریال",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "دلار",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-          {
-            price: "60000000",
-            pricePostFix: "یورو",
-            convertedPrice: "60000000",
-            convertedPricePostFix: "$",
-          },
-        ],
-      },
-    ],
-    overalExpense: {
-      title: "کل",
-      overalExpenseDetail: [
-        {
-          label: "هزینه",
-          value: "60000000",
-        },
-        {
-          label: "درآمد",
-          value: "250000000",
-          children: (
-            <div
-              className="flex items-center
-            justify-between bg-card-mute
-            rounded-lg p-2 flex-row mt-2"
-            >
-              <span className="text-xs text-foreground-mute border border-1 border-border-mute p-1">
-                درآمد
-              </span>
-              <span className="text-xs text-foreground-mute border border-1 border-border-mute p-1">
-                نرخ تبدیل
-              </span>
-              <span className="text-xs text-foreground-mute border border-1 border-border-mute p-1">
-                دلار
-              </span>
-              <Button
-                variant={"info"}
-                className="p-1 border-none rounded-full w-4 h-4"
-              >
-                <FaPlus className="text-card" />
-              </Button>
-            </div>
-          ),
-        },
-        {
-          label: "سود و زیان",
-          value: "50000000",
-        },
-      ],
-    },
-  };
+  // const expenses: ExpenseContainerInterface = {
+  //   expenseList: [
+  //     {
+  //       title: "هتل",
+  //       icon: "/icons/hotel.png",
+  //       expenseInfo: [
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "ریال",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "دلار",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "یورو",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "ویزا",
+  //       icon: "/icons/visa.png",
+  //       expenseInfo: [
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "ریال",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "دلار",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "یورو",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //       ],
+  //     },
+  //     {
+  //       title: "پرواز",
+  //       icon: "/icons/airport.png",
+  //       expenseInfo: [
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "ریال",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "دلار",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //         {
+  //           price: "60000000",
+  //           pricePostFix: "یورو",
+  //           convertedPrice: "60000000",
+  //           convertedPricePostFix: "$",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   overalExpense: {
+  //     title: "کل",
+  //     overalExpenseDetail: [
+  //       {
+  //         label: "هزینه",
+  //         value: "60000000",
+  //       },
+  //       {
+  //         label: "درآمد",
+  //         value: "250000000",
+  //         hasForm:true
+  //       },
+  //       {
+  //         label: "سود و زیان",
+  //         value: "50000000",
+  //       },
+  //     ],
+  //   },
+  //};
 
   return {
     clientInfoProps,
     contractServices,
-    expenses,
+    //expenses,
     expert,
     contractInfo,
     activeItemForm,

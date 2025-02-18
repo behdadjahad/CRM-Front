@@ -1,12 +1,17 @@
-import { useState } from "react";
-import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
+
 import ContractExpenseCard, {
   ExpenseCardInterface,
 } from "./contract-expense-card";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { formatPrice } from "@/lib/utils";
 
 import CurrencyDropDown from "../shared/currency-drop-down";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getAllExpenses, sendExchageRate } from "@/api/currency";
+import { useParams } from "next/navigation";
+import OveralExpenseContainer from "./overal-expense-container";
+import { useQueryClient } from "@tanstack/react-query";
+
 export interface ExpenseContainerInterface {
   expenseList: ExpenseCardInterface[];
   overalExpense: {
@@ -14,16 +19,88 @@ export interface ExpenseContainerInterface {
     overalExpenseDetail: {
       label: string;
       value: string;
-      children?: React.ReactNode;
+      hasForm?: boolean;
     }[];
   };
 }
 
-export default function ContractExpenseContainer({
-  expenseList,
-  overalExpense,
-}: ExpenseContainerInterface) {
-  const [view, setView] = useState(false);
+export default function ContractExpenseContainer() {
+  const [overalExpense, setOveralExpense] = useState<any[]>([]);
+  const [contractCurrency, setContractCurrency] = useState<any>({});
+  const [serviceExpenses, setServiceExpenses] = useState<any>([]);
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+  const { mutate: exchangeRateHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return sendExchageRate(data, Number(id));
+    },
+    onSuccess: (data) => {
+      setContractCurrency(data.contractCurrency);
+    },
+  });
+  const { data: allExpenses } = useQuery({
+    queryKey: ["allExpenses"],
+    queryFn: async () => await getAllExpenses(Number(id)),
+  });
+  useEffect(() => {
+    if (allExpenses) {
+      const overalExpenseData = [
+        { label: "هزینه", value: allExpenses.buyPrice },
+        {
+          label: "درآمد",
+          value: allExpenses.sellPrice,
+          hasForm: true,
+        },
+        {
+          label: "سود و زیان",
+          value: allExpenses.profit,
+        },
+      ];
+      const contractExchangeRate = allExpenses.contractCurrency;
+      //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
+      //     return {},
+      //   });
+      const servicePrices = Object.entries(allExpenses.servicePrices).map(
+        ([key, value]) => ({ key, ...(value as any) })
+      );
+      const totalServiceExpenses = servicePrices
+        .filter((item) => item.groupedBuyPrices.length > 0)
+        .map((item) => ({
+          groupPrices: item.groupedBuyPrices.map((price: any) => ({
+            currency: price.currency,
+            buyPrice: price.totalBuyPrice,
+            convertedBuyPrice: price.totalBuyPriceInContractCurrency,
+          })),
+
+          title:
+            item.key === "accommodationContract"
+              ? "هتل"
+              : item.key === "otherContract"
+              ? "دیگر"
+              : item.key === "visaContract"
+              ? "ویزا"
+              : item.key === "ticketContract"
+              ? "پرواز"
+              : item.key === "pickUpContract"
+              ? "پیکاپ"
+              : item.key === "embassyPackageContract"
+              ? "سفارت"
+              : item.key === "ensuranceContract"
+              ? "بیمه"
+              : item.key,
+        }));
+      console.log(totalServiceExpenses);
+
+      setContractCurrency(contractExchangeRate);
+      setOveralExpense(overalExpenseData);
+      setServiceExpenses(totalServiceExpenses);
+    }
+  }, [allExpenses]);
+  useEffect(() => {
+    if (contractCurrency) {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    }
+  }, [contractCurrency, queryClient]);
 
   return (
     <div className="rounded-lg bg-white p-4">
@@ -33,41 +110,19 @@ export default function ContractExpenseContainer({
         </h2>
         <div className="flex items-center justify-between">
           <div>هزینه های قرارداد</div>
-       <CurrencyDropDown />
+          <CurrencyDropDown
+            contractCurrency={contractCurrency}
+            onCurrencyHandler={exchangeRateHandler}
+          />
         </div>
       </div>
-      {expenseList.map((item) => (
-        <ContractExpenseCard key={item.title} {...item} />
+      {serviceExpenses?.map((item: any) => (
+        <ContractExpenseCard key={item.title} {...item} contractCurrency={contractCurrency} />
       ))}
-      <div className="flex flex-col w-full bg-primary rounded-lg p-4 gap-4">
-        <div className="text-xs text-card font-bold">{overalExpense.title}</div>
-        {overalExpense.overalExpenseDetail.map((item) => (
-          <div
-            className="flex items-center justify-between flex-wrap"
-            key={item.label}
-          >
-            <span className="text-card text-xs ">{item.label}</span>
-            <div className="flex items-center justify-between gap-4  bg-card-mute  p-2 rounded-lg w-2/3">
-              {item.children && (
-                <Button
-                  className="p-0 border-none bg-transparent"
-                  onClick={() => setView(!view)}
-                >
-                  {view ? (
-                    <FaChevronUp className="text-card" size={8} />
-                  ) : (
-                    <FaChevronDown className="text-card" size={8} />
-                  )}
-                </Button>
-              )}
-              <span className="text-xs text-card text-left flex-1">
-                {formatPrice(item.value)}
-              </span>
-            </div>
-            <div className="w-full">{view && item.children}</div>
-          </div>
-        ))}
-      </div>
+      <OveralExpenseContainer
+        data={overalExpense}
+        contractCurrency={contractCurrency}
+      />
     </div>
   );
 }

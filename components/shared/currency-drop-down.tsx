@@ -1,13 +1,13 @@
 "use client";
 
-import { getCurrencies } from "@/api/currency";
+import { getCurrencies} from "@/api/currency";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -15,27 +15,32 @@ import { OptionType } from "./form-maker";
 
 export interface CurrencyDropDownInterface {
   className?: string;
+  contractCurrency: any;
+  onCurrencyHandler: any;
 }
 
 export default function CurrencyDropDown({
   className,
+  contractCurrency,
+  onCurrencyHandler,
 }: CurrencyDropDownInterface) {
-    const [currencies, setCurrencies] = useState<OptionType[]>([]);
-    const [activeCurrency, setActiveCurrency] = useState<OptionType>();
-    const { data: currency } = useQuery({
-        queryKey: ["Currency"],
-        queryFn: () => getCurrencies(),
-      });
-      useEffect(() => {
-        if (currency) {
-          const currencyOptions = currency.data.map((item: any) => ({
-            value: item.id.toString(),
-            label: item.name,
-          }));
-          setCurrencies(currencyOptions);
-        
-        }
-      }, [currency]);
+  const [currencies, setCurrencies] = useState<OptionType[]>([]);
+
+
+  const { data: currency } = useQuery({
+    queryKey: ["Currency"],
+    queryFn: () => getCurrencies(),
+  });
+  useEffect(() => {
+    if (currency) {
+      const currencyOptions = currency.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setCurrencies(currencyOptions);
+    }
+  }, [currency]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -53,18 +58,19 @@ export default function CurrencyDropDown({
             alt="edit-currency"
           />
 
-          <span className="text-sm">{activeCurrency ? activeCurrency.label:"تومان"}</span>
+          <span className="text-sm">{contractCurrency?.name ?? ""}</span>
         </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>
-      {currencies.map((item) => (
+        {currencies.map((item) => (
           <div
             key={item.value}
             className="text-sm cursor-pointer hover:bg-foreground-mute w-full p-2 text-center rounded-sm hover:text-card"
             onClick={() => {
-              
-                setActiveCurrency(item);
+              onCurrencyHandler({
+                contractCurrencyId: Number(item.value),
+              })
             }}
           >
             {item.label}

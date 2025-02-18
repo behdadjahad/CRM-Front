@@ -21,9 +21,9 @@ export default function FilePreview({
 
     form.setFieldValue(item.dependantKey, updatedPreviews);
   };
-
+  
   return (
-    <div className="flex  flex-wrap gap-4 rounded-lg border-dashed border-slate border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
+    <div className="flex flex-wrap gap-4 rounded-lg border-dashed border-slate border-2 h-14 mt-2 w-full items-center px-2 flex-row-reverse">
       {form.values[item.dependantKey as string] &&
         form.values[item.dependantKey as string].map(
           (preview: any, index: any) => (

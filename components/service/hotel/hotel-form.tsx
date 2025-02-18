@@ -39,9 +39,10 @@ export default function HotelForm({
       hotelName: hotel?.hotel,
       serviceType: hotel?.serviceType,
       accommodationType: hotel?.accommodationType,
-      voucherFile: "",
+      voucherFile:hotel?.files,
       id: hotel?.id,
       isSubmitted: hotel.isSubmitted,
+      
     },
     validationSchema: Yup.object().shape({
       city: Yup.string().required(REQUIRED_TEXT),
@@ -169,11 +170,6 @@ export default function HotelForm({
           (hotel: any) =>
             hotel.accommodationId == formik.values.accommodationType
         );
-
-      console.log({
-        updatedHotels,
-        accommodationType: formik.values.accommodationType,
-      });
 
       setHotelOptions(updatedHotels);
     }

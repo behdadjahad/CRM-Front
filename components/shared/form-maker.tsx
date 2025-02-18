@@ -63,6 +63,7 @@ export interface FieldType {
   readonly?: boolean;
   disabled?: boolean;
   title?: string;
+  controlClassName?: string;
 }
 
 export interface FormMakerInterface {

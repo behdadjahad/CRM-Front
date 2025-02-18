@@ -30,6 +30,7 @@ export default function TextInput({
         onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
           "text-subtitle/80 text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
+          //item.className,
           item.labelClassName,
           {
             "floating-input bg-primary-foreground": item.floating,
