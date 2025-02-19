@@ -52,19 +52,19 @@ export async function addIncomeData(data:any,id:number) {
 }
 export async function editIncomeData(data:any,id:number) {
   try {
-    const result = await fetchService(`contract-chadco-customer/exchange-rate/${id}`, {
-      method: "PATCH",
+    const result = await fetchService(`contract-incomes/${id}`, {
+      method: "PUT",
       body: data,
     });
 
     return result;
   } catch {}
 }
-export async function deleteIncomeData(data:any,id:number) {
+export async function deleteIncomeData(id:number) {
   try {
-    const result = await fetchService(`contract-chadco-customer/exchange-rate/${id}`, {
-      method: "PATCH",
-      body: data,
+    const result = await fetchService(`contract-incomes/${id}`, {
+      method: "DELETE",
+ 
     });
 
     return result;

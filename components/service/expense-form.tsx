@@ -3,13 +3,19 @@ import { Button } from "../ui/button";
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
 import { Check } from "lucide-react";
-import { addIncomeData } from "@/api/currency";
+import { addIncomeData, editIncomeData } from "@/api/currency";
 import { useMutation } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
-export default function ExpenseForm({ formId, onAddHandler, currencies }: any) {
+export default function ExpenseForm({
+  formId,
+  onAddHandler,
+  currencies,
+  expenseFormData,
+  onRemoveHandler
+}: any) {
   const { id } = useParams();
-  const { mutate: singleExchangeRateHandler } = useMutation({
+  const { mutate: addSingleExchangeRateHandler } = useMutation({
     mutationFn: (data: any) => {
       return addIncomeData(data, Number(id));
     },
@@ -17,12 +23,41 @@ export default function ExpenseForm({ formId, onAddHandler, currencies }: any) {
       console.log(data);
     },
   });
+  const { mutate: editSingleExchangeRateHandler } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editIncomeData(data, id);
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+    },
+  });
+  function singleExchangeRateHandler(data: any) {
+    if (data.isSubmitted) {
+
+      editSingleExchangeRateHandler({
+        data: {
+          incomeAmount: data.income,
+          incomeCurrencyExchangeRate: data.exchangeRate,
+          incomeCurrencyId: data.exchangeRateLabel,
+        },
+        id: data.id,
+      });
+    } else {
+     addSingleExchangeRateHandler({
+        incomeAmount: data.income,
+        incomeCurrencyExchangeRate: data.exchangeRate,
+        incomeCurrencyId: data.exchangeRateLabel,
+      });
+    }
+  }
 
   const formik = useFormik({
     initialValues: {
-      income: "",
-      exchangeRate: "",
-      exchangeRateLabel: "",
+      income: expenseFormData.income,
+      exchangeRate: expenseFormData.incomeExchangeRate,
+      exchangeRateLabel: expenseFormData.currency,
+      id: expenseFormData.id,
+      isSubmitted: expenseFormData.isSubmitted,
     },
     // validationSchema: Yup.object().shape({
     //   exchangeRate: Yup.string().required(REQUIRED_TEXT),
@@ -46,11 +81,24 @@ export default function ExpenseForm({ formId, onAddHandler, currencies }: any) {
               <Button
                 className="border-none p-1 bg-quartiery-background rounded-full flex items-center justify-center "
                 onClick={() => {
-                  singleExchangeRateHandler({
-                    incomeAmount:formik.values.income,
-                    incomeCurrencyExchangeRate: formik.values.exchangeRate,
-                    incomeCurrencyId: formik.values.exchangeRateLabel,
-                  });
+                  onRemoveHandler(formId);
+                }}
+              >
+                {" "}
+                <Check size={16} color="white" />
+              </Button>
+            ),
+            //className: "text-right bg-red-400 w-5 h-5 rounded-full flex items-center justify-center",
+            className: "w-5 h-5",
+          },
+          {
+            key: "action",
+            component: "non-field",
+            children: (
+              <Button
+                className="border-none p-1 bg-quartiery-background rounded-full flex items-center justify-center "
+                onClick={() => {
+                  singleExchangeRateHandler(formik.values);
                 }}
               >
                 {" "}
