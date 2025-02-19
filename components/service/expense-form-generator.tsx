@@ -2,8 +2,14 @@ import { useEffect, useState } from "react";
 import ExpenseForm from "./expense-form";
 import { OptionType } from "../shared/form-maker";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteIncomeData, getCurrencies, getSubmittedIncome } from "@/api/currency";
+import {
+  addIncomeData,
+  deleteIncomeData,
+  getCurrencies,
+  getSubmittedIncome,
+} from "@/api/currency";
 import { useParams } from "next/navigation";
+import { Button } from "../ui/button";
 export default function ExpenseFormGenerator() {
   const { id } = useParams();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
@@ -13,25 +19,42 @@ export default function ExpenseFormGenerator() {
       isSubmitted: false,
     },
   ]);
+  const [formValues, setFormValues] = useState<any[]>([]);
   const { data: submittedIncomeList, isLoading: isIncomeLoading } = useQuery({
     queryKey: ["submittedIncomeList"],
     queryFn: () => getSubmittedIncome(Number(id)),
   });
 
+  const { mutate: addExchangeRateHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return addIncomeData(data, Number(id));
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+    },
+  });
   useEffect(() => {
     if (isIncomeLoading) return;
     console.log(submittedIncomeList);
     if (submittedIncomeList?.data?.length) {
-      setAddedExpenseForm(
-        submittedIncomeList.data.map((item: any) => ({
+      setAddedExpenseForm([
+        ...submittedIncomeList.data.map((item: any) => ({
           income: item.incomeAmount,
           currency: item.incomeCurrencyId,
           incomeExchangeRate: item.incomeCurrencyExchangeRate,
           id: item.id,
           isSubmitted: true,
-        }))
-      );
-    } else {
+        })),
+        {
+          id: `expense-form-1`,
+          income: null,
+          currency: null,
+          incomeExchangeRate: null,
+          isSubmitted: false,
+        },
+      ]);
+    }
+    else {
       setAddedExpenseForm([
         {
           id: `expense-form-1`,
@@ -74,32 +97,70 @@ export default function ExpenseFormGenerator() {
     onSuccess: () => {},
   });
   function removeHandler(formId: string | number) {
-    const selectedExpenseForm = addedExpenseForm.find((item:any) => item.id == formId);
+    const selectedExpenseForm = addedExpenseForm.find(
+      (item: any) => item.id == formId
+    );
     if (selectedExpenseForm.isSubmitted) {
       removeIncome(selectedExpenseForm.id);
       const updatedAddedExpenseForm = addedExpenseForm.filter(
-        (item:any) => item.id != formId
+        (item: any) => item.id != formId
       );
       setAddedExpenseForm(updatedAddedExpenseForm);
     } else if (addedExpenseForm.length > 1) {
       const updatedAddedExpenseForm = addedExpenseForm.filter(
-        (item:any) => item.id != formId
+        (item: any) => item.id != formId
       );
       setAddedExpenseForm(updatedAddedExpenseForm);
     } else return;
   }
+
+  const handleFormChange = (formId: any, updatedData: any) => {
+    setFormValues((prev) => [
+      ...prev.filter((item) => item.id !== formId),
+      updatedData,
+    ]);
+  };
+
+  function handleSubmit() {
+    
+    addExchangeRateHandler(
+      formValues.map((item) => ({
+        incomeAmount: Number(item.income),
+        incomeCurrencyExchangeRate: Number(item.exchangeRate),
+        incomeCurrencyId: item.exchangeRateLabel,
+      })).filter(
+        (item) =>
+          item.incomeAmount && item.incomeCurrencyExchangeRate && item.incomeCurrencyId
+      )
+    );
+  }
+
   return (
-    <>
-      {addedExpenseForm.map((item: any, index: number) => (
-        <ExpenseForm
-          key={item.id}
-          formId={item.id}
-          onAddHandler={addExpenseForm}
-          currencies={currencies}
-          expenseFormData={addedExpenseForm[index]}
-          onRemoveHandler={removeHandler}
-        />
-      ))}
-    </>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col">
+        {addedExpenseForm.map((item: any, index: number) => (
+          <ExpenseForm
+            key={item.id}
+            formId={item.id}
+            onAddHandler={addExpenseForm}
+            currencies={currencies}
+            expenseFormData={item}
+            onRemoveHandler={removeHandler}
+            isFirstItem={index === addedExpenseForm.length - 1}
+            index={index}
+            onFormChange={handleFormChange}
+          />
+        ))}
+      </div>
+      <Button
+        variant={"info"}
+        className="p-1 border-none w-12 h-8"
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        ثبت
+      </Button>
+    </div>
   );
 }

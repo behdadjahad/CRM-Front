@@ -87,7 +87,8 @@ export default function ContractExpenseContainer() {
               ? "سفارت"
               : item.key === "ensuranceContract"
               ? "بیمه"
-              : item.key,
+                          : item.key,
+          icon:"/icons/visa.png"
         }));
       console.log(totalServiceExpenses);
 

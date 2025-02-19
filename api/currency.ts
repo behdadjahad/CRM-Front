@@ -42,7 +42,8 @@ export async function sendSingleExchageRate(data:any,id:number) {
 }
 export async function addIncomeData(data:any,id:number) {
   try {
-    const result = await fetchService(`contract-incomes/${id}`, {
+
+    const result = await fetchService(`contract-incomes/many/${id}`, {
       method: "POST",
       body: data,
     });

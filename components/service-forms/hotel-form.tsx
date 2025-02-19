@@ -402,7 +402,7 @@ export default function HotelForm() {
       //   },
       //   id: 10,
       // });
-      console.log(data)
+   
     }
     // roomCount:"",
     // roomType: "",

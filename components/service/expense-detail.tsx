@@ -23,7 +23,7 @@ export default function ExpenseDetail({
     },
     onSubmit: () => {},
   });
-  console.log(27, contractCurrency.name)
+  
   const { mutate: singleExchangeRateHandler } = useMutation({
     mutationFn: (data: any) => {
       return sendSingleExchageRate(data, Number(id));

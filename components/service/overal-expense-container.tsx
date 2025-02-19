@@ -8,7 +8,7 @@ export default function OveralExpenseContainer({
   data,
   contractCurrency,
 }: any) {
-    console.log(11,contractCurrency)
+
     const [view, setView] = useState(false);
    
   return (
