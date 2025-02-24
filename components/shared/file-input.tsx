@@ -37,7 +37,7 @@ export default function FileInput({
       .filter((preview) => preview !== null) as { url: string; file: File }[]; // Remove any null entries and assert correct type
 
     form.setFieldValue(item.key, [
-      ...form.values["voucherFile"],
+      ...(form.values[item.key] ?? []),
       ...updatedPreviews,
     ]);
   };

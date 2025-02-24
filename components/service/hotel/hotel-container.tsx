@@ -53,7 +53,7 @@ export default function HotelContainer() {
           hotels: city.hotel.map((hotel: any) => ({
             label: hotel.name,
             value: hotel.id,
-            accommodationId: hotel.AccommodationAcType.accomodationType.id, // Optional chaining in case it's undefined
+            accommodationId: hotel.AccommodationAcType.accomodationType.id, 
           })),
         })),
       }));

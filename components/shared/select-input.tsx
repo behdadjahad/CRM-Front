@@ -37,7 +37,7 @@ const SelectInput = React.memo(function SelectInput({
         container: () => "w-full",
         control: () => {
           return cn(
-            "outline-none  w-full bg-background text-subtitle/80 placeholder:text-subtitle/80 text-right bg-primary-foreground border-none overflow-hidden focus:outline-none",
+            "outline-none  w-full bg-background text-subtitle/80 placeholder:text-subtitle/80 text-right bg-primary-foreground border-none overflow-hidden focus:outline-none bg-gray-400",
             item.controlClassName
           );
         },

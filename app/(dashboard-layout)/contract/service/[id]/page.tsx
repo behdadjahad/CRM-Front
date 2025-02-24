@@ -3,9 +3,7 @@
 import ClientInfoContainer, {
   ClientInfoContainerInterface,
 } from "@/components/service/client-info-container";
-import ContractExpenseContainer, {
-
-} from "@/components/service/contract-expense-container";
+import ContractExpenseContainer from "@/components/service/contract-expense-container";
 import ContractInfoContainer, {
   ContractInfoInterface,
 } from "@/components/shared/contract-info-container";
@@ -30,12 +28,11 @@ import { ServiceCardInterface } from "@/components/shared/service-card";
 import { sendSingleServiceData } from "@/api/service";
 import { convertDate } from "@/lib/date";
 
-
 export default function Service() {
   const {
     clientInfoProps,
     contractServices,
-   // expenses,
+    // expenses,
     expert,
     contractInfo,
     activeItemForm,
@@ -73,7 +70,7 @@ export default function Service() {
       </div>
 
       <div className="w-full lg:w-1/4 flex flex-col">
-        <ContractExpenseContainer/>
+        <ContractExpenseContainer />
         <div className="mt-4">
           <ClientInfoContainer {...clientInfoProps} />
         </div>
@@ -219,10 +216,9 @@ function getData() {
           {
             label: "نام ونام خانوادگی",
 
-            value:
-              clientInfo?.person?.firstName && clientInfo?.person?.lastName
-                ? `${clientInfo?.person?.firstName}${clientInfo?.person?.lastName}`
-                : "",
+            value: `${clientInfo?.person.firstName ?? ""} ${
+              clientInfo?.person?.lastName ?? ""
+            }`.trim(),
           },
           {
             label: "تاریخ تولد",

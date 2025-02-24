@@ -1,4 +1,6 @@
 import HotelContainer from "@/components/service/hotel/hotel-container";
+import VisaContainer from "@/components/service/visa/visa-container";
+
 
 import { ServiceCardInterface } from "@/components/shared/service-card";
 
@@ -12,7 +14,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-visa.png",
     // children: <ServiceForm {...visaForm} />,
     name: "Visa",
-    form: <>visa Form</>,
+    form: <VisaContainer />,
   },
   {
     id: 2,

@@ -14,7 +14,7 @@ export default function ExpenseForm({
   expenseFormData,
   onRemoveHandler,
   isFirstItem,
-  index,
+  //index,
   onFormChange
 }: any) {
   

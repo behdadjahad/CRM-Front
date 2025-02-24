@@ -123,10 +123,7 @@ export default function HotelForm({
     onRemoveHandler(formId);
   }
 
-  // function removeRoomHandler(formId: string) {
-  //   const updatedRoomKeys = addedRooms.filter((item) => item.id != formId);
-  //   setAddedRooms(updatedRoomKeys);
-  // }
+
     const { mutate: removeRoom } = useMutation({
       mutationFn: (id: number) => {
         return deleteRoomData(id);

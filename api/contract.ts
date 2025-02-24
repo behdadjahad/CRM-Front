@@ -211,7 +211,7 @@ export interface ContractOutput {
   description: string;
   contractPayments: any;
   returnDate: string;
-  mainCustomerSoldto: string;
+  mainCustomerSoldto: any;
   totalBenefit: string;
   contractFile: string;
   isItFinalized: boolean;

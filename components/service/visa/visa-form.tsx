@@ -1,0 +1,190 @@
+import FormMaker from "@/components/shared/form-maker";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useFormik } from "formik";
+import { editVisaData, sendVisaData } from "@/api/visa";
+import { useMutation } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+
+export default function VisaForm({
+  visa,
+  onRemoveHandler,
+  itemId,
+  currencies,
+  countries,
+  customers,
+}: any) {
+  const { id } = useParams();
+  const formik = useFormik({
+    initialValues: {
+      id: visa?.id,
+      isSubmitted: visa?.isSubmitted,
+      visaType: "",
+      country: "",
+      clientName: visa?.customerSoldToId,
+      visaTime: "",
+      currency: "",
+      description: visa?.description,
+     // visaFile: visa?.files,
+      visaFile: "",
+    },
+
+    onSubmit: async () => {},
+    enableReinitialize: true,
+  });
+  function removeForm(formId: string) {
+    onRemoveHandler(formId);
+  }
+  const { mutate: visaSubmitter } = useMutation({
+    mutationFn: (data: any) => {
+      return sendVisaData(data, Number(id));
+    },
+    onSuccess: () => {},
+  });
+  const { mutate: visaEditor } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editVisaData(data, id);
+    },
+  });
+
+  function submitForm(data: any) {
+    console.log(data);
+    if (data.isSubmitted) {
+      visaEditor({
+        data: {
+          files: data.visaFile,
+          description: data.description,
+          customerSoldToId: data.clientName,
+        },
+        id: data.id,
+      });
+    } else {
+      visaSubmitter({
+        files: data.visaFile,
+        description: data.description,
+        customerSoldToId: data.clientName,
+      });
+    }
+  }
+  return (
+    <div className={cn("flex flex-col gap-4")}>
+      <div className="flex flex-row items-center gap-4 p-2">
+        <h2>ویزا</h2>
+      </div>
+
+      <FormMaker
+        form={formik}
+        fields={[
+          {
+            key: "visaType",
+            component: "Select",
+            placeholder: "نوع ویزا",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "country",
+            component: "Select",
+            placeholder: "کشور",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+            options: countries,
+          },
+          {
+            key: "clientName",
+            component: "Select",
+            placeholder: "نام مشتری",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+            options: customers,
+          },
+          {
+            key: "visaTime",
+            component: "Select",
+            placeholder: "مدت زمان ویزا",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "visaCost",
+            component: "input",
+            placeholder: " هزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "currency",
+            component: "Select",
+            placeholder: "ارز هزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+            options: currencies,
+          },
+          {
+            key: "visaApproval",
+            component: "Select",
+            placeholder: "یکبارورود",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "description",
+            component: "input",
+            placeholder: "توضیحات",
+            type: "text",
+            floating: true,
+            className: "w-full",
+          },
+          {
+            key: "visaFile",
+            component: "file",
+            placeholder: "",
+            type: "file",
+            floating: true,
+            icon: "/icons/vector.png",
+            className: "w-full",
+          },
+          {
+            component: "file-preview",
+            key: "filePreview",
+            dependantKey: "visaFile",
+            className: "w-full",
+          },
+          {
+            component: "non-field",
+            key: "actions",
+            children: (
+              <div className="flex flex-row items-center gap-2 justify-end w-full">
+                <Button
+                  variant="info"
+                  onClick={() => {
+                    submitForm(formik.values);
+                  }}
+                >
+                  ثبت ویزا
+                </Button>
+                <Button
+                  onClick={() => {
+                    removeForm(itemId);
+                  }}
+                  className="text-danger border-danger"
+                >
+                  حذف ویزا
+                </Button>
+              </div>
+            ),
+          },
+        ]}
+        className=""
+      />
+    </div>
+  );
+}
