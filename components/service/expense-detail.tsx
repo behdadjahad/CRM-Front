@@ -12,16 +12,16 @@ export default function ExpenseDetail({
   isOpen,
   currency,
   buyPrice,
- // convertedBuyPrice,
+  // convertedBuyPrice,
   onToggle,
   // currencies,
   contractCurrency,
-  // serviceName,
+   serviceName,
   onChangeTotalPrice,
+  onChangeTotalAmount,
 }: any) {
-  //console.log(serviceName)
-  const [buyPriceInCurrency, setbuyPriceInCurrency] =
-    useState(0);
+  console.log(serviceName)
+  const [buyPriceInCurrency, setbuyPriceInCurrency] = useState(0);
 
   const { id } = useParams();
   const formik = useFormik({
@@ -43,6 +43,15 @@ export default function ExpenseDetail({
     onChangeTotalPrice(
       Number(formik.values.exchangeRate) * buyPrice - buyPriceInCurrency
     );
+
+      onChangeTotalAmount({
+        exchangeRate: Number(formik.values.exchangeRate),
+        buyPrice: buyPrice,
+        currencyId: currency.id,
+        currencyName: currency.name,
+        serviceName:serviceName
+      });
+
   }, [formik.values.exchangeRate]);
   return (
     <div className="flex flex-col">
@@ -94,8 +103,7 @@ export default function ExpenseDetail({
               type: "text",
               floating: true,
               className: "text-right flex-1 p-0 h-6 text-xs rounded-md",
-              labelClassName:
-                "text-right flex-1 p-0 h-6 text-xs rounded-md border-",
+              labelClassName: "text-right flex-1 px-3 h-6 text-xs rounded-md",
             },
             // {
             //   key: "exchangeRateLabel",

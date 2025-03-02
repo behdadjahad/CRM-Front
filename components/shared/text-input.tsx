@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FormMakerInterface } from "./form-maker";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 
@@ -12,11 +12,25 @@ export default function TextInput({
   item: FormMakerInterface["fields"][0];
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
+  const [inputValue, setInputValue] = useState(item.defaultValue || form.values[item.key] || '');
   const toggleVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
+  const handleInputChange = (e: any) => {
+    const value = e.target.value;
 
+    // Remove commas for the raw value
+    const rawValue = value.replace(/,/g, '');
+
+    // Update the form value with the raw value (without commas)
+    form.setFieldValue(item.key, rawValue);
+
+    // Format the value with commas and update the displayed value
+    const formattedValue = formatPrice(rawValue);
+
+    // Set the formatted value in the local state for the input field
+    setInputValue(formattedValue);
+  };
   return (
     <div
       className={cn("relative w-full", { "input-container": item.floating })}
@@ -24,10 +38,12 @@ export default function TextInput({
       <input
         key={item.key}
         placeholder={item.floating ? " " : item.placeholder}
-        value={item.defaultValue ? item.defaultValue : form.values[item.key]}
+       // value={item.defaultValue ? item.defaultValue : form.values[item.key]}
+        value={inputValue}
         type={passwordVisible ? "text" : item.type}
         multiple={true}
-        onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
+        onChange={handleInputChange}
+       // onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
           "text-subtitle/80 text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
           //item.className,

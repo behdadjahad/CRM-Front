@@ -26,7 +26,7 @@ export default function HotelForm({
   hotel,
   className,
 }: any) {
-  console.log(hotel)
+ 
   const queryClient = useQueryClient();
   const [hotelId, setHotelId] = useState<number>();
   const [addedRooms, setAddedRooms] = useState<any[]>([]);
@@ -57,7 +57,7 @@ export default function HotelForm({
     mutationKey: ["submittedRooms"],
     mutationFn: (id: number) => getSubmittedRooms(id),
     onSuccess: ({ data }) => {
-      console.log(59,data)
+   
       setAddedRooms(
         data.map((item: any) => ({
           checkInDate: item?.checkInDate,

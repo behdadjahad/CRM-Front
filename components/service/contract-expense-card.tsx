@@ -24,6 +24,7 @@ export default function ContractExpenseCard({
   contractCurrency,
   //totalExpenseInCurrency,
   icon,
+  onChangeTotalAmount
 }: any) {
   const [openForms, setOpenForms] = useState<string[]>([]);
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
@@ -91,6 +92,7 @@ export default function ContractExpenseCard({
               currencies={currencies}
               contractCurrency={contractCurrency}
               onChangeTotalPrice={handlePriceChange}
+              onChangeTotalAmount={onChangeTotalAmount}
 
             />
           );

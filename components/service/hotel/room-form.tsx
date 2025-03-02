@@ -14,7 +14,7 @@ export interface RoomInterface {
 }
 // http://185.126.203.246:3000/public
 export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
-  console.log(17, room);
+
   const queryClient = useQueryClient();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
@@ -88,7 +88,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   });
 
   function submitRoom(data: any) {
-    console.log(room.isSubmitted);
+
     if (room.isSubmitted) {
       roomEditor({
         data: {
@@ -197,14 +197,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             className: "w-full md:w-1/3",
             options: currencies,
           },
-          {
-            key: "broker",
-            component: "Select",
-            placeholder: "کارگزار",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
+       
           {
             component: "non-field",
             key: "actions",

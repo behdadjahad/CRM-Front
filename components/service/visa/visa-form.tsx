@@ -61,7 +61,7 @@ export default function VisaForm({
   });
 
   function submitForm(data: any) {
-    console.log(data);
+ 
     if (data.isSubmitted) {
       visaEditor({
         data: {

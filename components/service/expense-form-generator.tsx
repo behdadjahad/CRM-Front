@@ -29,13 +29,13 @@ export default function ExpenseFormGenerator() {
     mutationFn: (data: any) => {
       return addIncomeData(data, Number(id));
     },
-    onSuccess: (data: any) => {
-      console.log(data);
+    onSuccess: () => {
+   
     },
   });
   useEffect(() => {
     if (isIncomeLoading) return;
-    console.log(submittedIncomeList);
+   
     if (submittedIncomeList?.data?.length) {
       setAddedExpenseForm([
         ...submittedIncomeList.data.map((item: any) => ({

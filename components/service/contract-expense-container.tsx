@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import ContractExpenseCard, {
   ExpenseCardInterface,
@@ -11,6 +11,7 @@ import { getAllExpenses, sendExchageRate } from "@/api/currency";
 import { useParams } from "next/navigation";
 import OveralExpenseContainer from "./overal-expense-container";
 import { useQueryClient } from "@tanstack/react-query";
+import { formatPrice } from "@/lib/utils";
 
 export interface ExpenseContainerInterface {
   expenseList: ExpenseCardInterface[];
@@ -28,6 +29,7 @@ export default function ContractExpenseContainer() {
   const [overalExpense, setOveralExpense] = useState<any[]>([]);
   const [contractCurrency, setContractCurrency] = useState<any>({});
   const [serviceExpenses, setServiceExpenses] = useState<any>([]);
+  const [totalExpenses, setTotalExpenses] = useState<any>([]);
   const queryClient = useQueryClient();
   const { id } = useParams();
   const { mutate: exchangeRateHandler } = useMutation({
@@ -96,7 +98,34 @@ export default function ContractExpenseContainer() {
             )
             .reduce((sum: number, price: any) => sum + price.totalBuyPrice, 0),
         }));
-      console.log(99, totalServiceExpenses);
+      const resultMap = new Map();
+
+      totalServiceExpenses.forEach((item) => {
+        item.groupPrices.forEach(
+          ({
+            buyPrice,
+            currency,
+          }: {
+            buyPrice: number;
+            currency: { id: number; name: string };
+          }) => {
+            if (resultMap.has(currency.id)) {
+              resultMap.get(currency.id).total += buyPrice;
+            } else {
+              resultMap.set(currency.id, {
+                id: currency.id,
+                name: currency.name,
+                total: buyPrice,
+              });
+            }
+          }
+        );
+      });
+
+      const totalAmountArray = Array.from(resultMap.values());
+      setTotalExpenses(totalAmountArray);
+      // console.log(113, totalAmountArray);
+      // console.log(99, totalServiceExpenses);
       setContractCurrency(contractExchangeRate);
       setOveralExpense(overalExpenseData);
       setServiceExpenses(totalServiceExpenses);
@@ -108,6 +137,100 @@ export default function ContractExpenseContainer() {
     }
   }, [contractCurrency, queryClient]);
 
+
+  // const prevExchangeRate = useRef<number>(0);
+
+  // const totalAmountHandler = (totalAmount: any) => {
+  //   if (totalAmount.currencyId === contractCurrency.id) {
+  //     return;
+  //   }
+  //   setTotalExpenses((prevExpenses:any) =>
+  //     prevExpenses.map((expense:any) =>
+  //       expense.id === contractCurrency.id
+  //         ? {
+  //             ...expense,
+  //             total:
+  //               expense.total -
+  //               prevExchangeRate.current * totalAmount.buyPrice + // Remove old exchange rate effect
+  //               totalAmount.exchangeRate * totalAmount.buyPrice // Apply new exchange rate
+  //           }
+  //         : expense
+  //     )
+  //   );
+  
+  //   // Update previous exchange rate AFTER updating the state
+  //   prevExchangeRate.current = totalAmount.exchangeRate;
+  // };
+  const prevExchangeRate = useRef<number>(0);
+  const prevTotalAmount = useRef<any>(null); // Track last totalAmount object
+  
+  const totalAmountHandler = (totalAmount: any) => {
+    if (totalAmount.currencyId === contractCurrency.id) {
+      return;
+    }
+  
+    setTotalExpenses((prevExpenses: any) =>
+      prevExpenses.map((expense: any) => {
+        // Check if this is the target expense
+        if (expense.id === contractCurrency.id) {
+          let updatedTotal = expense.total;
+  
+          // If only the exchange rate has changed (totalAmount itself has NOT changed), remove old effect
+          if (prevTotalAmount.current && prevTotalAmount.current.currencyId === totalAmount.currencyId && prevTotalAmount.current.buyPrice === totalAmount.buyPrice) {
+            updatedTotal -= prevExchangeRate.current * totalAmount.buyPrice; // Remove old exchange rate effect
+          }
+  
+          // Always apply the new exchange rate effect
+          updatedTotal += totalAmount.exchangeRate * totalAmount.buyPrice;
+  
+          return {
+            ...expense,
+            total: updatedTotal
+          };
+        }
+  
+        return expense;
+      })
+    );
+  
+    // Update previous values AFTER updating the state
+    prevExchangeRate.current = totalAmount.exchangeRate;
+    prevTotalAmount.current = { ...totalAmount }; // Store a copy to track changes
+  };
+  
+  // const totalAmountHandler = (totalAmount: any) => {
+  //   // If totalAmount.currencyId is the same as contractCurrency, do nothing
+  //   if (totalAmount.currencyId === contractCurrency.id) {
+  //     return;
+  //   }
+
+  //   setTotalExpenses((prevExpenses: any) =>
+  //     prevExpenses.map((expense: any) => {
+  //       if (expense.id === contractCurrency.id) {
+  //         // Update contract currency total with the exchange rate change
+  //         return {
+  //           ...expense,
+  //           total:
+  //             expense.total -
+  //             prevExchangeRate.current * totalAmount.buyPrice + // Remove old exchange rate effect
+  //             totalAmount.exchangeRate * totalAmount.buyPrice // Apply new exchange rate
+  //         };
+  //       } else if (expense.id === totalAmount.currencyId) {
+  //         // Subtract buyPrice only the first time when exchangeRate is not 0
+  //         if (!hasSubtracted.current && totalAmount.exchangeRate !== 0) {
+  //           hasSubtracted.current = true; // Mark as subtracted once
+  //           return { ...expense, total: expense.total - totalAmount.buyPrice };
+  //         }
+  //       }
+  //       return expense; // No change for other currencies
+  //     })
+  //   );
+
+  //   // Update previous exchange rate after state update
+  //   prevExchangeRate.current = totalAmount.exchangeRate || 0;
+  // };
+
+  
   return (
     <div className="rounded-lg bg-white p-4">
       <div className="flex flex-col gap-2">
@@ -121,23 +244,13 @@ export default function ContractExpenseContainer() {
             onCurrencyHandler={exchangeRateHandler}
           />
         </div>
-        <div>
-          <div className="flex items-center justify-between">
-            <span></span>
-            <span>تومان</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span></span>
-            <span>دلار</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span></span>
-            <span>ریال</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span></span>
-            <span>یورو</span>
-          </div>
+        <div className="border-b-2 border-gray-600 border-dashed p-2">
+          {totalExpenses && totalExpenses?.map((item: any) => (
+            <div key={item.id} className="flex items-center justify-between">
+              <span>{formatPrice(item.total)}</span>
+              <span>{item.name}</span>
+            </div>
+          ))}
         </div>
       </div>
       {serviceExpenses?.map((item: any) => (
@@ -145,6 +258,7 @@ export default function ContractExpenseContainer() {
           key={item.title}
           {...item}
           contractCurrency={contractCurrency}
+          onChangeTotalAmount={totalAmountHandler}
         />
       ))}
       <OveralExpenseContainer

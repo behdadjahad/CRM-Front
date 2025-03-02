@@ -88,7 +88,7 @@ export default function VisaContainer() {
 
           }))
         );
-        console.log(23, submittedVisas);
+
       } else {
         setAddedVisas([
           {
@@ -113,7 +113,7 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (contract) {
-      console.log(81, contract);
+
       setCustomers([
         {
           label: `${contract?.mainCustomerSoldto.person.firstName ?? ""} ${
@@ -195,7 +195,7 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (visaDurationTypesData) {
-      console.log(visaDurationTypesData);
+   
       const visaDurationTypeOptions: OptionType[] =
         visaDurationTypesData.data.map((item: any) => ({
           label: `${item.value} ${
