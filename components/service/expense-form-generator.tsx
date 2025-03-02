@@ -137,7 +137,7 @@ export default function ExpenseFormGenerator() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col">
+      <div className="flex flex-col bg-card-mute rounded-lg gap-1">
         {addedExpenseForm.map((item: any, index: number) => (
           <ExpenseForm
             key={item.id}
@@ -154,7 +154,7 @@ export default function ExpenseFormGenerator() {
       </div>
       <Button
         variant={"info"}
-        className="p-1 border-none w-12 h-8"
+        className="p-4 border-none w-14 h-6 self-end"
         onClick={() => {
           handleSubmit();
         }}

@@ -232,7 +232,9 @@ export default function Contract() {
     mutationFn: (data: any) => {
       return insertSubmitterData(data,Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      router.push(`/contract/service/${id}`);
+    },
   });
 
   const { mutate: personalSubmitHandler } = useMutation({
@@ -281,7 +283,7 @@ export default function Contract() {
       return sendServiceData(data, Number(id));
     },
     onSuccess: () => {
-      router.push(`/contract/service/${id}`);
+    
     },
   });
 

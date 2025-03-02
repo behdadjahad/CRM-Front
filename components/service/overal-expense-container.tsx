@@ -15,6 +15,7 @@ export default function OveralExpenseContainer({
     <div className="flex flex-col w-full bg-primary rounded-lg p-4 gap-4">
       {/* <div className="text-xs text-card font-bold">{overalExpense.title}</div>  */}
       {data.map((item: any) => (
+        
         <div
           className="flex items-center justify-between flex-wrap"
           key={item.label}
@@ -38,10 +39,11 @@ export default function OveralExpenseContainer({
               <span>{contractCurrency?.name ?? ""}</span>
             </div>
           </div>
-          <div className="w-full">
+          <div className="w-full mt-2">
             {view && item.hasForm && <ExpenseFormGenerator />}
           </div>
-        </div>
+          </div>
+       
       ))}
     </div>
   );

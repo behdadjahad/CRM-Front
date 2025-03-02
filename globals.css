@@ -11,7 +11,9 @@
     --aqua-mute: 225, 66%, 87%;
 
     /*gray colors*/
-    --slate: 220, 12%, 85%;
+   --slate: 220, 12%, 85%;
+   --slate-mute:222, 6% , 66%;
+
 
     --background: 224, 85%, 97%;
     --foreground: 220, 24%, 12%;

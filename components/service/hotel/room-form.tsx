@@ -1,12 +1,12 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import { REQUIRED_TEXT } from "@/lib/utils";
+import { formatPrice, REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { editRoomData, getRooms, sendRoomData } from "@/api/accommodation";
 import { useEffect, useState } from "react";
 import { getCurrencies } from "@/api/currency";
-
+import { useQueryClient } from "@tanstack/react-query";
 import { convertDate, convertToGregorian } from "@/lib/date";
 import { Button } from "@/components/ui/button";
 export interface RoomInterface {
@@ -14,6 +14,8 @@ export interface RoomInterface {
 }
 // http://185.126.203.246:3000/public
 export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
+  console.log(17, room);
+  const queryClient = useQueryClient();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
   const { data: roomType } = useQuery({
@@ -45,13 +47,17 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   const formik = useFormik({
     initialValues: {
       roomType: room?.roomTypeId?.toString(),
-      contractDateIn: room?.checkInDate ? convertDate(room?.checkInDate,"Solar"): "",
-      contractDateOut: room?.contractDateOut? convertDate(room?.checkOutDate,"Solar") :"",
-      costPerNight: room?.priceWeBuyPerNight,
-      currency: "",
+      contractDateIn: room?.checkInDate
+        ? convertDate(room?.checkInDate, "Solar")
+        : "",
+      contractDateOut: room?.checkOutDate
+        ? convertDate(room?.checkOutDate, "Solar")
+        : "",
+      costPerNight:room?.priceWeBuyPerNight ? formatPrice(room?.priceWeBuyPerNight):"",
+      currency: room?.currencyWeBuy?.toString(),
       broker: "",
       roomCount: room?.numberOfRooms,
-      id: room.id,
+      id: room?.id,
     },
     validationSchema: Yup.object().shape({
       roomType: Yup.string().required(REQUIRED_TEXT),
@@ -68,14 +74,21 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   const { mutate: roomSubmitter } = useMutation({
     mutationFn: ({ data, id }: { data: any; id: number }) =>
       sendRoomData(data, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
   });
+
   const { mutate: roomEditor } = useMutation({
     mutationFn: ({ data, id }: { data: any; id: number }) =>
       editRoomData(data, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
   });
 
   function submitRoom(data: any) {
-    console.log(room.isSubmitted)
+    console.log(room.isSubmitted);
     if (room.isSubmitted) {
       roomEditor({
         data: {
@@ -94,29 +107,28 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
           currencyWeBuyId: data.currency,
         },
         id: data.id,
-      })
+      });
+    } else {
+      roomSubmitter({
+        data: {
+          roomTypeId: data.roomType,
+          numberOfRooms: Number(data.roomCount),
+          checkInDate: convertToGregorian(
+            data.contractDateIn,
+            data.checkInDateType
+          ),
+          checkOutDate: convertToGregorian(
+            data.contractDateOut,
+            data.checkOutDateType
+          ),
+          priceWeBuyPerNight: Number(data.costPerNight),
+          currencyWeBuyExchangeRate: 10,
+          currencyWeBuyId: data.currency,
+        },
+        id: hotelId,
+      });
     }
-      else {
-        roomSubmitter({
-          data: {
-            roomTypeId: data.roomType,
-            numberOfRooms: Number(data.roomCount),
-            checkInDate: convertToGregorian(
-              data.contractDateIn,
-              data.checkInDateType
-            ),
-            checkOutDate: convertToGregorian(
-              data.contractDateOut,
-              data.checkOutDateType
-            ),
-            priceWeBuyPerNight: Number(data.costPerNight),
-            currencyWeBuyExchangeRate: 10,
-            currencyWeBuyId: data.currency,
-          },
-          id: hotelId,
-        });
-      }
-     }
+  }
 
   function removeForm(formId: string) {
     onRemoveHandler(formId);

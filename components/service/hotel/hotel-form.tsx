@@ -5,7 +5,7 @@ import {
   sendHotelData,
 } from "@/api/accommodation";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { cn, REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
@@ -26,6 +26,8 @@ export default function HotelForm({
   hotel,
   className,
 }: any) {
+  console.log(hotel)
+  const queryClient = useQueryClient();
   const [hotelId, setHotelId] = useState<number>();
   const [addedRooms, setAddedRooms] = useState<any[]>([]);
   const [cityOptions, setCityOptions] = useState<OptionType[]>(cities);
@@ -55,14 +57,16 @@ export default function HotelForm({
     mutationKey: ["submittedRooms"],
     mutationFn: (id: number) => getSubmittedRooms(id),
     onSuccess: ({ data }) => {
+      console.log(59,data)
       setAddedRooms(
         data.map((item: any) => ({
           checkInDate: item?.checkInDate,
           checkOutDate: item?.checkOutDate,
           numberOfRooms: item?.numberOfRooms,
+          currencyWeBuy:item?.currencyWeBuy.id,
           priceWeBuyPerNight: item?.priceWeBuyPerNight,
           id: item?.id,
-          roomTypeId: item?.acRoomTypeId,
+          roomTypeId: item?.acRoomType.roomType.id,
           isSubmitted: true,
         }))
       );
@@ -79,6 +83,9 @@ export default function HotelForm({
     },
     onSuccess: (data: any) => {
       setHotelId(data.id);
+      queryClient.invalidateQueries({
+        queryKey: ["submittedHotels"],
+      })
     },
   });
 

@@ -1,4 +1,11 @@
-import { deleteVisaData, getCountries, getSubmittedVisas } from "@/api/visa";
+import {
+  deleteVisaData,
+  getCountries,
+  getSubmittedVisas,
+  getVisaDurationTypes,
+  getVisaEntranceTypes,
+  getVisaTypes,
+} from "@/api/visa";
 import RegisteryForm from "@/components/contract/registery-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -20,6 +27,9 @@ export default function VisaContainer() {
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [customers, setCustomers] = useState<OptionType[]>([]);
+  const [visaTypes, setVisaTypes] = useState<OptionType[]>([]);
+  const [visaDurationTypes, setVisaDurationTypes] = useState<OptionType[]>([]);
+  const [visaEntranceTypes, setVisaEntranceTypes] = useState<OptionType[]>([]);
   const { data: currency } = useQuery({
     queryKey: ["Currency"],
     queryFn: () => getCurrencies(),
@@ -69,17 +79,30 @@ export default function VisaContainer() {
             files: item.files,
             description: item.description,
             customerSoldToId: item.customerSoldToId,
+            country: item.countryId,
+            visaType: item.visaTypeId,
+            visaApproval: item.visaEntranceTypeId,
+            visaTime: item.visaDurationTypeId,
+            visaCost: item.priceWeBuy,
+            currency:item.currencyWeBuyId
+
           }))
         );
         console.log(23, submittedVisas);
       } else {
         setAddedVisas([
           {
-            id: "visa-1",
+            id: `visa-${addedVisas.length + 1}`,
             isSubmitted: false,
             files: null,
             description: null,
             customerSoldToId: null,
+            country: null,
+            visaType: null,
+            visaApproval: null,
+            visaTime: null,
+            visaCost: null,
+            currency:null
           },
         ]);
       }
@@ -97,7 +120,7 @@ export default function VisaContainer() {
             contract?.mainCustomerSoldto.person.lastName ?? ""
           }`.trim(),
 
-          value: contract?.mainCustomerSoldto.person.id.toString(),
+          value: contract?.mainCustomerSoldto.id.toString(),
         },
       ]);
     }
@@ -125,6 +148,12 @@ export default function VisaContainer() {
         files: null,
         description: null,
         customerSoldToId: null,
+        country: null,
+        visaType: null,
+        visaApproval: null,
+        visaTime: null,
+        visaCost: null,
+        currency:null
       },
     ]);
   }
@@ -145,6 +174,61 @@ export default function VisaContainer() {
       setAddedVisas(updatedAddedVisas);
     } else return;
   }
+  const { data: visaTypesData } = useQuery({
+    queryKey: ["visaTypesData"],
+    queryFn: async () => await getVisaTypes(),
+  });
+  useEffect(() => {
+    if (visaTypesData) {
+      const visaTypeOptions: OptionType[] = visaTypesData.data.map(
+        (item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        })
+      );
+      setVisaTypes(visaTypeOptions);
+    }
+  }, [visaTypesData]);
+  const { data: visaDurationTypesData } = useQuery({
+    queryKey: ["visaDurationTypesData"],
+    queryFn: async () => await getVisaDurationTypes(),
+  });
+  useEffect(() => {
+    if (visaDurationTypesData) {
+      console.log(visaDurationTypesData);
+      const visaDurationTypeOptions: OptionType[] =
+        visaDurationTypesData.data.map((item: any) => ({
+          label: `${item.value} ${
+            item.Type === "YEARS"
+              ? "ساله"
+              : item.Type === "MONTHS"
+              ? "ماهه"
+              : item.Type === "DAYS"
+              ? "روزه"
+              : ""
+          }`.trim(),
+          value: item.id.toString(),
+          type: item.Type,
+        }));
+
+      setVisaDurationTypes(visaDurationTypeOptions);
+    }
+  }, [visaDurationTypesData]);
+  const { data: VisaEntranceTypesData } = useQuery({
+    queryKey: ["VisaEntranceTypesData"],
+    queryFn: async () => await getVisaEntranceTypes(),
+  });
+  useEffect(() => {
+    if (VisaEntranceTypesData) {
+      const visaEntranceTypeOptions: OptionType[] =
+        VisaEntranceTypesData.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+
+      setVisaEntranceTypes(visaEntranceTypeOptions);
+    }
+  }, [VisaEntranceTypesData]);
   return (
     <div className="bg-transparent p-6 rounded-xl flex flex-col gap-4">
       <Button
@@ -165,6 +249,9 @@ export default function VisaContainer() {
             currencies={currencies}
             countries={countries}
             customers={customers}
+            visaTypes={visaTypes}
+            visaDurationTypes={visaDurationTypes}
+            visaEntranceTypes={visaEntranceTypes}
           />
         ))}
       </div>

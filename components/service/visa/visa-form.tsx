@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import { editVisaData, sendVisaData } from "@/api/visa";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 
 export default function VisaForm({
@@ -14,22 +14,29 @@ export default function VisaForm({
   currencies,
   countries,
   customers,
+  visaTypes,
+  visaDurationTypes,
+  visaEntranceTypes,
 }: any) {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const formik = useFormik({
     initialValues: {
       id: visa?.id,
       isSubmitted: visa?.isSubmitted,
-      visaType: "",
-      country: "",
-      clientName: visa?.customerSoldToId,
-      visaTime: "",
-      currency: "",
+      visaType: visa?.visaType?.toString(),
+      country: visa?.country?.toString(),
+      clientName: visa?.customerSoldToId?.toString(),
+      visaTime: visa?.visaTime?.toString(),
+      currency: visa?.currency?.toString(),
       description: visa?.description,
-     // visaFile: visa?.files,
-      visaFile: "",
+      visaCost: visa?.visaCost,
+      visaApproval: visa?.visaApproval?.toString(),
+      //visaFile: visa?.files,
     },
 
+
+  
     onSubmit: async () => {},
     enableReinitialize: true,
   });
@@ -40,11 +47,16 @@ export default function VisaForm({
     mutationFn: (data: any) => {
       return sendVisaData(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
   });
   const { mutate: visaEditor } = useMutation({
     mutationFn: ({ data, id }: { data: any; id: number }) => {
       return editVisaData(data, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
 
@@ -56,6 +68,12 @@ export default function VisaForm({
           files: data.visaFile,
           description: data.description,
           customerSoldToId: data.clientName,
+          countryId: data.country,
+          priceWeBuy: data.visaCost,
+          currencyWeBuyId: data.currency,
+          visaEntranceTypeId: data.visaApproval,
+          visaDurationTypeId: data.visaTime,
+          visaTypeId: data.visaType,
         },
         id: data.id,
       });
@@ -64,6 +82,12 @@ export default function VisaForm({
         files: data.visaFile,
         description: data.description,
         customerSoldToId: data.clientName,
+        countryId: data.country,
+        priceWeBuy: data.visaCost,
+        currencyWeBuyId: data.currency,
+        visaEntranceTypeId: data.visaApproval,
+        visaDurationTypeId: data.visaTime,
+        visaTypeId: data.visaType,
       });
     }
   }
@@ -83,6 +107,7 @@ export default function VisaForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: visaTypes,
           },
           {
             key: "country",
@@ -109,6 +134,7 @@ export default function VisaForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: visaDurationTypes,
           },
           {
             key: "visaCost",
@@ -130,10 +156,11 @@ export default function VisaForm({
           {
             key: "visaApproval",
             component: "Select",
-            placeholder: "یکبارورود",
+            placeholder: " نوع ویزا (تعداد ورود-خروج) ",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: visaEntranceTypes,
           },
           {
             key: "description",

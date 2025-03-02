@@ -85,3 +85,24 @@ export async function getCountries() {
       return result;
     } catch {}
   }
+export async function getVisaTypes() {
+    try {
+      const result = await fetchService("visa-type");
+
+      return result;
+    } catch {}
+  }
+export async function getVisaDurationTypes() {
+    try {
+      const result = await fetchService("visa-duration-type");
+
+      return result;
+    } catch {}
+  }
+export async function getVisaEntranceTypes() {
+    try {
+      const result = await fetchService("visa-entrance-type");
+
+      return result;
+    } catch {}
+  }

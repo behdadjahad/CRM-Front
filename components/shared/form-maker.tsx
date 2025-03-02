@@ -64,6 +64,11 @@ export interface FieldType {
   disabled?: boolean;
   title?: string;
   controlClassName?: string;
+  inputClassName?: string;
+  valueContainerClassName?: string;
+  dropdownIndicatorClassName?: string;
+  clearIndicatorClassName?: string;
+  containerClassName?: string;
 }
 
 export interface FormMakerInterface {

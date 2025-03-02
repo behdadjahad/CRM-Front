@@ -1,8 +1,7 @@
-import { FaPlus } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import { Button } from "../ui/button";
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
-import { Trash } from "lucide-react";
 
 
 import { useEffect } from "react";
@@ -15,37 +14,8 @@ export default function ExpenseForm({
   onRemoveHandler,
   isFirstItem,
   //index,
-  onFormChange
+  onFormChange,
 }: any) {
-  
-
-  // const { mutate: editSingleExchangeRateHandler } = useMutation({
-  //   mutationFn: ({ data, id }: { data: any; id: number }) => {
-  //     return editIncomeData(data, id);
-  //   },
-  //   onSuccess: (data: any) => {
-  //     console.log(data);
-  //   },
-  // });
-  // function singleExchangeRateHandler(data: any) {
-  //   if (data.isSubmitted) {
-  //     editSingleExchangeRateHandler({
-  //       data: {
-  //         incomeAmount: data.income,
-  //         incomeCurrencyExchangeRate: data.exchangeRate,
-  //         incomeCurrencyId: data.exchangeRateLabel,
-  //       },
-  //       id: data.id,
-  //     });
-  //   } else {
-  //     addSingleExchangeRateHandler({
-  //       incomeAmount: data.income,
-  //       incomeCurrencyExchangeRate: data.exchangeRate,
-  //       incomeCurrencyId: data.exchangeRateLabel,
-  //     });
-  //   }
-  // }
-
   const formik = useFormik({
     initialValues: {
       income: expenseFormData.income,
@@ -54,17 +24,17 @@ export default function ExpenseForm({
       id: expenseFormData.id,
       isSubmitted: expenseFormData.isSubmitted,
     },
-   
+
     onSubmit: () => {},
   });
   useEffect(() => {
-    onFormChange(formId,formik.values);
+    onFormChange(formId, formik.values);
   }, [formik.values]);
   return (
     <div
       className="flex items-center
-            justify-between bg-card-mute
-            rounded-lg p-2 flex-row mt-2"
+            justify-between
+            rounded-lg flex-row p-0"
     >
       <FormMaker
         form={formik}
@@ -74,35 +44,31 @@ export default function ExpenseForm({
                 key: "action",
                 component: "non-field",
                 children: (
-                  <Button
-                    className="border-none p-1 bg-quartiery-background rounded-full flex items-center justify-center "
-                    onClick={() => {
-                      //singleExchangeRateHandler(formik.values);
-                    }}
-                  >
-                    {" "}
+                  <Button className="p-1 bg-card-mute rounded-full flex items-center justify-center border border-slate-mute">
                     <FaPlus size={16} color="white" onClick={onAddHandler} />
                   </Button>
                 ),
-                //className: "text-right bg-red-400 w-5 h-5 rounded-full flex items-center justify-center",
-                className: "w-5 h-5",
+
+              //className: "w-5 h-5",
+                className:"w-1/6 flex items-center justify-center"
               }
             : {
                 key: "action",
                 component: "non-field",
                 children: (
                   <Button
-                    className="border-none p-1 bg-quartiery-background rounded-full flex items-center justify-center "
+                    className="p-1 bg-card-mute rounded-full flex items-center justify-center border border-slate-mute"
                     onClick={() => {
                       onRemoveHandler(formId);
                     }}
                   >
                     {" "}
-                    <Trash size={16} color="white" />
+                    <FaMinus className="text-white text-sm" />
                   </Button>
                 ),
-                //className: "text-right bg-red-400 w-5 h-5 rounded-full flex items-center justify-center",
-                className: "w-5 h-5",
+
+              //className: "w-5 h-5",
+                className:"w-1/6 flex items-center justify-center"
               },
 
           {
@@ -111,9 +77,9 @@ export default function ExpenseForm({
             placeholder: "درآمد",
             type: "text",
             floating: false,
-            className: "text-right flex-1 p-0 h-6 text-xs rounded-md",
+            className: "text-right p-0 h-6 text-xs rounded-md border border-slate-mute w-1/4",
             labelClassName:
-              "text-right flex-1 p-0 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute p-1 bg-card-mute",
+              "text-right flex-1 p-1 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute bg-card-mute",
           },
           {
             key: "exchangeRate",
@@ -121,9 +87,9 @@ export default function ExpenseForm({
             placeholder: "نرخ تبدیل",
             type: "text",
             floating: false,
-            className: "text-right flex-1 p-0 h-6 text-xs rounded-md",
+            className: "text-right p-0 h-6 text-xs rounded-md border border-slate-mute w-1/4",
             labelClassName:
-              "text-right flex-1 p-0 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute p-1 bg-card-mute",
+              "text-right p-1 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute bg-card-mute",
           },
           {
             key: "exchangeRateLabel",
@@ -132,15 +98,18 @@ export default function ExpenseForm({
             type: "text",
             floating: true,
             options: currencies,
-            className: "text-right w-1/3",
+            className: "text-right w-1/4",
+            containerClassName:"!h-6",
             controlClassName:
-              "text-xs h-6 text-xs text-foreground-mute border border-1 border-border-mute p-1 bg-card-mute",
+              "!bg-card-mute text-xs !h-6 !min-h-6",
+            inputClassName: "!text-xs !text-foreground-mute !min-h-6 !h-6 !m-0 !p-0",
+            valueContainerClassName: "!p-0 h-6 !text-foreground-mute",
+            dropdownIndicatorClassName: "text-foreground-mute !p-0 !h-4 !min-h-4 cursor-pointer hidden",
+            clearIndicatorClassName:"!p-0"
           },
         ]}
-        className="flex flex-row items-center gap-2"
+        className="flex flex-row items-center justify-between p-0"
       />
-  
-    
     </div>
   );
 }
