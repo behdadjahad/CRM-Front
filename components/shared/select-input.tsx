@@ -14,8 +14,10 @@ const SelectInput = React.memo(function SelectInput({
     (data: any) => {
       if (data === null) {
         form.setFieldValue(item.key, null);
+        
       } else {
         form.setFieldValue(item.key, Number(data.value));
+
       }
     },
     [item.key, form]
@@ -26,13 +28,14 @@ const SelectInput = React.memo(function SelectInput({
       isClearable
       isValidNewOption={() => false}
       options={item.options}
-      onChange={(item: any) => handleValueChange(item)}
+      onChange={(data: any) => handleValueChange(data)}
       placeholder={
         item.options?.find((optItem) => optItem.value == form.values[item.key])
           ?.label ||
         item.placeholder ||
         item.label
       }
+      value={item.options?.find((optItem) => optItem.value === form.values[item.key]) || null}
       classNames={{
         container: () => { return cn("w-full",item.containerClassName) },
         control: () => {

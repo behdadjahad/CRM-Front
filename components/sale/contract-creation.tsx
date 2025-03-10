@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CustomModal from "@/components/shared/custom-modal";
@@ -13,7 +12,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "@/store/user-slice";
 import {
-  ContractCreationInput,
   createContract,
   getContractNumber,
 } from "@/api/contract";
@@ -48,10 +46,11 @@ export default function ContractCreation({
       submitter: "",
       accountant: "",
       description: "",
-      country: 0,
-      city: 0,
+      country: undefined,
+      city:undefined ,
     },
     onSubmit: async () => {},
+    enableReinitialize: true,
   });
 
   const { data: users } = useQuery({
@@ -111,44 +110,65 @@ export default function ContractCreation({
     dispatch(fetchUserData() as any);
   }, [dispatch, userData]);
   const router = useRouter();
+
   const { mutate } = useMutation({
     mutationFn: (id: number) => {
       return getContractNumber(id);
     },
     onSuccess: ({ data }) => {
+      console.log(122, data);
       formik.setFieldValue("contractId", data?.contractId);
       formik.setFieldValue("number", data?.suggestedContractNo);
     },
   });
 
   const { mutate: createContractMutation } = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: ContractCreationInput }) => {
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
       return createContract(id, data);
     },
     onSuccess: ({ data }) => {
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
-
       router.push(`/contract/${data.id}`);
     },
   });
-  function contractSubmitHandler() {
+  const { mutate: createContractMutationn } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return createContract(id, data);
+    },
+    onSuccess: () => {
+      formik.resetForm();
+      setActiveItem(null);
+  },
+  });
+  function contractSubmitHandler(enableNewCreation: boolean) {
     if (!formik.values.contractId) return;
-    createContractMutation({
-      id: formik.values.contractId,
-      data: {
-        contractTypeId: activeItem.id,
-        contractDate: convertToGregorian(formik.values.contractDate,formik.values.contractDateType),
-        dateType: formik.values.contractDateType,
-        description: formik.values.description,
-        userSubmitterId: userData.id,
-        userResponsibleId: Number(formik.values.accountant),
-        destinationCityId:formik.values.city,
-        destinationCountryId:formik.values.country
-
-      },
-    });
+    const id = formik.values.contractId;
+    const data = {
+      contractTypeId: activeItem.id,
+      contractDate: convertToGregorian(
+        formik.values.contractDate,
+        formik.values.contractDateType
+      ),
+      dateType: formik.values.contractDateType,
+      description: formik.values.description,
+      userSubmitterId: userData.id,
+      userResponsibleId: Number(formik.values.accountant),
+      destinationCityId: formik.values.city,
+      destinationCountryId: formik.values.country,
+    };
+    if (enableNewCreation) {
+      createContractMutationn({
+        id: id,
+        data: data,
+      });
+    } else {
+      createContractMutation({
+        id: id,
+        data: data,
+      });
+    }
   }
 
   return (
@@ -281,14 +301,17 @@ export default function ContractCreation({
             <Button
               variant={"info"}
               onClick={() => {
-                contractSubmitHandler();
-                setOpenModal(true);
-
+                contractSubmitHandler(true);
               }}
             >
               ثبت و جدید
             </Button>
-            <Button variant={"info"} onClick={contractSubmitHandler}>
+            <Button
+              variant={"info"}
+              onClick={() => {
+                contractSubmitHandler(false);
+              }}
+            >
               ثبت و تکمیل
             </Button>
             <Button

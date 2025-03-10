@@ -69,6 +69,7 @@ export interface FieldType {
   dropdownIndicatorClassName?: string;
   clearIndicatorClassName?: string;
   containerClassName?: string;
+  isFormattedNumber?: boolean;
 }
 
 export interface FormMakerInterface {

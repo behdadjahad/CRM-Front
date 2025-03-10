@@ -21,7 +21,9 @@ import { createFormFields } from "@/constants/client-form-fields";
 import {
   createClient,
   createOrganization,
+
   insertAddressData,
+
   insertCommunicationData,
   insertSubmitterData,
 } from "@/api/client";
@@ -242,6 +244,7 @@ export default function Contract() {
       return createClient(data, Number(id));
     },
     onSuccess: (result) => {
+      console.log(result)
       const customerId = result.customerId;
       const url = organizationId
         ? `?customerId=${customerId}&organizationId=${organizationId}`

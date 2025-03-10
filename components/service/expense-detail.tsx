@@ -20,7 +20,7 @@ export default function ExpenseDetail({
   onChangeTotalPrice,
   onChangeTotalAmount,
 }: any) {
-  console.log(serviceName)
+
   const [buyPriceInCurrency, setbuyPriceInCurrency] = useState(0);
 
   const { id } = useParams();
