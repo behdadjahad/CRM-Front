@@ -10,6 +10,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { addCustomerData, getAllCustomers } from "@/api/customer";
 import { useParams } from "next/navigation";
 
+import CustomerManager from "./customer-manager";
+
 export interface ClientInfoContainerInterface {
   clients: ClientInfoCardInterface[];
 }
@@ -21,7 +23,7 @@ export default function ClientInfoContainer({
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
-
+  const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);
   const formik = useFormik({
     initialValues: {
       clientName: "",
@@ -158,14 +160,10 @@ export default function ClientInfoContainer({
                 </span>
               </Button>
             </div>
-
-            {/**/}
-            {/* Button to Open Second Modal */}
-
-            {/* Second Modal Inside the First Modal */}
+            {/*Second Modal*/}
             <CustomModal
               minWidth="0"
-              maxWidth="500px"
+              maxWidth="700px"
               isOpen={openSecondModal}
               onRequestClose={() => setOpenSecondModal(false)}
               contentLabel="لیست مشتری ها"
@@ -174,26 +172,37 @@ export default function ClientInfoContainer({
                 <span className="text-lg font-bold">لیست مشتری ها</span>
                 <MdClose
                   size={20}
-                  onClick={() => setOpenSecondModal(false)}
+                  onClick={() => {
+                    setOpenSecondModal(false);
+                    setSelectedCustomers([]);
+                  }}
                   className="cursor-pointer"
                 />
               </div>
 
-              <div className="p-4">
-                <p>لیست مشتری ها</p>
-              </div>
+              <CustomerManager />
 
               <div className="flex flex-row gap-4 items-center justify-end">
-                <Button variant={"info"}>ثبت</Button>
+                <Button
+                  variant={"info"}
+                  onClick={() => {
+                    console.log(selectedCustomers);
+                  }}
+                >
+                  ثبت
+                </Button>
                 <Button
                   variant={"foreground"}
-                  onClick={() => setOpenSecondModal(false)}
+                  onClick={() => {
+                    setOpenSecondModal(false);
+                    setSelectedCustomers([]);
+                  }}
                 >
                   لغو
                 </Button>
               </div>
             </CustomModal>
-            {/**/}
+            {/*Second Modal*/}
           </div>
 
           <div className="w-full flex flex-col items-end gap-8">
