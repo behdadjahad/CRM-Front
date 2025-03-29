@@ -1,4 +1,6 @@
+
 import HotelContainer from "@/components/service/hotel/hotel-container";
+import TicketContainer from "@/components/service/ticket/ticket-container";
 import VisaContainer from "@/components/service/visa/visa-container";
 
 
@@ -25,7 +27,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-international-airport.png",
     //children: <ServiceForm {...flightForm} />,
     name: "Ticket",
-    form: <>flight Form</>,
+    form: <TicketContainer />,
   },
   {
     id: 3,
@@ -36,7 +38,7 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-airport.png",
     // children: <ServiceForm {...flightForm} />,
     name: "Ticket",
-    form: <>flight Form</>,
+    form: <TicketContainer />,
   },
   {
     id: 4,

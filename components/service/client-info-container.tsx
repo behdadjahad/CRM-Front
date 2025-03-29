@@ -6,24 +6,31 @@ import CustomModal from "@/components/shared/custom-modal";
 import { MdClose } from "react-icons/md";
 import FormMaker from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { addCustomerData, getAllCustomers } from "@/api/customer";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  addCustomerData,
+  addMultipleCustomerData,
+  getAllCustomers,
+  getCustomers,
+} from "@/api/customer";
 import { useParams } from "next/navigation";
-
+import Image from "next/image";
 import CustomerManager from "./customer-manager";
 
 export interface ClientInfoContainerInterface {
   clients: ClientInfoCardInterface[];
 }
 
-export default function ClientInfoContainer({
-  clients,
-}: ClientInfoContainerInterface) {
+export default function ClientInfoContainer() {
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
+  const [openThirdModal, setOpenThirdModal] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);
+  const [clientList, setClientList] = useState<any[]>([]);
+  const [clientInfoList, setClientInfoList] = useState<any[]>([]);
   const formik = useFormik({
     initialValues: {
       clientName: "",
@@ -39,14 +46,23 @@ export default function ClientInfoContainer({
     mutationFn: (data: any) => {
       return addCustomerData(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      setOpenModal(false);
+      formik.resetForm();
+      queryClient.invalidateQueries({
+        queryKey: ["contractCustomersData"],
+      });
+    },
   });
+
   function submitHandler() {
     submitCustomerHandler({
-      fullName: "string",
-      birthdate: "2000-01-01T00:00:00Z",
-      idNumber: "string",
-      phoneNumber: "string",
+      firstName: formik.values.clientName,
+      lastName: formik.values.clientFamily,
+      //birthdate: ,
+      idNumber: formik.values.clientSSD,
+      phoneNumber: formik.values.clientPhoneNumber,
+      email: formik.values.clientEmail,
     });
   }
   const { data: allCustomers } = useQuery({
@@ -56,15 +72,20 @@ export default function ClientInfoContainer({
 
   useEffect(() => {
     if (allCustomers) {
-      const customersData = allCustomers?.data?.map((customer: any) => ({
+      const customersData = allCustomers?.data?.map((customer: any) => (
+        {
         id: customer?.id,
         firstName: customer?.person?.firstName,
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        email: "alirezaebrahimi@gmail.com",
-        phone: "989127359952",
-      }));
+        // email: customer?.email[0]?.email,
+        //   phone: customer?.phone[0]?.number,
+          email: "alirezaRezaei@gmail.com",
+        phone:"989127359952",
+        }));
+      console.log(allCustomers?.data[0].phone[0].number)
+      console.log(customersData)
       setCustomers(customersData);
     }
   }, [allCustomers]);
@@ -104,16 +125,80 @@ export default function ClientInfoContainer({
           : true)
     );
   }, [formik.values, customers]);
-  useEffect(() => {
-    console.log(filteredCustomers);
-  }, [formik.values]);
+  useEffect(() => {}, [formik.values]);
 
+  const { data: contractCustomersData } = useQuery({
+    queryKey: ["contractCustomersData"],
+    queryFn: () => getCustomers(Number(id)),
+  });
+
+  useEffect(() => {
+    if (contractCustomersData) {
+      const clients = contractCustomersData?.data?.map((client: any) => [
+        { label: "id", value: client?.id},
+        {
+          label: "نام و نام خانوادگی",
+          value: client?.customer?.person?.fullName,
+        },
+        { label: "کدملی", value: client?.customer?.person?.idNumber },
+        { label: "شماره تلفن", value: client?.customer?.phone[0]?.number },
+        { label: "ایمیل", value: client?.customer?.email[0]?.email },
+      ]);
+      console.log(contractCustomersData?.data)
+      const clientsInfo = contractCustomersData?.data?.map((client: any) => ({
+        id: client?.id,
+        name:client?.customer?.person?.firstName,
+        family:client?.customer?.person?.lastName,
+        ssd:client?.customer?.person?.idNumber,
+        phone:client?.customer?.phone[0]?.number,
+        email:client?.customer?.email[0]?.email
+      
+      }));
+      console.log(129, clients);
+      console.log(clientsInfo)
+      setClientList(clients);
+      setClientInfoList(clientsInfo)
+    }
+  }, [contractCustomersData]);
+
+  const checkCustomerHandler = (customer: any, isChecked: boolean) => {
+    if (isChecked) {
+      setSelectedCustomers((prevState) => [...prevState, customer]);
+    } else {
+      setSelectedCustomers((prevState) =>
+        prevState.filter((item) => item.id !== customer.id)
+      );
+    }
+  };
+  const { mutate: submitMultipleCustomerHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return addMultipleCustomerData(data, Number(id));
+    },
+    onSuccess: () => {
+      setOpenSecondModal(false);
+      setOpenThirdModal(false);
+      setSelectedCustomers([])
+      queryClient.invalidateQueries({
+        queryKey: ["contractCustomersData"],
+      });
+    },
+  });
+  function submitMultipleHandler(data: any) {
+  const updatedData=data.map((obj:any) => obj.id)
+   submitMultipleCustomerHandler(updatedData);
+
+  }
   return (
     <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
       <h2 className="text-foreground text-lg">اطلاعات مشتری</h2>
       <div className="flex flex-col gap-4">
-        {clients.map((item, index) => (
-          <ClientInfoCard key={`client-${index}`} {...item} />
+        {clientList.map((item, index) => (
+          <ClientInfoCard
+            key={`client-${index}`}
+            clientId={item[0].value}
+            clientData={item}
+            clientInfo={clientInfoList[index]}
+          />
         ))}
       </div>
 
@@ -127,6 +212,58 @@ export default function ClientInfoContainer({
 
           <span className="text-xs text-primary-active">افزودن مشتری</span>
         </Button>
+        <Button
+          variant={"foreground"}
+          onClick={() => setOpenThirdModal(true)}
+          className="border-none"
+        >
+          <FaPlus size={10} className="text-primary-active" />
+
+          <span className="text-xs text-primary-active">
+            انتخاب از لیست مشتری
+          </span>
+        </Button>
+        <CustomModal
+          minWidth="0"
+          maxWidth="700px"
+          isOpen={openThirdModal}
+          onRequestClose={() => setOpenThirdModal(false)}
+          contentLabel="لیست مشتری ها"
+        >
+          <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+            <span className="text-lg font-bold">لیست مشتری ها</span>
+            <MdClose
+              size={20}
+              onClick={() => {
+                setOpenThirdModal(false);
+                setSelectedCustomers([]);
+              }}
+              className="cursor-pointer"
+            />
+          </div>
+
+          <CustomerManager onCheckHandler={checkCustomerHandler} />
+
+          <div className="flex flex-row gap-4 items-center justify-end">
+            <Button
+              variant={"info"}
+              onClick={() => {
+                submitMultipleHandler(selectedCustomers);
+              }}
+            >
+              ثبت
+            </Button>
+            <Button
+              variant={"foreground"}
+              onClick={() => {
+                setOpenThirdModal(false);
+                setSelectedCustomers([]);
+              }}
+            >
+              لغو
+            </Button>
+          </div>
+        </CustomModal>
 
         <CustomModal
           minWidth="0"
@@ -180,13 +317,13 @@ export default function ClientInfoContainer({
                 />
               </div>
 
-              <CustomerManager />
+              <CustomerManager onCheckHandler={checkCustomerHandler} />
 
               <div className="flex flex-row gap-4 items-center justify-end">
                 <Button
                   variant={"info"}
                   onClick={() => {
-                    console.log(selectedCustomers);
+                    submitMultipleHandler(selectedCustomers);
                   }}
                 >
                   ثبت
@@ -284,32 +421,58 @@ export default function ClientInfoContainer({
                       });
                     }}
                   >
-                    <div className="flex flex-col">
-                      <span className="text-sm font-primary-bold">
+                    {" "}
+                    <div className="flex items-center gap-2">
+                      {" "}
+                      <Image
+                        src={"/icons/customer.png"}
+                        alt="edit"
+                        width={18}
+                        height={18}
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-primary-bold">
+                          {highlightMatch(
+                            customer.firstName,
+                            formik.values.clientName
+                          )}{" "}
+                          {highlightMatch(
+                            customer.lastName,
+                            formik.values.clientFamily
+                          )}
+                        </span>
+                        <span className="text-sm text-foreground-mute">
+                          {highlightMatch(
+                            customer.email,
+                            formik.values.clientEmail
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center text-foreground-mute gap-2">
+                      <Image
+                        src={"/icons/customerMobile.png"}
+                        alt="edit"
+                        width={12}
+                        height={12}
+                      />
+                      <span>
                         {highlightMatch(
-                          customer.firstName,
-                          formik.values.clientName
-                        )}{" "}
-                        {highlightMatch(
-                          customer.lastName,
-                          formik.values.clientFamily
-                        )}
-                      </span>
-                      <span className="text-sm text-foreground-mute">
-                        {highlightMatch(
-                          customer.email,
-                          formik.values.clientEmail
+                          customer.phone,
+                          formik.values.clientPhoneNumber
                         )}
                       </span>
                     </div>
-                    <div className="text-foreground-mute">
-                      {highlightMatch(
-                        customer.phone,
-                        formik.values.clientPhoneNumber
-                      )}
-                    </div>
-                    <div className="text-foreground-mute">
-                      {highlightMatch(customer.ssd, formik.values.clientSSD)}
+                    <div className="flex items-center text-foreground-mute gap-2">
+                      <Image
+                        src={"/icons/customerID.png"}
+                        alt="edit"
+                        width={18}
+                        height={18}
+                      />
+                      <span>
+                        {highlightMatch(customer.ssd, formik.values.clientSSD)}
+                      </span>
                     </div>
                   </div>
                 );

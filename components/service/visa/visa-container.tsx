@@ -230,7 +230,7 @@ export default function VisaContainer() {
     }
   }, [VisaEntranceTypesData]);
   return (
-    <div className="bg-transparent p-6 rounded-xl flex flex-col gap-4">
+    <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <Button
         variant={"transparent"}
         onClick={addVisaForm}
@@ -239,7 +239,7 @@ export default function VisaContainer() {
         <FaPlus />
         اضافه کردن ویزا
       </Button>
-      <div className="flex flex-col-reverse">
+      <div className="flex flex-col-reverse gap-4">
         {addedVisas.map((item, index) => (
           <VisaForm
             key={item.id}

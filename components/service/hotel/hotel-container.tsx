@@ -210,7 +210,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
   }
 
   return (
-    <div className="bg-transparent p-6 rounded-xl flex flex-col gap-4">
+    <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <Button
         variant={"transparent"}
         onClick={addHotelForm}
@@ -219,7 +219,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
         <FaPlus />
         اضافه کردن اقامتگاه
       </Button>
-      <div className="flex flex-col-reverse">
+      <div className="flex flex-col-reverse gap-4">
         {addedHotels.map((item, index) => (
           <HotelForm
             key={item.id}

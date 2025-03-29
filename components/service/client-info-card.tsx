@@ -3,7 +3,12 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCustomerData, editCustomerData } from "@/api/customer";
+import CustomModal from "../shared/custom-modal";
+import { MdClose } from "react-icons/md";
+import { useFormik } from "formik";
+import FormMaker from "../shared/form-maker";
 
 export interface ClientInfoCardInterface {
   data: {
@@ -26,11 +31,49 @@ export interface ClientInfoCardInterface {
 }
 
 export default function ClientInfoCard({
-  data,
-  action,
-  clientServices,
-}: ClientInfoCardInterface) {
+  clientData,
+  clientId,
+  clientInfo,
+}: {
+  clientData: any[];
+  clientId: number;
+  clientInfo: any;
+}) {
+  const queryClient = useQueryClient();
+  console.log(clientInfo);
+  const formik = useFormik({
+    initialValues: {
+      clientName: clientInfo?.name,
+      clientFamily: clientInfo?.family,
+      clientSSD: clientInfo?.ssd,
+      clientPhoneNumber: clientInfo?.phone,
+      clientEmail: clientInfo?.email,
+    },
+    onSubmit: async () => {},
+    enableReinitialize: true,
+  });
+
+  const [openModal, setOpenModal] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+  const { mutate: deleteCustomerHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return deleteCustomerData(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["contractCustomersData"],
+      });
+    },
+  });
+  const { mutate: editCustomerHandler } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return editCustomerData(id, data);
+    },
+    onSuccess: () => {
+      setOpenModal(false);
+    },
+  });
+
   return (
     <div className="flex flex-col rounded-lg overflow-hidden  items-start border border-border/20  border-r-primary border-r-[6px]">
       <div
@@ -39,53 +82,140 @@ export default function ClientInfoCard({
         } transition-all duration-300 ease-in-out`}
       >
         <div className="w-4/5 flex flex-col gap-1">
-          {data.map((item) => (
-            <div key={item.label} className="flex flex-row">
-              <span className="text-subtitle/80 text-xs  w-1/2">
-                {item.label}
-              </span>
-              <span className="text-xs  w-1/2">{item.value}</span>
-            </div>
-          ))}
+          {clientData.map(
+            (item: any, index: number) =>
+              index > 0 && (
+                <div key={item.label} className="flex flex-row">
+                  <span className="text-subtitle/80 text-xs w-1/2">
+                    {item.label}
+                  </span>
+                  <span className="text-xs w-1/2">{item.value}</span>
+                </div>
+              )
+          )}
         </div>
 
         <div className="w-1/5 flex flex-col gap-2">
           <div className="flex items-center justify-center gap-0.5">
-            {action.map((item) => (
-              <Button
-                key={item.icon.src}
-                variant={"transparent"}
-                className="p-0"
-              >
-                <Image
-                  src={item.icon.src}
-                  alt=""
-                  width={1024}
-                  height={1024}
-                  className={cn("object-cover", item.icon.className)}
-                />
-              </Button>
-            ))}
-          </div>
-          <div className="bg-background rounded-md flex flex-col py-2 items-center gap-1 h-full overflow-hidden">
-            {clientServices.map((item) => (
-              <div
-                key={item.icon}
-                className="w-7 h-7 bg-background-active flex items-center justify-center"
-              >
-                <Image
-                  src={item.icon}
-                  alt=""
-                  width={1024}
-                  height={1024}
-                  className={cn("object-cover w-3.5 h-4", item.iconClassName)}
+            <Button variant={"transparent"} className="p-0">
+              <Image
+                src="/icons/trash.png"
+                alt=""
+                width={1024}
+                height={1024}
+                className="w-5 h-5"
+                onClick={() => {
+                  deleteCustomerHandler(clientId);
+                }}
+              />
+            </Button>
+            <Button variant={"transparent"} className="p-0">
+              <Image
+                src="/icons/edit-primary.png"
+                alt=""
+                width={1024}
+                height={1024}
+                className="w-4 h-4"
+                onClick={() => setOpenModal(true)}
+              />
+            </Button>
+            <CustomModal
+              minWidth="0"
+              maxWidth="700px"
+              isOpen={openModal}
+              onRequestClose={() => setOpenModal(false)}
+              contentLabel="ویرایش مشتری"
+            >
+              <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                <span className="text-lg font-bold">ویرایش مشتری</span>
+                <MdClose
+                  size={20}
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                  className="cursor-pointer"
                 />
               </div>
-            ))}
+              <div className="w-full flex flex-col items-end gap-8">
+                <FormMaker
+                  form={formik}
+                  fields={[
+                    {
+                      key: "clientName",
+                      component: "input",
+                      placeholder: "نام",
+                      type: "text",
+                      floating: true,
+                      className: "w-full md:w-1/2",
+                    },
+                    {
+                      key: "clientFamily",
+                      component: "input",
+                      placeholder: "نام خانوادگی",
+                      type: "text",
+                      floating: true,
+                      className: "w-full md:w-1/2",
+                    },
+                    {
+                      key: "clientSSD",
+                      component: "input",
+                      placeholder: "کدملی",
+                      type: "text",
+                      floating: true,
+                      className: "w-full md:w-1/2",
+                    },
+                    {
+                      key: "clientPhoneNumber",
+                      component: "input",
+                      placeholder: "شماره تماس",
+                      type: "text",
+                      floating: true,
+                      className: "w-full md:w-1/2",
+                    },
+                    {
+                      key: "clientEmail",
+                      component: "input",
+                      placeholder: "ایمیل",
+                      type: "text",
+                      floating: true,
+                      className: "w-full md:w-1/2",
+                    },
+                  ]}
+                  className="flex flex-row w-full"
+                />
+              </div>
+
+              <div className="flex flex-row gap-4 items-center justify-end">
+                <Button
+                  variant={"info"}
+                  onClick={() => {
+                    editCustomerHandler({
+                      id: clientInfo.id,
+                      data: {
+                        firstName: formik.values.clientName,
+                        lastName: formik.values.clientFamily,
+                        idNumber: formik.values.clientSSD,
+                        phoneNumber: formik.values.clientPhoneNumber,
+                        email: formik.values.clientEmail,
+                      },
+                    });
+                  }}
+                >
+                  ثبت
+                </Button>
+                <Button
+                  variant={"foreground"}
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                >
+                  لغو
+                </Button>
+              </div>
+            </CustomModal>
           </div>
         </div>
       </div>
-
       <Button
         variant={"transparent"}
         onClick={() => setIsCollapsed(!isCollapsed)}

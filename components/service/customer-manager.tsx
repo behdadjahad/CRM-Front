@@ -5,10 +5,11 @@ import FormMaker from "../shared/form-maker";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCustomers } from "@/api/customer";
-export default function CustomerManager() {
+export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (customer: any, isChecked: boolean) => void }) {
   const [customers, setCustomers] = useState<any[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<any[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);
+ 
   const customerSearchFormik = useFormik({
     initialValues: {
       clientKeyWord: "",
@@ -24,7 +25,9 @@ export default function CustomerManager() {
         prevState.filter((item) => item.id !== customer.id)
       );
     }
+    onCheckHandler(customer,isChecked)
   };
+
   const { data: allCustomers } = useQuery({
     queryKey: ["allCustomers"],
     queryFn: () => getAllCustomers(),
@@ -38,8 +41,10 @@ export default function CustomerManager() {
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        email: "alirezaebrahimi@gmail.com",
-        phone: "989127359952",
+        //email: customer?.email[0]?.email,
+        email: "alirezaRezaei@gmail.com",
+        phone:"989127359952",
+        //phone:customer?.phone[0]?.number ,
       }));
       setCustomers(customersData);
       setFilteredCustomers(customersData);

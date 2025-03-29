@@ -92,7 +92,7 @@ export default function VisaForm({
     }
   }
   return (
-    <div className={cn("flex flex-col gap-4")}>
+    <div className={cn("flex flex-col gap-4 border border-gray-400 rounded-md p-3")}>
       <div className="flex flex-row items-center gap-4 p-2">
         <h2>ویزا</h2>
       </div>

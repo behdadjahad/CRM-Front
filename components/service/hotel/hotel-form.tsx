@@ -180,7 +180,7 @@ export default function HotelForm({
   }, [formik.values.accommodationType, formik.values.city]);
 
   return (
-    <div className={cn("flex flex-col gap-4", className)}>
+    <div className={cn("flex flex-col gap-4 border border-gray-400 rounded-md p-3", className)}>
       <div className="flex flex-row items-center gap-4 p-2">
         <h2>اقامتگاه</h2>
         <Button

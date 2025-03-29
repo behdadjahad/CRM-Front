@@ -168,6 +168,7 @@ export interface ContractInformationOutput {
 }
 
 export async function getContractById(id: number): Promise<ContractOutput | undefined> {
+  console.log(id)
   try {
     const result = await fetchService(
       `contract-chadco-customer/${id}`

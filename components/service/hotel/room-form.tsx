@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 export interface RoomInterface {
   hotelId: number;
 }
-// http://185.126.203.246:3000/public
+
 export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
 
   const queryClient = useQueryClient();
@@ -94,14 +94,14 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
         data: {
           roomTypeId: data.roomType,
           numberOfRooms: Number(data.roomCount),
-          // checkInDate: convertToGregorian(
-          //   data?.contractDateIn,
-          //   data?.checkInDateType
-          // ),
-          // checkOutDate: convertToGregorian(
-          //   data?.contractDateOut,
-          //   data?.checkOutDateType
-          // ),
+          checkInDate: convertToGregorian(
+            data?.contractDateIn,
+            data?.checkInDateType
+          ),
+          checkOutDate: convertToGregorian(
+            data?.contractDateOut,
+            data?.checkOutDateType
+          ),
           priceWeBuyPerNight: Number(data.costPerNight),
           currencyWeBuyExchangeRate: 10,
           currencyWeBuyId: data.currency,
@@ -134,7 +134,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
     onRemoveHandler(formId);
   }
   return (
-    <div className="bg-card flex flex-col gap-4">
+    <div className="bg-card flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <h2>مدت اقامت</h2>
       <FormMaker
         form={formik}
