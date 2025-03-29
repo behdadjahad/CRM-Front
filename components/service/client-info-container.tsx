@@ -72,8 +72,7 @@ export default function ClientInfoContainer() {
 
   useEffect(() => {
     if (allCustomers) {
-      const customersData = allCustomers?.data?.map((customer: any) => (
-        {
+      const customersData = allCustomers?.data?.map((customer: any) => ({
         id: customer?.id,
         firstName: customer?.person?.firstName,
         ssd: customer?.person?.idNumber,
@@ -81,11 +80,11 @@ export default function ClientInfoContainer() {
         lastName: customer?.person?.lastName,
         // email: customer?.email[0]?.email,
         //   phone: customer?.phone[0]?.number,
-          email: "alirezaRezaei@gmail.com",
-        phone:"989127359952",
-        }));
-      console.log(allCustomers?.data[0].phone[0].number)
-      console.log(customersData)
+        email: "alirezaRezaei@gmail.com",
+        phone: "989127359952",
+      }));
+      console.log(allCustomers?.data[0].phone[0].number);
+      console.log(customersData);
       setCustomers(customersData);
     }
   }, [allCustomers]);
@@ -125,7 +124,6 @@ export default function ClientInfoContainer() {
           : true)
     );
   }, [formik.values, customers]);
-  useEffect(() => {}, [formik.values]);
 
   const { data: contractCustomersData } = useQuery({
     queryKey: ["contractCustomersData"],
@@ -135,7 +133,7 @@ export default function ClientInfoContainer() {
   useEffect(() => {
     if (contractCustomersData) {
       const clients = contractCustomersData?.data?.map((client: any) => [
-        { label: "id", value: client?.id},
+        { label: "id", value: client?.id },
         {
           label: "نام و نام خانوادگی",
           value: client?.customer?.person?.fullName,
@@ -144,20 +142,19 @@ export default function ClientInfoContainer() {
         { label: "شماره تلفن", value: client?.customer?.phone[0]?.number },
         { label: "ایمیل", value: client?.customer?.email[0]?.email },
       ]);
-      console.log(contractCustomersData?.data)
+      console.log(contractCustomersData?.data);
       const clientsInfo = contractCustomersData?.data?.map((client: any) => ({
         id: client?.id,
-        name:client?.customer?.person?.firstName,
-        family:client?.customer?.person?.lastName,
-        ssd:client?.customer?.person?.idNumber,
-        phone:client?.customer?.phone[0]?.number,
-        email:client?.customer?.email[0]?.email
-      
+        name: client?.customer?.person?.firstName,
+        family: client?.customer?.person?.lastName,
+        ssd: client?.customer?.person?.idNumber,
+        phone: client?.customer?.phone[0]?.number,
+        email: client?.customer?.email[0]?.email,
       }));
       console.log(129, clients);
-      console.log(clientsInfo)
+      console.log(clientsInfo);
       setClientList(clients);
-      setClientInfoList(clientsInfo)
+      setClientInfoList(clientsInfo);
     }
   }, [contractCustomersData]);
 
@@ -177,16 +174,15 @@ export default function ClientInfoContainer() {
     onSuccess: () => {
       setOpenSecondModal(false);
       setOpenThirdModal(false);
-      setSelectedCustomers([])
+      setSelectedCustomers([]);
       queryClient.invalidateQueries({
         queryKey: ["contractCustomersData"],
       });
     },
   });
   function submitMultipleHandler(data: any) {
-  const updatedData=data.map((obj:any) => obj.id)
-   submitMultipleCustomerHandler(updatedData);
-
+    const updatedData = data.map((obj: any) => obj.id);
+    submitMultipleCustomerHandler(updatedData);
   }
   return (
     <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
@@ -483,7 +479,13 @@ export default function ClientInfoContainer() {
             <Button variant={"info"} onClick={submitHandler}>
               ثبت
             </Button>
-            <Button variant={"foreground"} onClick={() => setOpenModal(false)}>
+            <Button
+              variant={"foreground"}
+              onClick={() => {
+                setOpenModal(false);
+                formik.resetForm();
+              }}
+            >
               لغو
             </Button>
           </div>
