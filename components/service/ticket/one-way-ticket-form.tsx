@@ -6,15 +6,28 @@ import { FaPlus } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import StopForm from "./stop-form";
 
-export default function OneWayTicketForm({itemId,onRemoveHandler}: {itemId:any,onRemoveHandler:any }) {
+export default function OneWayTicketForm({
+  itemId,
+  onRemoveHandler,
+  flightClassOptions,
+  flightTypeOptions,
+}: {
+  itemId: any;
+  onRemoveHandler: any;
+  flightClassOptions: any;
+  flightTypeOptions: any;
+}) {
   const formik = useFormik({
     initialValues: {
-      country: "",
-      city: "",
-      hotelName: "",
-      serviceType: "",
-      accommodationType: "",
-      voucherFile: "",
+      originCityAirport: "",
+      originTerminal: "",
+      dateTime: "",
+      destinationCityAirport: "",
+      destinationTerminal: "",
+      airline: "",
+      cost: "",
+      currency: "",
+      broker:"",
       id: "",
       isSubmitted: "",
     },
@@ -35,8 +48,8 @@ export default function OneWayTicketForm({itemId,onRemoveHandler}: {itemId:any,o
     const updatedAddedFlights = addedStops.filter((item) => item.id != formId);
     setAddedStops(updatedAddedFlights);
   }
-  function removeTicketForm(formId:any){
-   onRemoveHandler(formId)
+  function removeTicketForm(formId: any) {
+    onRemoveHandler(formId);
   }
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
@@ -56,23 +69,23 @@ export default function OneWayTicketForm({itemId,onRemoveHandler}: {itemId:any,o
         form={formik}
         fields={[
           {
-            key: "origin-city-airport",
-            component: "input",
+            key: "originCityAirport",
+            component: "Select",
             placeholder: "مبدا(شهر،فرودگاه)",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "origin-terminal",
-            component: "input",
+            key: "originTerminal",
+            component: "Select",
             placeholder: "ترمینال مبدا",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "origin-date-time",
+            key: "dateTime",
             component: "date",
             placeholder: "تاریخ و ساعت",
             type: "text",
@@ -80,30 +93,22 @@ export default function OneWayTicketForm({itemId,onRemoveHandler}: {itemId:any,o
             className: "w-full md:w-1/3",
           },
           {
-            key: "destination-city-airport",
-            component: "input",
+            key: "destinationCityAirport",
+            component: "Select",
             placeholder: "مقصد(شهر،فرودگاه)",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "destination-airport",
-            component: "input",
+            key: "destinationTerminal",
+            component: "Select",
             placeholder: "ترمینال مقصد",
             type: "text",
             floating: true,
+            className: "w-full md:w-1/3",
+          },
 
-            className: "w-full md:w-1/3",
-          },
-          {
-            key: "origin-date-time",
-            component: "date",
-            placeholder: "تاریخ و ساعت",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
           {
             key: "airline",
             component: "Select",
@@ -113,15 +118,68 @@ export default function OneWayTicketForm({itemId,onRemoveHandler}: {itemId:any,o
             className: "w-full md:w-1/3",
           },
           {
+            key: "flightClass",
+            component: "list-preview",
+            title: "کلاس پرواز",
+            options: flightClassOptions,
+          },
+          {
+            key: "flightType",
+            component: "list-preview",
+            title: "نوع پرواز",
+            options: flightTypeOptions,
+          },
+          {
+            component: "non-field",
+            key: "title",
+            children: (
+              <h2 className="w-full border-t-4 border-dashed pt-3">خرید</h2>
+            ),
+          },
+
+          {
+            key: "cost",
+            component: "input",
+            placeholder: "هزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+
+          {
+            key: "currency",
+            component: "Select",
+            placeholder: "ارزهزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "broker",
+            component: "Select",
+            placeholder: "کارگزار",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+
+          {
             component: "non-field",
             key: "actions",
             children: (
               <div className="flex flex-row items-center gap-2 justify-end w-full">
-                <Button variant="info" onClick={() => {console.log(itemId)}}>
+                <Button
+                  variant="info"
+                  onClick={() => {
+                    console.log(itemId);
+                  }}
+                >
                   ثبت بلیط
                 </Button>
                 <Button
-                  onClick={() => {removeTicketForm(itemId);}}
+                  onClick={() => {
+                    removeTicketForm(itemId);
+                  }}
                   className="text-danger border-danger"
                 >
                   حذف بلیط

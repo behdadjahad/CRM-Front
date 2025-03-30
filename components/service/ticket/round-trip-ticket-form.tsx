@@ -6,15 +6,47 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 
-export default function RoundTripTicketForm({itemId}:{itemId:any}) {
+export default function RoundTripTicketForm({
+  itemId,
+  flightClassOptions,
+  flightTypeOptions,
+}: {
+  itemId: any;
+  flightTypeOptions: any;
+  flightClassOptions: any;
+}) {
   const formik = useFormik({
     initialValues: {
-      country: "",
-      city: "",
-      hotelName: "",
-      serviceType: "",
-      accommodationType: "",
-      voucherFile: "",
+      originCityAirport: "",
+      originTerminal: "",
+      dateTime: "",
+      destinationCityAirport: "",
+      destinationTerminal: "",
+      airline: "",
+      cost: "",
+      currency: "",
+      broker: "",
+      flightType: "",
+      flightClass:"",
+      id: "",
+      isSubmitted: "",
+    },
+    onSubmit: async () => {},
+    enableReinitialize: true,
+  });
+  const returnFormik = useFormik({
+    initialValues: {
+      returnOriginCityAirport: "",
+      returnOriginTerminal: "",
+      returnDateTime: "",
+      returnDestinationCityAirport: "",
+      returnDestinationTerminal: "",
+      returnAirline: "",
+      returnCost: "",
+      returnBroker: "",
+      returnCurrency: "",
+      returnFlightClass:"",
+      returnFlightType:"",
       id: "",
       isSubmitted: "",
     },
@@ -45,7 +77,9 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
     setAddedStops(updatedAddedFlights);
   }
   function removeReturnHandler(formId: any) {
-    const updatedAddedFlights = addedReturnStops.filter((item) => item.id != formId);
+    const updatedAddedFlights = addedReturnStops.filter(
+      (item) => item.id != formId
+    );
     setAddedReturnStops(updatedAddedFlights);
   }
 
@@ -68,23 +102,23 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
           form={formik}
           fields={[
             {
-              key: "origin-city-airport",
-              component: "input",
+              key: "originCityAirport",
+              component: "Select",
               placeholder: "مبدا(شهر،فرودگاه)",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "origin-terminal",
-              component: "input",
+              key: "originTerminal",
+              component: "Select",
               placeholder: "ترمینال مبدا",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "origin-date-time",
+              key: "dateTime",
               component: "date",
               placeholder: "تاریخ و ساعت",
               type: "text",
@@ -92,30 +126,22 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
               className: "w-full md:w-1/3",
             },
             {
-              key: "destination-city-airport",
-              component: "input",
+              key: "destinationCityAirport",
+              component: "Select",
               placeholder: "مقصد(شهر،فرودگاه)",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "destination-airport",
-              component: "input",
+              key: "destinationTerminal",
+              component: "Select",
               placeholder: "ترمینال مقصد",
               type: "text",
               floating: true,
+              className: "w-full md:w-1/3",
+            },
 
-              className: "w-full md:w-1/3",
-            },
-            {
-              key: "origin-date-time",
-              component: "date",
-              placeholder: "تاریخ و ساعت",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/3",
-            },
             {
               key: "airline",
               component: "Select",
@@ -125,11 +151,62 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
               className: "w-full md:w-1/3",
             },
             {
+              key: "flightClass",
+              component: "list-preview",
+              title: "کلاس پرواز",
+              options: flightClassOptions,
+            },
+            {
+              key: "flightType",
+              component: "list-preview",
+              title: "نوع پرواز",
+              options: flightTypeOptions,
+            },
+            {
+              component: "non-field",
+              key: "title",
+              children: (
+                <h2 className="w-full border-t-4 border-dashed pt-3">خرید</h2>
+              ),
+            },
+
+            {
+              key: "cost",
+              component: "input",
+              placeholder: "هزینه",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+
+            {
+              key: "currency",
+              component: "Select",
+              placeholder: "ارزهزینه",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+            {
+              key: "broker",
+              component: "Select",
+              placeholder: "کارگزار",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+
+            {
               component: "non-field",
               key: "actions",
               children: (
                 <div className="flex flex-row items-center gap-2 justify-end w-full">
-                  <Button variant="info" onClick={() => {console.log(itemId)}}>
+                  <Button
+                    variant="info"
+                    onClick={() => {
+                      console.log(itemId);
+                    }}
+                  >
                     ثبت پرواز
                   </Button>
                   <Button
@@ -168,26 +245,26 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
           </Button>
         </div>
         <FormMaker
-          form={formik}
+          form={returnFormik}
           fields={[
             {
-              key: "origin-city-airport",
-              component: "input",
+              key: "returnOriginCityAirport",
+              component: "Select",
               placeholder: "مبدا(شهر،فرودگاه)",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "origin-terminal",
-              component: "input",
+              key: "returnOriginTerminal",
+              component: "Select",
               placeholder: "ترمینال مبدا",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "origin-date-time",
+              key: "returnDateTime",
               component: "date",
               placeholder: "تاریخ و ساعت",
               type: "text",
@@ -195,32 +272,24 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
               className: "w-full md:w-1/3",
             },
             {
-              key: "destination-city-airport",
-              component: "input",
+              key: "returnDestinationCityAirport",
+              component: "Select",
               placeholder: "مقصد(شهر،فرودگاه)",
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
             },
             {
-              key: "destination-airport",
-              component: "input",
+              key: "returnDestinationTerminal",
+              component: "Select",
               placeholder: "ترمینال مقصد",
               type: "text",
               floating: true,
+              className: "w-full md:w-1/3",
+            },
 
-              className: "w-full md:w-1/3",
-            },
             {
-              key: "origin-date-time",
-              component: "date",
-              placeholder: "تاریخ و ساعت",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/3",
-            },
-            {
-              key: "airline",
+              key: "returnAirline",
               component: "Select",
               placeholder: "ایرلاین",
               type: "text",
@@ -228,8 +297,54 @@ export default function RoundTripTicketForm({itemId}:{itemId:any}) {
               className: "w-full md:w-1/3",
             },
             {
+              key: "returnFlightClass",
+              component: "list-preview",
+              title: "کلاس پرواز",
+              options: flightClassOptions,
+            },
+            {
+              key: "returnFlightType",
+              component: "list-preview",
+              title: "نوع پرواز",
+              options: flightTypeOptions,
+            },
+            {
               component: "non-field",
-              key: "actions",
+              key: "returnTitle",
+              children: (
+                <h2 className="w-full border-t-4 border-dashed pt-3">خرید</h2>
+              ),
+            },
+
+            {
+              key: "returnCost",
+              component: "input",
+              placeholder: "هزینه",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+
+            {
+              key: "returnCurrency",
+              component: "Select",
+              placeholder: "ارزهزینه",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+            {
+              key: "returnBroker",
+              component: "Select",
+              placeholder: "کارگزار",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
+
+            {
+              component: "non-field",
+              key: "returnActions",
               children: (
                 <div className="flex flex-row items-center gap-2 justify-end w-full">
                   <Button variant="info" onClick={() => {}}>

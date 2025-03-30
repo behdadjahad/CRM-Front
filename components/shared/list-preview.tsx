@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FormMakerInterface, OptionType } from "./form-maker";
+import { FormMakerInterface } from "./form-maker";
 import React, { useEffect, useState } from "react";
 
 export default function ListPreview({
@@ -18,11 +18,11 @@ export default function ListPreview({
     }
   }, [form.values[item.key]]);
   return (
-    <div className="flex flex-col md:flex-row items-center  w-full justify-between gap-4">
+    <div className="flex flex-col md:flex-row items-center  w-full  gap-8">
       <div className="">{item.title}</div>
 
       {/* Apply gap to the inner flex container as well */}
-      <div className="flex flex-row gap-8 flex-wrap ">
+      <div className="flex flex-row flex-wrap gap-8">
         {item.options &&
           item.options.map((optItem) => (
             <div
@@ -37,7 +37,7 @@ export default function ListPreview({
                 }
               }}
               className={cn(
-                "cursor-pointer text-sm font-semibold border  rounded-md h-9 w-18 flex items-center justify-center text-subtitle/80",
+                "cursor-pointer text-sm font-semibold border h-9 rounded-md flex items-center justify-center text-subtitle/80 py-4 px-8 bg-gray-50",
                 {
                   "border-aqua-mute text-aqua-active":
                     activeItem && activeItem.value === optItem.value,

@@ -14,7 +14,42 @@ export default function TicketForm({
   onRemoveHandler: any;
 }) {
   const [category, setCategory] = useState("one-way");
-
+  const flightClassOptions = [
+    {
+      value:"1",
+      label: "اکونومی",
+    },
+    {
+      value: "2",
+      label: "پرمیوم اکونومی",
+    },
+    {
+      value: "3",
+      label: "بیزینس",
+    },
+    {
+      value: "4",
+      label: "پرمیوم بیزینس",
+    },
+    {
+      value: "5",
+      label: "فرست کلاس",
+    },
+    {
+      value: "6",
+      label: "پریمیوم فرست کلاس",
+    },
+  ];
+  const flightTypeOptions = [
+    {
+      value: "1",
+      label: "سیستمی",
+    },
+    {
+      value: "2",
+      label: "چارتری",
+    },
+  ]
   return (
     <div className={cn("flex flex-col gap-4 bg-card rounded-md p-3")}>
       <RadioGroup
@@ -57,14 +92,11 @@ export default function TicketForm({
         </div>
       </RadioGroup>
       {category === "one-way" ? (
-        <OneWayTicketForm
-          itemId={itemId}
-          onRemoveHandler={onRemoveHandler}
-        />
+        <OneWayTicketForm itemId={itemId} onRemoveHandler={onRemoveHandler} flightClassOptions={flightClassOptions} flightTypeOptions={flightTypeOptions} />
       ) : category === "round-trip" ? (
-          <RoundTripTicketForm itemId={itemId} />
+        <RoundTripTicketForm itemId={itemId} flightClassOptions={flightClassOptions} flightTypeOptions={flightTypeOptions}/>
       ) : (
-        <FlightContainer />
+        <FlightContainer flightClassOptions={flightClassOptions} flightTypeOptions={flightTypeOptions}/>
       )}
     </div>
   );

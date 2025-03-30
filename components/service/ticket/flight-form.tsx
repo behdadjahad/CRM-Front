@@ -9,20 +9,31 @@ import StopForm from "./stop-form";
 export default function FlightForm({
   itemId,
   onRemoveHandler,
+  flightClassOptions,
+  flightTypeOptions,
+  count
 }: {
   itemId: any;
-  onRemoveHandler: any;
+    onRemoveHandler: any;
+    flightClassOptions: any;
+    flightTypeOptions: any;
+    count: any;
 }) {
   const formik = useFormik({
     initialValues: {
-      country: "",
-      city: "",
-      hotelName: "",
-      serviceType: "",
-      accommodationType: "",
-      voucherFile: "",
+      originCityAirport: "",
+      originTerminal: "",
+      dateTime: "",
+      destinationCityAirport: "",
+      destinationTerminal: "",
+      airline: "",
+      cost: "",
+      currency: "",
+      broker: "",
+      flightType: "",
+      flightClass:"",
       id: "",
-      isSubmitted: false,
+      isSubmitted: "",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -48,7 +59,7 @@ export default function FlightForm({
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
-        <h2 className="p-3">پرواز شماره</h2>
+        <h2 className="p-3">پرواز شماره <span>{count}</span></h2>
         <Button
           variant={"transparent"}
           onClick={addStopForm}
@@ -63,23 +74,23 @@ export default function FlightForm({
         form={formik}
         fields={[
           {
-            key: "origin-city-airport",
-            component: "input",
+            key: "originCityAirport",
+            component: "Select",
             placeholder: "مبدا(شهر،فرودگاه)",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "origin-terminal",
-            component: "input",
+            key: "originTerminal",
+            component: "Select",
             placeholder: "ترمینال مبدا",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "origin-date-time",
+            key: "dateTime",
             component: "date",
             placeholder: "تاریخ و ساعت",
             type: "text",
@@ -87,30 +98,22 @@ export default function FlightForm({
             className: "w-full md:w-1/3",
           },
           {
-            key: "destination-city-airport",
-            component: "input",
+            key: "destinationCityAirport",
+            component: "Select",
             placeholder: "مقصد(شهر،فرودگاه)",
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
           },
           {
-            key: "destination-airport",
-            component: "input",
+            key: "destinationTerminal",
+            component: "Select",
             placeholder: "ترمینال مقصد",
             type: "text",
             floating: true,
+            className: "w-full md:w-1/3",
+          },
 
-            className: "w-full md:w-1/3",
-          },
-          {
-            key: "origin-date-time",
-            component: "date",
-            placeholder: "تاریخ و ساعت",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/3",
-          },
           {
             key: "airline",
             component: "Select",
@@ -119,6 +122,53 @@ export default function FlightForm({
             floating: true,
             className: "w-full md:w-1/3",
           },
+          {
+            key: "flightClass",
+            component: "list-preview",
+            title: "کلاس پرواز",
+            options: flightClassOptions,
+          },
+          {
+            key: "flightType",
+            component: "list-preview",
+            title: "نوع پرواز",
+            options: flightTypeOptions,
+          },
+          {
+            component: "non-field",
+            key: "title",
+            children: (
+              <h2 className="w-full border-t-4 border-dashed pt-3">خرید</h2>
+            ),
+          },
+
+          {
+            key: "cost",
+            component: "input",
+            placeholder: "هزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+
+          {
+            key: "currency",
+            component: "Select",
+            placeholder: "ارزهزینه",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+          {
+            key: "broker",
+            component: "Select",
+            placeholder: "کارگزار",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
+
+
           {
             component: "non-field",
             key: "actions",

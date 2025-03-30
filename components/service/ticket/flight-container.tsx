@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import FlightForm from "./flight-form";
 
-export default function FlightContainer() {
+export default function FlightContainer({flightClassOptions,flightTypeOptions}:{flightClassOptions:any,flightTypeOptions:any}) {
   const [addedFlights, setAddedFlights] = useState<any[]>([
     {
       id: `flight-1`,
@@ -28,11 +28,14 @@ export default function FlightContainer() {
   }
   return (
     <div className="bg-card rounded-xl flex flex-col gap-4">
-      {addedFlights.map((item) => (
+      {addedFlights.map((item,index) => (
         <FlightForm
           key={item.id}
           itemId={item.id}
           onRemoveHandler={removeHandler}
+          flightClassOptions={flightClassOptions}
+          flightTypeOptions={flightTypeOptions}
+          count={(index+1).toString()}
         />
       ))}
       <Button
