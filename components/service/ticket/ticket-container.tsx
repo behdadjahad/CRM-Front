@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import TicketForm from "./ticket-form";
+import { useQuery } from "@tanstack/react-query";
+import { getTransportationType } from "@/api/transportation";
 
 export default function TicketContainer() {
   const [addedTickets, setAddedTickets] = useState<any[]>([{
@@ -24,6 +26,16 @@ export default function TicketContainer() {
       setAddedTickets(updatedAddedFlights);
     } else return;
   }
+  
+    const { data: transportationData } = useQuery({
+      queryKey: ["transportationData"],
+      queryFn: () => getTransportationType(),
+    });
+    useEffect(() => {
+      if (transportationData) {
+        console.log(36,transportationData)
+      }
+    }, [transportationData]);
   return (
     <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between">
