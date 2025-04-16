@@ -171,7 +171,7 @@ export default function OneWayTicketForm({
                 <Button
                   variant="info"
                   onClick={() => {
-                    console.log(itemId);
+                 
                   }}
                 >
                   ثبت بلیط

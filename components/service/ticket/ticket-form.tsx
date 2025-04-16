@@ -63,7 +63,7 @@ export default function TicketForm({
             id="one-way"
             onClick={() => {
               setCategory("one-way");
-              console.log(itemId);
+         
             }}
           />
         </div>
@@ -75,7 +75,7 @@ export default function TicketForm({
             id="round-trip"
             onClick={() => {
               setCategory("round-trip");
-              console.log(itemId);
+           
             }}
           />
         </div>
@@ -86,7 +86,7 @@ export default function TicketForm({
             id="multi-route"
             onClick={() => {
               setCategory("multi-route");
-              console.log(itemId);
+           
             }}
           />
         </div>

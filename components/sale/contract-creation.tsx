@@ -116,7 +116,7 @@ export default function ContractCreation({
       return getContractNumber(id);
     },
     onSuccess: ({ data }) => {
-      console.log(122, data);
+   
       formik.setFieldValue("contractId", data?.contractId);
       formik.setFieldValue("number", data?.suggestedContractNo);
     },

@@ -45,7 +45,7 @@ export default function TicketContainer() {
         onClick={addTicketForm}
         className={cn("text-aqua-foreground")}
       >
-        <FaPlus />
+          <FaPlus />
         افزودن بلیط
       </Button>
       </div>

@@ -244,7 +244,7 @@ export default function Contract() {
       return createClient(data, Number(id));
     },
     onSuccess: (result) => {
-      console.log(result)
+     
       const customerId = result.customerId;
       const url = organizationId
         ? `?customerId=${customerId}&organizationId=${organizationId}`

@@ -40,7 +40,7 @@ export default function ClientInfoCard({
   clientInfo: any;
 }) {
   const queryClient = useQueryClient();
-  console.log(clientInfo);
+
   const formik = useFormik({
     initialValues: {
       clientName: clientInfo?.name,

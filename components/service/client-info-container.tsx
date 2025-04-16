@@ -83,8 +83,7 @@ export default function ClientInfoContainer() {
         email: "alirezaRezaei@gmail.com",
         phone: "989127359952",
       }));
-      console.log(allCustomers?.data[0].phone[0].number);
-      console.log(customersData);
+    
       setCustomers(customersData);
     }
   }, [allCustomers]);
@@ -142,7 +141,7 @@ export default function ClientInfoContainer() {
         { label: "شماره تلفن", value: client?.customer?.phone[0]?.number },
         { label: "ایمیل", value: client?.customer?.email[0]?.email },
       ]);
-      console.log(contractCustomersData?.data);
+
       const clientsInfo = contractCustomersData?.data?.map((client: any) => ({
         id: client?.id,
         name: client?.customer?.person?.firstName,
@@ -151,8 +150,7 @@ export default function ClientInfoContainer() {
         phone: client?.customer?.phone[0]?.number,
         email: client?.customer?.email[0]?.email,
       }));
-      console.log(129, clients);
-      console.log(clientsInfo);
+  
       setClientList(clients);
       setClientInfoList(clientsInfo);
     }

@@ -7,7 +7,7 @@ import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 
 export default function RoundTripTicketForm({
-  itemId,
+  //itemId,
   flightClassOptions,
   flightTypeOptions,
 }: {
@@ -204,7 +204,7 @@ export default function RoundTripTicketForm({
                   <Button
                     variant="info"
                     onClick={() => {
-                      console.log(itemId);
+                     
                     }}
                   >
                     ثبت پرواز

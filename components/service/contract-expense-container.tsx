@@ -124,8 +124,7 @@ export default function ContractExpenseContainer() {
 
       const totalAmountArray = Array.from(resultMap.values());
       setTotalExpenses(totalAmountArray);
-      // console.log(113, totalAmountArray);
-      // console.log(99, totalServiceExpenses);
+   
       setContractCurrency(contractExchangeRate);
       setOveralExpense(overalExpenseData);
       setServiceExpenses(totalServiceExpenses);
