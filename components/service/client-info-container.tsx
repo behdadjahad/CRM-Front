@@ -11,7 +11,7 @@ import {
   addCustomerData,
   addMultipleCustomerData,
   getAllCustomers,
-  getCustomers,
+  getCustomersData,
 } from "@/api/customer";
 import { useParams } from "next/navigation";
 import Image from "next/image";
@@ -83,7 +83,7 @@ export default function ClientInfoContainer() {
         email: "alirezaRezaei@gmail.com",
         phone: "989127359952",
       }));
-    
+
       setCustomers(customersData);
     }
   }, [allCustomers]);
@@ -126,7 +126,7 @@ export default function ClientInfoContainer() {
 
   const { data: contractCustomersData } = useQuery({
     queryKey: ["contractCustomersData"],
-    queryFn: () => getCustomers(Number(id)),
+    queryFn: () => getCustomersData(Number(id)),
   });
 
   useEffect(() => {
@@ -150,7 +150,7 @@ export default function ClientInfoContainer() {
         phone: client?.customer?.phone[0]?.number,
         email: client?.customer?.email[0]?.email,
       }));
-  
+
       setClientList(clients);
       setClientInfoList(clientsInfo);
     }

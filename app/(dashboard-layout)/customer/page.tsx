@@ -5,7 +5,7 @@ import Title from "@/components/shared/title";
 export default function Customer() {
   return (
     <main>
-      <div>
+ 
         <Title label="مشتری" />
 
         <Breadcrumb
@@ -19,8 +19,8 @@ export default function Customer() {
             },
           ]}
         />
-      </div>
-      <div className="bg-card h-full rounded-lg">
+
+
         <CustomerTabContainer
           tabList={[
             "همه مشتری ها",
@@ -29,7 +29,7 @@ export default function Customer() {
             "گذشته و رسیدگی نشده",
           ]}
         />
-      </div>
+     
     </main>
   );
 }

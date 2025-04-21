@@ -1,13 +1,17 @@
 "use client";
+
 import { useState } from "react";
 import CustomerTabContent from "./customer-tab-content";
+import FilterContainer from "../section/filter-container";
 
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const [activeTab, setActiveTab] = useState(tabList[0]);
-  
 
   return (
-    <div className="w-full ">
+    <div className="bg-card rounded-lg p-6">
+      <div>
+        <FilterContainer />
+      </div>
       <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">
         {tabList.map((tab: any) => (
           <button
@@ -24,7 +28,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         ))}
       </div>
 
-      <div className="mt-4">
+      <div className="mt-4 h-full">
         {activeTab === "همه مشتری ها" && <CustomerTabContent />}
         {activeTab === "امروز" && <CustomerTabContent />}
       </div>

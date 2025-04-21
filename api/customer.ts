@@ -11,7 +11,7 @@ export async function getAllCustomers() {
   }
 }
 
-export async function getCustomers(id: number) {
+export async function getCustomersData(id: number) {
   try {
     const result = await fetchService(`contract-customers/${id}`);
 
@@ -43,11 +43,11 @@ export async function deleteCustomerData(id: number) {
     return {};
   }
 }
-export async function editCustomerData(id: number,data:any) {
+export async function editCustomerData(id: number, data: any) {
   try {
     const result = await fetchService(`contract-customers/${id}`, {
       method: "PUT",
-      body: data
+      body: data,
     });
 
     return result;
@@ -58,9 +58,24 @@ export async function editCustomerData(id: number,data:any) {
 
 export async function addMultipleCustomerData(data: any, id: number) {
   try {
-    const result = await fetchService(`contract-customers/multiple-customers/${id}`, {
+    const result = await fetchService(
+      `contract-customers/multiple-customers/${id}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    return result;
+  } catch {
+    return {};
+  }
+}
+export async function getCustomers(page:number,limit:number) {
+  try {
+    const result = await fetchService(`customer/rank?page=${page}&limit=${limit}`, {
       method: "POST",
-      body: data,
+      body: {},
     });
 
     return result;

@@ -11,3 +11,6 @@ export function formatPrice(priceString: any) {
   const price = priceString.toString();
   return price.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+export const limitForCustomers = 6;
+export const dateType = "Solar";
+export const customerSatisfactionTarget = 10;
