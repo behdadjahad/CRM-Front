@@ -1,0 +1,81 @@
+import { fetchService } from "@/boot/fetch-service";
+import { convertDate } from "@/lib/date";
+import { dateType, formatPrice, limitForCustomers } from "@/lib/utils";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+export interface CustomerState {
+  items: any[];
+  currentPage: number;
+  totalPages: number;
+  filters: any;
+}
+
+const initialState: CustomerState = {
+  items: [],
+  currentPage: 1,
+  totalPages: 0,
+  filters: {},
+};
+
+const customerSlice = createSlice({
+  name: "customer",
+  initialState: initialState,
+  reducers: {
+    setData(state, action: PayloadAction<any>) {
+      state.filters = action.payload;
+      state.currentPage = 1;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCustomers.fulfilled, (state, action) => {
+      state.items = action.payload.data.map((item: any) => ({
+        Info: {
+          "نام ونام خانوادگی": item?.person?.fullName,
+          "کدملی": item?.person?.idNumber,
+          "ایمیل": item?.email?.[0]?.email,
+          "شماره تماس": item?.phone?.[0]?.number,
+          "شغل": item?.person?.personJobs?.[0]?.jobs?.name,
+          "موضوع قرارداد": item?.lastContract?.contractType,
+          "رتبه مشتری": "نقره ای",
+          "قرارداد": convertDate(item?.lastContract?.submitDate, dateType),
+          "مبلغ آخرین قرارداد": `${item?.lastContract?.price}`,
+        },
+        subInfo: {
+          [item?.profit < 0 ? "ضرر و زیان" : "سود"]: formatPrice(
+            Math.abs(item?.profit)
+          ),
+          "تعداد مشتری": item?.totalPeopleInContracts,
+          "تاریخ آخرین پیگیری": "۱۴۰۳/۲/۶  ۲۱:۱۵",
+          "نوع آخرین پیگیری": "جلسه حضوری",
+          "وضعیت آخرین پیگیری": "برنامه‌ریزی‌شده",
+          "پیگیری بعدی": "۱۴۰۳/۲/۸  ۱۷:۴۵",
+          "امتیاز مشتری":"10 / 3"
+        },
+      }));
+      const totalItems = action?.payload?.pagination?.total;
+      state.totalPages = Math.ceil(totalItems / limitForCustomers);
+        const filters = action.meta.arg.filters;
+        console.log(filters);
+      state.filters = filters;
+    });
+  },
+});
+export const fetchCustomers = createAsyncThunk<any, any>(
+  "customer/fetchCustomers",
+  async ({ page, limit, filters }) => {
+    try {
+      const result = await fetchService(
+        `customer/rank?page=${page}&limit=${limit}`,
+        {
+          method: "POST",
+          body: filters,
+        }
+      );
+      console.log(result);
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
+export const { setData } = customerSlice.actions;
+export default customerSlice.reducer;

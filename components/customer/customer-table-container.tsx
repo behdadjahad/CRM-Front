@@ -9,13 +9,17 @@ import {
 import { Button } from "../ui/button";
 import { Fragment, useState } from "react";
 import React from "react";
-
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { Checkbox } from "../ui/checkbox";
+import { cn } from "@/lib/utils";
 export default function CustomerTableContainer({
   tableHeaderLabels,
   customers,
+  className
 }: {
-    tableHeaderLabels: string[];
-    customers: any;
+  tableHeaderLabels: string[];
+    customers: any[];
+    className: string;
 }) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
@@ -25,33 +29,56 @@ export default function CustomerTableContainer({
     );
   };
   return (
-    <div className="w-full flex flex-col items-center justify-between mt-4 h-full">
-      <Table className="w-full">
+    <div className={cn(" flex flex-col items-center justify-between h-full",className)}>
+      <Table >
         <TableHeader>
-          <TableRow className="bg-white sticky top-0 z-10">
+          <TableRow className="bg-white sticky top-0 z-10  border-b border-gray-200">
+            <TableHead className="text-center bg-white">
+              {" "}
+              <Checkbox
+                onCheckedChange={() => {}}
+                //checked={}
+              />
+              {""}
+            </TableHead>
             {tableHeaderLabels.map((label, index) => (
-              <TableHead key={index} className="text-center bg-white">
+              <TableHead
+                key={index}
+                className="text-center bg-white border-l border-gray-200 text-xs"
+              >
                 {label}
               </TableHead>
             ))}
-            <TableHead className="text-center bg-white">عملیات</TableHead>
+            {/*  */}
           </TableRow>
         </TableHeader>
         <TableBody>
           {customers?.map((customer: any, index: number) => (
             <Fragment key={index}>
-              <TableRow>
+              <TableRow className="border-b border-gray-200">
+                <TableCell className="flex items-center justify-center">
+                  {" "}
+                  <Checkbox
+                    onCheckedChange={() => {}}
+                    //checked={}
+                  />
+                </TableCell>
+
                 {tableHeaderLabels.map((label, idx) => (
-                  <TableCell key={idx} className="text-center">
-                    {customer.Info[label]}{" "}
+                  <TableCell key={idx} className="text-center text-xs">
+                    {customer.Info[label]}
                   </TableCell>
                 ))}
                 <TableCell className="text-center">
                   <Button
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg"
                     onClick={() => toggleRow(index)}
+                    className="border-none p-0 text-[##212B36]"
                   >
-                    {expandedRows.includes(index) ? "بستن" : "مشاهده"}{" "}
+                    {expandedRows.includes(index) ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}{" "}
                   </Button>
                 </TableCell>
               </TableRow>

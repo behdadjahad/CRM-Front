@@ -71,11 +71,11 @@ export async function addMultipleCustomerData(data: any, id: number) {
     return {};
   }
 }
-export async function getCustomers(page:number,limit:number) {
+export async function getCustomers(page:number , limit:number, body?:any) {
   try {
     const result = await fetchService(`customer/rank?page=${page}&limit=${limit}`, {
       method: "POST",
-      body: {},
+      body: body ? body : {},
     });
 
     return result;

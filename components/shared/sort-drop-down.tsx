@@ -8,18 +8,9 @@ import {
 import { cn } from "@/lib/utils";
 
 import Image from "next/image";
-export default function SortDropDown() {
-  const list = [
-    {
-      label: "پرفروش ترین ها",
-      value: "MostSold",
-    },
-    { label: "ارزان ترین", value: "MostCheap" },
-    { label: "گران ترین", value: "MostExpensive" },
+import { OptionType } from "./form-maker";
+export default function SortDropDown({list}: {list: OptionType[]}) {
 
-    { label: "جدید ترین ها", value: "Newest" },
-    { label: "قدیمی ترین ها", value: "Oldest" },
-  ];
 
   return (
     <DropdownMenu>
@@ -41,7 +32,7 @@ export default function SortDropDown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="flex flex-col gap-4">
-        {list.map((item) => (
+        {list && list.map((item) => (
           <div
             key={item.value}
             className="text-sm cursor-pointer hover:bg-foreground-mute w-full p-2 text-center rounded-sm hover:text-card"

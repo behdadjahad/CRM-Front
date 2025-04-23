@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import userReducer from "./user-slice";
+import customerReducer from "./customer-slice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    customer: customerReducer
   },
 });
 
@@ -14,3 +16,4 @@ export type AppDispatch = typeof store.dispatch;
 
 // Custom hook to use dispatch with TypeScript
 export const useAppDispatch: () => AppDispatch = useDispatch;
+

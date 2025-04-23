@@ -14,6 +14,7 @@ export interface LeftDrawerInterface {
   setState: (prev: any) => any;
   filterItems: any[];
   rangeItems: any[];
+  onFilterHandler: any;
 }
 
 export default function FilterDrawer({
@@ -21,6 +22,7 @@ export default function FilterDrawer({
   setState,
   filterItems,
   rangeItems,
+  onFilterHandler
 }: LeftDrawerInterface) {
   return (
     <div
@@ -77,7 +79,7 @@ export default function FilterDrawer({
         </div>
 
         <div className="p-7 w-full">
-          <Button variant={"info"} className="w-full" onClick={() => {}}>
+          <Button variant={"info"} className="w-full" onClick={onFilterHandler}>
             اعمال اطلاعات
           </Button>
         </div>

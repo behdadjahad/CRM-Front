@@ -70,6 +70,7 @@ export interface FieldType {
   clearIndicatorClassName?: string;
   containerClassName?: string;
   isFormattedNumber?: boolean;
+  onClick?:() => void;
 }
 
 export interface FormMakerInterface {
