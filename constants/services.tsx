@@ -1,5 +1,6 @@
 
 import HotelContainer from "@/components/service/hotel/hotel-container";
+import OtherContainer from "@/components/service/other/other-container";
 import TicketContainer from "@/components/service/ticket/ticket-container";
 import VisaContainer from "@/components/service/visa/visa-container";
 
@@ -130,7 +131,17 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-nature.png",
     activeImage: "/images/services/success/success-nature.png",
-    name: "Other",
+    name: "Nature",
     form: <>Nature Form</>,
+  },
+  {
+    id: 13,
+    image: "/images/services/nature.png",
+    title: "سایر",
+    isSelected: true,
+    selectedImage: "/images/services/primary/primary-nature.png",
+    activeImage: "/images/services/success/success-nature.png",
+    name: "Other",
+    form: <OtherContainer />,
   },
 ];

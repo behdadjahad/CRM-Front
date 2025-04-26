@@ -1,11 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import CustomModal from "../shared/custom-modal";
+import { MdClose } from "react-icons/md";
+import { Button } from "../ui/button";
+import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
   id: string;
@@ -80,7 +84,7 @@ export default function ContractCard({
   const RatingChart = dynamic(() => import("../shared/rating-chart"), {
     ssr: false,
   });
-
+  const [openModal, setOpenModal] = useState(false);
   return (
     <div
       className={cn(
@@ -142,14 +146,47 @@ export default function ContractCard({
 
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
               از مجموع {score.totalVotes} امتیاز
-              <Link href={`/sale/satisfaction/${id}`}>
+              {/* <Link href={`/sale/satisfaction/${id}`}> */}
+              <div onClick={() => {
+                    setOpenModal(true);
+                  }}>
                 <Image
                   src={"/icons/edit-pen.png"}
                   alt="ادیت"
                   width={16}
                   height={16}
                 />
-              </Link>
+                </div>
+                <CustomModal
+              minWidth="0"
+              maxWidth="700px"
+              isOpen={openModal}
+              onRequestClose={() => setOpenModal(false)}
+              contentLabel="رضایت مندی"
+            >
+              <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                <span className="text-lg font-bold">نظر خود را  ثبت کنید</span>
+                <MdClose
+                  size={20}
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                  className="cursor-pointer"
+                />
+              </div>
+               <Satisfaction />
+              <div className="flex flex-row gap-4 items-center justify-end">
+                <Button
+                  variant={"info"}
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                >
+                  ثبت بازخورد
+                </Button>
+              </div>
+            </CustomModal>
+              {/* </Link> */}
             </div>
           </div>
         </div>

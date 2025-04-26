@@ -14,12 +14,17 @@ export interface OverviewDetailInterface {
     isPositive: boolean;
     detailList: { title: string }[];
   }[];
+  scoreRange: {
+    label: string;
+    value: number;
+  }[];
   className?: string;
 }
 
 export default function OverviewDetailContainer({
   list,
   className,
+  scoreRange,
 }: OverviewDetailInterface) {
   const formik = useFormik({
     initialValues: {
@@ -50,9 +55,9 @@ export default function OverviewDetailContainer({
     });
   }
 
-  useEffect(() => {
-    setSelectedItems([]);
-  }, [activeItem]);
+  // useEffect(() => {
+  //   setSelectedItems([]);
+  // }, [activeItem]);
 
   return (
     <div
@@ -61,7 +66,29 @@ export default function OverviewDetailContainer({
         className
       )}
     >
-      <div className="flex flex-row items-center gap-4 w-full">
+      <span className="text-xs text-foreground w-full">
+        {/* {activeItem && activeItem.isPositive */}
+        {/* ? "از کدام مورد رضایت داشتید؟" */}
+        {/* : "ازکدام مورد ناراضی بودید؟" */}
+        {/* } */}
+        لطفامیزان رضایت خودرا از 1تا10ارزیابی کنید.
+      </span>
+      <div className="flex flex-row w-full justify-between items-end">
+        {scoreRange.map((item, index) => (
+          <div key={index} className="flex flex-col justify-between">
+          <span>{item.label}</span>
+          <div
+            className="rounded-full w-8 h-8 bg-background flex justify-center items-center cursor-pointer"
+
+          >
+
+            {item.value}
+          </div>
+          </div>
+        ))}
+      </div>
+
+      {/* <div className="flex flex-row items-center gap-4 w-full">
         <p className="text-xs text-foreground">
           آیا این تماس برای شما مفید بود؟
         </p>
@@ -101,24 +128,56 @@ export default function OverviewDetailContainer({
             </Button>
           ))}
         </div>
-      </div>
+      </div> */}
 
-      {activeItem && (
-        <span className="text-xs text-foreground w-full">
-          {activeItem && activeItem.isPositive
-            ? "از کدام مورد رضایت داشتید؟"
-            : "ازکدام مورد ناراضی بودید؟"}
-        </span>
-      )}
+      {/* {activeItem && ( */}
+      <span className="text-xs text-foreground w-full">
+        {/* {activeItem && activeItem.isPositive */}
+        {/* ? "از کدام مورد رضایت داشتید؟" */}
+        {/* : "ازکدام مورد ناراضی بودید؟" */}
+        {/* } */}
+        از کدام مورد رضایت داشتید؟
+      </span>
+      {/* )} */}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
-        {activeItem?.detailList.map((item) => (
+        {list[0].detailList.map((item) => (
           <Button
             key={`${item.title}-${activeItem?.label}`}
             className={cn(
               "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
               {
-                "text-primary-active bg-background":
+                "text-success-active bg-background":
+                  selectedItems.findIndex(
+                    (selected) => selected.title === item.title
+                  ) !== -1,
+              }
+            )}
+            onClick={() => {
+              activeHandler(item);
+            }}
+          >
+            {item.title}
+          </Button>
+        ))}
+      </div>
+      <span className="text-xs text-foreground w-full">
+        {/* {activeItem && activeItem.isPositive */}
+        {/* ? "از کدام مورد رضایت داشتید؟" */}
+        {/* : "ازکدام مورد ناراضی بودید؟" */}
+        {/* } */}
+        از کدام مورد ناراضی بودید؟
+      </span>
+      {/* )} */}
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
+        {list[1].detailList.map((item) => (
+          <Button
+            key={`${item.title}-${activeItem?.label}`}
+            className={cn(
+              "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
+              {
+                "text-negative bg-background":
                   selectedItems.findIndex(
                     (selected) => selected.title === item.title
                   ) !== -1,
@@ -148,8 +207,6 @@ export default function OverviewDetailContainer({
         ]}
         className="flex flex-row w-full"
       />
-
-      <Button variant={"info"}>ثبت بازخورد</Button>
     </div>
   );
 }

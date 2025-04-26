@@ -2,21 +2,35 @@ import { cn } from "@/lib/utils";
 
 import { Checkbox } from "../ui/checkbox";
 
-export default function CustomerCard({ className }: { className?: string }) {
+export default function CustomerCard({
+  className,
+  customer,
+  labels,
+}: {
+  className?: string;
+  customer: any;
+  labels: any;
+}) {
+  console.log(customer);
   return (
-    <div className={cn("rounded-md w-full p-4", className)}>
-      <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 p-4 gap-2">
-        <div className="flex items-center gap-2">
-          <Checkbox
+    <div className={cn("w-full p-4 rounded-md custom-shadow", className)}>
+      <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 p-4 gap-6">
+        {labels.map((item: any,index:number) => (
+          <div key={item.label} className="flex gap-2 items-center">
+           {index === 0 && <Checkbox
+              onCheckedChange={() => {}}
+              //checked={}
+            />}
+            <div className="flex flex-col justify-between gap-2">
+              <div className="text-xs">{!item.labelIsHidden && item.label}</div>
+              <div className="text-xs">{customer.Info[item.label]}</div>
+            </div>
+          </div>
+        ))}
+        {/* <Checkbox
             onCheckedChange={() => {}}
             //checked={}
-          />
-
-          <div>فرهاد امینی </div>
-        </div>
-        <div>نقره ای</div>
-        <div>Frahad2018@gmail.com</div>
-        <div>09177895236</div>
+          /> */}
       </div>
     </div>
   );

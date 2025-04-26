@@ -55,6 +55,17 @@ export default function CustomerTabContent() {
     "قرارداد",
     "مبلغ آخرین قرارداد",
   ];
+  const customerCardLabels = [
+    { label: "نام ونام خانوادگی", labelIsHidden: true },
+    { label: "رتبه مشتری", labelIsHidden: true },
+    { label: "ایمیل", labelIsHidden: true },
+    { label: "شماره تماس", labelIsHidden: true },
+    { label: "شغل", labelIsHidden: true },
+    { label: "موضوع قرارداد", labelIsHidden: true },
+    { label: "کدملی", labelIsHidden: false },
+
+    { label: "مبلغ آخرین قرارداد", labelIsHidden: false },
+  ];
   const handlePageChange = (selectedItem: any) => {
     const selectedPage = selectedItem.selected + 1;
     dispatch(
@@ -107,7 +118,11 @@ export default function CustomerTabContent() {
         className="hidden xl:flex"
         // className="hidden"
       />
-      <CustomerContainer className="flex items-center justify-center xl:hidden" />
+      <CustomerContainer
+        className="flex items-center justify-center xl:hidden"
+        customers={customerList}
+        labels={customerCardLabels}
+      />
       <div className="w-full mt-4">
         <ReactPaginate
           breakLabel="..."

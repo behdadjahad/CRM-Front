@@ -1,3 +1,6 @@
+
+
+
 import { cn } from '@/lib/utils';
 import React from 'react'
 
@@ -14,7 +17,7 @@ export default function Overview({ list, className }: OverviewInterface) {
   return (
     <div
       className={cn(
-        "rounded-xl p-6 bg-card shadow-[0px_12px_24px_-4px_#919EAB1F] w-full grid grid-cols-1 gap-y-5 md:grid-cols-2 items-center",
+        "rounded-xl bg-card p-3 shadow-[0px_12px_24px_-4px_#919EAB1F] w-full  items-center",
         className
       )}
     >
@@ -22,8 +25,8 @@ export default function Overview({ list, className }: OverviewInterface) {
         <div
           key={item.label}
           className={cn(
-            "flex flex-col gap-3 md:gap-5 items-center justify-center text-foreground",
-            { "md:border-l border-dashed": index == 0 }
+            "flex flex-col gap-3 md:gap-5 items-center justify-center text-foreground p-2",
+            { "md:border-b border-dashed": index == 0 }
           )}
         >
           <div className="flex gap-2 items-center justify-center">

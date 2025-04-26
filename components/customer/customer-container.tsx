@@ -3,12 +3,16 @@ import CustomerCard from "./customer-card";
 
 export default function CustomerContainer({
   className,
+  customers,
+  labels
 }: {
   className?: string;
+  customers:any[];
+  labels:any;
 }) {
-    return <div className={cn("flex flex-col", className)}>
-  
-        <CustomerCard className={""} />
+    return <div className={cn("flex flex-col gap-4 bg-transparent", className)}>
+       { customers.map((item,index) => (<CustomerCard className="custom-shadow" customer={item} key={index} labels={labels}/>))}
+
     </div>;
 }
 
