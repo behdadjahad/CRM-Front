@@ -3,7 +3,7 @@
 
 import React from "react";
 
-export interface ExpertInfoInterface {
+export interface PersonInfoInterface {
   list: {
     label?: string;
     value?: string;
@@ -11,7 +11,7 @@ export interface ExpertInfoInterface {
   }[];
 }
 
-export default function ExpertInfoContainer({ list }: ExpertInfoInterface) {
+export default function PersonInfoContainer({ list }: PersonInfoInterface) {
   return (
     <div className="w-full bg-city bg-no-repeat bg-cover flex flex-col gap-1 md:gap-8 md:flex-row text-card rounded-tl-xl rounded-tr-xl  p-3 md:p-6">
       {list.map((item, index) =>

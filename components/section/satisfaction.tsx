@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
 import OverviewDetailContainer, {
   OverviewDetailInterface,
@@ -7,9 +8,76 @@ import OverviewDetailContainer, {
 import SocialMedia from "../satisfaction/social-media";
 import RatingChart from "../shared/rating-chart";
 import Image from "next/image";
-export default function Satisfaction({}: {}) {
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getCallDevices,
+  getSatisfactionLabels,
+  submitSatisfaction,
+} from "@/api/satisfaction";
+import { Button } from "../ui/button";
+export default function Satisfaction({
+  onCloseHandler,
+  itemId
+}: {
+    onCloseHandler: () => any;
+    itemId: string;
+  
+}) {
+  const [callDevices, setCallDevices] = useState<any[]>([]);
+  const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
+  const [activeCallDevice, setActiveCallDevice] = useState<number>();
+  const [activeSatisfactionLabels, setActiveSatisfactionLabels] = useState<
+    any[]
+  >([]);
   const { score, totalVotes, overviewProps, overviewDetail } = getData();
+  const { data: callDeviceData } = useQuery({
+    queryKey: ["callDeviceData"],
+    queryFn: async () => await getCallDevices(),
+  });
+  const { data: SatisfactionLabelsData } = useQuery({
+    queryKey: ["SatisfactionLabelsData"],
+    queryFn: async () => await getSatisfactionLabels(),
+  });
+  useEffect(() => {
+    if (callDeviceData) {
+      console.log(callDeviceData);
+      const callDeviceOptions = callDeviceData.data.map((item: any) => ({
+        id: item.id,
+        label: item.name,
+      }));
+      setCallDevices(callDeviceOptions);
+    }
+  }, [callDeviceData]);
+  useEffect(() => {
+    if (SatisfactionLabelsData) {
+      console.log(SatisfactionLabelsData);
+      const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
+        (item: any) => ({
+          id: item.id,
+          label: item.reasonName,
+          type: item.satisfactionKind,
+        })
+      );
+      setSatisfactionLabels(satisfactionLabelsOptions);
+    }
+  }, [SatisfactionLabelsData]);
 
+  const { mutate: satisfactionSubmitHandler } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return submitSatisfaction(data, id);
+    },
+    onSuccess: () => {},
+  });
+  function submit() {
+    const data = {
+      // satisfactionReasonId: activeSatisfactionLabels,
+      satisfactionReasonId: 301,
+      callDeviceId: activeCallDevice,
+      satisfactionScore:5
+    };
+  
+    satisfactionSubmitHandler({ data, id:Number(itemId)  });
+  }
   return (
     <div>
       <div className="w-full flex gap-6">
@@ -25,11 +93,30 @@ export default function Satisfaction({}: {}) {
       <SocialMedia
         {...overviewProps}
         className="col-span-4 lg:col-span-3 row-span-1"
+        list={callDevices}
+        onSendHandler={(item) => {
+          setActiveCallDevice(item);
+        }}
       />
       <OverviewDetailContainer
         {...overviewDetail}
         className="shadow-[0px_12px_24px_-4px_#919EAB1F]"
+        labels={satisfactionLabels}
+        onSelectedHandler={(activeItem) => {
+          setActiveSatisfactionLabels(activeItem);
+        }}
       />
+      <div className="flex flex-row gap-4 items-center justify-end">
+        <Button
+          variant={"info"}
+          onClick={() => {
+            onCloseHandler();
+            submit();
+          }}
+        >
+          ثبت بازخورد
+        </Button>
+      </div>
     </div>
   );
 }
@@ -67,71 +154,50 @@ function getData() {
   };
 
   const overviewDetail: OverviewDetailInterface = {
-    list: [
+   
+
+    scoreRange: [
       {
-        label: "رضایت دارم",
-        isPositive: true,
-        detailList: [
-          { title: "رفتار محترمانه" },
-          { title: "پیگیری کامل" },
-          { title: "قیمت مناسب" },
-          { title: "رضایت" },
-        ],
+        label: "ضعیف",
+        value: 1,
       },
       {
-        label: "رضایت ندارم",
-        isPositive: false,
-        detailList: [
-          { title: "رفتار نامحترمانه" },
-          { title: "پیگیری ناقص" },
-          { title: "قیمت نامناسب" },
-          { title: "ناراضی" },
-        ],
+        label: "",
+        value: 2,
+      },
+      {
+        label: "",
+        value: 3,
+      },
+      {
+        label: "متوسط",
+        value: 4,
+      },
+      {
+        label: "",
+        value: 5,
+      },
+      {
+        label: "",
+        value: 6,
+      },
+      {
+        label: "خوب",
+        value: 7,
+      },
+      {
+        label: "",
+        value: 8,
+      },
+      {
+        label: "عالی",
+        value: 9,
+      },
+      {
+        label: "",
+        value: 10,
       },
     ],
-    scoreRange:[
-        {
-            label:"ضعیف",
-            value:1
-        },
-        {
-            label:"",
-            value:2
-        },
-        {
-            label:"",
-            value:3
-        },
-        {
-            label:"متوسط",
-            value:4
-        },
-        {
-            label:"",
-            value:5
-        },
-        {
-            label:"",
-            value:6
-        },
-        {
-            label:"خوب",
-            value:7
-        },
-        {
-            label:"",
-            value:8
-        },
-        {
-            label:"عالی",
-            value:9
-        },
-        {
-            label:"",
-            value:10
-        },
-
-    ]
   };
 
   return {

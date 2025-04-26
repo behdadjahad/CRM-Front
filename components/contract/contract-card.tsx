@@ -52,7 +52,6 @@ export default function ContractCard({
   user,
   className,
 }: ContractCardInterface) {
-
   const contractData = [
     {
       icon: "/icons/calendar-mute.png",
@@ -147,45 +146,42 @@ export default function ContractCard({
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
               از مجموع {score.totalVotes} امتیاز
               {/* <Link href={`/sale/satisfaction/${id}`}> */}
-              <div onClick={() => {
-                    setOpenModal(true);
-                  }}>
+              <div
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
                 <Image
                   src={"/icons/edit-pen.png"}
                   alt="ادیت"
                   width={16}
                   height={16}
                 />
+              </div>
+              <CustomModal
+                minWidth="0"
+                maxWidth="700px"
+                isOpen={openModal}
+                onRequestClose={() => setOpenModal(false)}
+                contentLabel="رضایت مندی"
+              >
+                <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                  <span className="text-lg font-bold">نظر خود را ثبت کنید</span>
+                  <MdClose
+                    size={20}
+                    onClick={() => {
+                      setOpenModal(false);
+                    }}
+                    className="cursor-pointer"
+                  />
                 </div>
-                <CustomModal
-              minWidth="0"
-              maxWidth="700px"
-              isOpen={openModal}
-              onRequestClose={() => setOpenModal(false)}
-              contentLabel="رضایت مندی"
-            >
-              <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
-                <span className="text-lg font-bold">نظر خود را  ثبت کنید</span>
-                <MdClose
-                  size={20}
-                  onClick={() => {
+                <Satisfaction
+                  onCloseHandler={() => {
                     setOpenModal(false);
                   }}
-                  className="cursor-pointer"
+                  itemId={id}
                 />
-              </div>
-               <Satisfaction />
-              <div className="flex flex-row gap-4 items-center justify-end">
-                <Button
-                  variant={"info"}
-                  onClick={() => {
-                    setOpenModal(false);
-                  }}
-                >
-                  ثبت بازخورد
-                </Button>
-              </div>
-            </CustomModal>
+              </CustomModal>
               {/* </Link> */}
             </div>
           </div>

@@ -2,8 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
+import { useState } from "react";
+
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
 
@@ -18,13 +18,17 @@ export interface OverviewDetailInterface {
     label: string;
     value: number;
   }[];
+  labels: any[];
   className?: string;
+  onSelectedHandler: (selectedItems: number[]) => void;
 }
 
 export default function OverviewDetailContainer({
   list,
   className,
   scoreRange,
+  labels,
+  onSelectedHandler
 }: OverviewDetailInterface) {
   const formik = useFormik({
     initialValues: {
@@ -33,32 +37,31 @@ export default function OverviewDetailContainer({
     onSubmit: async () => {},
   });
 
-  const [activeItem, setActiveItem] =
-    useState<OverviewDetailInterface["list"][0]>();
-  const [selectedItems, setSelectedItems] = useState<
-    OverviewDetailInterface["list"][0]["detailList"]
-  >([]);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-  function activeHandler(item: { title: string }) {
-    setSelectedItems((prevSelectedItems) => {
-      const index = prevSelectedItems.findIndex(
-        (selected) => selected.title === item.title
-      );
-
-      if (index === -1) {
-        return [...prevSelectedItems, item];
+  function activeHandler(item: number) {
+    setSelectedItems((prevSelected) => {
+      let updatedSelected;
+      
+      if (prevSelected.includes(item)) {
+        // If item exists, remove it
+        updatedSelected = prevSelected.filter((i) => i !== item);
       } else {
-        return prevSelectedItems.filter(
-          (selected) => selected.title !== item.title
-        );
+        // If item doesn't exist, add it
+        updatedSelected = [...prevSelected, item];
       }
+  
+      // Send the updated array to parent
+      onSelectedHandler(updatedSelected);
+  
+      return updatedSelected;
     });
   }
 
   // useEffect(() => {
   //   setSelectedItems([]);
   // }, [activeItem]);
-
+  console.log(labels);
   return (
     <div
       className={cn(
@@ -75,91 +78,43 @@ export default function OverviewDetailContainer({
       </span>
       <div className="flex flex-row w-full justify-between items-end">
         {scoreRange.map((item, index) => (
-          <div key={index} className="flex flex-col justify-between">
-          <span>{item.label}</span>
-          <div
-            className="rounded-full w-8 h-8 bg-background flex justify-center items-center cursor-pointer"
-
-          >
-
-            {item.value}
-          </div>
+          <div key={index} className="flex flex-col justify-between" onClick={() => {
+            
+          }}>
+            <span>{item.label}</span>
+            <div className="rounded-full w-8 h-8 bg-background flex justify-center items-center cursor-pointer">
+              {item.value}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* <div className="flex flex-row items-center gap-4 w-full">
-        <p className="text-xs text-foreground">
-          آیا این تماس برای شما مفید بود؟
-        </p>
-
-        <div className="flex flex-row gap-4">
-          {list.map(({ detailList, isPositive, label, labelClassName }) => (
-            <Button
-              key={label}
-              className={cn(
-                "border-none p-0 text-xs flex items-center gap-2 text-foreground-mute font-normal",
-                {
-                  "text-success-active":
-                    activeItem?.label === label && isPositive,
-                  "text-negative": activeItem?.label === label && !isPositive,
-                },
-                labelClassName
-              )}
-              onClick={() => {
-                if (activeItem && activeItem.label === label) {
-                  setActiveItem(undefined);
-                } else {
-                  setActiveItem({
-                    detailList,
-                    isPositive,
-                    label,
-                    labelClassName,
-                  });
-                }
-              }}
-            >
-              {isPositive ? (
-                <BiSolidLike size={20} />
-              ) : (
-                <BiSolidDislike size={20} />
-              )}
-              {label}
-            </Button>
-          ))}
-        </div>
-      </div> */}
-
-      {/* {activeItem && ( */}
       <span className="text-xs text-foreground w-full">
-        {/* {activeItem && activeItem.isPositive */}
-        {/* ? "از کدام مورد رضایت داشتید؟" */}
-        {/* : "ازکدام مورد ناراضی بودید؟" */}
-        {/* } */}
         از کدام مورد رضایت داشتید؟
       </span>
-      {/* )} */}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
-        {list[0].detailList.map((item) => (
-          <Button
-            key={`${item.title}-${activeItem?.label}`}
-            className={cn(
-              "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
-              {
-                "text-success-active bg-background":
-                  selectedItems.findIndex(
-                    (selected) => selected.title === item.title
-                  ) !== -1,
-              }
-            )}
-            onClick={() => {
-              activeHandler(item);
-            }}
-          >
-            {item.title}
-          </Button>
-        ))}
+        {labels.map(
+          (item) =>
+            item.type === "Satisfy" && (
+              <Button
+                key={item.id}
+                className={cn(
+                  "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
+                  {
+                    "text-success-active bg-background": selectedItems.includes(
+                      item.id
+                    ),
+                  }
+                )}
+                onClick={() => {
+                  activeHandler(item.id);
+                }}
+              >
+                {item.label}
+              </Button>
+            )
+        )}
       </div>
       <span className="text-xs text-foreground w-full">
         {/* {activeItem && activeItem.isPositive */}
@@ -171,25 +126,27 @@ export default function OverviewDetailContainer({
       {/* )} */}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
-        {list[1].detailList.map((item) => (
-          <Button
-            key={`${item.title}-${activeItem?.label}`}
-            className={cn(
-              "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
-              {
-                "text-negative bg-background":
-                  selectedItems.findIndex(
-                    (selected) => selected.title === item.title
-                  ) !== -1,
-              }
-            )}
-            onClick={() => {
-              activeHandler(item);
-            }}
-          >
-            {item.title}
-          </Button>
-        ))}
+        {labels.map(
+          (item) =>
+            item.type === "Unsatisfy" && (
+              <Button
+                key={item.id}
+                className={cn(
+                  "col-span-1 border border-border/20 p-0 text-xs text-foreground px-4 py-2 rounded-md",
+                  {
+                    "text-negative bg-background": selectedItems.includes(
+                      item.id
+                    ),
+                  }
+                )}
+                onClick={() => {
+                  activeHandler(item.id);
+                }}
+              >
+                {item.label}
+              </Button>
+            )
+        )}
       </div>
 
       <FormMaker

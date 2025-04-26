@@ -1,14 +1,18 @@
-import { SocialMediaLinks } from "@/constants/credentials";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { NavLink } from "../shared/nav-link";
-import Image from "next/image";
+
+
 
 export interface SocialMediaInterface {
   className?: string;
+  list: {
+    id: number;
+    label: string;
+  }[];
+  onSendHandler: (arg:any) => void;
 }
 
-export default function SocialMedia({ className }: SocialMediaInterface) {
+export default function SocialMedia({ className, list ,onSendHandler}: SocialMediaInterface) {
   return (
     <div
       className={cn(
@@ -19,16 +23,24 @@ export default function SocialMedia({ className }: SocialMediaInterface) {
       <span className="text-sm">طریقه ارتباط جهت رضایت مندی:</span>
 
       <div className="flex items-center gap-4">
-        {SocialMediaLinks.map((item) => (
-          <NavLink key={item.name} link={item.link}>
-            <Image
+        {list.map((item) => (
+          <div
+            key={item.id}
+            onClick={() => {
+              onSendHandler(item.id)
+            }}
+          >
+            {item.label}
+            {/* <NavLink key={item.name} link={item.link}> */}
+            {/* <Image
               src={item.imageSrc}
               alt={item.name}
               width={1028}
               height={1028}
               className="w-6 h-6 p-0.5 object-contain"
-            />
-          </NavLink>
+            /> */}
+            {/* </NavLink>  */}
+          </div>
         ))}
       </div>
     </div>

@@ -18,11 +18,14 @@ import { convertDate } from "@/lib/date";
 import { useEffect, useState } from "react";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import { sendSingleServiceData } from "@/api/service";
-import ContractInfoContainer, { ContractInfoInterface } from "@/components/shared/contract-info-container";
+import ContractInfoContainer, {
+  ContractInfoInterface,
+} from "@/components/shared/contract-info-container";
 import Image from "next/image";
-import ExpertInfoContainer, { ExpertInfoInterface } from "@/components/shared/expert-info-container";
+import ExpertInfoContainer, {
+  PersonInfoInterface,
+} from "@/components/shared/person-info-container";
 export default function Service() {
-
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItemForm, setActiveItemForm] = useState<any>(null);
 
@@ -107,7 +110,7 @@ export default function Service() {
       },
     ],
   };
-  const expert: ExpertInfoInterface = {
+  const expert: PersonInfoInterface = {
     list: [
       {
         label: "",
@@ -160,8 +163,8 @@ export default function Service() {
           />
         </div>
         <div className="flex flex-col gap-1 mt-12">
-         <ExpertInfoContainer {...expert} />
-          <ContractInfoContainer {...contractInfo} /> 
+          <ExpertInfoContainer {...expert} />
+          <ContractInfoContainer {...contractInfo} />
         </div>
 
         <ServiceContainer {...contractServices} />
@@ -177,5 +180,3 @@ export default function Service() {
     </main>
   );
 }
-
- 
