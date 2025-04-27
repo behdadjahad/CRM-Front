@@ -16,12 +16,19 @@ import { Rating } from "react-simple-star-rating";
 export default function CustomerDetailTable({
   tableHeaderLabels,
   list,
+  className,
 }: {
   tableHeaderLabels: any[];
   list: any[];
+  className: string;
 }) {
   return (
-    <div className={cn(" flex flex-col items-center justify-between h-full")}>
+    <div
+      className={cn(
+        " flex flex-col items-center justify-between h-full",
+        className
+      )}
+    >
       <Table>
         <TableHeader>
           <TableRow className="bg-white sticky top-0 z-10  border-b border-gray-200">
@@ -52,7 +59,7 @@ export default function CustomerDetailTable({
                   <TableCell key={idx} className="text-center text-xs">
                     {item[label]}
 
-                    { label === "رضایتمندی" && (
+                    {label === "رضایتمندی" && (
                       <Rating
                         iconsCount={1} // Only 1 star
                         size={20} // Optional: size of the star
@@ -60,8 +67,8 @@ export default function CustomerDetailTable({
                         readonly
                         allowFraction={true}
                         initialValue={item[label]} // Optional: handle click
-                      />)
-                    }
+                      />
+                    )}
                   </TableCell>
                 ))}
               </TableRow>

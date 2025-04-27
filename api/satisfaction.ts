@@ -2,7 +2,7 @@ import { fetchService } from "@/boot/fetch-service";
 
 export async function getCallDevices() {
   try {
-    const result = await fetchService("call-device-controller");
+    const result = await fetchService("call-device");
 
     return result;
   } catch {

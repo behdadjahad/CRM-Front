@@ -52,8 +52,12 @@ export default function CustomerDetail() {
           },
         ]}
       />
-      <PersonInfoContainer {...customer} />
-      <CustomerDetailContent />
+      <div>
+        <PersonInfoContainer {...customer} />
+        <CustomerDetailContent
+          tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+        />
+      </div>
     </main>
   );
 }

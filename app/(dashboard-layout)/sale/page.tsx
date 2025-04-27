@@ -116,7 +116,7 @@ function getData() {
         },
         score: {
           final: 30,
-          totalVotes: 11,
+          totalVotes: 10,
         },
         services: item.avServices
           ? services.filter((obj) => item.avServices.includes(obj.name))

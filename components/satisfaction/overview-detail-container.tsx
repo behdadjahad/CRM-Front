@@ -5,63 +5,46 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 
 import FormMaker from "../shared/form-maker";
-import { useFormik } from "formik";
 
 export interface OverviewDetailInterface {
-  list: {
-    label: string;
-    labelClassName?: string;
-    isPositive: boolean;
-    detailList: { title: string }[];
-  }[];
+  // list: {
+  //   label: string;
+  //   labelClassName?: string;
+  //   isPositive: boolean;
+  //   detailList: { title: string }[];
+  // }[];
   scoreRange: {
     label: string;
     value: number;
+    className?: string;
   }[];
   labels: any[];
   className?: string;
-  onSelectedHandler: (selectedItems: number[]) => void;
+  form: any;
 }
 
 export default function OverviewDetailContainer({
-  list,
+  // list,
   className,
   scoreRange,
   labels,
-  onSelectedHandler
+  form,
 }: OverviewDetailInterface) {
-  const formik = useFormik({
-    initialValues: {
-      explanation: "",
-    },
-    onSubmit: async () => {},
-  });
-
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const [activeScore, setActiveScore] = useState<number>();
 
   function activeHandler(item: number) {
-    setSelectedItems((prevSelected) => {
-      let updatedSelected;
-      
-      if (prevSelected.includes(item)) {
-        // If item exists, remove it
-        updatedSelected = prevSelected.filter((i) => i !== item);
-      } else {
-        // If item doesn't exist, add it
-        updatedSelected = [...prevSelected, item];
-      }
-  
-      // Send the updated array to parent
-      onSelectedHandler(updatedSelected);
-  
-      return updatedSelected;
-    });
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(item)
+        ? prevSelected.filter((i) => i !== item)
+        : [...prevSelected, item]
+    );
   }
 
   // useEffect(() => {
   //   setSelectedItems([]);
   // }, [activeItem]);
-  console.log(labels);
+
   return (
     <div
       className={cn(
@@ -70,19 +53,25 @@ export default function OverviewDetailContainer({
       )}
     >
       <span className="text-xs text-foreground w-full">
-        {/* {activeItem && activeItem.isPositive */}
-        {/* ? "از کدام مورد رضایت داشتید؟" */}
-        {/* : "ازکدام مورد ناراضی بودید؟" */}
-        {/* } */}
         لطفامیزان رضایت خودرا از 1تا10ارزیابی کنید.
       </span>
       <div className="flex flex-row w-full justify-between items-end">
         {scoreRange.map((item, index) => (
-          <div key={index} className="flex flex-col justify-between" onClick={() => {
-            
-          }}>
+          <div
+            key={index}
+            className="flex flex-col justify-between"
+            onClick={() => {
+              form.setFieldValue("score", item.value);
+              setActiveScore(item.value);
+            }}
+          >
             <span>{item.label}</span>
-            <div className="rounded-full w-8 h-8 bg-background flex justify-center items-center cursor-pointer">
+            <div
+              className={cn(
+                "rounded-full w-8 h-8 bg-background flex justify-center items-center cursor-pointer",
+                activeScore === item.value ? item.className : ""
+              )}
+            >
               {item.value}
             </div>
           </div>
@@ -109,6 +98,7 @@ export default function OverviewDetailContainer({
                 )}
                 onClick={() => {
                   activeHandler(item.id);
+                  form.setFieldValue("satisfactionLableId", item.id);
                 }}
               >
                 {item.label}
@@ -117,13 +107,8 @@ export default function OverviewDetailContainer({
         )}
       </div>
       <span className="text-xs text-foreground w-full">
-        {/* {activeItem && activeItem.isPositive */}
-        {/* ? "از کدام مورد رضایت داشتید؟" */}
-        {/* : "ازکدام مورد ناراضی بودید؟" */}
-        {/* } */}
         از کدام مورد ناراضی بودید؟
       </span>
-      {/* )} */}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full">
         {labels.map(
@@ -141,6 +126,7 @@ export default function OverviewDetailContainer({
                 )}
                 onClick={() => {
                   activeHandler(item.id);
+                  form.setFieldValue("satisfactionLableId", item.id);
                 }}
               >
                 {item.label}
@@ -150,7 +136,7 @@ export default function OverviewDetailContainer({
       </div>
 
       <FormMaker
-        form={formik}
+        form={form}
         fields={[
           {
             key: "explanation",

@@ -1,11 +1,33 @@
 import FormMaker from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
 import { REQUIRED_TEXT } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
-export default function OtherContainer({ itemId,onRemoveHandler }: { itemId: any,onRemoveHandler:any; }) {
+import { useParams } from "next/navigation";
+import { editOtherData, sendOtherData } from "@/api/other";
+export default function OtherContainer({
+  itemId,
+  onRemoveHandler,
+  other,
+}: {
+  itemId: any;
+  onRemoveHandler: any;
+  other: any;
+}) {
+  const [otherId, setOtherId] = useState<number>();
+  const { id } = useParams();
+  const queryClient = useQueryClient();
   const formik = useFormik({
-    initialValues: {},
+    initialValues: {
+      id: other?.id,
+      title: other?.title,
+      description: other?.description,
+      otherFile: other?.files,
+      isSubmitted: other.isSubmitted,
+    
+    },
     validationSchema: Yup.object().shape({
       title: Yup.string().required(REQUIRED_TEXT),
     }),
@@ -17,6 +39,46 @@ export default function OtherContainer({ itemId,onRemoveHandler }: { itemId: any
     onRemoveHandler(formId);
   }
 
+  const { mutate: otherSubmitter } = useMutation({
+    mutationFn: (data: any) => {
+      return sendOtherData(data, Number(id));
+    },
+    onSuccess: (data: any) => {
+      setOtherId(data.id);
+      queryClient.invalidateQueries({
+        queryKey: ["submittedOthers"],
+      });
+    },
+  });
+
+  const { mutate: otherEditor } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editOtherData(data, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["submittedOthers"],
+      });
+    },
+  });
+  function submitForm(data: any) {
+    if (data.isSubmitted) {
+      otherEditor({
+        data: {
+          title: data.title,
+          description: data.description,
+          files: data.otherFile,
+        },
+        id: data.id,
+      });
+    } else {
+      otherSubmitter({
+        title: data.title,
+        description: data.description,
+        files: data.otherFile,
+      });
+    }
+  }
   return (
     <div className="bg-card flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <h2>سایر </h2>
@@ -38,6 +100,21 @@ export default function OtherContainer({ itemId,onRemoveHandler }: { itemId: any
             type: "text",
             floating: true,
             className: "w-full md:w-2/3",
+          },
+          {
+            key: "otherFile",
+            component: "file",
+            placeholder: "",
+            type: "file",
+            floating: true,
+            icon: "/icons/vector.png",
+            className: "w-full",
+          },
+          {
+            component: "file-preview",
+            key: "filePreview",
+            dependantKey: "otherFile",
+            className: "w-full",
           },
           {
             component: "non-field",
@@ -78,7 +155,12 @@ export default function OtherContainer({ itemId,onRemoveHandler }: { itemId: any
             key: "actions",
             children: (
               <div className="flex flex-row items-center gap-2 justify-end w-full">
-                <Button variant="info" onClick={() => {}}>
+                <Button
+                  variant="info"
+                  onClick={() => {
+                    submitForm(formik.values);
+                  }}
+                >
                   ثبت
                 </Button>
                 <Button

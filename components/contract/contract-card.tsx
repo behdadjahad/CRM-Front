@@ -5,10 +5,10 @@ import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
-import { Button } from "../ui/button";
+
 import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {

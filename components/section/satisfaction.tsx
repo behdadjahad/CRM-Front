@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
-import OverviewDetailContainer, {
-  OverviewDetailInterface,
-} from "../satisfaction/overview-detail-container";
+import OverviewDetailContainer from "../satisfaction/overview-detail-container";
 import SocialMedia from "../satisfaction/social-media";
 import RatingChart from "../shared/rating-chart";
 import Image from "next/image";
@@ -15,21 +13,18 @@ import {
   submitSatisfaction,
 } from "@/api/satisfaction";
 import { Button } from "../ui/button";
+import { useFormik } from "formik";
 export default function Satisfaction({
   onCloseHandler,
-  itemId
+  itemId,
 }: {
-    onCloseHandler: () => any;
-    itemId: string;
-  
+  onCloseHandler: () => any;
+  itemId: string;
 }) {
   const [callDevices, setCallDevices] = useState<any[]>([]);
   const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
-  const [activeCallDevice, setActiveCallDevice] = useState<number>();
-  const [activeSatisfactionLabels, setActiveSatisfactionLabels] = useState<
-    any[]
-  >([]);
-  const { score, totalVotes, overviewProps, overviewDetail } = getData();
+
+  const { score, totalVotes, overviewProps, scoreRange } = getData();
   const { data: callDeviceData } = useQuery({
     queryKey: ["callDeviceData"],
     queryFn: async () => await getCallDevices(),
@@ -40,17 +35,17 @@ export default function Satisfaction({
   });
   useEffect(() => {
     if (callDeviceData) {
-      console.log(callDeviceData);
+      console.log("callDeviceData", callDeviceData);
       const callDeviceOptions = callDeviceData.data.map((item: any) => ({
         id: item.id,
         label: item.name,
+        image:item.iconFile
       }));
       setCallDevices(callDeviceOptions);
     }
   }, [callDeviceData]);
   useEffect(() => {
     if (SatisfactionLabelsData) {
-      console.log(SatisfactionLabelsData);
       const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
         (item: any) => ({
           id: item.id,
@@ -70,14 +65,23 @@ export default function Satisfaction({
   });
   function submit() {
     const data = {
-      // satisfactionReasonId: activeSatisfactionLabels,
-      satisfactionReasonId: 301,
-      callDeviceId: activeCallDevice,
-      satisfactionScore:5
+      satisfactionReasonId: formik.values.satisfactionLableId,
+      callDeviceId: formik.values.callDeviceId,
+      satisfactionScore: formik.values.score,
+      description: formik.values.explanation,
     };
-  
-    satisfactionSubmitHandler({ data, id:Number(itemId)  });
+
+    satisfactionSubmitHandler({ data, id: Number(itemId) });
   }
+  const formik = useFormik({
+    initialValues: {
+      explanation: "",
+      score: 0,
+      satisfactionLableId: undefined,
+      callDeviceId: undefined,
+    },
+    onSubmit: async () => {},
+  });
   return (
     <div>
       <div className="w-full flex gap-6">
@@ -91,20 +95,16 @@ export default function Satisfaction({
         <Overview {...overviewProps} />
       </div>
       <SocialMedia
-        {...overviewProps}
+        // {...overviewProps}
         className="col-span-4 lg:col-span-3 row-span-1"
         list={callDevices}
-        onSendHandler={(item) => {
-          setActiveCallDevice(item);
-        }}
+        form={formik}
       />
       <OverviewDetailContainer
-        {...overviewDetail}
+        scoreRange={scoreRange}
         className="shadow-[0px_12px_24px_-4px_#919EAB1F]"
         labels={satisfactionLabels}
-        onSelectedHandler={(activeItem) => {
-          setActiveSatisfactionLabels(activeItem);
-        }}
+        form={formik}
       />
       <div className="flex flex-row gap-4 items-center justify-end">
         <Button
@@ -153,57 +153,63 @@ function getData() {
     ],
   };
 
-  const overviewDetail: OverviewDetailInterface = {
-   
-
-    scoreRange: [
-      {
-        label: "ضعیف",
-        value: 1,
-      },
-      {
-        label: "",
-        value: 2,
-      },
-      {
-        label: "",
-        value: 3,
-      },
-      {
-        label: "متوسط",
-        value: 4,
-      },
-      {
-        label: "",
-        value: 5,
-      },
-      {
-        label: "",
-        value: 6,
-      },
-      {
-        label: "خوب",
-        value: 7,
-      },
-      {
-        label: "",
-        value: 8,
-      },
-      {
-        label: "عالی",
-        value: 9,
-      },
-      {
-        label: "",
-        value: 10,
-      },
-    ],
-  };
+  const scoreRange = [
+    {
+      label: "ضعیف",
+      value: 1,
+      className: "text-negative border border-negative",
+    },
+    {
+      label: "",
+      value: 2,
+      className: "text-negative border border-negative",
+    },
+    {
+      label: "",
+      value: 3,
+      className: "text-negative border border-negative",
+    },
+    {
+      label: "متوسط",
+      value: 4,
+      className: "",
+    },
+    {
+      label: "",
+      value: 5,
+      className: "",
+    },
+    {
+      label: "",
+      value: 6,
+      className: "",
+    },
+    {
+      label: "",
+      value: 7,
+      className: "",
+    },
+    {
+      label: "خوب",
+      value: 8,
+      className: "",
+    },
+    {
+      label: "عالی",
+      value: 9,
+      className: "",
+    },
+    {
+      label: "",
+      value: 10,
+      className: "",
+    },
+  ];
 
   return {
     score: 30,
     totalVotes: 10,
     overviewProps,
-    overviewDetail,
+    scoreRange,
   };
 }

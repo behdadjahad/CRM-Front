@@ -157,7 +157,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       </div>
 
       <div className="mt-4 h-full">
-        {activeTab === "همه مشتری ها" && <CustomerTabContent />}
+        {activeTab === "" && <CustomerTabContent />}
         
       </div>
     </div>

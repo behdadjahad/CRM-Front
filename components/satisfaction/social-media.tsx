@@ -1,18 +1,25 @@
 import { cn } from "@/lib/utils";
 import React from "react";
-
-
-
+import Image from "next/image";
+import { config } from "@/config/config";
 export interface SocialMediaInterface {
   className?: string;
   list: {
     id: number;
     label: string;
+    image: string;
   }[];
-  onSendHandler: (arg:any) => void;
+  // onSendHandler: (arg: any) => void;
+  form: any;
 }
 
-export default function SocialMedia({ className, list ,onSendHandler}: SocialMediaInterface) {
+export default function SocialMedia({
+  className,
+  list,
+  //onSendHandler,
+  form,
+}: SocialMediaInterface) {
+  const staticUrl = `${config.ServerAddress}/public/`;
   return (
     <div
       className={cn(
@@ -27,18 +34,19 @@ export default function SocialMedia({ className, list ,onSendHandler}: SocialMed
           <div
             key={item.id}
             onClick={() => {
-              onSendHandler(item.id)
+              // onSendHandler(item.id)
+              form.setFieldValue("callDeviceId", item.id);
             }}
           >
-            {item.label}
+            {/* {item.label} */}
             {/* <NavLink key={item.name} link={item.link}> */}
-            {/* <Image
-              src={item.imageSrc}
-              alt={item.name}
+           { item?.image && <Image
+              src={staticUrl + item?.image}
+              alt={item?.label}
               width={1028}
               height={1028}
               className="w-6 h-6 p-0.5 object-contain"
-            /> */}
+            />}
             {/* </NavLink>  */}
           </div>
         ))}
