@@ -21,6 +21,7 @@ export default function CustomerTabContent() {
   const customerList = useSelector((state: any) => state.customer.items);
   const pages = useSelector((state: any) => state.customer.totalPages);
   const filters = useSelector((state: any) => state.customer.filters);
+  console.log(customerList)
   useEffect(() => {
     dispatch(
       fetchCustomers({
@@ -120,7 +121,7 @@ export default function CustomerTabContent() {
       />
       <CustomerContainer
         className="flex items-center justify-center xl:hidden"
-        customers={customerList}
+        customers={customerList.map((item:any)=>(item.Info))}
         labels={customerCardLabels}
       />
       <div className="w-full mt-4">

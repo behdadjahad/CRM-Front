@@ -4,6 +4,7 @@ import { useState } from "react";
 import CustomerDetailTable from "./customer-detail-table";
 import ReactPaginate from "react-paginate";
 import CustomerDetailContractContainer from "./customer-detail-contract-container";
+import CustomerDetailReport from "./customer-detail-report";
 // import dynamic from "next/dynamic"; // Only if you're using Next.js
 
 // const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
@@ -57,7 +58,54 @@ export default function CustomerDetailContent({
       رضایتمندی: 0.8,
     },
   ];
+  const servicesReportData = [
+    {
+      label: "هتل",
+      value: 48,
+      valueInPercent: 90,
+      chartFillColor: "#FEC53D",
+      chartPathColor: "#FFFCF6",
 
+      icon: "/icons/hotel-report.png",
+      iconClassName: "w-6 h-6",
+    },
+    {
+      label: "ویزا",
+      value: 13,
+      valueInPercent: 90,
+      chartFillColor: "#4AD991",
+      chartPathColor: "#DFF7EB",
+      icon: "/icons/visa-report.png",
+      iconClassName: "w-4 h-6",
+    },
+    {
+      label: "پرواز",
+      value: 21,
+      valueInPercent: 10,
+      chartFillColor: "#FF9771",
+      chartPathColor: "#FFF0EB",
+      icon: "/icons/flight-report.png",
+      iconClassName: "w-8 h-6",
+    },
+    {
+      label: "تورداخلی",
+      value: 48,
+      valueInPercent: 85,
+      chartFillColor: "#6BA9EF",
+      chartPathColor: "#E8F3FF",
+      icon: "/icons/suit-case-report.png",
+      iconClassName: "w-4 h-6",
+    },
+    {
+      label: "سایر",
+      value: 13,
+      valueInPercent: 27,
+      chartFillColor: "#8280FF",
+      chartPathColor: "#D0CFFF",
+      icon: "/icons/other-report.png",
+      iconClassName: "w-6 h-2",
+    },
+  ];
   //   const handlePageChange = (selectedItem: any) => {
   //     // const selectedPage = selectedItem.selected + 1;
   //     console.log(selectedItem);
@@ -127,6 +175,9 @@ export default function CustomerDetailContent({
             </div>
           </div>
         </div>
+      )}
+      {activeTab === "آماروگزارش ها" && (
+        <CustomerDetailReport serviceData={servicesReportData} />
       )}
     </>
   );
