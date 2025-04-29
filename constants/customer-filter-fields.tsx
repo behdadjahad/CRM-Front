@@ -1,18 +1,55 @@
-export const contractStatusOptions = [
+export const contractStateOptions = [
   {
-    label: "Open",
-    value: "Open",
+    label: "ایجاد شده",
+    value: "INITIAL",
   },
   {
-    label: "Sign",
-    value: "Sign",
+    label: "در حال انجام",
+    value: "INPROGRESS",
   },
   {
-    label: "Payed",
-    value: "Payed",
+    label: "انجام شده",
+    value: "DONE",
+  },
+];
+export const followUpOptions = [
+  {
+    label: "انجام شده",
+    value: "Done",
   },
   {
-    label: "Finance",
-    value: "Finance",
+    label: "ثابت نگه داشته شده",
+    value: "Freeze",
+  },
+  {
+    label: "درحال انتظار",
+    value: "Pending",
+  },
+  {
+    label: "متوقف شده",
+    value: "Postponed",
+  },
+  {
+    label: "لغو شده",
+    value: "Canceled",
+  },
+];
+
+export const serviceOptions = [
+  {
+    value: "Visa",
+    label: "ویزا",
+  },
+  {
+    value: "Ticket",
+    label: "بلیط",
+  },
+  {
+    value: "Other",
+    label: "سایر",
+  },
+  {
+    value: "Accommodation",
+    label: "هتل",
   },
 ];

@@ -48,7 +48,11 @@ export default function FilterContainer({
         state={openFilter}
         filterItems={filterItems}
         rangeItems={rangeItems}
-        onFilterHandler={onFilterHandler}
+        onFilterHandler={() => {
+          onFilterHandler() 
+          setOpenFilter(false)
+        }}
+     
       />
     </div>
   );

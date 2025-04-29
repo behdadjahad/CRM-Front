@@ -84,7 +84,7 @@ export default function CustomerTabContent() {
         page: 1,
         limit: limitForCustomers,
         filters: {
-          clientKeyWord: searchValue,
+          searchText: searchValue,
         },
       })
     );

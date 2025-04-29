@@ -118,7 +118,7 @@ export default function CustomerDetailReport({
       <div className="grid grid-cols-4 gap-4">
         <div className="col-span-1 flex flex-col gap-4 justify-between">
           {CustomerReportInfoData.map((item) => (
-            <CustomerReportInfoCard {...item} />
+            <CustomerReportInfoCard key={item.label} {...item} />
           ))}
         </div>
 
@@ -127,7 +127,7 @@ export default function CustomerDetailReport({
             <div className="flex flex-row gap-4 w-full">
               {" "}
               {CustomerReportExpenseData.map((item) => (
-                <CustomerReportInfoCard {...item} />
+                <CustomerReportInfoCard key={item.label} {...item} />
               ))}
             </div>
             <div className="rounded-lg p-6 bg-card h-full flex flex-col justify-between">

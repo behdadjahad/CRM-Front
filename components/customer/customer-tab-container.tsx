@@ -5,7 +5,11 @@ import CustomerTabContent from "./customer-tab-content";
 import FilterContainer from "../section/filter-container";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
-import { contractStatusOptions } from "@/constants/customer-filter-fields";
+import {
+  contractStateOptions,
+  followUpOptions,
+  serviceOptions,
+} from "@/constants/customer-filter-fields";
 import { limitForCustomers } from "@/lib/utils";
 import { fetchCustomers } from "@/store/customer-slice";
 import { useDispatch } from "react-redux";
@@ -13,50 +17,87 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
   /**/
+  const priceOptions = Array.from({ length: 11 }, (_, i) => {
+    const value = (i * 10000000).toString(); // string value
+    return {
+      label: `${i * 10} میلیون تومان`, // display label
+      value, // string value
+    };
+  });
   const formik = useFormik({
     initialValues: {
-      contractStatus: "",
       name: "",
-      gender: "",
-      birthdate: "",
-      socialNumber: "",
+      family: "",
       career: "",
-      location: "",
-      contractNumber: "",
-      contractDate: "",
-      startDate: "",
-      endDate: "",
-      sellRange: [0, 10000],
-      buyRange: [0, 10000],
+      scoreRange: [1, 10],
+      minSellPrice: 0,
+      maxSellPrice:0,
+      services: [],
+      contractState: [],
+      followupStatus: [],
     },
     onSubmit: async () => {},
   });
 
   const filterItems = [
-    // {
-    //   title: "شغل مشتری",
-    //   component: (
-    //     <FormMaker
-    //       form={formik}
-    //       fields={[
+    {
+      title: "اطلاعات مشتری",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "name",
+              component: "input",
+              placeholder: "نام",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "family",
+              component: "input",
+              placeholder: "نام خانوادگی",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
 
-    //       ]}
-    //       className="flex flex-row w-full"
-    //     />
-    //   ),
-    // },
-    // {
-    //   title: "امتیاز رضایتمندی",
-    //   component: (
-    //     <FormMaker
-    //       form={formik}
-    //       fields={[
-
-    //       ]}
-    //       className="flex flex-row w-full"
-    //     />
-    //   ),
-    // },
+            {
+              key: "career",
+              component: "input",
+              placeholder: "شغل",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
+    {
+      title: "سرویس ها",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "services",
+              component: "checkbox",
+              placeholder: "سرویس ها",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: serviceOptions,
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
     {
       title: "وضعیت پیگیری",
       component: (
@@ -64,12 +105,31 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           form={formik}
           fields={[
             {
-              key: "contractStatus",
+              key: "followupStatus",
               component: "checkbox",
               placeholder: "وضعیت پیگیری",
               type: "text",
               className: "w-full items-start p-0",
-              options: contractStatusOptions,
+              options: followUpOptions,
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
+    {
+      title: "وضعیت قرارداد",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "contractState",
+              component: "checkbox",
+              placeholder: "وضعیت قرارداد",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: contractStateOptions,
             },
           ]}
           className="flex flex-row w-full gap-y-2"
@@ -105,11 +165,72 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         />
       ),
     },
+    {
+      title: "محدوده امتیاز",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "scoreRange",
+              component: "slider",
+              placeholder: "",
+              type: "text",
+              className: "w-full items-start p-0",
+              range: { max: 10, min: 1, step: 1 },
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+    {
+      title: "محدوده مبلغ درآمد",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "minSellPrice",
+              component: "Select",
+              placeholder: "واردکردن مبلغ",
+              type: "text",
+              floating: true,
+              className: "w-full  px-0",
+              options:priceOptions
+            },
+            {
+              key: "maxSellPrice",
+              component: "Select",
+              placeholder: "حداکثرقیمت",
+              type: "text",
+              floating: true,
+              className: "w-full items-start p-0",
+              options:priceOptions
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+   
   ];
   function submitFilter() {
     const filters = {
-      // contractStatus: formik.values.contractStatus,
-      contractStatus: "Sign",
+      customerName: formik.values.name,
+      customerLastName: formik.values.family,
+      customerJob: formik.values.career,
+      // satisfactionScore: formik.values.scoreRange,
+      satisfactionScore:4,
+      contractState: formik.values.contractState,
+      followUpStatus: formik.values.followupStatus,
+      // followUpDateTimeRangeStart: "2000-01-01T00:00:00Z",
+      // followUpDateTimeRangeEnd: "2030-01-01T00:00:00Z",
+      avServices: formik.values.services,
+      // dateTimeRangeStart: "2000-01-01T00:00:00Z",
+      // dateTimeRangeEnd: "2030-01-01T00:00:00Z",
+      minPrice: Number(formik.values.minSellPrice),
+      maxPrice:Number( formik.values.maxSellPrice),
     };
     dispatch(
       fetchCustomers({
@@ -118,13 +239,14 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: filters,
       })
     );
+    
   }
   const customerSortlist = [
     {
-      label: "پرفروش ترین ها",
-      value: "MostSold",
+      label: "نام مشتری(الف-ی)",
+      value: "",
     },
-    { label: "ارزان ترین", value: "MostCheap" },
+    { label: "نام مشتری(ی-الف)", value: "" },
     { label: "گران ترین", value: "MostExpensive" },
 
     { label: "جدید ترین ها", value: "Newest" },
@@ -134,7 +256,10 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
     <div className="bg-card rounded-lg p-6">
       <div>
         <FilterContainer
-          onFilterHandler={submitFilter}
+          onFilterHandler={() => {
+            submitFilter()
+            formik.resetForm()
+           }}
           rangeItems={rangeItems}
           filterItems={filterItems}
           sortList={customerSortlist}
@@ -158,7 +283,6 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
 
       <div className="mt-4 h-full">
         {activeTab === "همه مشتری ها" && <CustomerTabContent />}
-        
       </div>
     </div>
   );

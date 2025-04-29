@@ -12,14 +12,16 @@ import React from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+
 export default function CustomerTableContainer({
   tableHeaderLabels,
   customers,
-  className
+  className,
 }: {
   tableHeaderLabels: string[];
-    customers: any[];
-    className: string;
+  customers: any[];
+  className: string;
 }) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
@@ -28,9 +30,15 @@ export default function CustomerTableContainer({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
+  console.log(customers);
   return (
-    <div className={cn(" flex flex-col items-center justify-between h-full",className)}>
-      <Table >
+    <div
+      className={cn(
+        " flex flex-col items-center justify-between h-full",
+        className
+      )}
+    >
+      <Table>
         <TableHeader>
           <TableRow className="bg-white sticky top-0 z-10  border-b border-gray-200">
             <TableHead className="text-center bg-white">
@@ -55,33 +63,46 @@ export default function CustomerTableContainer({
         <TableBody>
           {customers?.map((customer: any, index: number) => (
             <Fragment key={index}>
-              <TableRow className="border-b border-gray-200">
-                <TableCell className="flex items-center justify-center">
-                  {" "}
-                  <Checkbox
-                    onCheckedChange={() => {}}
-                    //checked={}
-                  />
-                </TableCell>
-
-                {tableHeaderLabels.map((label, idx) => (
-                  <TableCell key={idx} className="text-center text-xs">
-                    {customer.Info[label]}
+              <Link
+                href={`/customer/${customer.id}`}
+                style={{ display: "contents" }} // ✅ Preserves layout
+              >
+                <TableRow className="border-b border-gray-200">
+                  {/* <Link
+                  href={`/customer/${customer.id}`}
+                  className="absolute inset-0 z-10"
+                ></Link> */}
+                  <TableCell className="flex items-center justify-center">
+                    {" "}
+                    <Checkbox
+                      onCheckedChange={() => {}}
+                      //checked={}
+                    />
                   </TableCell>
-                ))}
-                <TableCell className="text-center">
-                  <Button
-                    onClick={() => toggleRow(index)}
-                    className="border-none p-0 text-[##212B36]"
-                  >
-                    {expandedRows.includes(index) ? (
-                      <FaChevronUp />
-                    ) : (
-                      <FaChevronDown />
-                    )}{" "}
-                  </Button>
-                </TableCell>
-              </TableRow>
+
+                  {tableHeaderLabels.map((label, idx) => (
+                    <TableCell key={idx} className="text-center text-xs">
+                      {customer.Info[label]}
+                    </TableCell>
+                  ))}
+                  <TableCell className="text-center">
+                    <Button
+                      onClick={(e) => {
+                        toggleRow(index);
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      className="border-none p-0 text-[##212B36]"
+                    >
+                      {expandedRows.includes(index) ? (
+                        <FaChevronUp />
+                      ) : (
+                        <FaChevronDown />
+                      )}{" "}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </Link>
               {expandedRows.includes(index) && (
                 <TableRow className="bg-gray-100">
                   <TableCell

@@ -15,6 +15,8 @@ export interface LeftDrawerInterface {
   filterItems: any[];
   rangeItems: any[];
   onFilterHandler: any;
+
+  
 }
 
 export default function FilterDrawer({
@@ -22,7 +24,9 @@ export default function FilterDrawer({
   setState,
   filterItems,
   rangeItems,
-  onFilterHandler
+  onFilterHandler,
+
+  
 }: LeftDrawerInterface) {
   return (
     <div

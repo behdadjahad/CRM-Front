@@ -1,7 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
 import { convertDate } from "@/lib/date";
 import { dateType, formatPrice, limitForCustomers } from "@/lib/utils";
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export interface CustomerState {
   items: any[];
   currentPage: number;
@@ -20,14 +20,16 @@ const customerSlice = createSlice({
   name: "customer",
   initialState: initialState,
   reducers: {
-    setData(state, action: PayloadAction<any>) {
-      state.filters = action.payload;
-      state.currentPage = 1;
-    },
+  //  setData(state, action: PayloadAction<any>) {
+  //     state.filters = action.payload;
+  //     console.log(action.payload);
+  //     state.currentPage = 1;
+  //   },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
       state.items = action.payload.data.map((item: any) => ({
+        id: item?.person?.id,
         Info: {
           "نام ونام خانوادگی": item?.person?.fullName,
           "کدملی": item?.person?.idNumber,
@@ -77,5 +79,5 @@ export const fetchCustomers = createAsyncThunk<any, any>(
     }
   }
 );
-export const { setData } = customerSlice.actions;
+// export const { setData } = customerSlice.actions;
 export default customerSlice.reducer;

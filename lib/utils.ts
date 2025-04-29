@@ -14,3 +14,4 @@ export function formatPrice(priceString: any) {
 export const limitForCustomers = 6;
 export const dateType = "Solar";
 export const customerSatisfactionTarget = 10;
+export const limitForCustomerDetailContracts = 6;

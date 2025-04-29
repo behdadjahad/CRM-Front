@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomerDetailTable from "./customer-detail-table";
 import ReactPaginate from "react-paginate";
 import CustomerDetailContractContainer from "./customer-detail-contract-container";
 import CustomerDetailReport from "./customer-detail-report";
 // import dynamic from "next/dynamic"; // Only if you're using Next.js
-
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "next/navigation";
+import { fetchCustomerDetailContract } from "@/store/customer-detail-contract-slice";
+import { limitForCustomerDetailContracts } from "@/lib/utils";
 // const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 export default function CustomerDetailContent({
   tabList,
 }: {
   tabList: string[];
 }) {
+  const dispatch = useDispatch<any>();
+  const { id } = useParams();
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const customerContractHeaderLabels = [
     "شماره قرارداد",
@@ -42,22 +47,22 @@ export default function CustomerDetailContent({
     { label: "تعداد مشتری", labelIsHidden: false },
     { label: "رضایتمندی", labelIsHidden: false },
   ];
-  const customerContracts = [
-    {
-      "شماره قرارداد": "9845320169",
-      "تاریخ قرارداد": "1404/1/16",
-      "میزان درآمد": "15000000000",
-      "سود و زیان": "9000000",
-      مقصد: "ارمنستان",
-      "موضوع قرارداد": "ویزا",
-      اپراتور: "علی بازرگان",
-      وضعیت: "فعال",
-      "تاریخ شروع": "1403/02/06",
-      "تاریخ پایان": "1403/01/16",
-      "تعداد مشتری": "147",
-      رضایتمندی: 0.8,
-    },
-  ];
+  // const customerContracts = [
+  //   {
+  //     "شماره قرارداد": "9845320169",
+  //     "تاریخ قرارداد": "1404/1/16",
+  //     "میزان درآمد": "15000000000",
+  //     "سود و زیان": "9000000",
+  //     مقصد: "ارمنستان",
+  //     "موضوع قرارداد": "ویزا",
+  //     اپراتور: "علی بازرگان",
+  //     وضعیت: "فعال",
+  //     "تاریخ شروع": "1403/02/06",
+  //     "تاریخ پایان": "1403/01/16",
+  //     "تعداد مشتری": "147",
+  //     رضایتمندی: 0.8,
+  //   },
+  // ];
   const servicesReportData = [
     {
       label: "هتل",
@@ -106,17 +111,32 @@ export default function CustomerDetailContent({
       iconClassName: "w-6 h-2",
     },
   ];
-  //   const handlePageChange = (selectedItem: any) => {
-  //     // const selectedPage = selectedItem.selected + 1;
-  //     console.log(selectedItem);
-  //     // dispatch(
-  //     //   fetchCustomers({
-  //     //     page: selectedPage,
-  //     //     limit: limitForCustomers,
-  //     //     filters: filters,
-  //     //   })
-  //     // );
-  //   };
+    const handlePageChange = (selectedItem: any) => {
+      const selectedPage = selectedItem.selected + 1;
+      console.log(selectedPage);
+      dispatch(
+        fetchCustomerDetailContract({
+          page: selectedItem,
+          limit: limitForCustomerDetailContracts,
+          id: id,
+          //filters: {},
+        })
+      );
+    };
+  useEffect(() => {
+    dispatch(
+      fetchCustomerDetailContract({
+        page: 1,
+        limit: limitForCustomerDetailContracts,
+        id: id,
+        //filters: {},
+      })
+    );
+  }, [dispatch]);
+  const customerContracts = useSelector(
+    (state: any) => state.customerDetailContract.items
+  );
+  const pages = useSelector((state: any) => state.customerDetailContract.totalPages);
   return (
     <>
       <div className="bg-card w-full mt-0 flex gap-4">
@@ -152,15 +172,16 @@ export default function CustomerDetailContent({
               list={customerContracts}
               labels={customerContractCardLabels}
             />
-            <div className="w-full mt-4">
+            {pages > 1 &&
+              <div className="w-full mt-4">
               <ReactPaginate
                 breakLabel="..."
                 nextLabel="صفحه بعد"
                 previousLabel="صفحه قبل"
-                onPageChange={() => {}}
+                onPageChange={handlePageChange}
                 pageRangeDisplayed={2}
                 marginPagesDisplayed={3}
-                pageCount={10}
+                pageCount={pages}
                 renderOnZeroPageCount={null}
                 containerClassName="w-full relative flex justify-center items-center ltr"
                 pageClassName="mx-3 rounded-md"
@@ -172,7 +193,8 @@ export default function CustomerDetailContent({
                 nextLinkClassName="rounded-md text-sm"
                 disabledClassName="opacity-50 cursor-not-allowed"
               />
-            </div>
+            </div>}
+        
           </div>
         </div>
       )}
