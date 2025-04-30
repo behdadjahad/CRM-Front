@@ -30,7 +30,7 @@ export default function CustomerTableContainer({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
-  console.log(customers);
+
   return (
     <div
       className={cn(

@@ -3,14 +3,14 @@ import FormMaker from "../shared/form-maker";
 // import CustomerExpensesOverview from "./customer-expenses-overview";
 //import CustomerTableContainer from "./customer-table-container";
 import ReactPaginate from "react-paginate";
-import { useEffect } from "react";
+
 import { fetchCustomers } from "@/store/customer-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { limitForCustomers } from "@/lib/utils";
 import CustomerTableContainer from "./customer-table-container";
 import CustomerContainer from "./customer-container";
 
-export default function CustomerTabContent() {
+export default function CustomerTabContent({customerList}:{customerList:any[]}) {
   const dispatch = useDispatch<any>();
   const customerSearchFormik = useFormik({
     initialValues: {
@@ -18,19 +18,11 @@ export default function CustomerTabContent() {
     },
     onSubmit: async () => {},
   });
-  const customerList = useSelector((state: any) => state.customer.items);
+
   const pages = useSelector((state: any) => state.customer.totalPages);
   const filters = useSelector((state: any) => state.customer.filters);
-  console.log(customerList)
-  useEffect(() => {
-    dispatch(
-      fetchCustomers({
-        page: 1,
-        limit: limitForCustomers,
-        filters: {},
-      })
-    );
-  }, [dispatch]);
+
+
   // const expenses = [
   //   {
   //     label: "هزینه",

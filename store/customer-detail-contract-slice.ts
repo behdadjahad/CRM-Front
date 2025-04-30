@@ -34,7 +34,7 @@ const customerDetailContractSlice = createSlice({
         "تاریخ شروع": "",
         "تاریخ پایان": "",
         "تعداد مشتری": "",
-        رضایتمندی: item?.contractSatisfaction[0].satisfactionScore / 10,
+        رضایتمندی: item?.contractSatisfaction[0]?.satisfactionScore / 10,
       }));
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / limitForCustomerDetailContracts);
@@ -59,7 +59,7 @@ export const fetchCustomerDetailContract = createAsyncThunk<any, any>(
           // body: filters,
         }
       );
-      console.log(result);
+   
       return result;
     } catch {
       return {};

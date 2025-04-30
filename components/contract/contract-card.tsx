@@ -4,12 +4,15 @@ import React, { useState } from "react";
 import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import dynamic from "next/dynamic";
+
 
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 
+//import Satisfaction from "../section/satisfaction";
+import dynamic from "next/dynamic";
 import Satisfaction from "../section/satisfaction";
+// import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
   id: string;
@@ -56,12 +59,12 @@ export default function ContractCard({
     {
       icon: "/icons/calendar-mute.png",
       label: "تاریخ قرارداد",
-      value: contract.date,
+      value: contract?.date ?? "",
     },
     {
       icon: "/icons/user-mute.png",
       label: "ثبت کننده",
-      value: contract.submitter,
+      value: contract?.submitter ?? "",
     },
     {
       icon: "/icons/user-mute.png",
@@ -71,12 +74,12 @@ export default function ContractCard({
     {
       icon: "/icons/map.png",
       label: "مقصد",
-      value: contract.destination,
+      value: contract?.destination ?? "",
     },
     {
       icon: "/icons/dollar.png",
       label: "واحد ارز",
-      value: contract.unit,
+      value: contract?.unit ?? "",
     },
   ];
 
@@ -93,58 +96,58 @@ export default function ContractCard({
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground">
         <div className="flex items-center gap-2">
-          <Image src={header.icon} alt={header.title} width={20} height={24} />
+          <Image src={header?.icon} alt={header?.title} width={20} height={24} />
 
-          <span className="text-lg font-bold">{header.title}</span>
+          <span className="text-lg font-bold">{header?.title}</span>
         </div>
 
         <div className="flex flex-col text-xs leading-5 gap-1">
-          <span>تاریخ ثبت: {header.submitDate}</span>
+          <span>تاریخ ثبت: {header?.submitDate}</span>
 
-          <span>شماره قرارداد: {header.contractNumber}</span>
+          <span>شماره قرارداد: {header?.contractNumber}</span>
         </div>
       </div>
 
       <div className="p-3.5 flex flex-col gap-4">
         <div className="flex items-center gap-4">
           <Image
-            src={user.image}
-            alt={user.name}
+            src={user?.image}
+            alt={user?.name}
             width={40}
             height={40}
             className="w-10 h-10 rounded-full"
           />
 
-          <span className="text-sm">{user.name}</span>
+          <span className="text-sm">{user?.name}</span>
         </div>
 
         <div className="flex items-start justify-between">
           <div className="flex flex-col gap-1">
-            {contractData.map((item) => (
+            {contractData && contractData?.map((item) => (
               <div
-                key={item.label + item.value}
+                key={item?.label + item?.value}
                 className="flex text-xs w-full items-center gap-1"
               >
                 <Image
-                  src={item.icon}
-                  alt={item.label}
+                  src={item?.icon ?? ""}
+                  alt={item?.label ?? ""}
                   width={20}
                   height={20}
                   className="w-5 h-5"
                 />
 
-                <span className="text-sm col-span-4 w-24">{item.label}</span>
+                <span className="text-sm col-span-4 w-24">{item?.label}</span>
 
-                <span className="col-span-5 font-bold">{item.value}</span>
+                <span className="col-span-5 font-bold">{item?.value}</span>
               </div>
             ))}
           </div>
 
           <div className="w-28 flex flex-col items-center">
-            <RatingChart value={score.final} color="#FFA500" />
+            <RatingChart value={score?.final} color="#FFA500" />
 
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
-              از مجموع {score.totalVotes} امتیاز
+              از مجموع {score?.totalVotes} امتیاز
               {/* <Link href={`/sale/satisfaction/${id}`}> */}
               <div
                 onClick={() => {
@@ -188,10 +191,10 @@ export default function ContractCard({
         </div>
 
         <div className="flex justify-start gap-2">
-          {services.map((item) => (
+          {services && services.length >  0 && services.map((item) => (
             <ServiceCard
               {...item}
-              key={item.title + header.title + user.name}
+              key={item?.title + header?.title + user?.name}
               className="min-w-20 max-w-20 h-auto text-[8px] text-right items-start "
               imageClassName="min-w-0 h-16"
             />
@@ -200,9 +203,9 @@ export default function ContractCard({
       </div>
 
       <div className="py-3.5 px-6 text-xs flex items-center justify-between gap-4 border-t text-muted-active">
-        <span>درآمد: {footer.income}</span>
-        <span>هزینه: {footer.cost}</span>
-        <span>سود/زیان: {footer.overall}</span>
+        <span>درآمد: {footer?.income}</span>
+        <span>هزینه: {footer?.cost}</span>
+        <span>سود/زیان: {footer?.overall}</span>
       </div>
     </div>
   );

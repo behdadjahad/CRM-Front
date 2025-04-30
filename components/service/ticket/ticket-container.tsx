@@ -33,7 +33,7 @@ export default function TicketContainer() {
     });
     useEffect(() => {
       if (transportationData) {
-        console.log(36,transportationData)
+      
       }
     }, [transportationData]);
   return (

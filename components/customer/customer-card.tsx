@@ -11,7 +11,7 @@ export default function CustomerCard({
   customer: any;
   labels: any;
 }) {
-  console.log(customer);
+  
   return (
     <div className={cn("w-full p-4 rounded-md bg-card custom-shadow", className)}>
       <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 p-4 gap-6">

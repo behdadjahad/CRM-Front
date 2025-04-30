@@ -28,7 +28,7 @@ const customerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
-      state.items = action.payload.data.map((item: any) => ({
+      state.items = action?.payload?.data?.map((item: any) => ({
         id: item?.person?.id,
         Info: {
           "نام ونام خانوادگی": item?.person?.fullName,
@@ -56,7 +56,7 @@ const customerSlice = createSlice({
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / limitForCustomers);
         const filters = action.meta.arg.filters;
-        console.log(filters);
+ 
       state.filters = filters;
     });
   },
@@ -72,7 +72,7 @@ export const fetchCustomers = createAsyncThunk<any, any>(
           body: filters,
         }
       );
-      console.log(result);
+
       return result;
     } catch {
       return {};

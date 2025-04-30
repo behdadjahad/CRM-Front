@@ -1,6 +1,11 @@
 "use client";
 import { getUsers } from "@/api/auth";
-import { getContracts, getContractTypes } from "@/api/contract";
+import { getContracts,} from "@/api/contract";
+
+
+
+
+import { getContractTypes } from "@/api/contract";
 import ContractContainer, {
   ContractContainerInterface,
 } from "@/components/contract/contract-container";
@@ -8,23 +13,85 @@ import ContractCreation from "@/components/sale/contract-creation";
 import ContractOverview, {
   ContractOverviewInterface,
 } from "@/components/sale/contract-overview";
-import Filter from "@/components/sale/filter";
+
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
+import { convertDate } from "@/lib/date";
 import { services } from "@/constants/services";
 
-import { convertDate } from "@/lib/date";
+
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+
 
 export default function Sale() {
   const { requestCount, contractOverviewProps, contractList, contractTypes } =
     getData();
+  // const [contractItems, setContractItems] = useState<any[]>([]);
+  // const { data: contractInformation } = useQuery({
+  //   queryKey: ["contractInformation"],
+  //   queryFn: () => getContracts(),
+  // });
+  // useEffect(() => {
+  //   if (contractInformation?.data) {
+  //     // setContractItems(contractInformation?.data);
+  //     console.log(contractInformation?.data)
+  // const contractList= 
+  // contractInformation?.data?.map((item: any) => ({
+  //       id: item?.id,
+  //       contract: {
+  //         date:
+  //           item?.contractDate && item?.dateType
+  //             ? convertDate(item?.contractDate, item?.dateType)
+  //             : "",
 
+  //         destination: "",
+  //         submitter:
+  //           // users?.find((obj) => obj.id === item.userSubmitterId)?.fullName ??
+  //           "",
+  //         unit: "",
+  //       },
+  //       footer: {
+  //         cost: item?.buyPrice?.toString(),
+  //         income: item?.sellPrice?.toString(),
+  //         overall: (item?.sellPrice - item?.buyPrice).toString(),
+  //       },
+  //       header: {
+  //         contractNumber: item?.contractNo,
+  //         icon: "/icons/visa-white.png",
+
+  //         submitDate:
+  //           item?.submitDateTime && item?.dateType
+  //             ? convertDate(item?.submitDateTime, item?.dateType)
+  //             : "",
+
+  //         title:""
+  //           // contractTypes.find((obj) => obj.id === item.contractTypeId)
+  //           //   ?.title ?? "",
+  //       },
+  //       score: {
+  //         final: 30,
+  //         totalVotes: 10,
+  //       },
+  //     services:[],
+  //     // item.avServices
+  //     //     ? services.filter((obj) => item.avServices.includes(obj.name))
+  //     //     : [],
+  //       user: {
+  //         image: "/images/expert.png",
+  //         name:""
+  //           // users?.find((obj) => obj.id === item.userResponsibleId)?.fullName ??
+          
+  //       },
+  // }))
+  //     setContractItems(contractList)
+      
+  //   }
+  // }, [contractInformation?.data]);
   return (
     <main>
-      <div className="flex items-center justify-between">
+   <div className="flex items-center justify-between"> 
         <div>
           <Title label="فروش" />
 
@@ -41,13 +108,13 @@ export default function Sale() {
           />
         </div>
 
-        <ContractCreation contractTypes={contractTypes} />
+       <ContractCreation contractTypes={contractTypes} />
       </div>
 
       <ContractOverview {...contractOverviewProps} />
 
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-y-4">
-        <Filter />
+        {/* <Filter /> */}
 
         <div className="text-base font-bold h-9 flex items-center justify-center">
           {requestCount} درخواست
@@ -55,13 +122,13 @@ export default function Sale() {
       </div>
 
       <div className="md:bg-background-active rounded-xl md:p-6">
-        <ContractContainer list={contractList} />
-      </div>
+         <ContractContainer list={contractList} />
+      </div> 
     </main>
   );
 }
 
-function getData() {
+ function getData() {
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
   );
@@ -179,3 +246,4 @@ function getData() {
     contractTypes,
   };
 }
+

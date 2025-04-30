@@ -4,7 +4,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import LeftDrawer from '../shared/left-drawer'
-import SortDropDown from '../shared/sort-drop-down'
+
 
 export default function Filter() {
   const [openFilter, setOpenFilter] = useState(false)
@@ -25,7 +25,7 @@ export default function Filter() {
           مرتب سازی بر اساس
         </span>
       </Button> */}
-      <SortDropDown />
+      {/* <SortDropDown /> */}
 
       <LeftDrawer setState={setOpenFilter} state={openFilter} />
     </div>

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { useState } from "react";
+
 import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { editOtherData, sendOtherData } from "@/api/other";
@@ -16,7 +16,7 @@ export default function OtherContainer({
   onRemoveHandler: any;
   other: any;
 }) {
-  const [otherId, setOtherId] = useState<number>();
+  // const [otherId, setOtherId] = useState<number>();
   const { id } = useParams();
   const queryClient = useQueryClient();
   const formik = useFormik({
@@ -43,8 +43,8 @@ export default function OtherContainer({
     mutationFn: (data: any) => {
       return sendOtherData(data, Number(id));
     },
-    onSuccess: (data: any) => {
-      setOtherId(data.id);
+    onSuccess: () => {
+      // setOtherId(data.id);
       queryClient.invalidateQueries({
         queryKey: ["submittedOthers"],
       });

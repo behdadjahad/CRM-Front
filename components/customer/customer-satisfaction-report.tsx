@@ -8,10 +8,13 @@ export interface CustomerSatisfactionReportInterface {
     value: number;
   }[];
 }
+interface CustomerSatisfactionReportProps {
+  data: CustomerSatisfactionReportInterface[];
+}
 
 export default function CustomerSatisfactionReport({
   data,
-}: CustomerSatisfactionReportInterface[]) {
+}: CustomerSatisfactionReportProps) {
   const totalContracts = 120;
   const satisfaction = 80;
   const unsatisfaction = 40;

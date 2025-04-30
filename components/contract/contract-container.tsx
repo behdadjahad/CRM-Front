@@ -1,6 +1,7 @@
 import React from "react";
+
+import  ContractCard, { ContractCardInterface } from "./contract-card";
 import { cn } from "@/lib/utils";
-import ContractCard, { ContractCardInterface } from "./contract-card";
 
 export interface ContractContainerInterface {
   list: ContractCardInterface[];
@@ -11,6 +12,7 @@ export default function ContractContainer({
   list,
   className,
 }: ContractContainerInterface) {
+
   return (
     <div
       className={cn(
@@ -21,9 +23,11 @@ export default function ContractContainer({
       {list.map((item, index) => (
         <ContractCard
           {...item}
-          key={item.header.submitDate + item.user.name + index}
+          key={item?.header?.submitDate + item?.user?.name + index}
         />
+ 
       ))}
     </div>
+  
   );
 }

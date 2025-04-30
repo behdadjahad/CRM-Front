@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomerTabContent from "./customer-tab-content";
 import FilterContainer from "../section/filter-container";
 import { useFormik } from "formik";
@@ -12,7 +12,8 @@ import {
 } from "@/constants/customer-filter-fields";
 import { limitForCustomers } from "@/lib/utils";
 import { fetchCustomers } from "@/store/customer-slice";
-import { useDispatch } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
@@ -31,7 +32,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       career: "",
       scoreRange: [1, 10],
       minSellPrice: 0,
-      maxSellPrice:0,
+      maxSellPrice: 0,
       services: [],
       contractState: [],
       followupStatus: [],
@@ -197,7 +198,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
               type: "text",
               floating: true,
               className: "w-full  px-0",
-              options:priceOptions
+              options: priceOptions,
             },
             {
               key: "maxSellPrice",
@@ -206,14 +207,13 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
               type: "text",
               floating: true,
               className: "w-full items-start p-0",
-              options:priceOptions
+              options: priceOptions,
             },
           ]}
           className="flex flex-row w-full"
         />
       ),
     },
-   
   ];
   function submitFilter() {
     const filters = {
@@ -221,7 +221,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       customerLastName: formik.values.family,
       customerJob: formik.values.career,
       // satisfactionScore: formik.values.scoreRange,
-      satisfactionScore:4,
+      satisfactionScore: 4,
       contractState: formik.values.contractState,
       followUpStatus: formik.values.followupStatus,
       // followUpDateTimeRangeStart: "2000-01-01T00:00:00Z",
@@ -230,7 +230,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       // dateTimeRangeStart: "2000-01-01T00:00:00Z",
       // dateTimeRangeEnd: "2030-01-01T00:00:00Z",
       minPrice: Number(formik.values.minSellPrice),
-      maxPrice:Number( formik.values.maxSellPrice),
+      maxPrice: Number(formik.values.maxSellPrice),
     };
     dispatch(
       fetchCustomers({
@@ -239,7 +239,6 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: filters,
       })
     );
-    
   }
   const customerSortlist = [
     {
@@ -252,14 +251,58 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
     { label: "جدید ترین ها", value: "Newest" },
     { label: "قدیمی ترین ها", value: "Oldest" },
   ];
+  const customerList = useSelector((state: any) => state.customer.items);
+
+  function setTabData(tabKey: string) {
+    const filters: any = {};
+    const today = new Date();
+    const start = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
+    ); // Today 00:00 UTC
+    const end = new Date(start);
+    end.setUTCDate(end.getUTCDate() + 1);
+    switch (tabKey) {
+      case "امروز":
+        filters.dateTimeRangeStart = start.toISOString();
+        filters.dateTimeRangeEnd = end.toISOString();
+        break;
+      case "5روز آینده":
+        filters.dateTimeRangeStart = "active";
+        filters.dateTimeRangeEnd = "active";
+        break;
+      case "گذشته و رسیدگی نشده":
+        filters.dateTimeRangeStart = "active";
+        filters.dateTimeRangeEnd = "active";
+        break;
+      default:
+        break;
+    }
+    dispatch(
+      fetchCustomers({
+        page: 1,
+        limit: limitForCustomers,
+        filters: filters,
+      })
+    );
+  }
+  useEffect(() => {
+    dispatch(
+      fetchCustomers({
+        page: 1,
+        limit: limitForCustomers,
+        filters: {},
+      })
+    );
+  }, [dispatch]);
+
   return (
     <div className="bg-card rounded-lg p-6">
       <div>
         <FilterContainer
           onFilterHandler={() => {
-            submitFilter()
-            formik.resetForm()
-           }}
+            submitFilter();
+            formik.resetForm();
+          }}
           rangeItems={rangeItems}
           filterItems={filterItems}
           sortList={customerSortlist}
@@ -274,7 +317,10 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
                 ? "border-b-2 border-black font-bold text-black"
                 : "text-neutral-500"
             }`}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              setActiveTab(tab);
+              setTabData(tab);
+            }}
           >
             {tab.toUpperCase()}
           </button>
@@ -282,7 +328,13 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       </div>
 
       <div className="mt-4 h-full">
-        {activeTab === "همه مشتری ها" && <CustomerTabContent />}
+        {activeTab === "همه مشتری ها" && (
+          <CustomerTabContent customerList={customerList} />
+        )}
+           {activeTab === "امروز" && (
+          <CustomerTabContent customerList={customerList} />
+        )}
+       
       </div>
     </div>
   );

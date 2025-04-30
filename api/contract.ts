@@ -142,7 +142,10 @@ export interface ContractCreationOutput {
 export async function getContracts(): Promise<ContractInformationOutput> {
   try {
     const result: ContractInformationOutput = await fetchService(
-      "contract-chadco-customer"
+      "contract-chadco-customer/filter-contracts", {
+        method: "POST",
+        
+      }
     );
 
     return result;
