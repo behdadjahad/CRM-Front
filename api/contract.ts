@@ -139,12 +139,12 @@ export interface ContractCreationOutput {
   };
 }
 
-export async function getContracts(): Promise<ContractInformationOutput> {
+export async function getContracts({ data }: { data?: any}): Promise<ContractInformationOutput> {
   try {
     const result: ContractInformationOutput = await fetchService(
       "contract-chadco-customer/filter-contracts", {
         method: "POST",
-        
+        body:data ? data : {}
       }
     );
 

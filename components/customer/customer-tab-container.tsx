@@ -267,12 +267,14 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters.dateTimeRangeEnd = end.toISOString();
         break;
       case "5روز آینده":
-        filters.dateTimeRangeStart = "active";
-        filters.dateTimeRangeEnd = "active";
+ 
+        const endDate = new Date(start);
+        end.setUTCDate(end.getUTCDate() + 5); // 5 days ahead
+        filters.dateTimeRangeStart = start.toISOString();
+        filters.dateTimeRangeEnd = endDate.toISOString();
         break;
       case "گذشته و رسیدگی نشده":
-        filters.dateTimeRangeStart = "active";
-        filters.dateTimeRangeEnd = "active";
+        filters.dateTimeRangeEnd = start.toISOString();
         break;
       default:
         break;
@@ -334,6 +336,13 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
            {activeTab === "امروز" && (
           <CustomerTabContent customerList={customerList} />
         )}
+           {activeTab === "5روز آینده" && (
+          <CustomerTabContent customerList={customerList} />
+        )}
+{/*        
+           {activeTab === "گذشته و رسیدگی نشده" && (
+          <CustomerTabContent customerList={customerList} />
+        )} */}
        
       </div>
     </div>
