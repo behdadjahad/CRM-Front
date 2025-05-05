@@ -27,8 +27,9 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-international-airport.png",
     activeImage: "/images/services/success/success-international-airport.png",
     //children: <ServiceForm {...flightForm} />,
-    name: "Ticket",
-    form: <TicketContainer />,
+    name: "Flight",
+    form: <TicketContainer transportationType="Airline" />,
+ 
   },
   {
     id: 3,
@@ -38,8 +39,8 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-airport.png",
     activeImage: "/images/services/success/success-airport.png",
     // children: <ServiceForm {...flightForm} />,
-    name: "Ticket",
-    form: <TicketContainer />,
+    name: "Flight",
+    form: <TicketContainer transportationType="Airline"/>,
   },
   {
     id: 4,
@@ -48,7 +49,7 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-suitcase.png",
     activeImage: "/images/services/success/success-suit-case.png",
-    name: "Ticket",
+    name: "Other",
     form: <>Tour Form</>,
   },
   {
@@ -138,7 +139,7 @@ export const services: ServiceCardInterface[] = [
     id: 13,
     image: "/images/services/nature.png",
     title: "سایر",
-    isSelected: true,
+    isSelected: false,
     selectedImage: "/images/services/primary/primary-nature.png",
     activeImage: "/images/services/success/success-nature.png",
     name: "Other",

@@ -1,21 +1,28 @@
 import { useFormik } from "formik";
-import FormMaker from "../../shared/form-maker";
+import FormMaker, { OptionType } from "../../shared/form-maker";
 import { Button } from "../../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import StopForm from "./stop-form";
-
+import { useMutation } from "@tanstack/react-query";
+import { getAirportTerminal } from "@/api/ticket";
+import { sendFlightData } from "@/api/flight";
+import { useParams } from "next/navigation";
 export default function OneWayTicketForm({
   itemId,
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
+  airports,
+  airlines
 }: {
   itemId: any;
   onRemoveHandler: any;
   flightClassOptions: any;
   flightTypeOptions: any;
+    airports: OptionType[];
+    airlines:OptionType[];
 }) {
   const formik = useFormik({
     initialValues: {
@@ -27,13 +34,17 @@ export default function OneWayTicketForm({
       airline: "",
       cost: "",
       currency: "",
-      broker:"",
+      broker: "",
       id: "",
-      isSubmitted: "",
+      isSubmitted:false,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
+  const { id } = useParams();
+  const [originTerminals, setOriginTerminals] = useState<OptionType[]>([]);
+  const [destinationTerminals, setDestinationTerminals] = useState<OptionType[]>([]);
+
   const [addedStops, setAddedStops] = useState<any[]>([]);
   function addStopForm() {
     setAddedStops([
@@ -51,6 +62,57 @@ export default function OneWayTicketForm({
   function removeTicketForm(formId: any) {
     onRemoveHandler(formId);
   }
+  const { mutate: SubmitOriginAirportHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getAirportTerminal(id);
+    },
+    onSuccess: (response) => {
+      const originTerminalOptions: OptionType[] = response.data.map((item: any) => ({
+        label: item.name,
+        value: item.id.toString(),
+      }));
+      setOriginTerminals(originTerminalOptions);
+    }
+  });
+  const { mutate: SubmitDestinationAirportHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getAirportTerminal(id);
+    },
+    onSuccess: (response) => {
+      const destinationTerminalOptions: OptionType[] = response?.data.map((item: any) => ({
+        label: item.name,
+        value: item.id.toString(),
+      }));
+      setDestinationTerminals(destinationTerminalOptions);
+    },
+  });
+  useEffect(() => {
+    SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+  }, [formik.values.originCityAirport]);
+
+  useEffect(() => {
+    SubmitDestinationAirportHandler(Number(formik.values.destinationCityAirport))
+  }, [formik.values.destinationCityAirport]);
+
+  const { mutate: submitFlightForm } = useMutation({
+    mutationFn: ({ data,id }: { data: any; id:number}) => {
+      return sendFlightData(data,id);
+    },
+    onSuccess: () => {
+  
+    }
+  });
+  function submitHandler() {
+
+    const data = {
+      travelType: "OneWay",
+      flightGroupId:null,
+    }
+    submitFlightForm({
+      id:Number(id),data:data
+    })
+}
+
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -75,6 +137,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: airports,
           },
           {
             key: "originTerminal",
@@ -83,10 +146,19 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: originTerminals,
           },
+          // {
+          //   key: "dateTime",
+          //   component: "date",
+          //   placeholder: "تاریخ و ساعت",
+          //   type: "text",
+          //   floating: true,
+          //   className: "w-full md:w-1/3",
+          // },
           {
             key: "dateTime",
-            component: "date",
+            component: "date-time",
             placeholder: "تاریخ و ساعت",
             type: "text",
             floating: true,
@@ -99,6 +171,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: airports,
           },
           {
             key: "destinationTerminal",
@@ -107,6 +180,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: destinationTerminals,
           },
 
           {
@@ -116,6 +190,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:airlines
           },
           {
             key: "flightClass",
@@ -168,12 +243,7 @@ export default function OneWayTicketForm({
             key: "actions",
             children: (
               <div className="flex flex-row items-center gap-2 justify-end w-full">
-                <Button
-                  variant="info"
-                  onClick={() => {
-                 
-                  }}
-                >
+                <Button variant="info" onClick={submitHandler}>
                   ثبت بلیط
                 </Button>
                 <Button

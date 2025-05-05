@@ -3,12 +3,14 @@ import { useDispatch } from "react-redux";
 import userReducer from "./user-slice";
 import customerReducer from "./customer-slice";
 import customerDetailContractReducer from "./customer-detail-contract-slice";
+import contractReducer from "./contract-slice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     customer: customerReducer,
     customerDetailContract:customerDetailContractReducer,
+    contract: contractReducer,
   },
 });
 

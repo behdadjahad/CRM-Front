@@ -69,9 +69,7 @@ export function convertToGregorian(
       timeZone
     );
   } else {
-    throw new Error(
-      "Invalid target type. Please choose 'Hijri', 'Jalali', or 'Gregorian'."
-    );
+   return ""
   }
 
   // Return the formatted date in Gregorian with timezone

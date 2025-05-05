@@ -5,33 +5,34 @@ import Image from "next/image";
 import OverviewDetailContainer from "../satisfaction/overview-detail-container";
 import SocialMedia from "../satisfaction/social-media";
 
-
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   getCallDevices,
   getSatisfactionLabels,
   submitSatisfaction,
 } from "@/api/satisfaction";
-
-
+import {
+  buildStyles,
+  CircularProgressbarWithChildren,
+} from "react-circular-progressbar";
 import { Button } from "../ui/button";
 import { useFormik } from "formik";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
-import dynamic from "next/dynamic";
 
 export default function Satisfaction({
   onCloseHandler,
   itemId,
+  score,
+  totalVotes,
 }: {
   onCloseHandler: () => any;
   itemId: string;
+  score: number;
+  totalVotes: number;
 }) {
   const [callDevices, setCallDevices] = useState<any[]>([]);
   const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
 
-  // const { score, totalVotes, overviewProps, scoreRange } = getData();
-  // const score = 30;
-  // const totalVotes = 10;
   const { data: callDeviceData } = useQuery({
     queryKey: ["callDeviceData"],
     queryFn: async () => await getCallDevices(),
@@ -42,11 +43,10 @@ export default function Satisfaction({
   });
   useEffect(() => {
     if (callDeviceData) {
-
       const callDeviceOptions = callDeviceData.data.map((item: any) => ({
         id: item.id,
         label: item.name,
-        image:item.iconFile
+        image: item.iconFile,
       }));
       setCallDevices(callDeviceOptions);
     }
@@ -89,7 +89,7 @@ export default function Satisfaction({
     },
     onSubmit: async () => {},
   });
-    const scoreRange = [
+  const scoreRange = [
     {
       label: "ضعیف",
       value: 1,
@@ -108,40 +108,40 @@ export default function Satisfaction({
     {
       label: "متوسط",
       value: 4,
-      className: "",
+      className: "text-info border border-info",
     },
     {
       label: "",
       value: 5,
-      className: "",
+      className: "text-info border border-info",
     },
     {
       label: "",
       value: 6,
-      className: "",
+      className: "text-info border border-info",
     },
     {
       label: "",
       value: 7,
-      className: "",
+      className: "text-info border border-info",
     },
     {
       label: "خوب",
       value: 8,
-      className: "",
+      className: "text-success-active border border-success-active",
     },
     {
-      label: "عالی",
+      label: "",
       value: 9,
-      className: "",
+      className: "text-success-active border border-success-active",
     },
     {
       label: "",
       value: 10,
-      className: "",
+      className: "text-success-active border border-success-active",
     },
   ];
-    const overviewProps: OverviewInterface = {
+  const overviewProps: OverviewInterface = {
     list: [
       {
         label: "ثبت رضایتمندی",
@@ -171,17 +171,34 @@ export default function Satisfaction({
       },
     ],
   };
-    const RatingChart = dynamic(() => import("../shared/rating-chart"), {
-      ssr: false,
-    });
+  // const RatingChart = dynamic(() => import("../shared/rating-chart"), {
+  //   ssr: false,
+  // });
   return (
     <div>
       <div className="w-full flex gap-6">
         <div className="rounded-xl  w-full p-3 bg-card items-center justify-center flex flex-col  shadow-[0px_12px_24px_-4px_#919EAB1F]">
-          <RatingChart value={30} color="#FFA500" />
+          {/* <RatingChart value={score} color="#FFA500" />
           <span className="text-center relative -mt-2 text-sm">
-            از مجموع {10} امتیاز
-          </span>
+            از مجموع {totalVotes} امتیاز
+          </span> */}
+          <div className="w-36 h-36">
+            <CircularProgressbarWithChildren
+              value={score}
+              styles={buildStyles({
+                pathColor: "#FFA500",
+                trailColor: "#E9EAEB",
+              })}
+            >
+              <div className="text-center  text-sm flex flex-col gap-2">
+                <span>میانگین امتیاز</span>
+                <span className="font-bold text-info">
+                  {totalVotes} / {(score * totalVotes) / 100}
+                </span>
+              </div>
+              {/* <FaStar style={{ fontSize: "32px", color: "#00bcd4" }} /> */}
+            </CircularProgressbarWithChildren>
+          </div>
         </div>
 
         <Overview {...overviewProps} />
@@ -212,96 +229,3 @@ export default function Satisfaction({
     </div>
   );
 }
-
-// function getData() {
-//   const overviewProps: OverviewInterface = {
-//     list: [
-//       {
-//         label: "ثبت رضایتمندی",
-//         value: "1403/04/23",
-//         icon: (
-//           <Image
-//             src={"/icons/calendar-tick.png"}
-//             width={16}
-//             height={16}
-//             className="object-cover w-4 h-4"
-//             alt="ثبت رضایتمندی"
-//           />
-//         ),
-//       },
-//       {
-//         label: "پیگیری رضایتمندی",
-//         value: "1403/04/29",
-//         icon: (
-//           <Image
-//             src={"/icons/calendar-untick.png"}
-//             width={16}
-//             height={16}
-//             className="object-cover w-4 h-4"
-//             alt="پیگیری رضایتمندی"
-//           />
-//         ),
-//       },
-//     ],
-//   };
-
-//   const scoreRange = [
-//     {
-//       label: "ضعیف",
-//       value: 1,
-//       className: "text-negative border border-negative",
-//     },
-//     {
-//       label: "",
-//       value: 2,
-//       className: "text-negative border border-negative",
-//     },
-//     {
-//       label: "",
-//       value: 3,
-//       className: "text-negative border border-negative",
-//     },
-//     {
-//       label: "متوسط",
-//       value: 4,
-//       className: "",
-//     },
-//     {
-//       label: "",
-//       value: 5,
-//       className: "",
-//     },
-//     {
-//       label: "",
-//       value: 6,
-//       className: "",
-//     },
-//     {
-//       label: "",
-//       value: 7,
-//       className: "",
-//     },
-//     {
-//       label: "خوب",
-//       value: 8,
-//       className: "",
-//     },
-//     {
-//       label: "عالی",
-//       value: 9,
-//       className: "",
-//     },
-//     {
-//       label: "",
-//       value: 10,
-//       className: "",
-//     },
-//   ];
-
-//   return {
-//     score: 30,
-//     totalVotes: 10,
-//     overviewProps,
-//     scoreRange,
-//   };
-// }

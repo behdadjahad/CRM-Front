@@ -14,11 +14,15 @@ export default function FilterContainer({
   rangeItems,
   filterItems,
   sortList,
+  onSortHandler,
+  onCancleHandler
 }: {
   onFilterHandler?: any;
   rangeItems: any[];
   filterItems: any[];
   sortList?: OptionType[];
+  onSortHandler:any;
+  onCancleHandler:any;
 }) {
   const [openFilter, setOpenFilter] = useState(false);
 
@@ -41,7 +45,7 @@ export default function FilterContainer({
           مرتب سازی بر اساس
         </span>
       </Button> */}
-      {sortList && <SortDropDown list={sortList} />}
+      {sortList && <SortDropDown list={sortList} onSortHandler={onSortHandler}/>}
 
       <FilterDrawer
         setState={setOpenFilter}
@@ -49,10 +53,16 @@ export default function FilterContainer({
         filterItems={filterItems}
         rangeItems={rangeItems}
         onFilterHandler={() => {
-          onFilterHandler() 
+          onFilterHandler()
           setOpenFilter(false)
         }}
-     
+        onCancleHandler=
+          {() => {
+            onCancleHandler()
+            setOpenFilter(false)
+          }}
+
+
       />
     </div>
   );

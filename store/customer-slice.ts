@@ -30,7 +30,7 @@ const customerSlice = createSlice({
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
       state.items = action?.payload?.data?.map((item: any) => ({
         id: item?.person?.id,
-        Info: {
+        info: {
           "نام ونام خانوادگی": item?.person?.fullName,
           "کدملی": item?.person?.idNumber,
           "ایمیل": item?.email?.[0]?.email,
@@ -55,8 +55,8 @@ const customerSlice = createSlice({
       }));
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / limitForCustomers);
-        const filters = action.meta.arg.filters;
- 
+      state.currentPage = action.meta.arg.page;
+      const filters = action.meta.arg.filters;
       state.filters = filters;
     });
   },

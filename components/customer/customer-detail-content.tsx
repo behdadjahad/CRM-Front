@@ -113,10 +113,10 @@ export default function CustomerDetailContent({
   ];
     const handlePageChange = (selectedItem: any) => {
       const selectedPage = selectedItem.selected + 1;
-    console.log(selectedPage)
+   
       dispatch(
         fetchCustomerDetailContract({
-          page: selectedItem,
+          page: selectedPage,
           limit: limitForCustomerDetailContracts,
           id: id,
           filters: {},

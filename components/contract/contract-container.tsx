@@ -20,7 +20,7 @@ export default function ContractContainer({
         className
       )}
     >
-      {list.map((item, index) => (
+      {list?.map((item, index) => (
         <ContractCard
           {...item}
           key={item?.header?.submitDate + item?.user?.name + index}

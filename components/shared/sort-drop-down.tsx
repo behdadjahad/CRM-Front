@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
 
 import Image from "next/image";
 import { OptionType } from "./form-maker";
-export default function SortDropDown({list}: {list: OptionType[]}) {
-
+export default function SortDropDown({list,onSortHandler}: {list: OptionType[],onSortHandler:any}) {
 
   return (
     <DropdownMenu>
@@ -27,17 +26,18 @@ export default function SortDropDown({list}: {list: OptionType[]}) {
             height={24}
           />
 
-          <span>مرتب سازی بر اساس</span>
+          <div>مرتب سازی بر اساس</div>
         </div>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="flex flex-col gap-4">
         {list && list.map((item) => (
           <div
-            key={item.value}
+            key={`${item.value}-${item.type}`}
             className="text-sm cursor-pointer hover:bg-foreground-mute w-full p-2 text-center rounded-sm hover:text-card"
             onClick={() => {
-              console.log(item.value);
+
+              onSortHandler(item.value,item.type)
             }}
           >
             {item.label}

@@ -9,14 +9,14 @@ import {
 
 import { Button } from "../ui/button";
 
-export interface LeftDrawerInterface {
+export interface FilterDrawerInterface {
   state: boolean;
   setState: (prev: any) => any;
   filterItems: any[];
   rangeItems: any[];
   onFilterHandler: any;
+  onCancleHandler:any
 
-  
 }
 
 export default function FilterDrawer({
@@ -25,9 +25,9 @@ export default function FilterDrawer({
   filterItems,
   rangeItems,
   onFilterHandler,
+  onCancleHandler
 
-  
-}: LeftDrawerInterface) {
+}: FilterDrawerInterface) {
   return (
     <div
       className={cn("h-0 w-0 overflow-hidden top-0 left-0 z-50 fixed", {
@@ -82,9 +82,12 @@ export default function FilterDrawer({
           </Accordion>
         </div>
 
-        <div className="p-7 w-full">
+        <div className="p-7 w-full flex gap-2">
           <Button variant={"info"} className="w-full" onClick={onFilterHandler}>
-            اعمال اطلاعات
+            اعمال فیلتر
+          </Button>
+          <Button variant={"foreground"} className="w-full" onClick={onCancleHandler}>
+             لغو فیلتر
           </Button>
         </div>
       </div>

@@ -82,7 +82,7 @@ export default function CustomerTableContainer({
 
                   {tableHeaderLabels.map((label, idx) => (
                     <TableCell key={idx} className="text-center text-xs">
-                      {customer.Info[label]}
+                      {customer.info[label]}
                     </TableCell>
                   ))}
                   <TableCell className="text-center">

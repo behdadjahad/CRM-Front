@@ -183,6 +183,8 @@ export default function ContractCard({
                     setOpenModal(false);
                   }}
                   itemId={id}
+                  score={score?.final}
+                  totalVotes={score?.totalVotes}
                 />
               </CustomModal>
               {/* </Link> */}

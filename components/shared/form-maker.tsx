@@ -14,7 +14,7 @@ import FileInput from "./file-input";
 import ToggleInput from "./toggle-input";
 import FilePreview from "./file-preview";
 import ListPreview from "./list-preview";
-
+import DateTimeInput from "./date-time-input";
 
 export interface OptionType {
   label: string;
@@ -27,6 +27,7 @@ export interface FieldType {
     | "input"
     | "Select"
     | "date"
+    | "date-time"
     | "phone"
     | "checkbox"
     | "radio"
@@ -70,7 +71,7 @@ export interface FieldType {
   clearIndicatorClassName?: string;
   containerClassName?: string;
   isFormattedNumber?: boolean;
-  onClick?:() => void;
+  onClick?: () => void;
 }
 
 export interface FormMakerInterface {
@@ -95,6 +96,9 @@ export default function FormMaker({
           return <PhoneNumberInput item={item} form={form} />;
         case "date":
           return <DateInput item={item} form={form} />;
+        case "date-time":
+          return <DateTimeInput item={item} form={form} />;
+
         case "checkbox":
           return <CheckboxInput item={item} form={form} />;
         case "radio":

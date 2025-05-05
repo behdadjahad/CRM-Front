@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import Creatable from "react-select/creatable";
+import Creatable  from "react-select/creatable";
 import { FormMakerInterface } from "./form-maker";
 import { cn } from "@/lib/utils";
-
+import { components, SingleValueProps, OptionProps } from "react-select";
 const SelectInput = React.memo(function SelectInput({
   form,
   item,
@@ -22,7 +22,25 @@ const SelectInput = React.memo(function SelectInput({
     },
     [item.key, form]
   );
+  // Custom Option (dropdown list)
+  const CustomOption = (props: OptionProps<any>) => (
+    <components.Option {...props}>
+      <div className="flex items-center gap-2">
+        {props.data.icon && <span>{props.data.icon}</span>}
+        <span>{props.label}</span>
+      </div>
+    </components.Option>
+  );
 
+  // Custom SingleValue (selected display)
+  const CustomSingleValue = (props: SingleValueProps<any>) => (
+    <components.SingleValue {...props}>
+      <div className="flex items-center gap-2">
+        {props.data.icon && <span>{props.data.icon}</span>}
+        <span>{props.data.label}</span>
+      </div>
+    </components.SingleValue>
+  );
   return (
     <Creatable
       isClearable
@@ -36,6 +54,10 @@ const SelectInput = React.memo(function SelectInput({
         item.label
       }
       value={item.options?.find((optItem) => optItem.value === form.values[item.key]) || null}
+      components={{
+        Option: CustomOption,
+        SingleValue: CustomSingleValue,
+      }}
       classNames={{
         container: () => { return cn("w-full",item.containerClassName) },
         control: () => {

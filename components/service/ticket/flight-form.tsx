@@ -1,23 +1,29 @@
-import FormMaker from "@/components/shared/form-maker";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
+import { useMutation } from "@tanstack/react-query";
+import { getAirportTerminal } from "@/api/ticket";
 
 export default function FlightForm({
   itemId,
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
-  count
+  count,
+  airlines,
+  airports
 }: {
   itemId: any;
     onRemoveHandler: any;
     flightClassOptions: any;
     flightTypeOptions: any;
     count: any;
+    airlines: OptionType[];
+    airports:OptionType[];
 }) {
   const formik = useFormik({
     initialValues: {
@@ -39,6 +45,8 @@ export default function FlightForm({
     enableReinitialize: true,
   });
   const [addedStops, setAddedStops] = useState<any[]>([]);
+    const [originTerminals, setOriginTerminals] = useState<OptionType[]>([]);
+    const [destinationTerminals, setDestinationTerminals] = useState<OptionType[]>([]);
   function addStopForm() {
     setAddedStops([
       ...addedStops,
@@ -56,6 +64,37 @@ export default function FlightForm({
     const updatedAddedFlights = addedStops.filter((item) => item.id != formId);
     setAddedStops(updatedAddedFlights);
   }
+    const { mutate: SubmitOriginAirportHandler } = useMutation({
+      mutationFn: (id: number) => {
+        return getAirportTerminal(id);
+      },
+      onSuccess: (response) => {
+        const originTerminalOptions: OptionType[] = response.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setOriginTerminals(originTerminalOptions);
+      }
+    });
+    const { mutate: SubmitDestinationAirportHandler } = useMutation({
+      mutationFn: (id: number) => {
+        return getAirportTerminal(id);
+      },
+      onSuccess: (response) => {
+        const destinationTerminalOptions: OptionType[] = response?.data.map((item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        }));
+        setDestinationTerminals(destinationTerminalOptions);
+      },
+    });
+    useEffect(() => {
+      SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+    }, [formik.values.originCityAirport]);
+  
+    useEffect(() => {
+      SubmitDestinationAirportHandler(Number(formik.values.destinationCityAirport))
+    }, [formik.values.destinationCityAirport]);
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -80,6 +119,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:airports
           },
           {
             key: "originTerminal",
@@ -88,6 +128,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:originTerminals
           },
           {
             key: "dateTime",
@@ -104,6 +145,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:airports
           },
           {
             key: "destinationTerminal",
@@ -112,6 +154,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:destinationTerminals
           },
 
           {
@@ -121,6 +164,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:airlines
           },
           {
             key: "flightClass",

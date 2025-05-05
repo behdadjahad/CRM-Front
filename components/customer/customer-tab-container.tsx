@@ -10,21 +10,16 @@ import {
   followUpOptions,
   serviceOptions,
 } from "@/constants/customer-filter-fields";
-import { limitForCustomers } from "@/lib/utils";
+import { cleanObject, limitForCustomers, priceOptions } from "@/lib/utils";
 import { fetchCustomers } from "@/store/customer-slice";
 
 import { useDispatch, useSelector } from "react-redux";
+import { convertToGregorian } from "@/lib/date";
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
   /**/
-  const priceOptions = Array.from({ length: 11 }, (_, i) => {
-    const value = (i * 10000000).toString(); // string value
-    return {
-      label: `${i * 10} میلیون تومان`, // display label
-      value, // string value
-    };
-  });
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -36,6 +31,14 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       services: [],
       contractState: [],
       followupStatus: [],
+      startDate: undefined,
+      startDateType: "",
+      endDate: undefined,
+      endDateType: "",
+      followUpStartDate: undefined,
+      followUpStartDateType: "",
+      followUpEndDate: undefined,
+      followUpEndDateType: "",
     },
     onSubmit: async () => {},
   });
@@ -147,6 +150,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           fields={[
             {
               key: "startDate",
+              dependantKey: "startDateType",
               component: "date",
               placeholder: "از تاریخ",
               type: "text",
@@ -155,6 +159,36 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
             },
             {
               key: "endDate",
+              dependantKey: "endDateType",
+              component: "date",
+              placeholder: "تا تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full items-start p-0",
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+    {
+      title: "محدوده تاریخ پیگیری",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "followUpStartDate",
+              dependantKey: "followUpStartDateType",
+              component: "date",
+              placeholder: "از تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+            {
+              key: "followUpEndDate",
+              dependantKey: "followUpEndDateType",
               component: "date",
               placeholder: "تا تاریخ",
               type: "text",
@@ -220,15 +254,34 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       customerName: formik.values.name,
       customerLastName: formik.values.family,
       customerJob: formik.values.career,
-      // satisfactionScore: formik.values.scoreRange,
-      satisfactionScore: 4,
+      satisfactionScore: formik.values.scoreRange,
+
       contractState: formik.values.contractState,
       followUpStatus: formik.values.followupStatus,
-      // followUpDateTimeRangeStart: "2000-01-01T00:00:00Z",
-      // followUpDateTimeRangeEnd: "2030-01-01T00:00:00Z",
+      followUpDateTimeRangeStart: formik.values.followUpStartDate
+        ? convertToGregorian(
+            formik.values.followUpStartDate,
+            formik.values.followUpStartDateType
+          )
+        : "",
+
+      followUpDateTimeRangeEnd: formik.values.followUpEndDate
+        ? convertToGregorian(
+            formik.values.followUpEndDate,
+            formik.values.followUpEndDateType
+          )
+        : "",
       avServices: formik.values.services,
-      // dateTimeRangeStart: "2000-01-01T00:00:00Z",
-      // dateTimeRangeEnd: "2030-01-01T00:00:00Z",
+      dateTimeRangeStart: formik.values.startDate ?convertToGregorian(
+        formik.values.startDate,
+        formik.values.startDateType
+      )
+    : "",
+      dateTimeRangeEnd:formik.values.endDate ? convertToGregorian(
+        formik.values.endDate,
+        formik.values.endDateType
+      )
+    : "",
       minPrice: Number(formik.values.minSellPrice),
       maxPrice: Number(formik.values.maxSellPrice),
     };
@@ -236,20 +289,48 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       fetchCustomers({
         page: 1,
         limit: limitForCustomers,
-        filters: filters,
+        filters: cleanObject(filters),
       })
     );
   }
   const customerSortlist = [
     {
       label: "نام مشتری(الف-ی)",
-      value: "",
+      value: "customerName",
+      type: "asc",
     },
-    { label: "نام مشتری(ی-الف)", value: "" },
-    { label: "گران ترین", value: "MostExpensive" },
+    { label: "نام مشتری(ی-الف)", value: "customerName", type: "desc" },
+    {
+      label: "میزان درآمد مشتری (کمترین - بیشترین)",
+      value: "sellPrice",
+      type: "asc",
+    },
 
-    { label: "جدید ترین ها", value: "Newest" },
-    { label: "قدیمی ترین ها", value: "Oldest" },
+    {
+      label: "میزان درآمد مشتری (بیشترین - کمترین)",
+      value: "sellPrice",
+      type: "desc",
+    },
+    {
+      label: "تاریخ آخرین قرارداد (جدیدترین - قدیمی‌ترین)",
+      value: "lastContractDate",
+      type: "desc",
+    },
+    {
+      label: "تاریخ آخرین قرارداد (قدیمی‌ترین - جدیدترین)",
+      value: "lastContractDate",
+      type: "asc",
+    },
+    {
+      label: "امتیاز رضایتمندی (پایین - بالا)",
+      value: "satisfactionScore",
+      type: "asc",
+    },
+    {
+      label: "امتیاز رضایتمندی (بالا - پایین)",
+      value: "satisfactionScore",
+      type: "desc",
+    },
   ];
   const customerList = useSelector((state: any) => state.customer.items);
 
@@ -267,7 +348,6 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters.dateTimeRangeEnd = end.toISOString();
         break;
       case "5روز آینده":
- 
         const endDate = new Date(start);
         end.setUTCDate(end.getUTCDate() + 5); // 5 days ahead
         filters.dateTimeRangeStart = start.toISOString();
@@ -296,18 +376,44 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       })
     );
   }, [dispatch]);
-
+  function submitSort(itemValue: string, type?: string) {
+ 
+    const sortData = {
+      sortKind: itemValue,
+      sortOrder: type,
+    };
+    dispatch(
+      fetchCustomers({
+        page: 1,
+        limit: limitForCustomers,
+        filters: sortData,
+      })
+    );
+  }
+  function cancleFilter() {
+    formik.resetForm();
+    dispatch(
+      fetchCustomers({
+        page: 1,
+        limit: limitForCustomers,
+        filters: {},
+      })
+    );
+  }
   return (
     <div className="bg-card rounded-lg p-6">
       <div>
         <FilterContainer
           onFilterHandler={() => {
             submitFilter();
-            formik.resetForm();
           }}
           rangeItems={rangeItems}
           filterItems={filterItems}
           sortList={customerSortlist}
+          onSortHandler={(item: string,itemType?:string) => {
+            submitSort(item,itemType);
+          }}
+          onCancleHandler={cancleFilter}
         />
       </div>
       <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">
@@ -333,17 +439,16 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         {activeTab === "همه مشتری ها" && (
           <CustomerTabContent customerList={customerList} />
         )}
-           {activeTab === "امروز" && (
+        {activeTab === "امروز" && (
           <CustomerTabContent customerList={customerList} />
         )}
-           {activeTab === "5روز آینده" && (
+        {activeTab === "5روز آینده" && (
           <CustomerTabContent customerList={customerList} />
         )}
-{/*        
+        {/*
            {activeTab === "گذشته و رسیدگی نشده" && (
           <CustomerTabContent customerList={customerList} />
         )} */}
-       
       </div>
     </div>
   );

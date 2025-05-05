@@ -3,8 +3,19 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import FlightForm from "./flight-form";
+import { OptionType } from "@/components/shared/form-maker";
 
-export default function FlightContainer({flightClassOptions,flightTypeOptions}:{flightClassOptions:any,flightTypeOptions:any}) {
+export default function FlightContainer({
+  flightClassOptions,
+  flightTypeOptions,
+  airlines,
+  airports
+}: {
+  flightClassOptions: any;
+  flightTypeOptions: any;
+    airlines: OptionType[];
+    airports:OptionType[];
+}) {
   const [addedFlights, setAddedFlights] = useState<any[]>([
     {
       id: `flight-1`,
@@ -28,14 +39,16 @@ export default function FlightContainer({flightClassOptions,flightTypeOptions}:{
   }
   return (
     <div className="bg-card rounded-xl flex flex-col gap-4">
-      {addedFlights.map((item,index) => (
+      {addedFlights.map((item, index) => (
         <FlightForm
           key={item.id}
           itemId={item.id}
           onRemoveHandler={removeHandler}
           flightClassOptions={flightClassOptions}
           flightTypeOptions={flightTypeOptions}
-          count={(index+1).toString()}
+          count={(index + 1).toString()}
+          airlines={airlines}
+          airports={airports}
         />
       ))}
       <Button

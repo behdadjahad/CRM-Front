@@ -38,8 +38,9 @@ const customerDetailContractSlice = createSlice({
       }));
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / limitForCustomerDetailContracts);
+      state.currentPage = action.meta.arg.page;
     });
-   
+
     },
 
 });
@@ -59,7 +60,7 @@ export const fetchCustomerDetailContract = createAsyncThunk<any, any>(
           // body: filters,
         }
       );
-   
+
       return result;
     } catch {
       return {};

@@ -20,6 +20,7 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
   });
 
   const pages = useSelector((state: any) => state.customer.totalPages);
+  const currentPage = useSelector((state: any) => state.customer.currentPage);
   const filters = useSelector((state: any) => state.customer.filters);
 
 
@@ -113,7 +114,7 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
       />
       <CustomerContainer
         className="flex items-center justify-center xl:hidden"
-        customers={customerList.map((item:any)=>(item.Info))}
+        customers={customerList.map((item: any) => ({id:item.id,info:item.info }))}
         labels={customerCardLabels}
       />
       <div className="w-full mt-4">
@@ -124,6 +125,7 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
           onPageChange={handlePageChange}
           pageRangeDisplayed={2}
           marginPagesDisplayed={3}
+          forcePage={currentPage - 1}
           pageCount={pages}
           renderOnZeroPageCount={null}
           containerClassName="w-full relative flex justify-center items-center ltr"

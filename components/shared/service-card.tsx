@@ -18,6 +18,7 @@ export interface ServiceCardInterface {
   children?: any;
   name?: string;
   form?: any;
+
 }
 
 export default function ServiceCard({

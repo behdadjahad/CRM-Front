@@ -1,65 +1,132 @@
 "use client";
-import { getUsers } from "@/api/auth";
-import { getContracts } from "@/api/contract";
 
 import { getContractTypes } from "@/api/contract";
-import ContractContainer, {
-  ContractContainerInterface,
-} from "@/components/contract/contract-container";
+import ContractContainer from "@/components/contract/contract-container";
 import ContractCreation from "@/components/sale/contract-creation";
-import ContractOverview, {
-  ContractOverviewInterface,
-} from "@/components/sale/contract-overview";
+
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
-import { convertDate } from "@/lib/date";
-import { services } from "@/constants/services";
-import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import FormMaker from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
-
+import { fetchContracts } from "@/store/contract-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { cleanObject, limitForContracts, priceOptions } from "@/lib/utils";
+import ReactPaginate from "react-paginate";
+import { convertToGregorian } from "@/lib/date";
+import {
+  contractStateOptions,
+  serviceOptions,
+} from "@/constants/customer-filter-fields";
+import ContractOverview from "@/components/sale/contract-overview";
 export default function Sale() {
-  const { requestCount, contractOverviewProps, contractList, contractTypes } =
-    getData();
-
+  const dispatch = useDispatch<any>();
+  const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
+    []
+  );
+  const contractLists = useSelector((state: any) => state.contract.items);
+  const pages = useSelector((state: any) => state.contract.totalPages);
+  const filters = useSelector((state: any) => state.contract.filters);
+  const currentPage = useSelector((state: any) => state.contract.currentPage);
+  const ContractOverviewList = useSelector(
+    (state: any) => state.contract.ContractOverviewList
+  );
+  const { data } = useQuery({
+    queryKey: ["contractTypeQuery"],
+    queryFn: () => getContractTypes(),
+  });
+  const handlePageChange = (selectedItem: any) => {
+    const selectedPage = selectedItem.selected + 1;
+    dispatch(
+      fetchContracts({
+        page: selectedPage,
+        limit: limitForContracts,
+        filters: filters,
+      })
+    );
+  };
+  useEffect(() => {
+    if (data?.success && data?.data) {
+      setContractTypes(
+        data.data.map((item: any) => ({
+          id: item.id,
+          image: "http://185.126.203.246:3000/public/" + item.iconFile,
+          title: item.name,
+          activeImage:
+            "http://185.126.203.246:3000/public/" + item.activeIconFile,
+        }))
+      );
+    }
+  }, [data]);
   const formik = useFormik({
     initialValues: {
-      searchBy: [],
-      contractStatus: [],
+      // searchBy: [],
+      openContracts: "",
+      contractState: [],
       name: "",
       gender: "",
       birthdate: "",
+      birthdateType: "",
       socialNumber: "",
       career: "",
       location: "",
       contractNumber: "",
       contractDate: "",
+      contractDateType: "",
       startDate: "",
+      startDateType: "",
       endDate: "",
-      sellRange: [0, 10000],
-      buyRange: [0, 10000],
+      endDateType: "",
+      services: [],
+      minBuyRange: "",
+      maxBuyRange: "",
+      minSellRange: "",
+      maxSellRange: "",
     },
     onSubmit: async () => {},
   });
   const filterItems = [
+    // {
+    //   title: "جستجو بر اساس",
+    //   component: (
+    //     <FormMaker
+    //       form={formik}
+    //       fields={[
+    //         {
+    //           key: "searchBy",
+    //           component: "checkbox",
+    //           placeholder: "جست‌وجو بر اساس",
+    //           type: "text",
+    //           className: "w-full items-start p-0",
+    //           options: [
+    //             { label: "درخواست", value: "request" },
+    //             { label: "قرارداد", value: "contract" },
+    //           ],
+    //         },
+    //       ]}
+    //       className="flex flex-row w-full"
+    //     />
+    //   ),
+    // },
     {
-      title: "جستجو بر اساس",
+      title: " نوع قرارداد (باز-بسته) ",
       component: (
         <FormMaker
           form={formik}
           fields={[
             {
-              key: "searchBy",
-              component: "checkbox",
-              placeholder: "جست‌وجو بر اساس",
+              key: "openContracts",
+              component: "radio",
+              placeholder: "نوع قرارداد",
               type: "text",
               className: "w-full items-start p-0",
               options: [
-                { label: "درخواست", value: "request" },
-                { label: "قرارداد", value: "contract" },
+                { label: "باز", value: "true" },
+                { label: "بسته", value: "false" },
               ],
             },
           ]}
@@ -74,18 +141,15 @@ export default function Sale() {
           form={formik}
           fields={[
             {
-              key: "contractStatus",
+              key: "contractState",
               component: "checkbox",
               placeholder: "وضعیت قرارداد",
               type: "text",
               className: "w-full items-start p-0",
-              options: [
-                { label: "باز", value: "open" },
-                { label: "بسته", value: "close" },
-              ],
+              options: contractStateOptions,
             },
           ]}
-          className="flex flex-row w-full"
+          className="flex flex-row w-full gap-y-2"
         />
       ),
     },
@@ -172,6 +236,25 @@ export default function Sale() {
         />
       ),
     },
+    {
+      title: "سرویس ها",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "services",
+              component: "checkbox",
+              placeholder: "سرویس ها",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: serviceOptions,
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
   ];
 
   const rangeItems = [
@@ -183,6 +266,7 @@ export default function Sale() {
           fields={[
             {
               key: "startDate",
+              dependantKey: "startDateType",
               component: "date",
               placeholder: "از تاریخ",
               type: "text",
@@ -191,6 +275,7 @@ export default function Sale() {
             },
             {
               key: "endDate",
+              dependantKey: "endDateType",
               component: "date",
               placeholder: "تا تاریخ",
               type: "text",
@@ -209,12 +294,22 @@ export default function Sale() {
           form={formik}
           fields={[
             {
-              key: "sellRange",
-              component: "slider",
-              placeholder: "",
+              key: "minSellRange",
+              component: "Select",
+              placeholder: "واردکردن مبلغ",
               type: "text",
-              className: "w-full items-start p-0",
-              range: { max: 10000, min: 0, step: 200 },
+              floating: true,
+              className: "w-full  px-0",
+              options: priceOptions,
+            },
+            {
+              key: "maxSellRange",
+              component: "Select",
+              placeholder: "واردکردن مبلغ",
+              type: "text",
+              floating: true,
+              className: "w-full  px-0",
+              options: priceOptions,
             },
           ]}
           className="flex flex-row w-full"
@@ -228,12 +323,22 @@ export default function Sale() {
           form={formik}
           fields={[
             {
-              key: "buyRange",
-              component: "slider",
-              placeholder: "",
+              key: "minBuyRange",
+              component: "Select",
+              placeholder: "واردکردن مبلغ",
               type: "text",
+              floating: true,
+              className: "w-full  px-0",
+              options: priceOptions,
+            },
+            {
+              key: "maxBuyRange",
+              component: "Select",
+              placeholder: "حداکثرقیمت",
+              type: "text",
+              floating: true,
               className: "w-full items-start p-0",
-              range: { max: 10000, min: 0, step: 200 },
+              options: priceOptions,
             },
           ]}
           className="flex flex-row w-full"
@@ -242,32 +347,91 @@ export default function Sale() {
     },
   ];
   const customerSortlist = [
-    {
-      label: "نام مشتری(الف-ی)",
-      value: "",
-    },
-    { label: "نام مشتری(ی-الف)", value: "" },
-    { label: "گران ترین", value: "MostExpensive" },
-
+    { label: "پرفروش ترین ها", value: "MostSold" },
+    { label: "ارزان ترین ها", value: "MostCheap" },
+    { label: "گران ترین ها", value: "MostExpensive" },
     { label: "جدید ترین ها", value: "Newest" },
     { label: "قدیمی ترین ها", value: "Oldest" },
   ];
-  const { mutate: filterHandler } = useMutation({
-    mutationFn: (data: any) => {
-      return getContracts(data);
-    },
-    onSuccess: (data) => {
-      console.log(data);
-    },
-  });
-  function submitFilter() {
-    console.log("hi")
-    filterHandler({
-      data: {
-        openContracts: "true",
-      },
-    });
+
+  function submitSort(itemValue: string) {
+    const sortData = {
+      sortBy: itemValue,
+    };
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit: limitForContracts,
+        filters: sortData,
+      })
+    );
   }
+
+  function submitFilter() {
+    const filterData = {
+      openContracts: formik.values.openContracts,
+      customerName: formik.values.name,
+      submitDateTimeRangeStart:  convertToGregorian(
+            formik.values?.startDate,
+            formik.values?.startDateType
+          ),
+   
+      submitDateTimeRangeEnd: 
+       convertToGregorian(formik.values?.endDate, formik.values?.endDateType),
+      
+      priceWeSellRangeStart: Number(formik.values.minSellRange),
+      priceWeSellRangeEnd: Number(formik.values.maxSellRange),
+      priceWeBuyRangeStart: Number(formik.values.minBuyRange),
+      priceWeBuyRangeEnd: Number(formik.values.maxBuyRange),
+      avServices: formik.values.services,
+      contractState: formik.values.contractState,
+      // "": formik.values.name,
+      // "": formik.values.gender,
+      // "": formik.values.birthdate
+      //   ? convertToGregorian(
+      //       formik.values.birthdate,
+      //       formik.values?.birthdateType
+      //     )
+      //   : "",
+      // "": formik.values.socialNumber,
+      // "": formik.values.career,
+      // "": formik.values.location,
+      // "": formik.values.contractNumber,
+      // "": formik.values.contractDate
+      //   ? convertToGregorian(
+      //       formik.values.contractDate,
+      //       formik.values?.contractDateType
+      //     )
+      //   : "",
+    };
+
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit: limitForContracts,
+        filters: cleanObject(filterData),
+      })
+    );
+  }
+  function cancleFilter() {
+    formik.resetForm();
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit: limitForContracts,
+        filters: {},
+      })
+    );
+  }
+  useEffect(() => {
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit: limitForContracts,
+        filters: {},
+      })
+    );
+  }, [dispatch]);
   return (
     <main>
       <div className="flex items-center justify-between">
@@ -290,146 +454,52 @@ export default function Sale() {
         <ContractCreation contractTypes={contractTypes} />
       </div>
 
-      <ContractOverview {...contractOverviewProps} />
+      <ContractOverview list={ContractOverviewList} />
 
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-y-4">
-        {/* <Filter /> */}
         <FilterContainer
           onFilterHandler={() => {
             submitFilter();
-            formik.resetForm();
           }}
           rangeItems={rangeItems}
           filterItems={filterItems}
           sortList={customerSortlist}
+          onSortHandler={(item: string) => {
+            submitSort(item);
+          }}
+          onCancleHandler={cancleFilter}
         />
         <div className="text-base font-bold h-9 flex items-center justify-center">
-          {requestCount} درخواست
+          درخواست
         </div>
       </div>
 
       <div className="md:bg-background-active rounded-xl md:p-6">
-        <ContractContainer list={contractList} />
+        <ContractContainer list={contractLists} />
+      </div>
+
+      <div className="w-full custom-shadow bg-card p-3 rounded-md">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="صفحه بعد"
+          previousLabel="صفحه قبل"
+          onPageChange={handlePageChange}
+          pageRangeDisplayed={2}
+          marginPagesDisplayed={3}
+          forcePage={currentPage - 1}
+          pageCount={pages}
+          renderOnZeroPageCount={null}
+          containerClassName="w-full relative flex justify-center items-center ltr"
+          pageClassName="mx-3 rounded-md"
+          pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
+          activeClassName="bg-gray-300 rounded-md"
+          previousClassName="absolute right-8"
+          previousLinkClassName="rounded-md text-sm"
+          nextClassName="absolute left-8"
+          nextLinkClassName="rounded-md text-sm"
+          disabledClassName="opacity-50 cursor-not-allowed"
+        />
       </div>
     </main>
   );
-}
-
-function getData() {
-  const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
-    []
-  );
-  const [contractItems, setContractItems] = useState<any[]>([]);
-  const { data: users } = useQuery({
-    queryKey: ["usersInformation"],
-    queryFn: async () => await getUsers(),
-  });
-
-  const { data: contractInformation } = useQuery({
-    queryKey: ["contractInformation"],
-    queryFn: () => getContracts({}),
-  });
-  useEffect(() => {
-    if (contractInformation?.data) {
-      setContractItems(contractInformation?.data);
-    }
-  }, [contractInformation?.data]);
-
-  const contractList: ContractContainerInterface["list"] = contractItems
-    ? contractItems.map((item: any) => ({
-        id: item.id,
-        contract: {
-          date:
-            item?.contractDate && item?.dateType
-              ? convertDate(item?.contractDate, item?.dateType)
-              : "",
-
-          destination: "",
-          submitter:
-            users?.find((obj) => obj.id === item.userSubmitterId)?.fullName ??
-            "",
-          unit: "",
-        },
-        footer: {
-          cost: item.buyPrice.toString(),
-          income: item.sellPrice.toString(),
-          overall: (item.sellPrice - item.buyPrice).toString(),
-        },
-        header: {
-          contractNumber: item.contractNo,
-          icon: "/icons/visa-white.png",
-
-          submitDate:
-            item?.submitDateTime && item?.dateType
-              ? convertDate(item?.submitDateTime, item?.dateType)
-              : "",
-
-          title:
-            contractTypes.find((obj) => obj.id === item.contractTypeId)
-              ?.title ?? "",
-        },
-        score: {
-          final: 30,
-          totalVotes: 10,
-        },
-        services: item.avServices
-          ? services.filter((obj) => item.avServices.includes(obj.name))
-          : [],
-        user: {
-          image: "/images/expert.png",
-          name:
-            users?.find((obj) => obj.id === item.userResponsibleId)?.fullName ??
-            "",
-        },
-      }))
-    : [];
-
-  const contractOverviewProps: ContractOverviewInterface = {
-    list: [
-      {
-        label: " قرار داد کل",
-        value:
-          contractInformation?.doneCount !== undefined &&
-          contractInformation?.inProgressCount !== undefined
-            ? (
-                contractInformation.doneCount +
-                contractInformation.inProgressCount
-              ).toString()
-            : "",
-      },
-      {
-        label: "قرار داد تکمیل شده",
-        value: (contractInformation?.doneCount ?? "").toString(),
-      },
-      {
-        label: " قرار داد ناقص",
-        value: (contractInformation?.inProgressCount ?? "").toString(),
-      },
-    ],
-  };
-
-  const { data } = useQuery({
-    queryKey: ["contractTypeQuery"],
-    queryFn: () => getContractTypes(),
-  });
-
-  useEffect(() => {
-    if (data?.success && data?.data) {
-      setContractTypes(
-        data.data.map((item: any) => ({
-          id: item.id,
-          image: "http://185.126.203.246:3000/public/" + item.iconFile,
-          title: item.name,
-          activeImage:
-            "http://185.126.203.246:3000/public/" + item.activeIconFile,
-        }))
-      );
-    }
-  }, [data]);
-  return {
-    requestCount: 273,
-    contractOverviewProps,
-    contractList,
-    contractTypes,
-  };
 }
