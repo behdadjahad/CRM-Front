@@ -19,16 +19,18 @@ export default function CustomerSatisfactionReportCard({
         } transition-all duration-300 ease-in-out`}
     >
       <div className="text-foreground-mute">{title}</div>
-      <div className="flex flex-col gap-4">
+      <div className="w-full flex flex-col gap-4">
         {list.map((listItem, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <div className="w-1/4">{listItem.label}</div>
+          <div key={index} className="w-full flex flex-col md:grid md:grid-cols-4 items-center gap-2">
+            <div className="w-full md:col-span-1 text-center md:text-right">{listItem.label}</div>
+            <div className="w-full md:col-span-3 flex items-center justify-between">
             <Progress
               value={listItem.value}
-              className="h-1.5 w-2/3 bg-muted/30"
+              className="h-1.5 bg-muted/30"
               indicatorClassName={indicatorClassName}
             />
-            <div className="text-foreground-mute">{`% ${listItem.value}`}</div>
+              <div className="text-foreground-mute text-left text-xs md:text-sm">{`% ${listItem.value}`}</div>
+              </div>
           </div>
         ))}
         </div>

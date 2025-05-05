@@ -115,16 +115,16 @@ export default function CustomerDetailReport({
 }: CustomerReportInterface) {
   return (
     <div className="flex flex-col gap-4 mt-4">
-      <div className="grid grid-cols-4 gap-4">
-        <div className="col-span-1 flex flex-col gap-4 justify-between">
+      <div className="flex flex-col md:grid md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:col-span-1 md:flex md:flex-col gap-2 md:gap-4 justify-between">
           {CustomerReportInfoData.map((item) => (
             <CustomerReportInfoCard key={item.label} {...item} />
           ))}
         </div>
 
-        <div className="col-span-3">
+        <div className="flex flex-col md:col-span-3">
           <div className="flex flex-col gap-4 w-full h-full">
-            <div className="flex flex-row gap-4 w-full">
+            <div className="flex flex-col md:flex-row gap-4 w-full">
               {" "}
               {CustomerReportExpenseData.map((item) => (
                 <CustomerReportInfoCard key={item.label} {...item} />
@@ -140,7 +140,8 @@ export default function CustomerDetailReport({
 
       <CustomerSatisfactionReport data={satisfactionReportData} />
       <div className="w-full bg-card p-8 rounded-lg">
-        <div className="flex justify-between items-center flex-wrap">
+        {/* <div className="flex justify-between items-center flex-wrap"> */}
+        <div className="w-full grid grid-cols-2 md:flex md:justify-between gap-4">
           {serviceData.map((item) => (
             <div key={item.label} className="flex flex-row gap-2">
               <div className="w-15 h-15">
@@ -158,7 +159,7 @@ export default function CustomerDetailReport({
                     height={107}
                     className={item.iconClassName}
                   />
-                  {/* <FaStar style={{ fontSize: "32px", color: "#00bcd4" }} /> */}
+           
                 </CircularProgressbarWithChildren>
               </div>
               <div className="flex flex-col gap-2">

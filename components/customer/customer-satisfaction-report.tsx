@@ -20,11 +20,11 @@ export default function CustomerSatisfactionReport({
   const unsatisfaction = 40;
   return (
     <div className="bg-card rounded-lg custom-shadow p-6">
-      <div className="grid grid-cols-2">
+      <div className="md:grid md:grid-cols-2 flex flex-col gap-4">
         <div className="flex flex-col justify-between">
           <div className="font-bold">رضایتمندی</div>
           <div className="flex items-center justify-center h-full">
-            <div className="relative w-68 h-68">
+            <div className="relative md:w-68 md:h-68 w-48 h-48">
               {" "}
               {/* width = 208px */}
               <PieChart

@@ -27,14 +27,14 @@ const customerDetailContractSlice = createSlice({
         "تاریخ قرارداد": convertDate(item?.contractDate, dateType),
         "میزان درآمد": item?.sellPrice,
         "سود و زیان": "",
-        مقصد: `${item?.destinationCountry},${item?.destinationCity}`,
+        مقصد: `${item?.destinationCountry?.name},${item?.destinationCity?.name}`,
         "موضوع قرارداد": "",
         اپراتور: " ",
         وضعیت: "",
         "تاریخ شروع": "",
         "تاریخ پایان": "",
         "تعداد مشتری": "",
-        رضایتمندی: item?.contractSatisfaction[0]?.satisfactionScore / 10,
+        رضایتمندی: item?.contractSatisfaction[0]?.satisfactionScore ?  item?.contractSatisfaction[0]?.satisfactionScore / 10 : 0,
       }));
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / limitForCustomerDetailContracts);

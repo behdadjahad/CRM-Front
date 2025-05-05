@@ -139,11 +139,12 @@ export default function CustomerDetailContent({
   const pages = useSelector((state: any) => state.customerDetailContract.totalPages);
   return (
     <>
-      <div className="bg-card w-full mt-0 flex gap-4">
+      <div className="bg-card w-full mt-0 flex gap-1 md:gap-4">
         {tabList.map((tab: any) => (
+          
           <button
             key={tab}
-            className={`text-center h-full p-6 ${
+            className={`text-center text-xs font-bold md:text-sm h-full p-2 md:p-6 ${
               activeTab === tab
                 ? "border-b-2 border-quartiery-background font-bold text-black"
                 : "text-neutral-500"
