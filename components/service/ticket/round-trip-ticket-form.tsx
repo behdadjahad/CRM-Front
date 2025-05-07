@@ -7,54 +7,73 @@ import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 import { useMutation } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
-
+import { convertDateTimeToGregorian } from "@/lib/date";
+import { useParams } from "next/navigation";
+import { sendFlightData } from "@/api/flight";
 export default function RoundTripTicketForm({
   //itemId,
   flightClassOptions,
   flightTypeOptions,
   airports,
-  airlines
+  airlines,
+  ticket,
 }: {
   itemId: any;
   flightTypeOptions: any;
   flightClassOptions: any;
-    airports: OptionType[];
-    airlines:OptionType[];
+  airports: OptionType[];
+  airlines: OptionType[];
+  ticket: any;
 }) {
+
   const formik = useFormik({
     initialValues: {
-      originCityAirport: "",
-      originTerminal: "",
-      dateTime: "",
-      destinationCityAirport: "",
-      destinationTerminal: "",
+      originCityAirport: ticket?.flights?.[0]?.originCityAirport?.toString(),
+      originTerminal: ticket?.flights?.[0]?.originTerminal?.toString(),
+      exitDateTime: ticket?.flights?.[0]?.exitDateTime?.toString(),
+      arriveDateTime: ticket?.flights?.[0]?.arriveDateTime?.toString(),
+      destinationCityAirport:
+        ticket?.flights?.[0]?.destinationCityAirport?.toString(),
+      destinationTerminal:
+        ticket?.flights?.[0]?.destinationTerminal?.toString(),
       airline: "",
       cost: "",
       currency: "",
       broker: "",
-      flightType: "",
+      id: ticket?.flights?.[0]?.flightId,
       flightClass: "",
-      id: "",
-      isSubmitted: "",
+      flightType: ticket?.flights?.[0]?.flightType?.toString(),
+      isSubmitted: ticket?.flights?.[0]?.isSubmitted,
+      flightGroupId:ticket?.isSubmitted ? ticket?.id:null,
+      travelType: ticket?.ticketType || "TwoWay",
+      groupOrder: 1,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
+
   const returnFormik = useFormik({
     initialValues: {
-      returnOriginCityAirport: "",
-      returnOriginTerminal: "",
-      returnDateTime: "",
-      returnDestinationCityAirport: "",
-      returnDestinationTerminal: "",
+      returnOriginCityAirport:
+        ticket?.flights?.[1]?.originCityAirport?.toString(),
+      returnOriginTerminal: ticket?.flights?.[1]?.originTerminal?.toString(),
+      returnExitDateTime: ticket?.flights?.[1]?.exitDateTime?.toString(),
+      returnArriveDateTime: ticket?.flights?.[1]?.arriveDateTime?.toString(),
+      returnDestinationCityAirport:
+        ticket?.flights?.[1]?.destinationCityAirport?.toString(),
+      returnDestinationTerminal:
+        ticket?.flights?.[1]?.destinationTerminal?.toString(),
       returnAirline: "",
       returnCost: "",
       returnBroker: "",
       returnCurrency: "",
       returnFlightClass: "",
-      returnFlightType: "",
-      id: "",
-      isSubmitted: "",
+      returnFlightType: ticket?.flights?.[1]?.flightType?.toString(),
+      id: ticket?.flights?.[1]?.flightId,
+      isSubmitted: ticket?.flights?.[1]?.isSubmitted,
+      flightGroupId:ticket?.isSubmitted ? ticket?.id:null,
+      travelType: ticket?.ticketType || "TwoWay",
+      groupOrder: 2,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -66,10 +85,13 @@ export default function RoundTripTicketForm({
   const [destinationTerminals, setDestinationTerminals] = useState<
     OptionType[]
   >([]);
-  const [returnOriginTerminals, setReturnOriginTerminals] = useState<OptionType[]>([]);
+  const [returnOriginTerminals, setReturnOriginTerminals] = useState<
+    OptionType[]
+  >([]);
   const [returnDestinationTerminals, setReturnDestinationTerminals] = useState<
     OptionType[]
   >([]);
+  const { id } = useParams();
   function addStopForm() {
     setAddedStops([
       ...addedStops,
@@ -154,23 +176,95 @@ export default function RoundTripTicketForm({
     },
   });
   useEffect(() => {
-    SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+    if (formik.values.originCityAirport) {
+      SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+    }
   }, [formik.values.originCityAirport]);
 
   useEffect(() => {
-    SubmitDestinationAirportHandler(
-      Number(formik.values.destinationCityAirport)
-    );
+    if (formik.values.destinationCityAirport) {
+      SubmitDestinationAirportHandler(
+        Number(formik.values.destinationCityAirport)
+      );
+    }
   }, [formik.values.destinationCityAirport]);
   useEffect(() => {
-    SubmitReturnOriginAirportHandler(Number(returnFormik.values.returnDestinationCityAirport));
+    if (returnFormik.values.returnDestinationCityAirport) {
+      SubmitReturnDestinationAirportHandler(
+        Number(returnFormik.values.returnDestinationCityAirport)
+      );
+    }
   }, [returnFormik.values.returnDestinationCityAirport]);
 
   useEffect(() => {
-    SubmitReturnDestinationAirportHandler(
-      Number(returnFormik.values.returnOriginCityAirport)
-    );
+    if (returnFormik.values.returnOriginCityAirport) {
+      SubmitReturnOriginAirportHandler(
+        Number(returnFormik.values.returnOriginCityAirport)
+      );
+    }
   }, [returnFormik.values.returnOriginCityAirport]);
+  const { mutate: submitFlightForm } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return sendFlightData(data, id);
+    },
+    onSuccess: () => {},
+  });
+  function submitHandler() {
+    const data = {
+      travelType: formik.values.travelType,
+      flightGroupId: formik.values.flightGroupId,
+      baseTerminalId: formik.values.originTerminal,
+      baseStationId: formik.values.originCityAirport,
+      destinationTerminalId: formik.values.destinationTerminal,
+      destinationStationId: formik.values.destinationCityAirport,
+      ticketClassId: formik.values.flightClass,
+      ticketKindId: formik.values.flightType,
+      exiteDateTime: convertDateTimeToGregorian(
+        formik.values.exitDateTime,
+        "Solar"
+      ),
+      arriveDateTime: convertDateTimeToGregorian(
+        formik.values.arriveDateTime,
+        "Gregorian"
+      ),
+      // arriveDateTime: "2000-01-01T00:00:00Z",
+
+      // exiteDateTime: "2000-01-01T00:00:00Z",
+      groupOrder: formik.values.groupOrder,
+    };
+    submitFlightForm({
+      id: Number(id),
+      data: data,
+    });
+  }
+  function returnSubmitHandler() {
+    const data = {
+      travelType: returnFormik.values.travelType,
+      flightGroupId: returnFormik.values.flightGroupId,
+      baseTerminalId: returnFormik.values.returnOriginTerminal,
+      baseStationId: returnFormik.values.returnOriginCityAirport,
+      destinationTerminalId: returnFormik.values.returnDestinationTerminal,
+      destinationStationId: returnFormik.values.returnDestinationCityAirport,
+      ticketClassId: returnFormik.values.returnFlightClass,
+      ticketKindId: returnFormik.values.returnFlightType,
+      exiteDateTime: convertDateTimeToGregorian(
+        returnFormik.values.returnExitDateTime,
+        "Solar"
+      ),
+      arriveDateTime: convertDateTimeToGregorian(
+        returnFormik.values.returnArriveDateTime,
+        "Gregorian"
+      ),
+      // arriveDateTime: "2000-01-01T00:00:00Z",
+
+      // exiteDateTime: "2000-01-01T00:00:00Z",
+      flightGroupOrder: returnFormik.values.groupOrder,
+    };
+    submitFlightForm({
+      id: Number(id),
+      data: data,
+    });
+  }
   return (
     <>
       <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
@@ -208,8 +302,8 @@ export default function RoundTripTicketForm({
               options: originTerminals,
             },
             {
-              key: "dateTime",
-              component: "date",
+              key: "exitDateTime",
+              component: "date-time",
               placeholder: "تاریخ و ساعت",
               type: "text",
               floating: true,
@@ -231,9 +325,16 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              options:destinationTerminals
+              options: destinationTerminals,
             },
-
+            {
+              key: "arriveDateTime",
+              component: "date-time",
+              placeholder: "تاریخ و ساعت",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
             {
               key: "airline",
               component: "Select",
@@ -241,7 +342,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              options:airlines
+              options: airlines,
             },
             {
               key: "flightClass",
@@ -294,7 +395,7 @@ export default function RoundTripTicketForm({
               key: "actions",
               children: (
                 <div className="flex flex-row items-center gap-2 justify-end w-full">
-                  <Button variant="info" onClick={() => {}}>
+                  <Button variant="info" onClick={submitHandler}>
                     ثبت پرواز
                   </Button>
                   <Button
@@ -315,6 +416,7 @@ export default function RoundTripTicketForm({
             key={item.id}
             onRemoveHandler={removeHandler}
             itemId={item.id}
+            flightId={ticket?.flights?.[0]?.flightId}
           />
         ))}
       </div>
@@ -351,11 +453,11 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              options:returnOriginTerminals
+              options: returnOriginTerminals,
             },
             {
-              key: "returnDateTime",
-              component: "date",
+              key: "returnExitDateTime",
+              component: "date-time",
               placeholder: "تاریخ و ساعت",
               type: "text",
               floating: true,
@@ -377,9 +479,16 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              options:returnDestinationTerminals
+              options: returnDestinationTerminals,
             },
-
+            {
+              key: "returnArriveDateTime",
+              component: "date-time",
+              placeholder: "تاریخ و ساعت",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/3",
+            },
             {
               key: "returnAirline",
               component: "Select",
@@ -387,7 +496,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              options:airlines
+              options: airlines,
             },
             {
               key: "returnFlightClass",
@@ -440,7 +549,7 @@ export default function RoundTripTicketForm({
               key: "returnActions",
               children: (
                 <div className="flex flex-row items-center gap-2 justify-end w-full">
-                  <Button variant="info" onClick={() => {}}>
+                  <Button variant="info" onClick={returnSubmitHandler}>
                     ثبت پرواز
                   </Button>
                   <Button
@@ -461,6 +570,7 @@ export default function RoundTripTicketForm({
             key={item.id}
             onRemoveHandler={removeReturnHandler}
             itemId={item.id}
+            flightId={ticket?.flights?.[1]?.flightId}
           />
         ))}
       </div>

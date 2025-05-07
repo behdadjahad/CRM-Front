@@ -79,3 +79,44 @@ export function convertToGregorian(
     .replace(" ", "T")
     .replace(/\s+/g, "");
 }
+export function convertDateTimeToGregorian(
+  dateTimeStr: string,
+  targetType: string
+): string {
+  const persianToEnglish = (str: string) => {
+    const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+    const englishDigits = "0123456789";
+    return str.replace(/[۰-۹]/g, (char) => englishDigits[persianDigits.indexOf(char)]);
+  };
+
+  // Convert Persian digits to English
+  dateTimeStr = persianToEnglish(dateTimeStr);
+
+  // Separate date and time
+  const [datePart, timePart = "00:00"] = dateTimeStr.split("-");
+  const [year, month, day] = datePart.split("/").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+
+  let gregorianDate: MomentTimezone.Moment;
+
+  if (targetType.toLowerCase() === "lunar") {
+    const hijriDate = momentHijri(`${year}-${month}-${day}`, "iYYYY-iMM-iDD");
+    gregorianDate = hijriDate.utc().hour(hour).minute(minute).second(0);
+  } else if (targetType.toLowerCase() === "solar") {
+    const greg = toGregorian(year, month, day); // Convert Jalali to Gregorian
+    gregorianDate = MomentTimezone.utc(
+      `${greg.gy}-${greg.gm}-${greg.gd} ${hour}:${minute}`,
+      "YYYY-M-D HH:mm"
+    );
+  } else if (targetType.toLowerCase() === "gregorian") {
+    gregorianDate = MomentTimezone.utc(
+      `${year}-${month}-${day} ${hour}:${minute}`,
+      "YYYY-MM-DD HH:mm"
+    );
+  } else {
+    return "";
+  }
+
+  // Format as UTC string
+  return gregorianDate.format("YYYY-MM-DDTHH:mm:ss[Z]");
+}

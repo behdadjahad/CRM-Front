@@ -1,22 +1,21 @@
+import { sendStopData } from "@/api/stop";
 import FormMaker from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { useFormik } from "formik";
 
 export default function StopForm({
   itemId,
   onRemoveHandler,
+  flightId
 }: {
   itemId: any;
-  onRemoveHandler: any;
+    onRemoveHandler: any;
+    flightId:number
 }) {
   const formik = useFormik({
     initialValues: {
-      country: "",
-      city: "",
-      hotelName: "",
-      serviceType: "",
-      accommodationType: "",
-      voucherFile: "",
+      flightId:"",
       id: "",
       isSubmitted: false,
     },
@@ -26,7 +25,23 @@ export default function StopForm({
   function removeForm(formId: any) {
     onRemoveHandler(formId);
   }
-
+  const { mutate: submitStopForm } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return sendStopData(data, id);
+    },
+    onSuccess: () => {},
+  });
+  function submitHandler() {
+    const data = {
+      stopDateTime: "2000-01-01T00:00:00Z",
+      stopStationId: 1,
+      description: "string"
+    };
+    submitStopForm({
+      id: flightId,
+      data: data,
+    });
+  }
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -64,7 +79,7 @@ export default function StopForm({
             key: "actions",
             children: (
               <div className="flex flex-row items-center gap-2 justify-end w-full">
-                <Button variant="info" onClick={() => {}}>
+                <Button variant="info" onClick={submitHandler}>
                   ثبت توقف
                 </Button>
                 <Button

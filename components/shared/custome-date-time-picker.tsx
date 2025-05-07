@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useId } from "react";
 import DatePicker from "react-multi-date-picker";
 import gregorian from "react-date-object/calendars/gregorian";
 import persian from "react-date-object/calendars/persian";
@@ -8,6 +8,7 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { cn } from "@/lib/utils";
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import DateObject from "react-date-object";
 export type DateCalendar = "Lunar" | "Solar" | "Gregorian";
 
 interface CustomeDatePickerProps {
@@ -18,9 +19,9 @@ interface CustomeDatePickerProps {
   onValueChanged?: (date: any) => any;
   onCalenderTypeChange?: (calenderType: DateCalendar) => any;
   idKey: string;
-  children?: any;
+  children?: React.ReactNode;
 }
-
+const pad = (num: number) => String(num).padStart(2, '0');
 export default function CustomeDateTimePicker({
   placeholder = "Select a date",
   children,
@@ -28,17 +29,16 @@ export default function CustomeDateTimePicker({
   idKey,
   value = new Date(),
   inputStyle = {},
-  onValueChanged = (date: any) => {
-    console.log(date);
-  },
-  onCalenderTypeChange = (calenderType: string) => {
-    console.log(calenderType);
-  },
+  onValueChanged = (date: any) => console.log(date),
+  onCalenderTypeChange = (calendarType: string) => console.log(calendarType),
 }: CustomeDatePickerProps) {
+  // const uniqueId = useId(); // generates a unique id per component
+  // const internalId = `${idKey}-${uniqueId}`; // scoped internal DOM id
+  const [internalId] = useState(() => `${idKey}-${Math.random().toString(36).substring(2, 9)}`);
+
   const [calendar, setCalendar] = useState<DateCalendar>("Solar");
   const [locale, setLocale] = useState(persian_fa);
 
-  // Calendar options
   const calendars = {
     Gregorian: {
       calendar: gregorian,
@@ -56,55 +56,70 @@ export default function CustomeDateTimePicker({
       label: "قمری",
     },
   };
+ 
 
   const updateButtonStyles = (calendarType: DateCalendar) => {
-    const container = document.querySelector(`#${idKey}`);
+    const container = document.querySelector(`#${internalId}`);
     if (!container) return;
     const buttons = container.querySelectorAll(".calendar-buttons button");
-    const calendarKey = calendars[calendarType].label;
-    const newButtons = [];
+    const calendarLabel = calendars[calendarType].label;
     buttons.forEach((button: any) => {
-      const buttonKey = button.innerText; // Get the button label
+      const isActive = button.innerText === calendarLabel;
       button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${
-        calendarKey == buttonKey
-          ? "bg-primary-muted text-primary-hover font-bold"
-          : ""
+        isActive ? "bg-primary-muted text-primary-hover font-bold" : ""
       }`;
-      newButtons.push(button);
     });
   };
 
+  // const handleCalendarChange = (calendarType: DateCalendar) => {
+  //   onCalenderTypeChange(calendarType);
+  //   setCalendar(calendarType);
+  //   setLocale(calendars[calendarType].locale);
+  //   updateButtonStyles(calendarType);
+  //   const newDate = new DateObject({
+  //     date: value,
+  //     calendar: calendars[calendarType].calendar,
+  //     locale: calendars[calendarType].locale,
+  //   });
+    
+  //   onValueChanged(newDate.format("YYYY/MM/DD-HH:mm"));
+  // };
+
   const handleCalendarChange = (calendarType: DateCalendar) => {
+    // Step 1: Parse the current date value in the *current* calendar
+    const oldDate = new DateObject({
+      date: value,
+      calendar: calendars[calendar].calendar,
+      locale: calendars[calendar].locale,
+    });
+  
+    // Step 2: Convert to new calendar while preserving absolute time
+    const newDate = oldDate.convert(calendars[calendarType].calendar);
+    newDate.locale = calendars[calendarType].locale;
+  
+    // Step 3: Apply changes
     onCalenderTypeChange(calendarType);
     setCalendar(calendarType);
     setLocale(calendars[calendarType].locale);
     updateButtonStyles(calendarType);
+    onValueChanged(newDate.format("YYYY/MM/DD-HH:mm"));
   };
-
   useEffect(() => {
     const interval = setInterval(() => {
-      const container = document.querySelector(`#${idKey}`);
-
+      const container = document.querySelector(`#${internalId}`);
       if (!container) return;
       const wrapper = container.querySelector(".rmdp-wrapper");
       if (wrapper && !wrapper.querySelector(".calendar-buttons")) {
-        // Create button container
         const buttonContainer = document.createElement("div");
-        buttonContainer.className =
-          "calendar-buttons flex justify-center mt-2 w-full";
+        buttonContainer.className = "calendar-buttons flex justify-center mt-2 w-full";
 
-        // Create and append buttons to the container
         Object.keys(calendars).forEach((key) => {
           const button = document.createElement("button");
           button.innerText = calendars[key as DateCalendar].label;
-          button.onclick = () => {
-            handleCalendarChange(key as DateCalendar);
-          };
+          button.onclick = () => handleCalendarChange(key as DateCalendar);
           button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${
-            calendar === key
-              ? "bg-primary-muted text-primary-hover font-bold"
-              : ""
-          }`; // Tailwind classes for styling
+            calendar === key ? "bg-primary-muted text-primary-hover font-bold" : ""
+          }`;
           buttonContainer.appendChild(button);
         });
 
@@ -112,21 +127,28 @@ export default function CustomeDateTimePicker({
       }
     }, 100);
 
-    // Clear interval on unmount
     return () => clearInterval(interval);
-  }, [calendar]); // Re-run effect when the calendar changes
+  }, [calendar, internalId]);
 
   return (
-    <div className={cn("[&>div]:w-full", className)} id={idKey}>
+    <div className={cn("[&>div]:w-full", className)} id={internalId}>
       <DatePicker
         calendar={calendars[calendar].calendar}
         locale={locale}
         value={value}
         autoFocus={true}
-        format="YYYY/MM/DD hh:mm A"
+        format="YYYY/MM/DD-HH:mm"
         inputClass="custom-date-input"
-        className="[&>.rmdp-input]:hidden" // Hides default input from date picker component
-        onChange={(date: any) => onValueChanged(date.format())}
+        className="[&>.rmdp-input]:hidden"
+        // onChange={(date: any) => onValueChanged(date.format())}
+        onChange={(date: any) => {
+          const formattedDate = `${date.year}/${pad(date.month)}/${pad(date.day)}-${pad(date.hour)}:${pad(date.minute)}`;
+          onValueChanged(formattedDate);
+        }}
+        
+        plugins={[
+          <TimePicker key="time" position="top" format="HH:mm" hideSeconds={true} />,
+        ]}
         render={(value, openCalendar) => (
           <div className="w-full">
             <div className="w-full h-full z-0" onClick={openCalendar}>
@@ -143,7 +165,6 @@ export default function CustomeDateTimePicker({
             />
           </div>
         )}
-        plugins={[<TimePicker position="top" key={"time"} format="hh:mm A"     hideSeconds={true}  />]}
       />
     </div>
   );

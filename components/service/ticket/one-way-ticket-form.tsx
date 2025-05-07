@@ -9,41 +9,56 @@ import { useMutation } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
 import { sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
+import { convertDateTimeToGregorian } from "@/lib/date";
 export default function OneWayTicketForm({
   itemId,
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
   airports,
-  airlines
+  airlines,
+  ticket,
 }: {
   itemId: any;
   onRemoveHandler: any;
   flightClassOptions: any;
   flightTypeOptions: any;
-    airports: OptionType[];
-    airlines:OptionType[];
+  airports: OptionType[];
+  airlines: OptionType[];
+  ticket: any;
 }) {
   const formik = useFormik({
     initialValues: {
-      originCityAirport: "",
-      originTerminal: "",
-      dateTime: "",
-      destinationCityAirport: "",
-      destinationTerminal: "",
+      originCityAirport: ticket?.flights?.[0]?.originCityAirport?.toString(),
+      originTerminal: ticket?.flights?.[0]?.originTerminal?.toString(),
+      exitDateTime: ticket?.flights?.[0]?.exitDateTime?.toString(),
+      exitDateTimeType:"",
+      arriveDateTime: ticket?.flights?.[0]?.arriveDateTime?.toString(),
+      arriveDateTimeType:"",
+      destinationCityAirport:
+        ticket?.flights?.[0]?.destinationCityAirport?.toString(),
+      destinationTerminal:
+        ticket?.flights?.[0]?.destinationTerminal?.toString(),
       airline: "",
       cost: "",
       currency: "",
       broker: "",
-      id: "",
-      isSubmitted:false,
+      id: ticket?.flights?.[0]?.flightId,
+      flightClass: "",
+      flightType: ticket?.flights?.[0]?.flightType?.toString(),
+      isSubmitted: ticket?.flights?.[0]?.isSubmitted,
+      flightGroupId: ticket.isSubmitted ? ticket?.id : null,
+      travelType: ticket?.ticketType || "OneWay",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
+
   const { id } = useParams();
   const [originTerminals, setOriginTerminals] = useState<OptionType[]>([]);
-  const [destinationTerminals, setDestinationTerminals] = useState<OptionType[]>([]);
+  const [destinationTerminals, setDestinationTerminals] = useState<
+    OptionType[]
+  >([]);
 
   const [addedStops, setAddedStops] = useState<any[]>([]);
   function addStopForm() {
@@ -67,51 +82,76 @@ export default function OneWayTicketForm({
       return getAirportTerminal(id);
     },
     onSuccess: (response) => {
-      const originTerminalOptions: OptionType[] = response.data.map((item: any) => ({
-        label: item.name,
-        value: item.id.toString(),
-      }));
+      const originTerminalOptions: OptionType[] = response.data.map(
+        (item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        })
+      );
       setOriginTerminals(originTerminalOptions);
-    }
+    },
   });
   const { mutate: SubmitDestinationAirportHandler } = useMutation({
     mutationFn: (id: number) => {
       return getAirportTerminal(id);
     },
     onSuccess: (response) => {
-      const destinationTerminalOptions: OptionType[] = response?.data.map((item: any) => ({
-        label: item.name,
-        value: item.id.toString(),
-      }));
+      const destinationTerminalOptions: OptionType[] = response?.data.map(
+        (item: any) => ({
+          label: item.name,
+          value: item.id.toString(),
+        })
+      );
       setDestinationTerminals(destinationTerminalOptions);
     },
   });
   useEffect(() => {
-    SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+    if (formik.values.originCityAirport) {
+      SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
+    }
   }, [formik.values.originCityAirport]);
 
   useEffect(() => {
-    SubmitDestinationAirportHandler(Number(formik.values.destinationCityAirport))
+    if (formik.values.destinationCityAirport) {
+      SubmitDestinationAirportHandler(
+        Number(formik.values.destinationCityAirport)
+      );
+    }
   }, [formik.values.destinationCityAirport]);
 
   const { mutate: submitFlightForm } = useMutation({
-    mutationFn: ({ data,id }: { data: any; id:number}) => {
-      return sendFlightData(data,id);
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return sendFlightData(data, id);
     },
-    onSuccess: () => {
-  
-    }
+    onSuccess: () => {},
   });
   function submitHandler() {
-
     const data = {
-      travelType: "OneWay",
-      flightGroupId:null,
-    }
+      travelType: formik.values.travelType,
+      flightGroupId: formik.values.flightGroupId,
+      baseTerminalId: formik.values.originTerminal,
+      baseStationId: formik.values.originCityAirport,
+      destinationTerminalId: formik.values.destinationTerminal,
+      destinationStationId: formik.values.destinationCityAirport,
+      ticketClassId: formik.values.flightClass,
+      ticketKindId: formik.values.flightType,
+      exiteDateTime: convertDateTimeToGregorian(
+        formik.values.exitDateTime,
+      formik.values.exitDateTimeType
+      ),
+      arriveDateTime: convertDateTimeToGregorian(
+        formik.values.arriveDateTime,
+      formik.values.arriveDateTimeType
+      ),
+      // arriveDateTime: "2000-01-01T00:00:00Z",
+
+      // exiteDateTime: "2000-01-01T00:00:00Z",
+    };
     submitFlightForm({
-      id:Number(id),data:data
-    })
-}
+      id: Number(id),
+      data: data,
+    });
+  }
 
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
@@ -157,8 +197,9 @@ export default function OneWayTicketForm({
           //   className: "w-full md:w-1/3",
           // },
           {
-            key: "dateTime",
+            key: "exitDateTime",
             component: "date-time",
+            dependantKey:"exitDateTimeType",
             placeholder: "تاریخ و ساعت",
             type: "text",
             floating: true,
@@ -182,6 +223,15 @@ export default function OneWayTicketForm({
             className: "w-full md:w-1/3",
             options: destinationTerminals,
           },
+          {
+            key: "arriveDateTime",
+            component: "date-time",
+            dependantKey:"arriveDateTimeType",
+            placeholder: "تاریخ و ساعت",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
+          },
 
           {
             key: "airline",
@@ -190,7 +240,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:airlines
+            options: airlines,
           },
           {
             key: "flightClass",
@@ -248,7 +298,8 @@ export default function OneWayTicketForm({
                 </Button>
                 <Button
                   onClick={() => {
-                    removeTicketForm(itemId);
+                    removeTicketForm(ticket?.flights?.[0]?.flightId);
+                    console.log()
                   }}
                   className="text-danger border-danger"
                 >
@@ -266,6 +317,7 @@ export default function OneWayTicketForm({
           key={item.id}
           onRemoveHandler={removeHandler}
           itemId={item.id}
+          flightId={ticket?.flights?.[0]?.flightId}
         />
       ))}
     </div>

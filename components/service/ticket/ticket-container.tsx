@@ -14,28 +14,32 @@ export default function TicketContainer({
   transportationType: string;
 }) {
   const { id } = useParams();
-  const [addedTickets, setAddedTickets] = useState<any[]>([
-    {
-      id: `ticket-1`,
-      isSubmitted: false,
-    },
-  ]);
+  const [addedTickets, setAddedTickets] = useState<any[]>([]);
   function addTicketForm() {
     setAddedTickets([
       ...addedTickets,
       {
         id: `ticket-${addedTickets.length + 1}`,
+        flights:[],
         isSubmitted: false,
       },
     ]);
   }
+  // function removeHandler(formId: any) {
+  //   if (addedTickets.length > 1) {
+  //     const updatedAddedFlights = addedTickets.filter(
+  //       (item) => item.id != formId
+  //     );
+  //     setAddedTickets(updatedAddedFlights);
+  //   } else return;
+  // }
   function removeHandler(formId: any) {
-    if (addedTickets.length > 1) {
+    // if (addedTickets.length > 1) {
       const updatedAddedFlights = addedTickets.filter(
-        (item) => item.id != formId
+        (item) => item.flightId != formId
       );
       setAddedTickets(updatedAddedFlights);
-    } else return;
+    // } else return;
   }
 
   const { data: ticketData } = useQuery({
@@ -44,21 +48,38 @@ export default function TicketContainer({
   });
   useEffect(() => {
     if (ticketData && ticketData?.data?.length > 0) {
-      console.log(47, ticketData)
-      const ticketInfo = ticketData.data.map((item: any) => ({
-        id: item.id,
-        ticketType: item.travelType,
-        flights: item.tickets.map((flight:any) => ({
-          id:flight.id,
-          stops: flight.flightStops.map((stop:any) => ({
-              id:stop.id
-            }))
-              
+      const ticketInfo = ticketData?.data?.map((item: any) => ({
+        id: item?.id,
+        ticketType: item?.travelType,
+        flights: item?.tickets?.map((flight: any) => ({
+          flightId: flight?.id,
+          flightClass: flight?.ticketClassId,
+          flightType: flight?.ticketKindId,
+          flightGroupId: flight?.flightGroupId,
+          originCityAirport: flight?.baseStationId,
+          originTerminal: flight?.baseTerminalId,
+          exitDateTime: flight?.exiteDateTime,
+          arriveDateTime: flight?.arriveDateTime,
+          destinationCityAirport: flight?.destinationStationId,
+          destinationTerminal: flight?.destinationTerminalId,
+          isSubmitted: true,
+          stops: flight?.flightStops?.map((stop: any) => ({
+            id: stop?.id,
+          })),
         })),
-        isSubmitted:true
-      }))
-      setAddedTickets(ticketInfo)
-  }}, [ticketData]);
+        isSubmitted: true,
+      }));
+      setAddedTickets(ticketInfo);
+    } else {
+      setAddedTickets([
+        {
+          id: `ticket-1`,
+          isSubmitted: false,
+          flights: [],
+        },
+      ]);
+    }
+  }, [ticketData]);
   return (
     <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -80,7 +101,6 @@ export default function TicketContainer({
             onRemoveHandler={removeHandler}
             transportationType={transportationType}
             ticket={item}
-           
           />
         ))}
       </div>

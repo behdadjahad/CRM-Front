@@ -30,6 +30,7 @@ export async function getAirlinesData(id:number) {
 
 
 export async function sendFlightData(data: any, id: number) {
+  console.log(data)
 
   try {
     if (!data || Object.keys(data).length === 0) {
@@ -53,11 +54,11 @@ export async function sendFlightData(data: any, id: number) {
       });
     }
 
-    const result = await fetchService(`flight-contract/${id}`, {
-      method: "POST",
-      body: formData,
-    });
+    // const result = await fetchService(`flight-contract/${id}`, {
+    //   method: "POST",
+    //   body: formData,
+    // });
 
-    return result;
+    // return result;
   } catch {}
 }

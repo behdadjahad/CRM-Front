@@ -7,46 +7,59 @@ import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 import { useMutation } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
-
+import { convertDateTimeToGregorian } from "@/lib/date";
+import { sendFlightData } from "@/api/flight";
+import { useParams } from "next/navigation";
 export default function FlightForm({
-  itemId,
+
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
   count,
   airlines,
-  airports
+  airports,
+  flight,
+  ticket,
 }: {
-  itemId: any;
-    onRemoveHandler: any;
-    flightClassOptions: any;
-    flightTypeOptions: any;
-    count: any;
-    airlines: OptionType[];
-    airports:OptionType[];
+
+  onRemoveHandler: any;
+  flightClassOptions: any;
+  flightTypeOptions: any;
+  count: any;
+  airlines: OptionType[];
+  airports: OptionType[];
+  flight: any;
+  ticket: any;
 }) {
+  const { id } = useParams();
+
   const formik = useFormik({
     initialValues: {
-      originCityAirport: "",
-      originTerminal: "",
-      dateTime: "",
-      destinationCityAirport: "",
-      destinationTerminal: "",
+      originCityAirport: flight?.originCityAirport?.toString(),
+      originTerminal: flight?.originTerminal?.toString(),
+      exitDateTime: flight?.exitDateTime?.toString(),
+      arriveDateTime: flight?.arriveDateTime?.toString(),
+      destinationCityAirport: flight?.destinationCityAirport?.toString(),
+      destinationTerminal: flight?.destinationTerminal?.toString(),
       airline: "",
       cost: "",
       currency: "",
       broker: "",
       flightType: "",
-      flightClass:"",
-      id: "",
-      isSubmitted: "",
+      flightClass: "",
+      id: flight?.FlightId,
+      isSubmitted: ticket?.isSubmitted,
+      flightGroupId: ticket.isSubmitted ? ticket?.id : null,
+      travelType: ticket?.ticketType || "MultiWay",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
   const [addedStops, setAddedStops] = useState<any[]>([]);
-    const [originTerminals, setOriginTerminals] = useState<OptionType[]>([]);
-    const [destinationTerminals, setDestinationTerminals] = useState<OptionType[]>([]);
+  const [originTerminals, setOriginTerminals] = useState<OptionType[]>([]);
+  const [destinationTerminals, setDestinationTerminals] = useState<
+    OptionType[]
+  >([]);
   function addStopForm() {
     setAddedStops([
       ...addedStops,
@@ -64,41 +77,86 @@ export default function FlightForm({
     const updatedAddedFlights = addedStops.filter((item) => item.id != formId);
     setAddedStops(updatedAddedFlights);
   }
-    const { mutate: SubmitOriginAirportHandler } = useMutation({
-      mutationFn: (id: number) => {
-        return getAirportTerminal(id);
-      },
-      onSuccess: (response) => {
-        const originTerminalOptions: OptionType[] = response.data.map((item: any) => ({
+  const { mutate: SubmitOriginAirportHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getAirportTerminal(id);
+    },
+    onSuccess: (response) => {
+      const originTerminalOptions: OptionType[] = response.data.map(
+        (item: any) => ({
           label: item.name,
           value: item.id.toString(),
-        }));
-        setOriginTerminals(originTerminalOptions);
-      }
-    });
-    const { mutate: SubmitDestinationAirportHandler } = useMutation({
-      mutationFn: (id: number) => {
-        return getAirportTerminal(id);
-      },
-      onSuccess: (response) => {
-        const destinationTerminalOptions: OptionType[] = response?.data.map((item: any) => ({
+        })
+      );
+      setOriginTerminals(originTerminalOptions);
+    },
+  });
+  const { mutate: SubmitDestinationAirportHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getAirportTerminal(id);
+    },
+    onSuccess: (response) => {
+      const destinationTerminalOptions: OptionType[] = response?.data.map(
+        (item: any) => ({
           label: item.name,
           value: item.id.toString(),
-        }));
-        setDestinationTerminals(destinationTerminalOptions);
-      },
-    });
-    useEffect(() => {
+        })
+      );
+      setDestinationTerminals(destinationTerminalOptions);
+    },
+  });
+  useEffect(() => {
+    if (formik.values.originCityAirport) {
       SubmitOriginAirportHandler(Number(formik.values.originCityAirport));
-    }, [formik.values.originCityAirport]);
-  
-    useEffect(() => {
-      SubmitDestinationAirportHandler(Number(formik.values.destinationCityAirport))
-    }, [formik.values.destinationCityAirport]);
+    }
+  }, [formik.values.originCityAirport]);
+
+  useEffect(() => {
+    if (formik.values.destinationCityAirport) {
+      SubmitDestinationAirportHandler(
+        Number(formik.values.destinationCityAirport)
+      );
+    }
+  }, [formik.values.destinationCityAirport]);
+  const { mutate: submitFlightForm } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return sendFlightData(data, id);
+    },
+    onSuccess: () => {},
+  });
+  function submitHandler() {
+    const data = {
+      travelType: formik.values.travelType,
+      flightGroupId: formik.values.flightGroupId,
+      baseTerminalId: formik.values.originTerminal,
+      baseStationId: formik.values.originCityAirport,
+      destinationTerminalId: formik.values.destinationTerminal,
+      destinationStationId: formik.values.destinationCityAirport,
+      ticketClassId: formik.values.flightClass,
+      ticketKindId: formik.values.flightType,
+      exiteDateTime: convertDateTimeToGregorian(
+        formik.values.exitDateTime,
+        "Solar"
+      ),
+      arriveDateTime: convertDateTimeToGregorian(
+        formik.values.arriveDateTime,
+        "Solar"
+      ),
+      // arriveDateTime: "2000-01-01T00:00:00Z",
+
+      // exiteDateTime: "2000-01-01T00:00:00Z",
+    };
+    submitFlightForm({
+      id: Number(id),
+      data: data,
+    });
+  }
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
-        <h2 className="p-3">پرواز شماره <span>{count}</span></h2>
+        <h2 className="p-3">
+          پرواز شماره <span>{count}</span>
+        </h2>
         <Button
           variant={"transparent"}
           onClick={addStopForm}
@@ -119,7 +177,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:airports
+            options: airports,
           },
           {
             key: "originTerminal",
@@ -128,11 +186,11 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:originTerminals
+            options: originTerminals,
           },
           {
-            key: "dateTime",
-            component: "date",
+            key: "exitDateTime",
+            component: "date-time",
             placeholder: "تاریخ و ساعت",
             type: "text",
             floating: true,
@@ -145,8 +203,9 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:airports
+            options: airports,
           },
+
           {
             key: "destinationTerminal",
             component: "Select",
@@ -154,7 +213,15 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:destinationTerminals
+            options: destinationTerminals,
+          },
+          {
+            key: "arriveDateTime",
+            component: "date-time",
+            placeholder: "تاریخ و ساعت",
+            type: "text",
+            floating: true,
+            className: "w-full md:w-1/3",
           },
 
           {
@@ -164,7 +231,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:airlines
+            options: airlines,
           },
           {
             key: "flightClass",
@@ -212,18 +279,18 @@ export default function FlightForm({
             className: "w-full md:w-1/3",
           },
 
-
           {
             component: "non-field",
             key: "actions",
             children: (
               <div className="flex flex-row items-center gap-2 justify-end w-full">
-                <Button variant="info" onClick={() => {}}>
+                <Button variant="info" onClick={submitHandler}>
                   ثبت پرواز
                 </Button>
                 <Button
                   onClick={() => {
-                    removeForm(itemId);
+                    removeForm(flight.flightId);
+              
                   }}
                   className="text-danger border-danger"
                 >
@@ -231,7 +298,6 @@ export default function FlightForm({
                 </Button>
               </div>
             ),
-            
           },
         ]}
         className=""
@@ -242,6 +308,7 @@ export default function FlightForm({
           key={item.id}
           onRemoveHandler={removeHandler}
           itemId={item.id}
+          flightId={flight?.flightId}
         />
       ))}
     </div>

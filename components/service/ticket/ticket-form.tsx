@@ -27,8 +27,8 @@ export default function TicketForm({
   transportationType: string;
   ticket: any;
   }) {
-  console.log(ticket)
-  const [category, setCategory] = useState("one-way");
+
+  const [category, setCategory] = useState(ticket?.ticketType || "OneWay");
   const [airports, setAirports] = useState<OptionType[]>([]);
   const [flightClasses, setFlightClasses] = useState<OptionType[]>([]);
   const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
@@ -118,69 +118,133 @@ export default function TicketForm({
     }
   }, [airportData]);
 
+
+
+
   return (
     <div className={cn("flex flex-col gap-4 bg-card rounded-md p-3")}>
       <RadioGroup
-        defaultValue="one-way"
+        defaultValue={category}
         className="flex flex-row-reverse gap-4 min-h-10"
       >
-        <div className="flex items-center space-x-2">
-          <label htmlFor="one-way">یک طرفه</label>
-          <RadioGroupItem
-            value="one-way"
-            id="one-way"
-            onClick={() => {
-              setCategory("one-way");
-            }}
-          />
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <label htmlFor="round-trip">رفت و برگشت</label>
-          <RadioGroupItem
-            value="round-trip"
-            id="round-trip"
-            onClick={() => {
-              setCategory("round-trip");
-            }}
-          />
-        </div>
-        <div className="flex items-center space-x-2">
-          <label htmlFor="multi-route">چندمسیره</label>
-          <RadioGroupItem
-            value="multi-route"
-            id="multi-route"
-            onClick={() => {
-              setCategory("multi-route");
-            }}
-          />
-        </div>
+        {["OneWay", "TwoWay", "MultiWay"].map((type) => (
+          <div className="flex items-center space-x-2" key={type}>
+            <label htmlFor={type}>
+              {type === "OneWay"
+                ? "یک طرفه"
+                : type === "TwoWay"
+                ? "رفت و برگشت"
+                : "چندمسیره"}
+            </label>
+            <RadioGroupItem
+              value={type}
+              id={type}
+              checked={category === type}
+              onClick={() => setCategory(type)}
+            />
+          </div>
+        ))}
       </RadioGroup>
-      {category === "one-way" ? (
+
+      {category === "OneWay" && (
         <OneWayTicketForm
           itemId={itemId}
+          ticket={ticket}
           onRemoveHandler={onRemoveHandler}
           flightClassOptions={flightClasses}
           flightTypeOptions={flightTypes}
           airports={airports}
           airlines={airlines}
         />
-      ) : category === "round-trip" ? (
+      )}
+
+      {category === "TwoWay" && (
         <RoundTripTicketForm
           itemId={itemId}
+          ticket={ticket}
+          // onRemoveHandler={onRemoveHandler}
           flightClassOptions={flightClasses}
           flightTypeOptions={flightTypes}
           airports={airports}
           airlines={airlines}
         />
-      ) : (
+      )}
+
+      {category === "MultiWay" && (
         <FlightContainer
+          ticket={ticket}
           flightClassOptions={flightClasses}
           flightTypeOptions={flightTypes}
-          airlines={airlines}
           airports={airports}
+          airlines={airlines}
         />
       )}
     </div>
+
+
+
+    // <div className={cn("flex flex-col gap-4 bg-card rounded-md p-3")}>
+    //   <RadioGroup
+    //     defaultValue="one-way"
+    //     className="flex flex-row-reverse gap-4 min-h-10"
+    //   >
+    //     <div className="flex items-center space-x-2">
+    //       <label htmlFor="one-way">یک طرفه</label>
+    //       <RadioGroupItem
+    //         value="one-way"
+    //         id="one-way"
+    //         onClick={() => {
+    //           setCategory("one-way");
+    //         }}
+    //       />
+    //     </div>
+
+    //     <div className="flex items-center space-x-2">
+    //       <label htmlFor="round-trip">رفت و برگشت</label>
+    //       <RadioGroupItem
+    //         value="round-trip"
+    //         id="round-trip"
+    //         onClick={() => {
+    //           setCategory("round-trip");
+    //         }}
+    //       />
+    //     </div>
+    //     <div className="flex items-center space-x-2">
+    //       <label htmlFor="multi-route">چندمسیره</label>
+    //       <RadioGroupItem
+    //         value="multi-route"
+    //         id="multi-route"
+    //         onClick={() => {
+    //           setCategory("multi-route");
+    //         }}
+    //       />
+    //     </div>
+    //   </RadioGroup>
+    //   {category === "one-way" ? (
+    //     <OneWayTicketForm
+    //       itemId={itemId}
+    //       onRemoveHandler={onRemoveHandler}
+    //       flightClassOptions={flightClasses}
+    //       flightTypeOptions={flightTypes}
+    //       airports={airports}
+    //       airlines={airlines}
+    //     />
+    //   ) : category === "round-trip" ? (
+    //     <RoundTripTicketForm
+    //       itemId={itemId}
+    //       flightClassOptions={flightClasses}
+    //       flightTypeOptions={flightTypes}
+    //       airports={airports}
+    //       airlines={airlines}
+    //     />
+    //   ) : (
+    //     <FlightContainer
+    //       flightClassOptions={flightClasses}
+    //       flightTypeOptions={flightTypes}
+    //       airlines={airlines}
+    //       airports={airports}
+    //     />
+    //   )}
+    // </div>
   );
 }
