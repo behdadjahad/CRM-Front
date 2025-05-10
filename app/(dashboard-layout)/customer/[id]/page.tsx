@@ -18,7 +18,7 @@ export default function CustomerDetail() {
             alt={"تصویر"}
             width={107}
             height={107}
-            className="h-full w-full border-4 border-primary-foreground rounded-full"
+            className="h-full w-full border-4 border-primary-foreground rounded-full object-cover"
           />
         ),
       },

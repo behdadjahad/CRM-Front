@@ -5,13 +5,13 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
 import { convertDateTimeToGregorian } from "@/lib/date";
-import { sendFlightData } from "@/api/flight";
+import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
-export default function FlightForm({
 
+export default function FlightForm({
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
@@ -21,7 +21,6 @@ export default function FlightForm({
   flight,
   ticket,
 }: {
-
   onRemoveHandler: any;
   flightClassOptions: any;
   flightTypeOptions: any;
@@ -32,6 +31,7 @@ export default function FlightForm({
   ticket: any;
 }) {
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const formik = useFormik({
     initialValues: {
@@ -39,16 +39,18 @@ export default function FlightForm({
       originTerminal: flight?.originTerminal?.toString(),
       exitDateTime: flight?.exitDateTime?.toString(),
       arriveDateTime: flight?.arriveDateTime?.toString(),
+      exitDateTimeType: "",
+      arriveDateTimeType: "",
       destinationCityAirport: flight?.destinationCityAirport?.toString(),
       destinationTerminal: flight?.destinationTerminal?.toString(),
       airline: "",
       cost: "",
       currency: "",
       broker: "",
-      flightType: "",
-      flightClass: "",
-      id: flight?.FlightId,
-      isSubmitted: ticket?.isSubmitted,
+      flightType: flight?.flightType,
+      flightClass: flight?.flightClass,
+      flightId: flight?.flightId,
+      isSubmitted: flight?.isSubmitted,
       flightGroupId: ticket.isSubmitted ? ticket?.id : null,
       travelType: ticket?.ticketType || "MultiWay",
     },
@@ -64,7 +66,8 @@ export default function FlightForm({
     setAddedStops([
       ...addedStops,
       {
-        id: `stop-${addedStops.length + 1}`,
+        stopId: `stop-${addedStops.length + 1}`,
+        isSubmitted:false
       },
     ]);
   }
@@ -122,7 +125,21 @@ export default function FlightForm({
     mutationFn: ({ data, id }: { data: any; id: number }) => {
       return sendFlightData(data, id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
+  });
+  const { mutate: editFlightForm } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editFlightData(data, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
   });
   function submitHandler() {
     const data = {
@@ -136,21 +153,32 @@ export default function FlightForm({
       ticketKindId: formik.values.flightType,
       exiteDateTime: convertDateTimeToGregorian(
         formik.values.exitDateTime,
-        "Solar"
+        formik.values.exitDateTimeType
       ),
       arriveDateTime: convertDateTimeToGregorian(
         formik.values.arriveDateTime,
-        "Solar"
+        formik.values.arriveDateTimeType
       ),
-      // arriveDateTime: "2000-01-01T00:00:00Z",
-
-      // exiteDateTime: "2000-01-01T00:00:00Z",
     };
-    submitFlightForm({
-      id: Number(id),
-      data: data,
-    });
+    if (!formik.values.isSubmitted) {
+      submitFlightForm({
+        id: Number(id),
+        data: data,
+      });
+    } else {
+      editFlightForm({
+        id: formik.values.flightId,
+        data: data,
+      });
+    }
   }
+  useEffect(() => {
+    if (flight?.flightStops && flight?.flightStops.length > 0) {
+      setAddedStops(flight?.flightStops);
+    } else {
+      setAddedStops([]);
+    }
+  }, [flight?.flightStops]);
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -190,6 +218,7 @@ export default function FlightForm({
           },
           {
             key: "exitDateTime",
+            dependantKey: "exitDateTimeType",
             component: "date-time",
             placeholder: "تاریخ و ساعت",
             type: "text",
@@ -217,6 +246,7 @@ export default function FlightForm({
           },
           {
             key: "arriveDateTime",
+            dependantKey: "arriveDateTimeType",
             component: "date-time",
             placeholder: "تاریخ و ساعت",
             type: "text",
@@ -290,7 +320,6 @@ export default function FlightForm({
                 <Button
                   onClick={() => {
                     removeForm(flight.flightId);
-              
                   }}
                   className="text-danger border-danger"
                 >
@@ -307,8 +336,11 @@ export default function FlightForm({
         <StopForm
           key={item.id}
           onRemoveHandler={removeHandler}
-          itemId={item.id}
+         
           flightId={flight?.flightId}
+          airports={airports}
+          flight={flight}
+          stop={item}
         />
       ))}
     </div>

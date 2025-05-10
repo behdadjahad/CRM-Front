@@ -5,47 +5,48 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 import StopForm from "./stop-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
-import { sendFlightData } from "@/api/flight";
+import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
 import { convertDateTimeToGregorian } from "@/lib/date";
 export default function OneWayTicketForm({
-  itemId,
   onRemoveHandler,
   flightClassOptions,
   flightTypeOptions,
   airports,
   airlines,
   ticket,
+
 }: {
-  itemId: any;
   onRemoveHandler: any;
   flightClassOptions: any;
   flightTypeOptions: any;
   airports: OptionType[];
   airlines: OptionType[];
-  ticket: any;
+    ticket: any;
+
 }) {
+  const queryClient = useQueryClient();
   const formik = useFormik({
     initialValues: {
       originCityAirport: ticket?.flights?.[0]?.originCityAirport?.toString(),
       originTerminal: ticket?.flights?.[0]?.originTerminal?.toString(),
-      exitDateTime: ticket?.flights?.[0]?.exitDateTime?.toString(),
-      exitDateTimeType:"",
-      arriveDateTime: ticket?.flights?.[0]?.arriveDateTime?.toString(),
-      arriveDateTimeType:"",
+      exitDateTime: ticket?.flights?.[0]?.exitDateTime,
+      exitDateTimeType: "",
+      arriveDateTime: ticket?.flights?.[0]?.arriveDateTime,
+      arriveDateTimeType: "",
       destinationCityAirport:
         ticket?.flights?.[0]?.destinationCityAirport?.toString(),
       destinationTerminal:
         ticket?.flights?.[0]?.destinationTerminal?.toString(),
-      airline: "",
+      airline: ticket?.flights?.[0]?.airline?.toString(),
       cost: "",
       currency: "",
       broker: "",
-      id: ticket?.flights?.[0]?.flightId,
-      flightClass: "",
-      flightType: ticket?.flights?.[0]?.flightType?.toString(),
+      flightId: ticket?.flights?.[0]?.flightId || ticket?.id,
+      flightClass: ticket?.flights?.[0]?.flightClass,
+      flightType: ticket?.flights?.[0]?.flightType,
       isSubmitted: ticket?.flights?.[0]?.isSubmitted,
       flightGroupId: ticket.isSubmitted ? ticket?.id : null,
       travelType: ticket?.ticketType || "OneWay",
@@ -65,14 +66,15 @@ export default function OneWayTicketForm({
     setAddedStops([
       ...addedStops,
       {
-        id: `stop-${addedStops.length + 1}`,
+        stopId: `stop-${addedStops.length + 1}`,
+        isSubmitted:false
       },
     ]);
   }
 
   function removeHandler(formId: any) {
-    const updatedAddedFlights = addedStops.filter((item) => item.id != formId);
-    setAddedStops(updatedAddedFlights);
+    const updatedAddedStops = addedStops.filter((item) => item.stopId != formId);
+    setAddedStops(updatedAddedStops);
   }
   function removeTicketForm(formId: any) {
     onRemoveHandler(formId);
@@ -123,7 +125,21 @@ export default function OneWayTicketForm({
     mutationFn: ({ data, id }: { data: any; id: number }) => {
       return sendFlightData(data, id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
+  });
+  const { mutate: editFlightForm } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editFlightData(data, id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
   });
   function submitHandler() {
     const data = {
@@ -137,22 +153,33 @@ export default function OneWayTicketForm({
       ticketKindId: formik.values.flightType,
       exiteDateTime: convertDateTimeToGregorian(
         formik.values.exitDateTime,
-      formik.values.exitDateTimeType
+        formik.values.exitDateTimeType
       ),
       arriveDateTime: convertDateTimeToGregorian(
         formik.values.arriveDateTime,
-      formik.values.arriveDateTimeType
+        formik.values.arriveDateTimeType
       ),
-      // arriveDateTime: "2000-01-01T00:00:00Z",
-
-      // exiteDateTime: "2000-01-01T00:00:00Z",
+      transportationCoId: formik.values.airline,
     };
-    submitFlightForm({
-      id: Number(id),
-      data: data,
-    });
+    if (!formik.values.isSubmitted) {
+      submitFlightForm({
+        id: Number(id),
+        data: data,
+      });
+    } else {
+      editFlightForm({
+        id: formik.values.flightId,
+        data: data,
+      });
+    }
   }
+  useEffect(() => {
+    if (ticket?.flights?.[0]?.flightStops && ticket?.flights?.[0]?.flightStops?.length > 0) {
 
+      setAddedStops(ticket?.flights?.[0]?.flightStops)
+    }
+    
+  },[ticket?.flights?.[0]?.flightStops])
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -199,7 +226,7 @@ export default function OneWayTicketForm({
           {
             key: "exitDateTime",
             component: "date-time",
-            dependantKey:"exitDateTimeType",
+            dependantKey: "exitDateTimeType",
             placeholder: "تاریخ و ساعت",
             type: "text",
             floating: true,
@@ -226,7 +253,7 @@ export default function OneWayTicketForm({
           {
             key: "arriveDateTime",
             component: "date-time",
-            dependantKey:"arriveDateTimeType",
+            dependantKey: "arriveDateTimeType",
             placeholder: "تاریخ و ساعت",
             type: "text",
             floating: true,
@@ -298,8 +325,7 @@ export default function OneWayTicketForm({
                 </Button>
                 <Button
                   onClick={() => {
-                    removeTicketForm(ticket?.flights?.[0]?.flightId);
-                    console.log()
+                    removeTicketForm(formik.values.flightId);
                   }}
                   className="text-danger border-danger"
                 >
@@ -316,8 +342,11 @@ export default function OneWayTicketForm({
         <StopForm
           key={item.id}
           onRemoveHandler={removeHandler}
-          itemId={item.id}
+      
           flightId={ticket?.flights?.[0]?.flightId}
+          airports={airports}
+          flight={ticket?.flights?.[0]}
+          stop={item}
         />
       ))}
     </div>

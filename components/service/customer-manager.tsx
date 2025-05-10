@@ -41,10 +41,10 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        //email: customer?.email[0]?.email,
-        email: "alirezaRezaei@gmail.com",
-        phone:"989127359952",
-        //phone:customer?.phone[0]?.number ,
+        email: customer?.email[0]?.email,
+        // email: "alirezaRezaei@gmail.com",
+        // phone:"989127359952",
+        phone:customer?.phone[0]?.number ,
       }));
       setCustomers(customersData);
       setFilteredCustomers(customersData);
@@ -62,8 +62,8 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
       [
         customer.firstName,
         customer.lastName,
-        customer.email,
-        customer.phone,
+        // customer.email,
+        // customer.phone,
         customer.ssd,
       ].some((field) => field?.toLowerCase().includes(keyword))
     );
@@ -132,7 +132,7 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
                     {highlightMatch(customer.lastName, keyword)}
                   </span>
                   <span className="text-sm text-foreground-mute">
-                    {highlightMatch(customer.email, keyword)}
+                    {/* {highlightMatch(customer.email, keyword)} */}
                   </span>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
                   width={12}
                   height={12}
                 />
-                <span>{highlightMatch(customer.phone, keyword)}</span>
+                {/* <span>{highlightMatch(customer.phone, keyword)}</span> */}
               </div>
               <div className="flex items-center text-foreground-mute gap-2">
                 <Image

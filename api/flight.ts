@@ -1,15 +1,15 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function getFightClassData(id:number) {
+export async function getFightClassData(id: number) {
   try {
     const result = await fetchService(`ticket-class/${id}`);
-    
+
     return result;
   } catch {
     return {};
   }
 }
-export async function getFightTypeData(id:number) {
+export async function getFightTypeData(id: number) {
   try {
     const result = await fetchService(`ticket-kind/${id}`);
 
@@ -18,7 +18,7 @@ export async function getFightTypeData(id:number) {
     return {};
   }
 }
-export async function getAirlinesData(id:number) {
+export async function getAirlinesData(id: number) {
   try {
     const result = await fetchService(`transportation-co/${id}`);
 
@@ -28,9 +28,8 @@ export async function getAirlinesData(id:number) {
   }
 }
 
-
 export async function sendFlightData(data: any, id: number) {
-  console.log(data)
+  console.log(data);
 
   try {
     if (!data || Object.keys(data).length === 0) {
@@ -54,11 +53,54 @@ export async function sendFlightData(data: any, id: number) {
       });
     }
 
-    // const result = await fetchService(`flight-contract/${id}`, {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    const result = await fetchService(`flight-contract/${id}`, {
+      method: "POST",
+      body: formData,
+    });
 
-    // return result;
+    return result;
+  } catch {}
+}
+
+export async function editFlightData(data: any, id: number) {
+  console.log(data);
+
+  try {
+    if (!data || Object.keys(data).length === 0) {
+      console.warn("sendHotelData: No data provided!");
+      return { error: "No data to send" };
+    }
+
+    const formData = new FormData();
+
+    for (const key in data) {
+      if (key !== "files") {
+        formData.append(key, data[key]);
+      }
+    }
+
+    if (Array.isArray(data.files)) {
+      data.files.forEach((fileObj: any) => {
+        if (fileObj?.file instanceof File) {
+          formData.append("files", fileObj.file);
+        }
+      });
+    }
+
+    const result = await fetchService(`flight-contract/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deleteFlightData(id: number) {
+  try {
+    const result = await fetchService(`flight-contract/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
   } catch {}
 }

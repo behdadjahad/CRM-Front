@@ -12,7 +12,7 @@ export default function ContractContainer({
   list,
   className,
 }: ContractContainerInterface) {
-
+console.log(list)
   return (
     <div
       className={cn(

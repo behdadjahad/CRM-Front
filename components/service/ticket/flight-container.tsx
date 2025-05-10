@@ -10,13 +10,20 @@ export default function FlightContainer({
   flightTypeOptions,
   airlines,
   airports,
-  ticket
+  ticket,
+  onRemoveHandler,
+
+  
+
 }: {
   flightClassOptions: any;
   flightTypeOptions: any;
     airlines: OptionType[];
     airports: OptionType[];
     ticket: any;
+    onRemoveHandler: any;
+
+    
   }) {
   
   const [addedFlights, setAddedFlights] = useState<any[]>([]);
@@ -36,17 +43,19 @@ export default function FlightContainer({
       ...addedFlights,
       {
         id: `flight-${addedFlights.length + 1}`,
+        isSubmitted:false
       },
     ]);
   }
   function removeHandler(formId: any) {
-    if (addedFlights.length > 1) {
-      const updatedAddedFlights = addedFlights.filter(
-        (item) => item.flightId != formId
-      );
+    onRemoveHandler(formId)
+    // if (addedFlights.length > 1) {
+    //   const updatedAddedFlights = addedFlights.filter(
+    //     (item) => item.flightId != formId
+    //   );
      
-      setAddedFlights(updatedAddedFlights);
-    } else return;
+    //   setAddedFlights(updatedAddedFlights);
+    // } else return;
   }
 
   return (
@@ -62,6 +71,8 @@ export default function FlightContainer({
           airports={airports}
           flight={item}
           ticket={ticket}
+   
+         
         />
       ))}
       <Button

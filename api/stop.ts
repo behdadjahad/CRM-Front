@@ -10,3 +10,23 @@ export async function sendStopData(data: any, id: number) {
     return result;
   } catch {}
 }
+export async function editStopData(data: any, id: number) {
+  try {
+    const result = await fetchService(`flight-stops/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deleteStopData(id: number) {
+  try {
+    const result = await fetchService(`flight-stops/${id}`, {
+      method: "DELETE",
+
+    });
+
+    return result;
+  } catch {}
+}

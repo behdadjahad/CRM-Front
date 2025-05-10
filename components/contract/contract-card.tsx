@@ -12,6 +12,7 @@ import { MdClose } from "react-icons/md";
 //import Satisfaction from "../section/satisfaction";
 import dynamic from "next/dynamic";
 import Satisfaction from "../section/satisfaction";
+import Link from "next/link";
 // import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
@@ -88,11 +89,12 @@ export default function ContractCard({
   });
   const [openModal, setOpenModal] = useState(false);
   return (
-    <div
+    <Link
       className={cn(
         "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F]",
         className
       )}
+      href={`/contract/service/${id}`}
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground">
         <div className="flex items-center gap-2">
@@ -209,6 +211,6 @@ export default function ContractCard({
         <span>هزینه: {footer?.cost}</span>
         <span>سود/زیان: {footer?.overall}</span>
       </div>
-    </div>
+    </Link>
   );
 }

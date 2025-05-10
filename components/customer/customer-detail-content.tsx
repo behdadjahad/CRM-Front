@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { fetchCustomerDetailContract } from "@/store/customer-detail-contract-slice";
 import { limitForCustomerDetailContracts } from "@/lib/utils";
+import { CustomerPersonalInfo } from "./customer-personal-info";
 // const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 export default function CustomerDetailContent({
   tabList,
@@ -201,6 +202,9 @@ export default function CustomerDetailContent({
       )}
       {activeTab === "آماروگزارش ها" && (
         <CustomerDetailReport serviceData={servicesReportData} />
+      )}
+      {activeTab === "اطلاعات شخصی" && (
+       <CustomerPersonalInfo />
       )}
     </>
   );

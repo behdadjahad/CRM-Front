@@ -68,13 +68,13 @@ export default function Service() {
       },
       {
         label: "تاریخ ثبت درخواست",
-        value: contract?.submitDateTime
+        value: (contract?.submitDateTime && contract?.dateType)
           ? convertDate(contract?.submitDateTime, contract?.dateType)
           : "",
       },
       {
         label: "تاریخ قرارداد",
-        value: contract?.submitDateTime
+        value:(contract?.contractDate && contract?.dateType)
           ? convertDate(contract?.contractDate, contract?.dateType)
           : "",
       },

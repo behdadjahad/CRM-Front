@@ -78,10 +78,10 @@ export default function ClientInfoContainer() {
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        // email: customer?.email[0]?.email,
-        //   phone: customer?.phone[0]?.number,
-        email: "alirezaRezaei@gmail.com",
-        phone: "989127359952",
+        email: customer?.email[0]?.email,
+          phone: customer?.phone[0]?.number,
+        // email: "alirezaRezaei@gmail.com",
+        // phone: "989127359952",
       }));
 
       setCustomers(customersData);

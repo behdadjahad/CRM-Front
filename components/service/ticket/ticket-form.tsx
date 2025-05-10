@@ -7,92 +7,27 @@ import OneWayTicketForm from "./one-way-ticket-form";
 import RoundTripTicketForm from "./round-trip-ticket-form";
 import { OptionType } from "@/components/shared/form-maker";
 import { getAirports } from "@/api/ticket";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import Image from "next/image";
-import { getTransportationTypeId } from "@/api/transportation";
-import {
-  getAirlinesData,
-  getFightClassData,
-  getFightTypeData,
-} from "@/api/flight";
-export default function TicketForm({
-  itemId,
-  onRemoveHandler,
-  transportationType,
-  ticket,
-}: {
-  itemId: any;
-  onRemoveHandler: any;
-  transportationType: string;
-  ticket: any;
-  }) {
 
+export default function TicketForm({
+  onRemoveHandler,
+
+  ticket,
+  flightClasses,
+  airlines,
+  flightTypes,
+}: {
+  onRemoveHandler: any;
+
+  ticket: any;
+  flightClasses: any;
+  airlines: any;
+  flightTypes: any;
+}) {
   const [category, setCategory] = useState(ticket?.ticketType || "OneWay");
   const [airports, setAirports] = useState<OptionType[]>([]);
-  const [flightClasses, setFlightClasses] = useState<OptionType[]>([]);
-  const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
-  const [airlines, setAirlines] = useState<OptionType[]>([]);
-
-  const { mutate: getTransportationType } = useMutation({
-    mutationFn: () => {
-      return getTransportationTypeId(transportationType);
-    },
-    onSuccess: (response) => {
-      if (response.id) {
-        getFlightClass(response.id);
-        getFlightType(response.id);
-        getAirlines(response.id);
-      }
-    },
-  });
-  const { mutate: getFlightClass } = useMutation({
-    mutationFn: (item: number) => {
-      return getFightClassData(item);
-    },
-    onSuccess: (response) => {
-      if (response.data && response.data.length > 0) {
-        const flightClassOptions = response?.data?.map((item: any) => ({
-          value: item?.id.toString(),
-          label: item?.name,
-        }));
-        setFlightClasses(flightClassOptions);
-      }
-    },
-  });
-  const { mutate: getFlightType } = useMutation({
-    mutationFn: (item: number) => {
-      return getFightTypeData(item);
-    },
-    onSuccess: (response) => {
-      if (response.data && response.data.length > 0) {
-        const flightTypeOptions = response?.data?.map((item: any) => ({
-          value: item?.id.toString(),
-          label: item?.name,
-        }));
-        setFlightTypes(flightTypeOptions);
-      }
-    },
-  });
-  const { mutate: getAirlines } = useMutation({
-    mutationFn: (item: number) => {
-      return getAirlinesData(item);
-    },
-    onSuccess: (response) => {
-      if (response.data && response.data.length > 0) {
-        const airlinesOptions = response?.data?.map((item: any) => ({
-          value: item?.id.toString(),
-          label: item?.name,
-        }));
-        setAirlines(airlinesOptions);
-      }
-    },
-  });
-  useEffect(() => {
-    if (transportationType) {
-      getTransportationType();
-    }
-  }, [transportationType]);
 
   const { data: airportData } = useQuery({
     queryKey: ["airportData"],
@@ -117,9 +52,6 @@ export default function TicketForm({
       setAirports(airportOptions);
     }
   }, [airportData]);
-
-
-
 
   return (
     <div className={cn("flex flex-col gap-4 bg-card rounded-md p-3")}>
@@ -148,7 +80,6 @@ export default function TicketForm({
 
       {category === "OneWay" && (
         <OneWayTicketForm
-          itemId={itemId}
           ticket={ticket}
           onRemoveHandler={onRemoveHandler}
           flightClassOptions={flightClasses}
@@ -160,9 +91,8 @@ export default function TicketForm({
 
       {category === "TwoWay" && (
         <RoundTripTicketForm
-          itemId={itemId}
           ticket={ticket}
-          // onRemoveHandler={onRemoveHandler}
+          onRemoveHandler={onRemoveHandler}
           flightClassOptions={flightClasses}
           flightTypeOptions={flightTypes}
           airports={airports}
@@ -177,11 +107,10 @@ export default function TicketForm({
           flightTypeOptions={flightTypes}
           airports={airports}
           airlines={airlines}
+          onRemoveHandler={onRemoveHandler}
         />
       )}
     </div>
-
-
 
     // <div className={cn("flex flex-col gap-4 bg-card rounded-md p-3")}>
     //   <RadioGroup

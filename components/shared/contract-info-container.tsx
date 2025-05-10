@@ -6,6 +6,7 @@ export interface ContractInfoInterface {
 }
 
 export default function ContractInfoContainer({ list }: ContractInfoInterface) {
+
   return (
     <div className="bg-card min-h-fit rounded-bl-xl rounded-br-xl overflow-hidden">
       <div className="opacity-90 p-8 text-primary-foreground flex flex-row justify-between items-center">

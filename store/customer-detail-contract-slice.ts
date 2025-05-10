@@ -27,7 +27,7 @@ const customerDetailContractSlice = createSlice({
         "تاریخ قرارداد": convertDate(item?.contractDate, dateType),
         "میزان درآمد": item?.sellPrice,
         "سود و زیان": "",
-        مقصد: `${item?.destinationCountry?.name},${item?.destinationCity?.name}`,
+        مقصد: `${item?.destinationCountry ?? ""},${item?.destinationCity  ?? ""}`,
         "موضوع قرارداد": "",
         اپراتور: " ",
         وضعیت: "",
@@ -60,7 +60,7 @@ export const fetchCustomerDetailContract = createAsyncThunk<any, any>(
           // body: filters,
         }
       );
-
+       console.log(result)
       return result;
     } catch {
       return {};
