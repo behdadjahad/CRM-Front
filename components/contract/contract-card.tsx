@@ -5,7 +5,6 @@ import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 
@@ -98,7 +97,12 @@ export default function ContractCard({
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground">
         <div className="flex items-center gap-2">
-          <Image src={header?.icon} alt={header?.title} width={20} height={24} />
+          <Image
+            src={header?.icon}
+            alt={header?.title}
+            width={20}
+            height={24}
+          />
 
           <span className="text-lg font-bold">{header?.title}</span>
         </div>
@@ -125,24 +129,25 @@ export default function ContractCard({
 
         <div className="flex items-start justify-between">
           <div className="flex flex-col gap-1">
-            {contractData && contractData?.map((item) => (
-              <div
-                key={item?.label + item?.value}
-                className="flex text-xs w-full items-center gap-1"
-              >
-                <Image
-                  src={item?.icon ?? ""}
-                  alt={item?.label ?? ""}
-                  width={20}
-                  height={20}
-                  className="w-5 h-5"
-                />
+            {contractData &&
+              contractData?.map((item) => (
+                <div
+                  key={item?.label + item?.value}
+                  className="flex text-xs w-full items-center gap-1"
+                >
+                  <Image
+                    src={item?.icon ?? ""}
+                    alt={item?.label ?? ""}
+                    width={20}
+                    height={20}
+                    className="w-5 h-5"
+                  />
 
-                <span className="text-sm col-span-4 w-24">{item?.label}</span>
+                  <span className="text-sm col-span-4 w-24">{item?.label}</span>
 
-                <span className="col-span-5 font-bold">{item?.value}</span>
-              </div>
-            ))}
+                  <span className="col-span-5 font-bold">{item?.value}</span>
+                </div>
+              ))}
           </div>
 
           <div className="w-28 flex flex-col items-center">
@@ -152,7 +157,12 @@ export default function ContractCard({
               از مجموع {score?.totalVotes} امتیاز
               {/* <Link href={`/sale/satisfaction/${id}`}> */}
               <div
-                onClick={() => {
+                // onClick={() => {
+                //   setOpenModal(true);
+                // }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   setOpenModal(true);
                 }}
               >
@@ -174,8 +184,9 @@ export default function ContractCard({
                   <span className="text-lg font-bold">نظر خود را ثبت کنید</span>
                   <MdClose
                     size={20}
-                    onClick={() => {
+                    onClick={(e) => {
                       setOpenModal(false);
+                        e.stopPropagation();
                     }}
                     className="cursor-pointer"
                   />
@@ -195,14 +206,16 @@ export default function ContractCard({
         </div>
 
         <div className="flex justify-start gap-2">
-          {services && services.length >  0 && services.map((item) => (
-            <ServiceCard
-              {...item}
-              key={item?.title + header?.title + user?.name}
-              className="min-w-20 max-w-20 h-auto text-[8px] text-right items-start "
-              imageClassName="min-w-0 h-16"
-            />
-          ))}
+          {services &&
+            services.length > 0 &&
+            services.map((item) => (
+              <ServiceCard
+                {...item}
+                key={item?.title + header?.title + user?.name}
+                className="min-w-20 max-w-20 h-auto text-[8px] text-right items-start "
+                imageClassName="min-w-0 h-16"
+              />
+            ))}
         </div>
       </div>
 

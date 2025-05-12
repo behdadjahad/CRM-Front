@@ -46,88 +46,89 @@ export default function ContractExpenseContainer() {
   });
   useEffect(() => {
     if (allExpenses) {
-      const overalExpenseData = [
-        { label: "هزینه", value: allExpenses.buyPrice },
-        {
-          label: "درآمد",
-          value: allExpenses.sellPrice,
-          hasForm: true,
-        },
-        {
-          label: "سود و زیان",
-          value: allExpenses.profit,
-        },
-      ];
-      const contractExchangeRate = allExpenses.contractCurrency;
-      //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
-      //     return {},
-      //   });
-      const servicePrices = Object.entries(allExpenses.servicePrices).map(
-        ([key, value]) => ({ key, ...(value as any) })
-      );
-      const totalServiceExpenses = servicePrices
-        .filter((item) => item.groupedBuyPrices.length > 0)
-        .map((item) => ({
-          groupPrices: item.groupedBuyPrices.map((price: any) => ({
-            currency: price.currency,
-            buyPrice: price.totalBuyPrice,
-            convertedBuyPrice: price.totalBuyPriceInContractCurrency,
-          })),
+      // const overalExpenseData = [
+      //   { label: "هزینه", value: allExpenses.buyPrice },
+      //   {
+      //     label: "درآمد",
+      //     value: allExpenses.sellPrice,
+      //     hasForm: true,
+      //   },
+      //   {
+      //     label: "سود و زیان",
+      //     value: allExpenses.profit,
+      //   },
+      // ];
+      // const contractExchangeRate = allExpenses.contractCurrency;
+      // //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
+      // //     return {},
+      // //   });
+      // const servicePrices = Object.entries(allExpenses.servicePrices).map(
+      //   ([key, value]) => ({ key, ...(value as any) })
+      // );
+      // const totalServiceExpenses = servicePrices
+      //   .filter((item) => item.groupedBuyPrices.length > 0)
+      //   .map((item) => ({
+      //     groupPrices: item.groupedBuyPrices.map((price: any) => ({
+      //       currency: price.currency,
+      //       buyPrice: price.totalBuyPrice,
+      //       convertedBuyPrice: price.totalBuyPriceInContractCurrency,
+      //     })),
 
-          title:
-            item.key === "accommodationContract"
-              ? "هتل"
-              : item.key === "otherContract"
-              ? "دیگر"
-              : item.key === "visaContract"
-              ? "ویزا"
-              : item.key === "ticketContract"
-              ? "پرواز"
-              : item.key === "pickUpContract"
-              ? "پیکاپ"
-              : item.key === "embassyPackageContract"
-              ? "سفارت"
-              : item.key === "ensuranceContract"
-              ? "بیمه"
-              : item.key,
-          icon: "/icons/visa.png",
-          totalExpenseInCurrency: item.groupedBuyPrices
-            .filter(
-              (price: any) =>
-                price.currency.id === allExpenses.contractCurrency.id
-            )
-            .reduce((sum: number, price: any) => sum + price.totalBuyPrice, 0),
-        }));
-      const resultMap = new Map();
+      //     title:
+      //       item.key === "accommodationContract"
+      //         ? "هتل"
+      //         : item.key === "otherContract"
+      //         ? "دیگر"
+      //         : item.key === "visaContract"
+      //         ? "ویزا"
+      //         : item.key === "ticketContract"
+      //         ? "پرواز"
+      //         : item.key === "pickUpContract"
+      //         ? "پیکاپ"
+      //         : item.key === "embassyPackageContract"
+      //         ? "سفارت"
+      //         : item.key === "ensuranceContract"
+      //         ? "بیمه"
+      //         : item.key,
+      //     icon: "/icons/visa.png",
+      //     totalExpenseInCurrency: item.groupedBuyPrices
+      //       .filter(
+      //         (price: any) =>
+      //           price.currency.id === allExpenses.contractCurrency.id
+      //       )
+      //       .reduce((sum: number, price: any) => sum + price.totalBuyPrice, 0),
+      //   }));
+      // const resultMap = new Map();
 
-      totalServiceExpenses.forEach((item) => {
-        item.groupPrices.forEach(
-          ({
-            buyPrice,
-            currency,
-          }: {
-            buyPrice: number;
-            currency: { id: number; name: string };
-          }) => {
-            if (resultMap.has(currency.id)) {
-              resultMap.get(currency.id).total += buyPrice;
-            } else {
-              resultMap.set(currency.id, {
-                id: currency.id,
-                name: currency.name,
-                total: buyPrice,
-              });
-            }
-          }
-        );
-      });
+      // totalServiceExpenses.forEach((item) => {
+      //   item.groupPrices.forEach(
+      //     ({
+      //       buyPrice,
+      //       currency,
+      //     }: {
+      //       buyPrice: number;
+      //       currency: { id: number; name: string };
+      //     }) => {
+      //       if (resultMap.has(currency.id)) {
+      //         resultMap.get(currency.id).total += buyPrice;
+      //       } else {
+      //         resultMap.set(currency.id, {
+      //           id: currency.id,
+      //           name: currency.name,
+      //           total: buyPrice,
+      //         });
+      //       }
+      //     }
+      //   );
+      // });
 
-      const totalAmountArray = Array.from(resultMap.values());
-      setTotalExpenses(totalAmountArray);
+      // const totalAmountArray = Array.from(resultMap.values());
+      // setTotalExpenses(totalAmountArray);
    
-      setContractCurrency(contractExchangeRate);
-      setOveralExpense(overalExpenseData);
-      setServiceExpenses(totalServiceExpenses);
+      // setContractCurrency(contractExchangeRate);
+      // setOveralExpense(overalExpenseData);
+      // setServiceExpenses(totalServiceExpenses);
+      console.log(allExpenses)
     }
   }, [allExpenses]);
   useEffect(() => {

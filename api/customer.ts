@@ -83,3 +83,13 @@ export async function getCustomers(page:number , limit:number, body?:any) {
     return {};
   }
 }
+
+export async function getCustomerPersonalInfo(id: number) {
+  try {
+    const result = await fetchService(`customer/personal-info/${id}`);
+
+    return result;
+  } catch {
+    return {};
+  }
+}

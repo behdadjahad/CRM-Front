@@ -47,8 +47,8 @@ export default function EditableContainer({
   });
 
   useEffect(() => {
-    if (users) {
-      const userOption: OptionType[] = users.map((item) => ({
+    if (users && users?.data?.length >0 ) {
+      const userOption: OptionType[] = users.data?.map((item:any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));
@@ -59,7 +59,7 @@ export default function EditableContainer({
   const formik = useFormik({
     initialValues: {
       number: contract?.contractNo ?? "",
-      date: convertDate(contract?.contractDate, contract.dateType) ?? "",
+      date: (contract?.contractDate && contract.dateType) ? convertDate(contract?.contractDate, contract.dateType) : "",
       subject: contract?.contractType?.name ?? "",
       accountant: contract?.userResponsible?.id.toString() ?? "",
       description: contract?.description ?? "",
@@ -79,8 +79,8 @@ export default function EditableContainer({
     queryFn: async () => await getCities(),
   });
   useEffect(() => {
-    if (countryData) {
-      const countryOptions: OptionType[] = countryData?.data.map((item) => ({
+    if (countryData && countryData?.data?.length >0) {
+      const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
         label: item.name,
         value: item.id.toString(),
       }));
@@ -89,9 +89,9 @@ export default function EditableContainer({
   }, [countryData]);
 
   useEffect(() => {
-    if (cityData) {
+    if (cityData &&cityData?.data?.length >0 ) {
       if (!formik.values.country) {
-        const cities: OptionType[] = cityData?.data.map((item) => ({
+        const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));

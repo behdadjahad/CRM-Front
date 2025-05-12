@@ -5,7 +5,49 @@ import {
   buildStyles,
   CircularProgressbarWithChildren,
 } from "react-circular-progressbar";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getCustomerPersonalInfo } from "@/api/customer";
+import { useEffect, useState } from "react";
 export function CustomerPersonalInfo() {
+  const { id } = useParams();
+  const [contactInfo, setContactInfo] = useState<any[]>([]);
+  const { data: customerPersonalInfo } = useQuery({
+    queryKey: ["customerPersonalInfo"],
+    queryFn: () => getCustomerPersonalInfo(Number(id) as number),
+  });
+  useEffect(() => {
+    if (customerPersonalInfo) {
+      console.log(customerPersonalInfo);
+      const contactInfoData = [
+        {
+          icon: "/icons/phone-icon.png",
+          value: "021-3467-8954",
+          className: "bg-[#DEEBFB]",
+          iconClassName: "w-5 h-5",
+        },
+        {
+          icon: "/icons/mobile-icon.png",
+          value: "021-3467-8954",
+          className: "bg-[#D0CFFF]",
+          iconClassName: "w-4 h-6",
+        },
+        {
+          icon: "/icons/email-icon.png",
+          value: customerPersonalInfo?.email[0]?.email,
+          className: "bg-[#DFF7EB]",
+          iconClassName: "w-5 h-4",
+        },
+        {
+          icon: "/icons/website-icon.png",
+          value: "021-3467-8954",
+          className: "bg-[#FADAD1]",
+          iconClassName: "w-5 h-5",
+        },
+      ];
+      setContactInfo(contactInfoData);
+    }
+  }, [customerPersonalInfo]);
   const satisfaction = 4;
   const totalVotes = 10;
   const score = (satisfaction * 100) / totalVotes;
@@ -40,28 +82,28 @@ export function CustomerPersonalInfo() {
       },
     ],
   };
-  const contactInfo = [
-    {
-      icon: "/icons/phone-icon.png",
-      value: "021-3467-8954",
-      className: "bg-[#DEEBFB]",
-    },
-    {
-      icon: "/icons/phone-icon.png",
-      value: "021-3467-8954",
-      className: "bg-[#DEEBFB]",
-    },
-    {
-      icon: "/icons/phone-icon.png",
-      value: "021-3467-8954",
-      className: "bg-[#DEEBFB]",
-    },
-    {
-      icon: "/icons/phone-icon.png",
-      value: "021-3467-8954",
-      className: "bg-[#DEEBFB]",
-    },
-  ];
+  // const contactInfo = [
+  //   {
+  //     icon: "/icons/phone-icon.png",
+  //     value: "021-3467-8954",
+  //     className: "bg-[#DEEBFB]",
+  //   },
+  //   {
+  //     icon: "/icons/phone-icon.png",
+  //     value: "021-3467-8954",
+  //     className: "bg-[#DEEBFB]",
+  //   },
+  //   {
+  //     icon: "/icons/phone-icon.png",
+  //     value: "021-3467-8954",
+  //     className: "bg-[#4AD991]",
+  //   },
+  //   {
+  //     icon: "/icons/phone-icon.png",
+  //     value: "021-3467-8954",
+  //     className: "bg-[#DEEBFB]",
+  //   },
+  // ];
   const addressesInfo = [
     {
       title: "اطلاعات محل کار",
@@ -99,7 +141,7 @@ export function CustomerPersonalInfo() {
     },
   ];
   return (
-    <div className="grid grid-cols-6 gap-4 bg-transparent mt-4 w-full">
+    <div className="flex flex-col lg:grid lg:grid-cols-6 gap-4 bg-transparent mt-4 w-full">
       <div className="col-span-2 flex flex-col gap-4 bg-card rounded-lg p-6">
         اطلاعات تماس
         {contactInfo.map((item, index) => (
@@ -114,9 +156,9 @@ export function CustomerPersonalInfo() {
               <Image
                 src={item?.icon}
                 alt="personal-info"
-                width={24}
-                height={24}
-                className="w-6 h-6"
+                width={1024}
+                height={1024}
+                className={item.iconClassName}
               />
             </div>
             <div>{item.value}</div>

@@ -33,11 +33,12 @@ export default function CurrencyDropDown({
   });
   useEffect(() => {
     if (currency) {
-      const currencyOptions = currency?.data?.map((item: any) => ({
-        value: item.id.toString(),
-        label: item.name,
-      }));
-      setCurrencies(currencyOptions);
+      // const currencyOptions = currency?.data?.map((item: any) => ({
+      //   value: item.id.toString(),
+      //   label: item.name,
+      // }));
+      // setCurrencies(currencyOptions);
+      console.log(currency)
     }
   }, [currency]);
 

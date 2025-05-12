@@ -90,8 +90,8 @@ const contractSlice = createSlice({
         { label: "قرار داد تکمیل شده", value: action?.payload?.doneCount ?? ""},
         { label: " قرار داد ناقص", value: action?.payload?.inProgressCount ?? ""},
       ];
-      const totalItems = action?.payload?.pagination?.total;
-      state.totalPages = Math.ceil(totalItems / limitForContracts);
+      const totalItems = action?.payload?.meta?.total;
+      state.totalPages = Math.ceil(totalItems / action?.payload?.meta?.limit);
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;

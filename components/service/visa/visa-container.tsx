@@ -131,7 +131,7 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users.map((item) => ({
+      const userOption: OptionType[] = users.map((item:any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));

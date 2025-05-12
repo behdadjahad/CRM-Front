@@ -21,9 +21,7 @@ import { createFormFields } from "@/constants/client-form-fields";
 import {
   createClient,
   createOrganization,
-
   insertAddressData,
-
   insertCommunicationData,
   insertSubmitterData,
 } from "@/api/client";
@@ -82,8 +80,8 @@ export default function Contract() {
     queryFn: async () => await getUsers(),
   });
   useEffect(() => {
-    if (users) {
-      const userOption: OptionType[] = users.map((item) => ({
+    if (users && users?.data?.length > 0) {
+      const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));
@@ -232,7 +230,7 @@ export default function Contract() {
   });
   const { mutate: SubmitterHandler } = useMutation({
     mutationFn: (data: any) => {
-      return insertSubmitterData(data,Number(id));
+      return insertSubmitterData(data, Number(id));
     },
     onSuccess: () => {
       router.push(`/contract/service/${id}`);
@@ -244,7 +242,6 @@ export default function Contract() {
       return createClient(data, Number(id));
     },
     onSuccess: (result) => {
-     
       const customerId = result.customerId;
       const url = organizationId
         ? `?customerId=${customerId}&organizationId=${organizationId}`
@@ -285,9 +282,7 @@ export default function Contract() {
     mutationFn: (data: any) => {
       return sendServiceData(data, Number(id));
     },
-    onSuccess: () => {
-    
-    },
+    onSuccess: () => {},
   });
 
   const { data: countryData } = useQuery({
@@ -304,8 +299,8 @@ export default function Contract() {
     queryFn: async () => await getCities(),
   });
   useEffect(() => {
-    if (countryData) {
-      const countryOptions: OptionType[] = countryData?.data.map((item) => ({
+    if (countryData && countryData?.data?.length > 0) {
+      const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
         label: item.name,
         value: item.id.toString(),
       }));
@@ -315,12 +310,14 @@ export default function Contract() {
     }
   }, [countryData]);
   useEffect(() => {
-    if (provinceData) {
+    if (provinceData && provinceData?.data?.length > 0) {
       if (!livingFormik.values.country) {
-        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
-          label: item.name,
-          value: item.id.toString(),
-        }));
+        const provinces: OptionType[] = provinceData?.data?.map(
+          (item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          })
+        );
 
         setProvinceOptions(provinces);
       } else {
@@ -337,12 +334,14 @@ export default function Contract() {
     }
   }, [provinceData, livingFormik.values.country]);
   useEffect(() => {
-    if (provinceData) {
+    if (provinceData && provinceData?.data?.length > 0) {
       if (!workFormik.values.workCountry) {
-        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
-          label: item.name,
-          value: item.id.toString(),
-        }));
+        const provinces: OptionType[] = provinceData?.data?.map(
+          (item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          })
+        );
 
         setWorkProvinceOptions(provinces);
       } else {
@@ -359,12 +358,14 @@ export default function Contract() {
     }
   }, [provinceData, workFormik.values.workCountry]);
   useEffect(() => {
-    if (provinceData) {
+    if (provinceData && provinceData?.data?.length > 0) {
       if (!organizationAddressFormik.values.organizationCountry) {
-        const provinces: OptionType[] = provinceData?.data.map((item: any) => ({
-          label: item.name,
-          value: item.id.toString(),
-        }));
+        const provinces: OptionType[] = provinceData?.data?.map(
+          (item: any) => ({
+            label: item.name,
+            value: item.id.toString(),
+          })
+        );
 
         setAgencyProvinceOptions(provinces);
       } else {
@@ -384,9 +385,9 @@ export default function Contract() {
   }, [provinceData, organizationAddressFormik.values.organizationCountry]);
 
   useEffect(() => {
-    if (cityData) {
+    if (cityData && cityData?.data?.length > 0) {
       if (!livingFormik.values.province) {
-        const cities: OptionType[] = cityData?.data.map((item) => ({
+        const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));
@@ -405,9 +406,9 @@ export default function Contract() {
     }
   }, [cityData, livingFormik.values.country]);
   useEffect(() => {
-    if (cityData) {
+    if (cityData && cityData?.data?.length > 0) {
       if (!workFormik.values.workCountry) {
-        const cities: OptionType[] = cityData?.data.map((item) => ({
+        const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));
@@ -425,9 +426,9 @@ export default function Contract() {
     }
   }, [cityData, workFormik.values.workCountry]);
   useEffect(() => {
-    if (cityData) {
+    if (cityData && cityData?.data?.length > 0) {
       if (!organizationAddressFormik.values.organizationProvince) {
-        const cities: OptionType[] = cityData?.data.map((item) => ({
+        const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));
@@ -475,12 +476,18 @@ export default function Contract() {
             {
               label: "تاریخ درج",
 
-              value: convertDate(contract?.submitDateTime, contract.dateType),
+              value:
+                contract?.submitDateTime && contract?.dateType
+                  ? convertDate(contract?.submitDateTime, contract?.dateType)
+                  : "",
             },
             {
               label: "تاریخ قرارداد",
 
-              value: convertDate(contract?.contractDate, contract.dateType),
+              value:
+                contract?.contractDate && contract?.dateType
+                  ? convertDate(contract?.contractDate, contract?.dateType)
+                  : "",
             },
             {
               label: "شماره قرار داد",
@@ -551,10 +558,14 @@ export default function Contract() {
                     personalSubmitHandler({
                       firstName: personalFormik.values.name,
                       lastName: personalFormik.values.familyName,
-                      birthdate: convertToGregorian(
-                        personalFormik.values.birthdate,
+                      birthdate:
+                        personalFormik.values.birthdate &&
                         personalFormik.values.birthdateType
-                      ),
+                          ? convertToGregorian(
+                              personalFormik.values.birthdate,
+                              personalFormik.values.birthdateType
+                            )
+                          : "",
 
                       socialNumber: personalFormik.values.socialNumber,
                       idNumber: personalFormik.values.idNumber,

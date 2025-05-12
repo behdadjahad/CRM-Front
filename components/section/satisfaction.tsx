@@ -43,24 +43,24 @@ export default function Satisfaction({
   });
   useEffect(() => {
     if (callDeviceData) {
-      const callDeviceOptions = callDeviceData.data.map((item: any) => ({
-        id: item.id,
-        label: item.name,
-        image: item.iconFile,
-      }));
-      setCallDevices(callDeviceOptions);
+      // const callDeviceOptions = callDeviceData.data.map((item: any) => ({
+      //   id: item.id,
+      //   label: item.name,
+      //   image: item.iconFile,
+      // }));
+      // setCallDevices(callDeviceOptions);
     }
   }, [callDeviceData]);
   useEffect(() => {
     if (SatisfactionLabelsData) {
-      const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
-        (item: any) => ({
-          id: item.id,
-          label: item.reasonName,
-          type: item.satisfactionKind,
-        })
-      );
-      setSatisfactionLabels(satisfactionLabelsOptions);
+      // const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
+      //   (item: any) => ({
+      //     id: item.id,
+      //     label: item.reasonName,
+      //     type: item.satisfactionKind,
+      //   })
+      // );
+      // setSatisfactionLabels(satisfactionLabelsOptions);
     }
   }, [SatisfactionLabelsData]);
 
@@ -175,7 +175,11 @@ export default function Satisfaction({
   //   ssr: false,
   // });
   return (
-    <div>
+    <div
+      onClick={(e) => {
+        e.stopPropagation(); // ✅ Stops bubbling
+      }}
+    >
       <div className="w-full flex gap-6">
         <div className="rounded-xl  w-full p-3 bg-card items-center justify-center flex flex-col  shadow-[0px_12px_24px_-4px_#919EAB1F]">
           {/* <RatingChart value={score} color="#FFA500" />

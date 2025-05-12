@@ -38,7 +38,8 @@ export default function LoginForm() {
       password: formik.values["password"],
     });
 
-    if (result.success) {
+    if (result) {
+      
       router.push("/sale");
       localStorage.setItem("token", result.data.accessToken);
       setIsLoading(false);

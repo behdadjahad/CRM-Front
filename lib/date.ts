@@ -30,6 +30,27 @@ export function convertDate(dateStr: string, targetType: string): string {
   }
 }
 
+export function convertDateTime(dateStr: string, targetType: string): string {
+  const [datePart, timePartRaw] = dateStr.split("T");
+  const timePart = timePartRaw?.substring(0, 5); // '09:41'
+
+  const [year, month, day] = datePart.split("-").map(Number); // use '-' not '/'
+
+  if (targetType.toLowerCase() === "lunar") {
+    const hijriDate = moment([year, month - 1, day]).format("iYYYY/iMM/iDD");
+    return `${hijriDate}-${timePart}`;
+  } else if (targetType.toLowerCase() === "solar") {
+    const jalaliDate = toJalaali(year, month, day);
+    return `${jalaliDate.jy}/${String(jalaliDate.jm).padStart(2, "0")}/${String(
+      jalaliDate.jd
+    ).padStart(2, "0")}-${timePart}`;
+  } else if (targetType.toLowerCase() === "gregorian") {
+    return `${year}/${String(month).padStart(2, "0")}/${String(day).padStart(2, "0")}-${timePart}`;
+  } else {
+    return "";
+  }
+}
+
 export function convertToGregorian(
   dateStr: string,
   targetType: string

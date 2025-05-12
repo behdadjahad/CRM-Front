@@ -35,9 +35,10 @@ export default function Service() {
       return sendSingleServiceData(data, Number(id));
     },
     onSuccess: (data) => {
+    
       const updatedServices = services.map((obj) => ({
         ...obj,
-        isSelected: data.avServices.includes(obj.name) ? true : obj.isSelected,
+        isSelected: data.data.includes(obj.name) ? true : obj.isSelected,
       }));
 
       setServiceList(updatedServices);
@@ -50,6 +51,7 @@ export default function Service() {
   });
   useEffect(() => {
     if (contract) {
+      console.log(contract)
       const updatedServices = services.map((obj) => ({
         ...obj,
         isSelected: contract?.avServices?.includes(obj.name)

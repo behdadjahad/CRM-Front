@@ -23,6 +23,8 @@ import {
   serviceOptions,
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
+import SortDropDown from "@/components/shared/sort-drop-down";
+import {  FaChevronDown } from "react-icons/fa";
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -35,10 +37,11 @@ export default function Sale() {
   const ContractOverviewList = useSelector(
     (state: any) => state.contract.ContractOverviewList
   );
-  const { data } = useQuery({
+  const { data: contractTypeData } = useQuery({
     queryKey: ["contractTypeQuery"],
     queryFn: () => getContractTypes(),
   });
+
   const handlePageChange = (selectedItem: any) => {
     const selectedPage = selectedItem.selected + 1;
     dispatch(
@@ -50,9 +53,9 @@ export default function Sale() {
     );
   };
   useEffect(() => {
-    if (data?.success && data?.data) {
+    if (contractTypeData && contractTypeData?.data?.length > 0) {
       setContractTypes(
-        data.data.map((item: any) => ({
+        contractTypeData.data.map((item: any) => ({
           id: item.id,
           image: "http://185.126.203.246:3000/public/" + item.iconFile,
           title: item.name,
@@ -60,11 +63,12 @@ export default function Sale() {
             "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
+      console.log(contractTypeData);
     }
-  }, [data]);
+  }, [contractTypeData]);
   const formik = useFormik({
     initialValues: {
-      // searchBy: [],
+
       openContracts: "",
       contractState: [],
       name: "",
@@ -89,29 +93,14 @@ export default function Sale() {
     },
     onSubmit: async () => {},
   });
+  const limitFormik = useFormik({
+    initialValues: {
+      limit:""
+    },
+    onSubmit: async () => {},
+  });
+ 
   const filterItems = [
-    // {
-    //   title: "جستجو بر اساس",
-    //   component: (
-    //     <FormMaker
-    //       form={formik}
-    //       fields={[
-    //         {
-    //           key: "searchBy",
-    //           component: "checkbox",
-    //           placeholder: "جست‌وجو بر اساس",
-    //           type: "text",
-    //           className: "w-full items-start p-0",
-    //           options: [
-    //             { label: "درخواست", value: "request" },
-    //             { label: "قرارداد", value: "contract" },
-    //           ],
-    //         },
-    //       ]}
-    //       className="flex flex-row w-full"
-    //     />
-    //   ),
-    // },
     {
       title: " نوع قرارداد (باز-بسته) ",
       component: (
@@ -371,14 +360,16 @@ export default function Sale() {
     const filterData = {
       openContracts: formik.values.openContracts,
       customerName: formik.values.name,
-      submitDateTimeRangeStart:  convertToGregorian(
-            formik.values?.startDate,
-            formik.values?.startDateType
-          ),
-   
-      submitDateTimeRangeEnd: 
-       convertToGregorian(formik.values?.endDate, formik.values?.endDateType),
-      
+      submitDateTimeRangeStart: convertToGregorian(
+        formik.values?.startDate,
+        formik.values?.startDateType
+      ),
+
+      submitDateTimeRangeEnd: convertToGregorian(
+        formik.values?.endDate,
+        formik.values?.endDateType
+      ),
+
       priceWeSellRangeStart: Number(formik.values.minSellRange),
       priceWeSellRangeEnd: Number(formik.values.maxSellRange),
       priceWeBuyRangeStart: Number(formik.values.minBuyRange),
@@ -432,6 +423,38 @@ export default function Sale() {
       })
     );
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit:Number(limitFormik.values.limit),
+        filters: filters,
+      })
+    );
+  }, [limitFormik.values.limit]);
+
+  const contractRecordList = [
+    {
+      label: "6ردیف",
+      value: "6",
+    },
+    {
+      label: "12ردیف",
+      value: "12",
+    },
+    {
+      label: "24 ردیف",
+      value: "24",
+    },
+    {
+      label: "36 ردیف",
+      value: "36",
+    },
+    {
+      label: "102 ردیف",
+      value: "102",
+    },
+  ];
   return (
     <main>
       <div className="flex items-center justify-between">
@@ -477,28 +500,48 @@ export default function Sale() {
       <div className="md:bg-background-active rounded-xl md:p-6">
         <ContractContainer list={contractLists} />
       </div>
-
-      <div className="w-full custom-shadow bg-card p-3 rounded-md">
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="صفحه بعد"
-          previousLabel="صفحه قبل"
-          onPageChange={handlePageChange}
-          pageRangeDisplayed={2}
-          marginPagesDisplayed={3}
-          forcePage={currentPage - 1}
-          pageCount={pages}
-          renderOnZeroPageCount={null}
-          containerClassName="w-full relative flex justify-center items-center ltr"
-          pageClassName="mx-3 rounded-md"
-          pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
-          activeClassName="bg-gray-300 rounded-md"
-          previousClassName="absolute right-8"
-          previousLinkClassName="rounded-md text-sm"
-          nextClassName="absolute left-8"
-          nextLinkClassName="rounded-md text-sm"
-          disabledClassName="opacity-50 cursor-not-allowed"
-        />
+      <div className="grid grid-cols-2 custom-shadow bg-card p-3 rounded-md">
+        {" "}
+        <div className="col-span-1 w-full">
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel="صفحه بعد"
+            previousLabel="صفحه قبل"
+            onPageChange={handlePageChange}
+            pageRangeDisplayed={2}
+            marginPagesDisplayed={3}
+            forcePage={currentPage - 1}
+            pageCount={pages}
+            renderOnZeroPageCount={null}
+            containerClassName="w-full relative flex justify-center items-center ltr"
+            pageClassName="mx-3 rounded-md"
+            pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
+            activeClassName="bg-gray-300 rounded-md"
+            previousClassName="absolute right-8"
+            previousLinkClassName="rounded-md text-sm"
+            nextClassName="absolute left-8"
+            nextLinkClassName="rounded-md text-sm"
+            disabledClassName="opacity-50 cursor-not-allowed"
+          />
+        </div>
+        <div className="col-span-1 flex items-center justify-end pl-3">
+          {" "}
+          <FormMaker
+            form={limitFormik}
+            fields={[
+              {
+                key: "limit",
+                component: "Select",
+                placeholder: "تعدادردیف",
+                type: "text",
+                floating: true,
+                className: "w-auto",
+                options: contractRecordList,
+              },]}
+            className="flex flex-row justify-end items-start"
+          />
+          
+        </div>
       </div>
     </main>
   );

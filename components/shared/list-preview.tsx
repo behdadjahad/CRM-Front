@@ -16,7 +16,7 @@ export default function ListPreview({
         item?.options?.find((opt) => opt.value == form.values[item.key])
       );
     }
-  }, [form.values[item.key]]);
+  }, [form.values[item.key],item?.options]);
   return (
     <div className="flex flex-col md:flex-row items-center  w-full  gap-8">
       <div className="">{item.title}</div>

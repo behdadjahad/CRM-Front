@@ -17,6 +17,16 @@ export default function StopForm({
   flight: any;
   stop: any;
 }) {
+  function convertTimeToISO(time: string): string {
+    return `1970-01-01T${time}:00Z`;
+  }
+  function extractTimeFromISO(isoString: string): string {
+  const date = new Date(isoString);
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+  }
+
   const queryClient = useQueryClient();
   const formik = useFormik({
     initialValues: {
@@ -24,20 +34,19 @@ export default function StopForm({
       stopId: stop?.stopId,
       airport: stop?.airport?.toString(),
       description: stop?.description,
-      stopTime: stop?.stopDateTime,
+      stopTime:stop?.stopTime ? extractTimeFromISO(stop?.stopTime):"00:00",
       isSubmitted: stop?.isSubmitted,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
   function removeForm(formId: any) {
-
     if (formik.values.isSubmitted) {
       deleteStopForm(formId);
-      console.log('true')
+      console.log("true");
     } else {
       onRemoveHandler(formId);
-      console.log('false')
+      console.log("false");
     }
   }
   const { mutate: submitStopForm } = useMutation({
@@ -74,7 +83,7 @@ export default function StopForm({
 
   function submitHandler() {
     const data = {
-      stopDateTime: "1970-01-01T01:40:00Z",
+      stopDateTime: convertTimeToISO(formik.values.stopTime),
       stopStationId: formik.values.airport,
       description: formik.values.description,
     };
@@ -111,7 +120,7 @@ export default function StopForm({
           },
           {
             key: "stopTime",
-            component: "input",
+            component: "time",
             placeholder: "مدت زمان توقف",
             type: "text",
             floating: true,

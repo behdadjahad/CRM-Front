@@ -15,6 +15,7 @@ import ToggleInput from "./toggle-input";
 import FilePreview from "./file-preview";
 import ListPreview from "./list-preview";
 import DateTimeInput from "./date-time-input";
+import TimeInput from "./time-input";
 
 export interface OptionType {
   label: string;
@@ -39,6 +40,7 @@ export interface FieldType {
     | "file-preview"
     | "list-preview"
     | "range-input"
+    | "time"
     | "non-field";
   floating?: boolean;
   placeholder?: string;
@@ -98,6 +100,8 @@ export default function FormMaker({
           return <DateInput item={item} form={form} />;
         case "date-time":
           return <DateTimeInput item={item} form={form} />;
+        case "time":
+          return <TimeInput item={item} form={form} />;
 
         case "checkbox":
           return <CheckboxInput item={item} form={form} />;

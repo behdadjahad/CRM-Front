@@ -13,14 +13,12 @@ import Image from "next/image";
 
 export default function TicketForm({
   onRemoveHandler,
-
   ticket,
   flightClasses,
   airlines,
   flightTypes,
 }: {
   onRemoveHandler: any;
-
   ticket: any;
   flightClasses: any;
   airlines: any;

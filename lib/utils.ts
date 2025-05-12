@@ -34,4 +34,4 @@ export const limitForCustomerDetailContracts = 6;
           !(Array.isArray(value) && value.length === 0)
       )
     );
-  }
+}

@@ -14,7 +14,7 @@ export default function OrganizationInformation({
   return (
     <div className={cn("w-full relative", className)}>
       <Image
-        src="/images/banner.png"
+        src="/images/Banner.png"
         alt="Logo"
         width={680}
         height={900}

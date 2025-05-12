@@ -93,10 +93,12 @@ export default function RoundTripTicketForm({
       returnCost: "",
       returnBroker: "",
       returnCurrency: "",
-      returnFlightClass: "",
+      returnFlightClass: ticket?.flights
+        ?.find((obj: any) => obj.groupOrder === 2)
+        ?.flightClass,
       returnFlightType: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 2)
-        ?.flightType?.toString(),
+        ?.flightType,
       flightId: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
         ?.flightId,
       isSubmitted: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)

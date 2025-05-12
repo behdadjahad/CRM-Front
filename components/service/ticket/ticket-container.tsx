@@ -7,7 +7,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useParams } from "next/navigation";
 import { getTicketData } from "@/api/ticket";
-import { deleteFlightData, getAirlinesData, getFightClassData, getFightTypeData } from "@/api/flight";
+import {
+  deleteFlightData,
+  getAirlinesData,
+  getFightClassData,
+  getFightTypeData,
+} from "@/api/flight";
 import { getTransportationTypeId } from "@/api/transportation";
 import { OptionType } from "@/components/shared/form-maker";
 
@@ -24,63 +29,67 @@ export default function TicketContainer({
       getTransportationType();
     }
   }, [transportationType]);
-   const [flightClasses, setFlightClasses] = useState<OptionType[]>([]);
-    const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
-    const [airlines, setAirlines] = useState<OptionType[]>([]);
-   const { mutate: getTransportationType } = useMutation({
-      mutationFn: () => {
-        return getTransportationTypeId(transportationType);
-      },
-      onSuccess: (response) => {
-        if (response.id) {
-          getFlightClass(response.id);
-          getFlightType(response.id);
-          getAirlines(response.id);
-        }
-      },
-    });
-    const { mutate: getFlightClass } = useMutation({
-      mutationFn: (item: number) => {
-        return getFightClassData(item);
-      },
-      onSuccess: (response) => {
-        if (response.data && response.data.length > 0) {
-          const flightClassOptions = response?.data?.map((item: any) => ({
-            value: item?.id.toString(),
-            label: item?.name,
-          }));
-          setFlightClasses(flightClassOptions);
-        }
-      },
-    });
-    const { mutate: getFlightType } = useMutation({
-      mutationFn: (item: number) => {
-        return getFightTypeData(item);
-      },
-      onSuccess: (response) => {
-        if (response.data && response.data.length > 0) {
-          const flightTypeOptions = response?.data?.map((item: any) => ({
-            value: item?.id.toString(),
-            label: item?.name,
-          }));
-          setFlightTypes(flightTypeOptions);
-        }
-      },
-    });
-    const { mutate: getAirlines } = useMutation({
-      mutationFn: (item: number) => {
-        return getAirlinesData(item);
-      },
-      onSuccess: (response) => {
-        if (response.data && response.data.length > 0) {
-          const airlinesOptions = response?.data?.map((item: any) => ({
-            value: item?.id.toString(),
-            label: item?.name,
-          }));
-          setAirlines(airlinesOptions);
-        }
-      },
-    });
+  const [flightClasses, setFlightClasses] = useState<OptionType[]>([]);
+  const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
+  const [airlines, setAirlines] = useState<OptionType[]>([]);
+  const { mutate: getTransportationType } = useMutation({
+    mutationFn: () => {
+      return getTransportationTypeId(transportationType);
+    },
+    onSuccess: (response) => {
+      if (response.id) {
+        getFlightClass(response.id);
+        getFlightType(response.id);
+        getAirlines(response.id);
+      }
+    },
+  });
+
+  const { mutate: getFlightClass } = useMutation({
+    mutationFn: (item: number) => {
+      return getFightClassData(item);
+    },
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        const flightClassOptions = response?.data?.map((item: any) => ({
+          value: item?.id,
+          label: item?.name,
+        }));
+        setFlightClasses(flightClassOptions);
+      }
+    },
+  });
+
+  
+
+  const { mutate: getFlightType } = useMutation({
+    mutationFn: (item: number) => {
+      return getFightTypeData(item);
+    },
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        const flightTypeOptions = response?.data?.map((item: any) => ({
+          value: item?.id.toString(),
+          label: item?.name,
+        }));
+        setFlightTypes(flightTypeOptions);
+      }
+    },
+  });
+  const { mutate: getAirlines } = useMutation({
+    mutationFn: (item: number) => {
+      return getAirlinesData(item);
+    },
+    onSuccess: (response) => {
+      if (response.data && response.data.length > 0) {
+        const airlinesOptions = response?.data?.map((item: any) => ({
+          value: item?.id.toString(),
+          label: item?.name,
+        }));
+        setAirlines(airlinesOptions);
+      }
+    },
+  });
   function addTicketForm() {
     setAddedTickets([
       ...addedTickets,
@@ -192,7 +201,6 @@ export default function TicketContainer({
           <TicketForm
             key={item.id}
             onRemoveHandler={removeHandler}
-    
             ticket={item}
             flightClasses={flightClasses}
             flightTypes={flightTypes}

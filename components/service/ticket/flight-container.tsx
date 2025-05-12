@@ -12,9 +12,6 @@ export default function FlightContainer({
   airports,
   ticket,
   onRemoveHandler,
-
-  
-
 }: {
   flightClassOptions: any;
   flightTypeOptions: any;

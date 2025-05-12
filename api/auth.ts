@@ -62,7 +62,7 @@ export async function getMe(): Promise<UserData> {
   }
 }
 
-export async function getUsers(): Promise<UserData[]> {
+export async function getUsers(): Promise<any> {
   try {
     const result = await fetchService("user/all-users");
     return result;

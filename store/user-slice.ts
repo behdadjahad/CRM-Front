@@ -29,9 +29,10 @@ export const fetchUserData = createAsyncThunk<UserData>(
   "user/fetchUserData",
   async (inputData, { dispatch }) => {
     try {
-      const data = await fetchService("user");
-      dispatch(setUser(data))
-      return data;
+      const result = await fetchService("user");
+  
+      dispatch(setUser(result?.data))
+      return result;
     } catch { }
   }
 );

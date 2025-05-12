@@ -67,18 +67,18 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      {
-        label: "قرارداد ها",
-        link: "/contract",
-        icon: (
-          <Image
-            src={"/icons/document.png"}
-            alt="قرارداد ها"
-            width={22}
-            height={22}
-          />
-        ),
-      },
+      // {
+      //   label: "قرارداد ها",
+      //   link: "/sale",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/document.png"}
+      //       alt="قرارداد ها"
+      //       width={22}
+      //       height={22}
+      //     />
+      //   ),
+      // },
     ],
   },
   {

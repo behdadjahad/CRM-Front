@@ -3,13 +3,13 @@ import FormMaker, { OptionType } from "../../shared/form-maker";
 import { Button } from "../../ui/button";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { cn } from "@/lib/utils";
+import { cn, dateType } from "@/lib/utils";
 import StopForm from "./stop-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
 import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
-import { convertDateTimeToGregorian } from "@/lib/date";
+import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 export default function OneWayTicketForm({
   onRemoveHandler,
   flightClassOptions,
@@ -32,10 +32,10 @@ export default function OneWayTicketForm({
     initialValues: {
       originCityAirport: ticket?.flights?.[0]?.originCityAirport?.toString(),
       originTerminal: ticket?.flights?.[0]?.originTerminal?.toString(),
-      exitDateTime: ticket?.flights?.[0]?.exitDateTime,
-      exitDateTimeType: "",
-      arriveDateTime: ticket?.flights?.[0]?.arriveDateTime,
-      arriveDateTimeType: "",
+      exitDateTime:ticket?.flights?.[0]?.exitDateTime && convertDateTime(ticket?.flights?.[0]?.exitDateTime,dateType),
+      exitDateTimeType:dateType,
+      arriveDateTime:ticket?.flights?.[0]?.arriveDateTime && convertDateTime(ticket?.flights?.[0]?.arriveDateTime,dateType) ,
+      arriveDateTimeType: dateType,
       destinationCityAirport:
         ticket?.flights?.[0]?.destinationCityAirport?.toString(),
       destinationTerminal:
@@ -155,10 +155,12 @@ export default function OneWayTicketForm({
         formik.values.exitDateTime,
         formik.values.exitDateTimeType
       ),
+    
       arriveDateTime: convertDateTimeToGregorian(
         formik.values.arriveDateTime,
         formik.values.arriveDateTimeType
       ),
+   
       transportationCoId: formik.values.airline,
     };
     if (!formik.values.isSubmitted) {

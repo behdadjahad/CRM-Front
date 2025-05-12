@@ -11,16 +11,14 @@ import { RootState } from "@/store";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserData } from "@/store/user-slice";
-import {
-  createContract,
-  getContractNumber,
-} from "@/api/contract";
+import { createContract, getContractNumber } from "@/api/contract";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
 import { useRouter } from "next/navigation";
 
 import { getCities, getCountries } from "@/api/location";
 import { convertToGregorian } from "@/lib/date";
+import { CustomToast } from "../shared/custome-toast";
 
 export interface ContractCreationInterface {
   contractTypes: ServiceCardInterface[];
@@ -47,7 +45,7 @@ export default function ContractCreation({
       accountant: "",
       description: "",
       country: undefined,
-      city:undefined ,
+      city: undefined,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -66,8 +64,8 @@ export default function ContractCreation({
     queryFn: async () => await getCities(),
   });
   useEffect(() => {
-    if (countryData) {
-      const countryOptions: OptionType[] = countryData?.data.map((item) => ({
+    if (countryData && countryData.data.length > 0) {
+      const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
         label: item.name,
         value: item.id.toString(),
       }));
@@ -76,7 +74,7 @@ export default function ContractCreation({
   }, [countryData]);
 
   useEffect(() => {
-    if (cityData) {
+    if (cityData && cityData.data.length > 0) {
       if (!formik.values.country) {
         const cities: OptionType[] = cityData?.data.map((item) => ({
           label: item.name,
@@ -98,7 +96,8 @@ export default function ContractCreation({
 
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users.map((item) => ({
+      console.log(users);
+      const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));
@@ -116,7 +115,6 @@ export default function ContractCreation({
       return getContractNumber(id);
     },
     onSuccess: ({ data }) => {
-   
       formik.setFieldValue("contractId", data?.contractId);
       formik.setFieldValue("number", data?.suggestedContractNo);
     },
@@ -126,27 +124,38 @@ export default function ContractCreation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return createContract(id, data);
     },
-    onSuccess: ({ data }) => {
+    onSuccess: (response) => {
+      CustomToast({
+        type: response.status,
+        message: response.message,
+      });
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
-      router.push(`/contract/${data.id}`);
+      router.push(`/contract/${response.data.id}`);
     },
   });
-  const { mutate: createContractMutationn } = useMutation({
+  const { mutate: createContractMutationReset } = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return createContract(id, data);
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      CustomToast({
+        type: response.status,
+        message: response.message,
+      });
       formik.resetForm();
       setActiveItem(null);
-  },
+    },
+    onError: (response) => {
+      console.log(response);
+    },
   });
   function contractSubmitHandler(enableNewCreation: boolean) {
     if (!formik.values.contractId) return;
     const id = formik.values.contractId;
     const data = {
-      contractTypeId: activeItem.id,
+      contractTypeId: activeItem?.id,
       contractDate: convertToGregorian(
         formik.values.contractDate,
         formik.values.contractDateType
@@ -158,8 +167,9 @@ export default function ContractCreation({
       destinationCityId: formik.values.city,
       destinationCountryId: formik.values.country,
     };
+
     if (enableNewCreation) {
-      createContractMutationn({
+      createContractMutationReset({
         id: id,
         data: data,
       });

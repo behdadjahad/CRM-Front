@@ -67,7 +67,7 @@ export interface ContractTypeOutput {
 export async function createContract(
   contractId: number,
   data: ContractCreationInput
-): Promise<ContractCreationOutput> {
+): Promise<any> {
   try {
     const result = await fetchService(
       `contract-chadco-customer/${contractId}`,
