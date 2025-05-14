@@ -1,7 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
 import { services } from "@/constants/services";
 import { convertDate } from "@/lib/date";
-import { limitForContracts, totalVotes } from "@/lib/utils";
+import { limitForContracts, ServerImageAddress, totalVotes } from "@/lib/utils";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface ContractState {
@@ -60,7 +60,7 @@ const contractSlice = createSlice({
         },
         header: {
           contractNumber: item.contractNo,
-          icon: "/icons/visa-white.png",
+          icon:ServerImageAddress + item?.contractType?.iconFile,
           submitDate:
             item?.submitDateTime && item?.dateType
               ? convertDate(item?.submitDateTime, item?.dateType)
@@ -90,8 +90,8 @@ const contractSlice = createSlice({
         { label: "قرار داد تکمیل شده", value: action?.payload?.doneCount ?? ""},
         { label: " قرار داد ناقص", value: action?.payload?.inProgressCount ?? ""},
       ];
-      const totalItems = action?.payload?.meta?.total;
-      state.totalPages = Math.ceil(totalItems / action?.payload?.meta?.limit);
+      const totalItems = action?.payload?.pagination?.total;
+      state.totalPages = Math.ceil(totalItems / action?.payload?.pagination?.limit);
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;
@@ -102,6 +102,7 @@ const contractSlice = createSlice({
 export const fetchContracts = createAsyncThunk<any, any>(
   "contract/fetchContracts",
   async ({ page, limit, filters }) => {
+  
     try {
       const result = await fetchService(
         `contract-chadco-customer/filter-contracts?page=${page}&limit=${limit}`,

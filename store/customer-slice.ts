@@ -37,7 +37,7 @@ const customerSlice = createSlice({
           "شماره تماس": item?.phone?.[0]?.number,
           "شغل": item?.person?.personJobs?.[0]?.jobs?.name,
           "موضوع قرارداد": item?.lastContract?.contractType,
-          "رتبه مشتری": "نقره ای",
+          "رتبه مشتری": item?.rank,
           "قرارداد": convertDate(item?.lastContract?.submitDate, dateType),
           "مبلغ آخرین قرارداد": `${item?.lastContract?.price}`,
         },
@@ -46,11 +46,11 @@ const customerSlice = createSlice({
             Math.abs(item?.profit)
           ),
           "تعداد مشتری": item?.totalPeopleInContracts,
-          "تاریخ آخرین پیگیری": "۱۴۰۳/۲/۶  ۲۱:۱۵",
-          "نوع آخرین پیگیری": "جلسه حضوری",
-          "وضعیت آخرین پیگیری": "برنامه‌ریزی‌شده",
-          "پیگیری بعدی": "۱۴۰۳/۲/۸  ۱۷:۴۵",
-          "امتیاز مشتری":"10 / 3"
+          "تاریخ آخرین پیگیری": "",
+          "نوع آخرین پیگیری": "",
+          "وضعیت آخرین پیگیری": "",
+          "پیگیری بعدی": "",
+          "امتیاز مشتری":item?.score,
         },
       }));
       const totalItems = action?.payload?.pagination?.total;

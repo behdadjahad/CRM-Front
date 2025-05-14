@@ -3,8 +3,6 @@
 import ClientInfoContainer from "@/components/service/client-info-container";
 import ContractExpenseContainer from "@/components/service/contract-expense-container";
 
-
-
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 
@@ -30,31 +28,33 @@ export default function Service() {
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
   const { id } = useParams();
-  const { mutate: submitService } = useMutation({
+  const { mutate: submitService, data: updatedServiceData } = useMutation({
     mutationFn: (data: any) => {
       return sendSingleServiceData(data, Number(id));
     },
-    onSuccess: (data) => {
-    
+    onSuccess: () => {},
+  });
+  useEffect(() => {
+    if (updatedServiceData) {
+
       const updatedServices = services.map((obj) => ({
         ...obj,
-        isSelected: data.data.includes(obj.name) ? true : obj.isSelected,
+        isSelected: updatedServiceData.data?.avServices?.includes(obj.name)
+          ? true
+          : obj.isSelected,
       }));
-
       setServiceList(updatedServices);
-    },
-  });
-
+    }
+  }, [updatedServiceData]);
   const { data: contract } = useQuery({
     queryKey: ["contract"],
     queryFn: async () => await getContractById(Number(id)),
   });
   useEffect(() => {
     if (contract) {
-      console.log(contract)
       const updatedServices = services.map((obj) => ({
         ...obj,
-        isSelected: contract?.avServices?.includes(obj.name)
+        isSelected: contract?.data?.avServices?.includes(obj.name)
           ? true
           : obj.isSelected,
       }));
@@ -70,15 +70,17 @@ export default function Service() {
       },
       {
         label: "تاریخ ثبت درخواست",
-        value: (contract?.submitDateTime && contract?.dateType)
-          ? convertDate(contract?.submitDateTime, contract?.dateType)
-          : "",
+        value:
+          contract?.submitDateTime && contract?.dateType
+            ? convertDate(contract?.submitDateTime, contract?.dateType)
+            : "",
       },
       {
         label: "تاریخ قرارداد",
-        value:(contract?.contractDate && contract?.dateType)
-          ? convertDate(contract?.contractDate, contract?.dateType)
-          : "",
+        value:
+          contract?.contractDate && contract?.dateType
+            ? convertDate(contract?.contractDate, contract?.dateType)
+            : "",
       },
       {
         label: "شماره قرارداد",
@@ -112,15 +114,15 @@ export default function Service() {
       },
       {
         label: "نام و نام خانوادگی",
-        value: "آرشام رضایی",
+        value: "",
       },
       {
         label: "نام دپارتمان",
-        value: "دپارتمان",
+        value: "",
       },
       {
         label: "سمت",
-        value: "کارشناس سرویس هتل",
+        value: "",
       },
     ],
   };
@@ -161,8 +163,6 @@ export default function Service() {
             <div className="flex gap-4">
               <Checkbox
                 onClick={() => {
-                  console.log(activeItem);
-
                   submitService({ avService: activeItem.name });
                   setActiveItem(null);
                 }}

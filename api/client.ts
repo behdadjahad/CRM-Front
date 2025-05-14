@@ -1,11 +1,8 @@
 import { fetchService } from "@/boot/fetch-service";
 
 export async function createClient(data: any, id: number) {
- // const person = await getPerson(id);
-
   try {
     const result = await fetchService("person", {
-      // method: person ? "PUT":"POST",
       method: "POST",
       body: data,
     });
@@ -15,16 +12,28 @@ export async function createClient(data: any, id: number) {
     return {};
   }
 }
-
-export async function getPerson(id: number) {
+export async function editClient(data: any, id: number) {
   try {
-    const result = await fetchService(`person/${id}`);
+    const result = await fetchService(`person/${id}`, {
+      method: "PUT",
+      body: data,
+    });
 
     return result;
   } catch {
     return {};
   }
 }
+
+// export async function getPerson(id: number) {
+//   try {
+//     const result = await fetchService(`person/${id}`);
+
+//     return result;
+//   } catch {
+//     return {};
+//   }
+// }
 export async function insertAddressData(data: any) {
   try {
     const result = await fetchService("address", {
@@ -37,6 +46,27 @@ export async function insertAddressData(data: any) {
     return {};
   }
 }
+export async function editAddressData(data: any, id: number) {
+  try {
+    const result = await fetchService(`address/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {
+    return {};
+  }
+}
+// export async function getAddressData(id: number) {
+//   try {
+//     const result = await fetchService(`address/customer/home/${id}`);
+
+//     return result;
+//   } catch {
+//     return {};
+//   }
+// }
 export async function insertCommunicationData(data: any) {
   try {
     const result = await fetchService("communication/many", {
@@ -49,6 +79,27 @@ export async function insertCommunicationData(data: any) {
     return {};
   }
 }
+export async function editCommunicationData(data: any) {
+  try {
+    const result = await fetchService('communication/many', {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {
+    return {};
+  }
+}
+// export async function getCommunicationData(id: number) {
+//   try {
+//     const result = await fetchService(`communication/home/${id}`);
+
+//     return result;
+//   } catch {
+//     return {};
+//   }
+// }
 export async function createOrganization(data: any) {
   try {
     const result = await fetchService("organization", {

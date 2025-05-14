@@ -27,7 +27,7 @@ export interface EditableContainerInterface {
     icon: React.ReactNode;
     click: () => any;
   };
-  contract: ContractOutput;
+  contract: any;
 }
 
 export default function EditableContainer({
@@ -47,8 +47,8 @@ export default function EditableContainer({
   });
 
   useEffect(() => {
-    if (users && users?.data?.length >0 ) {
-      const userOption: OptionType[] = users.data?.map((item:any) => ({
+    if (users && users?.data?.length > 0) {
+      const userOption: OptionType[] = users.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));
@@ -58,13 +58,16 @@ export default function EditableContainer({
 
   const formik = useFormik({
     initialValues: {
-      number: contract?.contractNo ?? "",
-      date: (contract?.contractDate && contract.dateType) ? convertDate(contract?.contractDate, contract.dateType) : "",
-      subject: contract?.contractType?.name ?? "",
-      accountant: contract?.userResponsible?.id.toString() ?? "",
-      description: contract?.description ?? "",
-      country: contract?.destinationCountry?.id.toString() ?? "",
-      city: contract?.destinationCity?.id.toString() ?? "",
+      number: contract?.data?.contractNo ?? "",
+      date:
+        contract?.data?.contractDate && contract?.data?.dateType
+          ? convertDate(contract?.data?.contractDate, contract?.data?.dateType)
+          : "",
+      subject: contract?.data?.contractType?.name ?? "",
+      accountant: contract?.data?.userResponsible?.id.toString() ?? "",
+      description: contract?.data?.description ?? "",
+      country: contract?.data?.destinationCountry?.id.toString() ?? "",
+      city: contract?.data?.destinationCity?.id.toString() ?? "",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -79,7 +82,7 @@ export default function EditableContainer({
     queryFn: async () => await getCities(),
   });
   useEffect(() => {
-    if (countryData && countryData?.data?.length >0) {
+    if (countryData && countryData?.data?.length > 0) {
       const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
         label: item.name,
         value: item.id.toString(),
@@ -89,7 +92,7 @@ export default function EditableContainer({
   }, [countryData]);
 
   useEffect(() => {
-    if (cityData &&cityData?.data?.length >0 ) {
+    if (cityData && cityData?.data?.length > 0) {
       if (!formik.values.country) {
         const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
@@ -119,9 +122,7 @@ export default function EditableContainer({
 
       setOpenModal(false);
       formik.resetForm();
-      // setContract(data.data)
-      // setActiveItem(null);
-      // router.push(`/contract/${data.id}`);
+    
     },
   });
 
@@ -203,6 +204,8 @@ export default function EditableContainer({
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                readonly: true,
+                disabled: true,
               },
               {
                 key: "date",
@@ -219,6 +222,8 @@ export default function EditableContainer({
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
+                readonly: true,
+                disabled: true,
               },
               {
                 key: "accountant",
@@ -264,16 +269,16 @@ export default function EditableContainer({
               variant={"info"}
               onClick={() => {
                 EditContractMutation({
-                  id: contract.id,
+                  id: contract?.data.id,
                   data: {
-                    contractTypeId: contract.contractType.id,
+                    contractTypeId: contract.data.contractType.id,
                     contractDate: convertToGregorian(
                       formik.values.date,
-                      contract.dateType
+                      contract.data.dateType
                     ),
-                    dateType: contract.dateType,
+                    dateType: contract.data.dateType,
                     description: formik.values.description,
-                    userSubmitterId: Number(contract.userSubmitter.id),
+                    userSubmitterId: Number(contract.data.userSubmitter.id),
                     userResponsibleId: Number(formik.values.accountant),
                     destinationCityId: Number(formik.values.city),
                     destinationCountryId: Number(formik.values.country),

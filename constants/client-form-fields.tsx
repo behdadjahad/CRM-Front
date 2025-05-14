@@ -38,7 +38,7 @@ export function createFormFields(
           className: "w-full md:w-1/2 lg:w-1/4",
         },
         {
-          key: "socialNumber",
+          key: "idNumber",
           component: "input",
           placeholder: "کد ملی",
           type: "text",
@@ -47,7 +47,7 @@ export function createFormFields(
           className: "w-full md:w-1/2 lg:w-1/4",
         },
         {
-          key: "idNumber",
+          key: "socialNumber",
           component: "input",
           placeholder: "شماره شناسنامه",
           type: "text",

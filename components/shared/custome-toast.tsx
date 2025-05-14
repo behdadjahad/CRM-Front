@@ -12,7 +12,7 @@ interface CustomToastProps {
 export function CustomToast({
   message,
   type,
-  duration = 4000,
+  duration = 2000,
   position = "top-center",
 }: CustomToastProps) {
   switch (type) {

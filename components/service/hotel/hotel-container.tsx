@@ -113,7 +113,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
   });
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users.map((item:any) => ({
+      const userOption: OptionType[] = users?.data?.map((item:any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));

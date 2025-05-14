@@ -7,6 +7,8 @@ import Title from "@/components/shared/title";
 import Image from "next/image";
 
 export default function CustomerDetail() {
+
+  
   const customer: PersonInfoInterface = {
     list: [
       {
@@ -24,15 +26,15 @@ export default function CustomerDetail() {
       },
       {
         label: "نام و نام خانوادگی",
-        value: "محمد برزگر",
+        value: "",
       },
       {
         label: "کدملی",
-        value: "2281754826",
+        value: "",
       },
       {
         label: "تاریخ تولد",
-        value: "6 اردیبهشت 1368",
+        value: "",
       },
     ],
   };
@@ -55,7 +57,8 @@ export default function CustomerDetail() {
       <div>
         <PersonInfoContainer {...customer} />
         <CustomerDetailContent
-          tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+          tabList={[ "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+          // tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
         />
       </div>
     </main>

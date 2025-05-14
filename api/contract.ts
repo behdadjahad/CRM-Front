@@ -38,7 +38,7 @@ export interface ServiceOutput {
 
 export async function getContractNumber(
   id: number
-): Promise<ContractTypeOutput> {
+): Promise<any> {
   try {
     const result: ContractTypeOutput = await fetchService(
       `contract-type/suggest/${id}`
@@ -172,7 +172,7 @@ export interface ContractInformationOutput {
   inProgressCount: number;
 }
 
-export async function getContractById(id: number): Promise<ContractOutput | undefined> {
+export async function getContractById(id: number): Promise<any > {
 
   try {
     const result = await fetchService(

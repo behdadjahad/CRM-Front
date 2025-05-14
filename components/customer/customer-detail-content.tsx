@@ -48,22 +48,7 @@ export default function CustomerDetailContent({
     { label: "تعداد مشتری", labelIsHidden: false },
     { label: "رضایتمندی", labelIsHidden: false },
   ];
-  // const customerContracts = [
-  //   {
-  //     "شماره قرارداد": "9845320169",
-  //     "تاریخ قرارداد": "1404/1/16",
-  //     "میزان درآمد": "15000000000",
-  //     "سود و زیان": "9000000",
-  //     مقصد: "ارمنستان",
-  //     "موضوع قرارداد": "ویزا",
-  //     اپراتور: "علی بازرگان",
-  //     وضعیت: "فعال",
-  //     "تاریخ شروع": "1403/02/06",
-  //     "تاریخ پایان": "1403/01/16",
-  //     "تعداد مشتری": "147",
-  //     رضایتمندی: 0.8,
-  //   },
-  // ];
+
   const servicesReportData = [
     {
       label: "هتل",
@@ -200,9 +185,9 @@ export default function CustomerDetailContent({
           </div>
         </div>
       )}
-      {activeTab === "آماروگزارش ها" && (
+      {/* {activeTab === "آماروگزارش ها" && (
         <CustomerDetailReport serviceData={servicesReportData} />
-      )}
+      )} */}
       {activeTab === "اطلاعات شخصی" && (
        <CustomerPersonalInfo />
       )}

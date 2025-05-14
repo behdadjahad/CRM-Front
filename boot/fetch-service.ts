@@ -1,3 +1,4 @@
+import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
 import { toast } from "react-toastify";
 
@@ -50,24 +51,28 @@ export async function fetchService(
     `${config.ServerAddress}/${version}/${url}`,
     options
   );
-  const data = await response.json();
+  const result = await response.json();
 
-  if (data.error) {
-    toast(data.error, {
-      position: "top-center",
-      style: {
-        background: "#a31111",
-        color: "#fff",
-      },
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
+  if (result.ui.type === "toast") {
+    CustomToast({
+      type: result.status,
+      message: result.message,
     });
-    throw new Error(data.error);
+    // toast(data.error, {
+    //   position: "top-center",
+    //   style: {
+    //     background: "#a31111",
+    //     color: "#fff",
+    //   },
+    //   autoClose: 5000,
+    //   hideProgressBar: true,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    // });
+    // throw new Error(data.error);
   }
 
-  return data;
+  return result;
 }

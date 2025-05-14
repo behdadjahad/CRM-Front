@@ -9,18 +9,21 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import RegisteryForm from "@/components/contract/registery-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getContractById } from "@/api/contract";
 import { useParams } from "next/navigation";
 import { services } from "@/constants/services";
 import FormTabContainer from "@/components/shared/form-tab-container";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { REQUIRED_TEXT } from "@/lib/utils";
+import { dateType, REQUIRED_TEXT } from "@/lib/utils";
 import { createFormFields } from "@/constants/client-form-fields";
 import {
   createClient,
   createOrganization,
+  editAddressData,
+  editClient,
+  editCommunicationData,
   insertAddressData,
   insertCommunicationData,
   insertSubmitterData,
@@ -34,7 +37,7 @@ import {
 } from "@/types/globals";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-hot-toast";
+
 import { Button } from "@/components/ui/button";
 import { sendServiceData } from "@/api/service";
 import { convertDate, convertToGregorian } from "@/lib/date";
@@ -63,10 +66,14 @@ export default function Contract() {
     OptionType[]
   >([]);
   const [agencyCityOptions, setAgencyCityOptions] = useState<OptionType[]>([]);
-
+  const [personalInfo, setPersonalInfo] = useState<any>();
+  const [addressInfo, setAddressInfo] = useState<any>();
+  const [livingContact, setLivingContact] = useState<any>();
+  const [workContact, setWorkContact] = useState<any>();
+  const [organizationContact, setOrganizationContact] = useState<any>();
   //contractId
   const { id } = useParams();
-
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const customerId = searchParams.get("customerId");
   const organizationId = searchParams.get("organizationId");
@@ -75,6 +82,152 @@ export default function Contract() {
     queryKey: ["contract"],
     queryFn: () => getContractById(Number(id) as number),
   });
+  useEffect(() => {
+    if (contract) {
+      if (
+        contract?.data?.mainCustomerSoldto &&
+        contract?.data?.mainCustomerSoldto !== null
+      ) {
+        const personData = contract?.data?.mainCustomerSoldto?.person;
+        const mainCustomerId = contract?.data?.mainCustomerSoldto?.id;
+
+        setPersonalInfo({
+          name: personData?.firstName,
+          familyName: personData?.lastName,
+          birthdate:
+            personData?.birthdate &&
+            convertDate(personData?.birthdate, dateType),
+          socialNumber: personData?.idCertificate,
+          idNumber: personData?.idNumber,
+          career: personData?.personJobs[0]?.jobs?.name,
+          personId: personData?.id,
+          isSubmitted: true,
+        });
+
+        router.push(`?customerId=${mainCustomerId}`);
+      } else {
+        setPersonalInfo({
+          name: "",
+          familyName: "",
+          birthdate: "",
+          socialNumber: "",
+          idNumber: "",
+          career: "",
+          isSubmitted: false,
+        });
+      }
+      if (contract?.data?.mainCustomerSoldto?.address?.length > 0) {
+        const addressData = contract?.data?.mainCustomerSoldto?.address;
+        setAddressInfo({
+          addressId: addressData?.[0]?.id,
+          address: addressData?.[0]?.address,
+          postalCode: addressData?.[0]?.postalCode,
+          street: addressData?.[0]?.street,
+          cityId: addressData?.[0]?.cityId,
+          countryId: addressData?.[0]?.countryId,
+          provinceId: addressData?.[0]?.provinceId,
+          isSubmitted: true,
+        });
+      } else {
+        setAddressInfo({
+          addressId: "",
+          address: "",
+          postalCode: "",
+          street: "",
+          cityId: "",
+          countryId: "",
+          provinceId: "",
+          isSubmitted: false,
+        });
+      }
+      if (contract?.data?.mainCustomerSoldto?.Communication !== null) {
+        const contactData = contract?.data?.mainCustomerSoldto?.Communication;
+        setLivingContact({
+          personalPhone: contactData?.mobile?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.communicationDetails,
+          personalPhoneId: contactData?.mobile?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.id,
+          homePhone: contactData?.homePhone?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.communicationDetails,
+          homePhoneId: contactData?.homePhone?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.id,
+          email: contactData?.email?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.communicationDetails,
+          emailId: contactData?.email?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.id,
+          website: contactData?.website?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.communicationDetails,
+          websiteId: contactData?.website?.find(
+            (item: any) => item?.communicater === "HOME"
+          )?.id,
+          isSubmitted: true,
+        });
+        setWorkContact({
+          jobPhone: contactData?.businessPhone?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.communicationDetails,
+          jobphoneId: contactData?.businessPhone?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.id,
+          email: contactData?.email?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.communicationDetails,
+          emailId: contactData?.email?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.id,
+          website: contactData?.website?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.communicationDetails,
+          websiteId: contactData?.website?.find(
+            (item: any) => item?.communicater === "BUSINESS"
+          )?.id,
+          isSubmitted: true,
+        });
+        setOrganizationContact({
+          organizationPhone: "",
+          organizationEmail: contactData?.email?.find(
+            (item: any) => item?.communicater === "ORGANIZATION"
+          )?.communicationDetails,
+          organizationWebsite: contactData?.website?.find(
+            (item: any) => item?.communicater === "ORGANIZATION"
+          )?.communicationDetails,
+          isSubmitted: true,
+        });
+      } else {
+        setLivingContact({
+          personalPhone: "",
+          personalPhoneId: "",
+          homePhone: "",
+          homePhoneId: "",
+          email: "",
+          emailId: "",
+          website: "",
+          websiteId: "",
+          isSubmitted: false,
+        });
+        setWorkContact({
+          jobPhone: "",
+          email: "",
+          website: "",
+          isSubmitted: false,
+        });
+        setOrganizationContact({
+          organizationPhone: "",
+          organizationEmail: "",
+          organizationWebsite: "",
+          isSubmitted: false,
+        });
+      }
+    }
+  }, [contract]);
+
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
@@ -90,14 +243,17 @@ export default function Contract() {
   }, [users]);
   const personalFormik = useFormik({
     initialValues: {
-      name: "",
-      familyName: "",
-      birthdate: "",
-      socialNumber: "",
-      idNumber: "",
-      career: "",
+      name: personalInfo?.name,
+      familyName: personalInfo?.familyName,
+      birthdate: personalInfo?.birthdate,
+      socialNumber: personalInfo?.socialNumber,
+      idNumber: personalInfo?.idNumber,
+      career: personalInfo?.career,
       birthdateType: "",
+      isSubmitted: personalInfo?.isSubmitted,
+      personId: personalInfo?.personId,
     },
+
     validationSchema: Yup.object().shape({
       name: Yup.string().required(REQUIRED_TEXT),
       familyName: Yup.string().required(REQUIRED_TEXT),
@@ -107,15 +263,22 @@ export default function Contract() {
       career: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
+    enableReinitialize: true,
   });
 
   const livingContactFormik = useFormik({
     initialValues: {
-      personalPhone: "",
-      homePhone: "",
-      email: "",
-      website: "",
+      personalPhone: livingContact?.personalPhone,
+      personalPhoneId: livingContact?.personalPhoneId,
+      homePhone: livingContact?.homePhone,
+      homePhoneId: livingContact?.homePhoneId,
+      email: livingContact?.email,
+      emailId: livingContact?.emailId,
+      website: livingContact?.website,
+      websiteId: livingContact?.websiteId,
+      isSubmitted: livingContact?.isSubmitted,
     },
+
     validationSchema: Yup.object().shape({
       personalPhone: Yup.string().required(REQUIRED_TEXT),
       homePhone: Yup.string().required(REQUIRED_TEXT),
@@ -123,13 +286,18 @@ export default function Contract() {
       website: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
+    enableReinitialize: true,
   });
 
   const workContactFormik = useFormik({
     initialValues: {
-      jobPhone: "",
-      email: "",
-      website: "",
+      jobPhone: workContact?.jobPhone,
+      jobPhoneId: workContact?.jobPhoneId,
+      email: workContact?.email,
+      emailId: workContact?.emailId,
+      website: workContact?.website,
+      websiteId: workContact?.websiteId,
+      isSubmitted: workContact?.isSubmitted,
     },
     validationSchema: Yup.object().shape({
       jobPhone: Yup.string().required(REQUIRED_TEXT),
@@ -137,6 +305,7 @@ export default function Contract() {
       website: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
+    enableReinitialize: true,
   });
   const organizationContactFormik = useFormik({
     initialValues: {
@@ -154,13 +323,15 @@ export default function Contract() {
 
   const livingFormik = useFormik({
     initialValues: {
-      province: "",
-      city: "",
-      street: "",
-      postalCode: "",
+      addressId: addressInfo?.addressId,
+      province: addressInfo?.provinceId,
+      city: addressInfo?.cityId,
+      street: addressInfo?.street,
+      postalCode: addressInfo?.postalCode,
       category: "",
-      address: "",
-      country: undefined,
+      address: addressInfo?.address,
+      country: addressInfo?.countryId?.toString(),
+      isSubmitted: addressInfo?.isSubmitted,
     },
     validationSchema: Yup.object().shape({
       province: Yup.string().required(REQUIRED_TEXT),
@@ -172,10 +343,12 @@ export default function Contract() {
       country: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
+    enableReinitialize: true,
   });
 
   const workFormik = useFormik({
     initialValues: {
+      addressId: "",
       workProvince: "",
       workCity: "",
       workStreet: "",
@@ -183,6 +356,7 @@ export default function Contract() {
       workCategory: "",
       workAddress: "",
       workCountry: undefined,
+      isSubmitted: "",
     },
     validationSchema: Yup.object().shape({
       workProvince: Yup.string().required(REQUIRED_TEXT),
@@ -242,16 +416,21 @@ export default function Contract() {
       return createClient(data, Number(id));
     },
     onSuccess: (result) => {
-      const customerId = result.customerId;
+      queryClient.invalidateQueries({
+        queryKey: ["contract"],
+      });
+      const customerId = result?.data?.customerId;
       const url = organizationId
         ? `?customerId=${customerId}&organizationId=${organizationId}`
         : `?customerId=${customerId}`;
       router.push(url);
-      toast.success("اطلاعات با موفقیت ثبت شد", {
-        duration: 4000, // Duration in ms
-        position: "top-center", // Position: top-right, top-center, etc.
-      });
     },
+  });
+  const { mutate: personalEditHandler } = useMutation({
+    mutationFn: ({ data, personId }: { data: any; personId: number }) => {
+      return editClient(data, personId);
+    },
+    onSuccess: () => {},
   });
   const { mutate: organizationSubmitHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -271,10 +450,65 @@ export default function Contract() {
     },
     onSuccess: () => {},
   });
-
+  const { mutate: addressEditHandler } = useMutation({
+    mutationFn: ({ data, addressId }: { data: any; addressId: number }) => {
+      return editAddressData(data, addressId);
+    },
+    onSuccess: () => {},
+  });
+  function submitAddressInfo() {
+    const data = {
+      address: livingFormik.values.address,
+      postalCode: livingFormik.values.postalCode,
+      street: livingFormik.values.street,
+      provinceId: livingFormik.values.province,
+      cityId: livingFormik.values.city,
+      countryId: livingFormik.values.country,
+      customerId: customerId,
+      addressTypeId: clientAddress.livingAddress,
+    };
+    if (!livingFormik.values.isSubmitted) {
+      addressInfoHandler(data);
+    } else {
+      addressEditHandler({
+        data: data,
+        addressId: livingFormik.values.addressId,
+      });
+    }
+  }
+  function submitWorkAddress() {
+    const data = {
+      address: workFormik.values.workAddress,
+      postalCode: workFormik.values.workPostalCode,
+      //apartmentNo: "string",
+      // longitude: 1,
+      //latitude: 1,
+      //googleUrl: "string",
+      street: workFormik.values.workStreet,
+      //"district": "string",
+      cityId: workFormik.values.workCity,
+      countryId: workFormik.values.workCountry,
+      customerId: customerId,
+      addressTypeId: clientAddress.workAddress,
+    };
+    if (!workFormik.values.isSubmitted) {
+      addressInfoHandler(data);
+    } else {
+      addressEditHandler({
+        data: data,
+        addressId: workFormik.values.addressId,
+      });
+    }
+  }
   const { mutate: communicateHandler } = useMutation({
     mutationFn: (data: any) => {
       return insertCommunicationData(data);
+    },
+    onSuccess: () => {},
+  });
+  const { mutate: editCommunicateHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return editCommunicationData(data);
     },
     onSuccess: () => {},
   });
@@ -453,6 +687,105 @@ export default function Contract() {
   function serviceHandler(services: any) {
     setContractServices(services.map((obj: any) => obj.name));
   }
+  function submitPersonalForm() {
+    const data = {
+      firstName: personalFormik.values.name,
+      lastName: personalFormik.values.familyName,
+      birthdate:
+        personalFormik.values.birthdate && personalFormik.values.birthdateType
+          ? convertToGregorian(
+              personalFormik.values.birthdate,
+              personalFormik.values.birthdateType
+            )
+          : "",
+
+      idCertificate: personalFormik.values.socialNumber,
+      idNumber: personalFormik.values.idNumber,
+      job: personalFormik.values.career,
+      isMainCustomer: true,
+      contractId: Number(id),
+    };
+    if (!personalFormik.values.isSubmitted) {
+      personalSubmitHandler(data);
+    } else {
+      personalEditHandler({
+        data: data,
+        personId: personalFormik.values.personId,
+      });
+    }
+  }
+  // function submitCommunicate() {
+  //   const data = [
+  //     {
+  //       communicationDetails: livingContactFormik.values.personalPhone,
+  //       communicationType: CommunicationType.mobile,
+  //       communicater: Communicater.home,
+  //       customerId: Number(customerId),
+  //     },
+  //     {
+  //       communicationDetails: livingContactFormik.values.homePhone,
+  //       communicationType: CommunicationType.home,
+  //       communicater: Communicater.home,
+  //       customerId: Number(customerId),
+  //     },
+  //     {
+  //       communicationDetails: livingContactFormik.values.email,
+  //       communicationType: CommunicationType.email,
+  //       communicater: Communicater.home,
+  //       customerId: Number(customerId),
+  //     },
+  //     {
+  //       communicationDetails: livingContactFormik.values.website,
+  //       communicationType: CommunicationType.website,
+  //       communicater: Communicater.home,
+  //       customerId: Number(customerId),
+  //     },
+  //   ];
+  //   if (!livingContactFormik.values.isSubmitted) {
+  //     communicateHandler(data);
+  //   } else {
+  //     editCommunicateHandler({
+  //       data: data,
+  //       contactId: livingContactFormik.values.livingContactId,
+  //     });
+  //   }
+  // }
+  // function submitWorkCommunicate() {
+  //   const data = [
+  //     {
+  //       communicationDetails: workContactFormik.values.jobPhone,
+  //       communicationType: CommunicationType.business,
+  //       communicater: Communicater.business,
+  //       customerId: Number(customerId),
+  //       //  organizationId: null,
+  //       // contractId: Number(id),
+  //     },
+  //     {
+  //       communicationDetails: workContactFormik.values.email,
+  //       communicationType: CommunicationType.email,
+  //       communicater: Communicater.business,
+  //       customerId: Number(customerId),
+  //       // organizationId: null,
+  //       // contractId: Number(id),
+  //     },
+  //     {
+  //       communicationDetails: workContactFormik.values.website,
+  //       communicationType: CommunicationType.website,
+  //       communicater: Communicater.business,
+  //       customerId: Number(customerId),
+  //       // organizationId: null,
+  //       // contractId: Number(id),
+  //     },
+  //   ];
+  //   if (!workContactFormik.values.isSubmitted) {
+  //     communicateHandler(data);
+  //   } else {
+  //     editCommunicateHandler({
+  //       data: data,
+  //       contactId: workContactFormik.values.workContactId,
+  //     });
+  //   }
+  // }
   return (
     <main>
       <div>
@@ -477,29 +810,35 @@ export default function Contract() {
               label: "تاریخ درج",
 
               value:
-                contract?.submitDateTime && contract?.dateType
-                  ? convertDate(contract?.submitDateTime, contract?.dateType)
+                contract?.data?.submitDateTime && contract?.data?.dateType
+                  ? convertDate(
+                      contract?.data?.submitDateTime,
+                      contract?.data?.dateType
+                    )
                   : "",
             },
             {
               label: "تاریخ قرارداد",
 
               value:
-                contract?.contractDate && contract?.dateType
-                  ? convertDate(contract?.contractDate, contract?.dateType)
+                contract?.data?.contractDate && contract?.data?.dateType
+                  ? convertDate(
+                      contract?.data?.contractDate,
+                      contract?.data?.dateType
+                    )
                   : "",
             },
             {
               label: "شماره قرار داد",
-              value: contract?.contractNo ?? "",
+              value: contract?.data?.contractNo ?? "",
             },
             {
               label: "موضوع قرار داد",
-              value: contract?.contractType?.name ?? "",
+              value: contract?.data?.contractType?.name ?? "",
             },
             {
               label: "توضیحات",
-              value: contract?.description ?? "",
+              value: contract?.data?.description ?? "",
             },
           ]}
           action={{
@@ -555,24 +894,7 @@ export default function Contract() {
                     className: "flex flex-row-reverse",
                   },
                   submitForm: () => {
-                    personalSubmitHandler({
-                      firstName: personalFormik.values.name,
-                      lastName: personalFormik.values.familyName,
-                      birthdate:
-                        personalFormik.values.birthdate &&
-                        personalFormik.values.birthdateType
-                          ? convertToGregorian(
-                              personalFormik.values.birthdate,
-                              personalFormik.values.birthdateType
-                            )
-                          : "",
-
-                      socialNumber: personalFormik.values.socialNumber,
-                      idNumber: personalFormik.values.idNumber,
-                      career: personalFormik.values.career,
-                      isMainCustomer: true,
-                      contractId: Number(id),
-                    });
+                    submitPersonalForm();
                   },
                 },
               ],
@@ -622,20 +944,7 @@ export default function Contract() {
                     className: "flex flex-row-reverse",
                   },
                   submitForm: () => {
-                    addressInfoHandler({
-                      address: livingFormik.values.address,
-                      postalCode: livingFormik.values.postalCode,
-                      //apartmentNo: "string",
-                      //longitude: 1,
-                      //latitude: 1,
-                      //googleUrl: "string",
-                      street: livingFormik.values.street,
-                      //district: "string",
-                      cityId: livingFormik.values.city,
-                      countryId: livingFormik.values.country,
-                      customerId: customerId,
-                      addressTypeId: clientAddress.livingAddress,
-                    });
+                    submitAddressInfo();
                   },
                 },
                 {
@@ -646,43 +955,73 @@ export default function Contract() {
                     className: "flex flex-row-reverse",
                   },
                   submitForm: () => {
-                    communicateHandler([
-                      {
-                        communicationDetails:
-                          livingContactFormik.values.personalPhone,
-                        communicationType: CommunicationType.mobile,
-                        communicater: Communicater.home,
-                        customerId: Number(customerId),
-
-                        // contractId: Number(id),
-                      },
-                      {
-                        communicationDetails:
-                          livingContactFormik.values.homePhone,
-                        communicationType: CommunicationType.home,
-                        communicater: Communicater.home,
-                        customerId: Number(customerId),
-
-                        // contractId: Number(id),
-                      },
-                      {
-                        communicationDetails: livingContactFormik.values.email,
-                        communicationType: CommunicationType.email,
-                        communicater: Communicater.home,
-                        customerId: Number(customerId),
-
-                        // contractId: Number(id),
-                      },
-                      {
-                        communicationDetails:
-                          livingContactFormik.values.website,
-                        communicationType: CommunicationType.website,
-                        communicater: Communicater.home,
-                        customerId: Number(customerId),
-
-                        // contractId: Number(id),
-                      },
-                    ]);
+                    if (!livingContactFormik.values.isSubmitted) {
+                      communicateHandler([
+                        {
+                          communicationDetails:
+                            livingContactFormik.values.personalPhone,
+                          communicationType: CommunicationType.mobile,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          communicationDetails:
+                            livingContactFormik.values.homePhone,
+                          communicationType: CommunicationType.home,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          communicationDetails:
+                            livingContactFormik.values.email,
+                          communicationType: CommunicationType.email,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          communicationDetails:
+                            livingContactFormik.values.website,
+                          communicationType: CommunicationType.website,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                      ]);
+                    } else {
+                      editCommunicateHandler([
+                        {
+                          id: livingContactFormik.values.personalPhoneId,
+                          communicationDetails:
+                            livingContactFormik.values.personalPhone,
+                          communicationType: CommunicationType.mobile,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          id: livingContactFormik.values.homePhoneId,
+                          communicationDetails:
+                            livingContactFormik.values.homePhone,
+                          communicationType: CommunicationType.home,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          id: livingContactFormik.values.emailId,
+                          communicationDetails:
+                            livingContactFormik.values.email,
+                          communicationType: CommunicationType.email,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                        {
+                          id: livingContactFormik.values.websiteId,
+                          communicationDetails:
+                            livingContactFormik.values.website,
+                          communicationType: CommunicationType.website,
+                          communicater: Communicater.home,
+                          customerId: Number(customerId),
+                        },
+                      ]);
+                    }
                   },
                 },
               ],
@@ -732,20 +1071,7 @@ export default function Contract() {
                     className: "flex flex-row-reverse",
                   },
                   submitForm: () => {
-                    addressInfoHandler({
-                      address: workFormik.values.workAddress,
-                      postalCode: workFormik.values.workPostalCode,
-                      //apartmentNo: "string",
-                      // longitude: 1,
-                      //latitude: 1,
-                      //googleUrl: "string",
-                      street: workFormik.values.workStreet,
-                      //"district": "string",
-                      cityId: workFormik.values.workCity,
-                      countryId: workFormik.values.workCountry,
-                      customerId: customerId,
-                      addressTypeId: clientAddress.workAddress,
-                    });
+                    submitWorkAddress();
                   },
                 },
                 {
@@ -756,32 +1082,68 @@ export default function Contract() {
                     className: "flex flex-row-reverse",
                   },
                   submitForm: () => {
-                    communicateHandler([
-                      {
-                        communicationDetails: workContactFormik.values.jobPhone,
-                        communicationType: CommunicationType.business,
-                        communicater: Communicater.business,
-                        customerId: Number(customerId),
-                        //  organizationId: null,
-                        // contractId: Number(id),
-                      },
-                      {
-                        communicationDetails: workContactFormik.values.email,
-                        communicationType: CommunicationType.email,
-                        communicater: Communicater.business,
-                        customerId: Number(customerId),
-                        // organizationId: null,
-                        // contractId: Number(id),
-                      },
-                      {
-                        communicationDetails: workContactFormik.values.website,
-                        communicationType: CommunicationType.website,
-                        communicater: Communicater.business,
-                        customerId: Number(customerId),
-                        // organizationId: null,
-                        // contractId: Number(id),
-                      },
-                    ]);
+                    if (!workContactFormik.values.isSubmitted) {
+                      communicateHandler([
+                        {
+                          communicationDetails:
+                            workContactFormik.values.jobPhone,
+                          communicationType: CommunicationType.business,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          //  organizationId: null,
+                          // contractId: Number(id),
+                        },
+                        {
+                          communicationDetails: workContactFormik.values.email,
+                          communicationType: CommunicationType.email,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          // organizationId: null,
+                          // contractId: Number(id),
+                        },
+                        {
+                          communicationDetails:
+                            workContactFormik.values.website,
+                          communicationType: CommunicationType.website,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          // organizationId: null,
+                          // contractId: Number(id),
+                        },
+                      ]);
+                    } else {
+                      editCommunicateHandler([
+                        {
+                          id: workContactFormik.values.jobPhoneId,
+                          communicationDetails:
+                            workContactFormik.values.jobPhone,
+                          communicationType: CommunicationType.business,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          //  organizationId: null,
+                          // contractId: Number(id),
+                        },
+                        {
+                          id: workContactFormik.values.emailId,
+                          communicationDetails: workContactFormik.values.email,
+                          communicationType: CommunicationType.email,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          // organizationId: null,
+                          // contractId: Number(id),
+                        },
+                        {
+                          id: workContactFormik.values.websiteId,
+                          communicationDetails:
+                            workContactFormik.values.website,
+                          communicationType: CommunicationType.website,
+                          communicater: Communicater.business,
+                          customerId: Number(customerId),
+                          // organizationId: null,
+                          // contractId: Number(id),
+                        },
+                      ]);
+                    }
                   },
                 },
               ],

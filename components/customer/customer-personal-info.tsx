@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
@@ -18,29 +19,29 @@ export function CustomerPersonalInfo() {
   });
   useEffect(() => {
     if (customerPersonalInfo) {
-      console.log(customerPersonalInfo);
+     
       const contactInfoData = [
         {
           icon: "/icons/phone-icon.png",
-          value: "021-3467-8954",
+          value: "",
           className: "bg-[#DEEBFB]",
           iconClassName: "w-5 h-5",
         },
         {
           icon: "/icons/mobile-icon.png",
-          value: "021-3467-8954",
+          value: "",
           className: "bg-[#D0CFFF]",
           iconClassName: "w-4 h-6",
         },
         {
           icon: "/icons/email-icon.png",
-          value: customerPersonalInfo?.email[0]?.email,
+          value: "",
           className: "bg-[#DFF7EB]",
           iconClassName: "w-5 h-4",
         },
         {
           icon: "/icons/website-icon.png",
-          value: "021-3467-8954",
+          value: "",
           className: "bg-[#FADAD1]",
           iconClassName: "w-5 h-5",
         },

@@ -45,7 +45,7 @@ export default function RoundTripTicketForm({
       destinationTerminal: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.destinationTerminal?.toString(),
-      airline:ticket?.flights?.find((obj: any) => obj.groupOrder === 1).airline.toString(),
+      airline:ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.airline?.toString(),
       cost: "",
       currency: "",
       broker: "",
@@ -325,8 +325,8 @@ export default function RoundTripTicketForm({
   }
   useEffect(() => {
     if (
-      ticket?.flights?.find((obj: any) => obj.groupOrder === 1).flightStops &&
-      ticket?.flights?.find((obj: any) => obj.groupOrder === 1).flightStops
+      ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.flightStops &&
+      ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.flightStops
         .length > 0
     ) {
       setAddedStops(

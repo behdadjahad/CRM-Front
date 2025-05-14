@@ -44,7 +44,9 @@ export default function ContractCreation({
       submitter: "",
       accountant: "",
       description: "",
-      country: undefined,
+      country: countryOptions
+        .find((option) => option?.label === "ایران")
+        ?.value.toString(),
       city: undefined,
     },
     onSubmit: async () => {},
@@ -83,7 +85,7 @@ export default function ContractCreation({
         setCityOptions(cities);
       } else {
         const cities: OptionType[] = cityData?.data
-          ?.filter((item) => item.countryId === formik.values.country)
+          ?.filter((item) => item?.countryId === Number(formik.values.country))
           .sort((a, b) => a.name.localeCompare(b.name))
           .map((item) => ({
             label: item.name,
@@ -114,9 +116,16 @@ export default function ContractCreation({
     mutationFn: (id: number) => {
       return getContractNumber(id);
     },
-    onSuccess: ({ data }) => {
-      formik.setFieldValue("contractId", data?.contractId);
-      formik.setFieldValue("number", data?.suggestedContractNo);
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        formik.setFieldValue("contractId", response?.data?.contractId);
+        formik.setFieldValue("number", response?.data?.suggestedContractNo);
+      } else {
+        setActiveItem(null);
+        formik.setFieldValue("contractId", "");
+        formik.setFieldValue("number", "");
+        return;
+      }
     },
   });
 
@@ -125,10 +134,7 @@ export default function ContractCreation({
       return createContract(id, data);
     },
     onSuccess: (response) => {
-      CustomToast({
-        type: response.status,
-        message: response.message,
-      });
+    
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
@@ -139,17 +145,11 @@ export default function ContractCreation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return createContract(id, data);
     },
-    onSuccess: (response) => {
-      CustomToast({
-        type: response.status,
-        message: response.message,
-      });
+    onSuccess: () => {
       formik.resetForm();
       setActiveItem(null);
     },
-    onError: (response) => {
-      console.log(response);
-    },
+    onError: () => {},
   });
   function contractSubmitHandler(enableNewCreation: boolean) {
     if (!formik.values.contractId) return;

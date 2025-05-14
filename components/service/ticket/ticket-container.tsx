@@ -37,10 +37,10 @@ export default function TicketContainer({
       return getTransportationTypeId(transportationType);
     },
     onSuccess: (response) => {
-      if (response.id) {
-        getFlightClass(response.id);
-        getFlightType(response.id);
-        getAirlines(response.id);
+      if (response.data?.id) {
+        getFlightClass(response.data?.id);
+        getFlightType(response.data?.id);
+        getAirlines(response.data?.id);
       }
     },
   });

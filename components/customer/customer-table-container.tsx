@@ -11,7 +11,7 @@ import { Fragment, useState } from "react";
 import React from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Checkbox } from "../ui/checkbox";
-import { cn } from "@/lib/utils";
+import { cn, customerRank } from "@/lib/utils";
 import Link from "next/link";
 
 export default function CustomerTableContainer({
@@ -80,11 +80,40 @@ export default function CustomerTableContainer({
                     />
                   </TableCell>
 
-                  {tableHeaderLabels.map((label, idx) => (
-                    <TableCell key={idx} className="text-center text-xs">
-                      {customer.info[label]}
-                    </TableCell>
-                  ))}
+                  {/* {tableHeaderLabels.map((label, idx) => (
+                      const rankMatch = customerRank.find(
+    (rank) => rank.value === customer.info[label]
+  );
+                   retrun(<TableCell key={idx} className="text-center text-xs">
+                      <span
+                        className={
+                          label === "رتبه مشتری"
+                            ? "font-bold text-green-600"
+                            : ""
+                        }
+                      >
+                        {customer.info[label]}
+                      </span>
+                    </TableCell>) 
+                    
+))} */}
+                  {tableHeaderLabels.map((label, idx) => {
+                    const rankMatch =
+                      label === "رتبه مشتری"
+                        ? customerRank.find(
+                            (rank) => rank.value === customer.info[label]
+                          )
+                        : null;
+                    console.log(rankMatch)
+                    console.log(rankMatch?.className)
+                    return (
+                      <TableCell key={idx} className="text-center text-xs">
+                        <div className={cn("",rankMatch?.className)}>
+                          {customer.info[label]}
+                        </div>
+                      </TableCell>
+                    );
+                  })}
                   <TableCell className="text-center">
                     <Button
                       onClick={(e) => {

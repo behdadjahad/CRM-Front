@@ -95,7 +95,7 @@ export default function Sale() {
   });
   const limitFormik = useFormik({
     initialValues: {
-      limit:""
+      limit:limitForContracts
     },
     onSubmit: async () => {},
   });

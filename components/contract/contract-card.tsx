@@ -102,6 +102,7 @@ export default function ContractCard({
             alt={header?.title}
             width={20}
             height={24}
+            className="w-5 h-6"
           />
 
           <span className="text-lg font-bold">{header?.title}</span>
@@ -186,7 +187,7 @@ export default function ContractCard({
                     size={20}
                     onClick={(e) => {
                       setOpenModal(false);
-                        e.stopPropagation();
+                      e.stopPropagation();
                     }}
                     className="cursor-pointer"
                   />
