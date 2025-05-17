@@ -37,20 +37,10 @@ export function cleanObject(obj: any) {
   );
 }
 export const ServerImageAddress = "http://185.126.203.246:3000/public/";
-export const customerRank = [
-  {
-    label: "طلایی",
-    value: "Gold",
-    className: "bg-[#FFFAEB] text-[#FDB022] border-[#FDB022]",
-  },
-  {
-    label: "نقره ای",
-    value: "Silver",
-    className: "bg-[#F3F2F2] text-[#919EAB] border-[#919EAB]",
-  },
-  {
-    label: "برنز",
-    value: "Bronze",
-    className: "bg-[#FFD700] text-[#B55D04] border-[#B55D04]",
-  },
-];
+
+export enum ContractState {
+  INPROGRESS = "فعال",
+
+} 
+
+

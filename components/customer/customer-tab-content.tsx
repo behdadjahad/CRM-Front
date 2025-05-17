@@ -114,7 +114,7 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
       />
       <CustomerContainer
         className="flex items-center justify-center xl:hidden"
-        customers={customerList.map((item: any) => ({id:item.id,info:item.info }))}
+        customers={customerList?.map((item: any) => ({id:item.id,info:item.info }))}
         labels={customerCardLabels}
       />
       <div className="w-full mt-4">

@@ -11,9 +11,9 @@ import { Fragment, useState } from "react";
 import React from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Checkbox } from "../ui/checkbox";
-import { cn, customerRank } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
-
+import { Rating } from "react-simple-star-rating";
 export default function CustomerTableContainer({
   tableHeaderLabels,
   customers,
@@ -23,6 +23,23 @@ export default function CustomerTableContainer({
   customers: any[];
   className: string;
 }) {
+  const customerRank = [
+    {
+      label: "طلایی",
+      value: "Gold",
+      className: "bg-[#FFFAEB] text-[#FDB022] border border-[#FDB022]",
+    },
+    {
+      label: "نقره ای",
+      value: "Silver",
+      className: "bg-[#F3F2F2] text-[#919EAB] border border-[#919EAB]",
+    },
+    {
+      label: "برنز",
+      value: "Bronze",
+      className: "bg-[#FFE6CE] text-[#B55D04] border border-[#B55D04]",
+    },
+  ];
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
   const toggleRow = (index: number) => {
@@ -80,23 +97,6 @@ export default function CustomerTableContainer({
                     />
                   </TableCell>
 
-                  {/* {tableHeaderLabels.map((label, idx) => (
-                      const rankMatch = customerRank.find(
-    (rank) => rank.value === customer.info[label]
-  );
-                   retrun(<TableCell key={idx} className="text-center text-xs">
-                      <span
-                        className={
-                          label === "رتبه مشتری"
-                            ? "font-bold text-green-600"
-                            : ""
-                        }
-                      >
-                        {customer.info[label]}
-                      </span>
-                    </TableCell>) 
-                    
-))} */}
                   {tableHeaderLabels.map((label, idx) => {
                     const rankMatch =
                       label === "رتبه مشتری"
@@ -104,25 +104,44 @@ export default function CustomerTableContainer({
                             (rank) => rank.value === customer.info[label]
                           )
                         : null;
-                    console.log(rankMatch)
-                    console.log(rankMatch?.className)
+
                     return (
                       <TableCell key={idx} className="text-center text-xs">
-                        <div className={cn("",rankMatch?.className)}>
-                          {customer.info[label]}
-                        </div>
+                        {label === "رتبه مشتری" ? (
+                          <div
+                            className={cn(
+                              "flex items-center rounded-md justify-around",
+                              rankMatch?.className
+                            )}
+                          >
+                            <span
+                              className={cn(
+                                "border-none inline-block w-4 h-4 rounded-full mr-2",
+                                rankMatch?.className
+                              )}
+                            ></span>
+                            <span>
+                              {" "}
+                              {rankMatch?.label
+                                ? rankMatch?.label
+                                : customer?.info[label]}
+                            </span>
+                          </div>
+                        ) : (
+                          customer?.info[label]
+                        )}
                       </TableCell>
                     );
                   })}
-                  <TableCell className="text-center">
-                    <Button
-                      onClick={(e) => {
-                        toggleRow(index);
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      className="border-none p-0 text-[##212B36]"
-                    >
+                  <TableCell
+                    className="text-center"
+                    onClick={(e) => {
+                      toggleRow(index);
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <Button className="border-none p-0 text-[##212B36]">
                       {expandedRows.includes(index) ? (
                         <FaChevronUp />
                       ) : (
@@ -145,7 +164,21 @@ export default function CustomerTableContainer({
                           className="flex flex-col items-center gap-2"
                         >
                           <div className="font-semibold">{lbl}</div>
-                          <div>{customer.subInfo[lbl]}</div>
+                          <div className="flex items-center gap-1">
+                            <span>{customer.subInfo[lbl]}</span>
+                            {lbl === "امتیاز مشتری" && (
+                              <span>
+                                <Rating
+                                  iconsCount={1} // Only 1 star
+                                  size={20} // Optional: size of the star
+                                  onClick={(rate) => console.log(rate)}
+                                  readonly
+                                  allowFraction={true}
+                                  initialValue={customer.subInfo[lbl]} // Optional: handle click
+                                />
+                              </span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>

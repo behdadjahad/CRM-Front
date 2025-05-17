@@ -60,7 +60,7 @@ const contractSlice = createSlice({
         },
         header: {
           contractNumber: item.contractNo,
-          icon:ServerImageAddress + item?.contractType?.iconFile,
+          icon:item?.contractType?.iconFile && ServerImageAddress + item?.contractType?.iconFile,
           submitDate:
             item?.submitDateTime && item?.dateType
               ? convertDate(item?.submitDateTime, item?.dateType)

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CustomerDetailTable from "./customer-detail-table";
 import ReactPaginate from "react-paginate";
 import CustomerDetailContractContainer from "./customer-detail-contract-container";
-import CustomerDetailReport from "./customer-detail-report";
+
 // import dynamic from "next/dynamic"; // Only if you're using Next.js
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
@@ -143,7 +143,7 @@ export default function CustomerDetailContent({
       </div>
       {activeTab === "قراردادها" && (
         <div className="bg-card flex flex-col justify-between p-6 rounded-md custom-shadow mt-6">
-          <div>فیلتر </div>
+          {/* <div>فیلتر </div> */}
           <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-white">
             {activeTab}
           </div>

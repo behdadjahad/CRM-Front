@@ -66,34 +66,34 @@ export default function Service() {
     list: [
       {
         label: "ثبت کننده",
-        value: contract?.userSubmitter?.fullName ?? "",
+        value: contract?.data?.userSubmitter?.fullName ?? "",
       },
       {
         label: "تاریخ ثبت درخواست",
         value:
-          contract?.submitDateTime && contract?.dateType
-            ? convertDate(contract?.submitDateTime, contract?.dateType)
+          contract?.data?.submitDateTime && contract?.data?.dateType
+            ? convertDate(contract?.data?.submitDateTime, contract?.data?.dateType)
             : "",
       },
       {
         label: "تاریخ قرارداد",
         value:
-          contract?.contractDate && contract?.dateType
-            ? convertDate(contract?.contractDate, contract?.dateType)
+          contract?.data?.contractDate && contract?.data?.dateType
+            ? convertDate(contract?.data?.contractDate, contract?.data?.dateType)
             : "",
       },
       {
         label: "شماره قرارداد",
 
-        value: contract?.contractNo ?? "",
+        value: contract?.data?.contractNo ?? "",
       },
       {
         label: "موضوع قرارداد",
-        value: contract?.contractType?.name ?? "",
+        value: contract?.data?.contractType?.name ?? "",
       },
       {
         label: "توضیحات",
-        value: contract?.description ?? "",
+        value: contract?.data?.description ?? "",
       },
     ],
   };

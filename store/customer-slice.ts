@@ -1,6 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
 import { convertDate } from "@/lib/date";
-import { dateType, formatPrice, limitForCustomers } from "@/lib/utils";
+import { dateType, formatPrice, limitForCustomers, totalVotes } from "@/lib/utils";
+import { Communicater } from "@/types/globals";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export interface CustomerState {
   items: any[];
@@ -29,12 +30,12 @@ const customerSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCustomers.fulfilled, (state, action) => {
       state.items = action?.payload?.data?.map((item: any) => ({
-        id: item?.person?.id,
+        id: item?.id,
         info: {
           "نام ونام خانوادگی": item?.person?.fullName,
           "کدملی": item?.person?.idNumber,
-          "ایمیل": item?.email?.[0]?.email,
-          "شماره تماس": item?.phone?.[0]?.number,
+          "ایمیل": item?.Communication?.email?.find((item:any)=>item?.communicater===Communicater.home)?.communicationDetails,
+          "شماره تماس": item?.Communication?.mobile?.[0]?.communicationDetails,
           "شغل": item?.person?.personJobs?.[0]?.jobs?.name,
           "موضوع قرارداد": item?.lastContract?.contractType,
           "رتبه مشتری": item?.rank,
@@ -50,7 +51,7 @@ const customerSlice = createSlice({
           "نوع آخرین پیگیری": "",
           "وضعیت آخرین پیگیری": "",
           "پیگیری بعدی": "",
-          "امتیاز مشتری":item?.score,
+          "امتیاز مشتری":item?.avgSatisfactionScore / totalVotes,
         },
       }));
       const totalItems = action?.payload?.pagination?.total;

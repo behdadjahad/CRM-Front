@@ -89,7 +89,7 @@ export default function ClientInfoContainer() {
   }, [allCustomers]);
 
   const filteredCustomers = useMemo(() => {
-    if (!customers.length) return []; // No customers available
+    if (!customers?.length) return []; // No customers available
 
     // If all filter values are empty, return an empty array
     if (Object.values(formik.values).every((value) => !value)) return [];
@@ -186,7 +186,7 @@ export default function ClientInfoContainer() {
     <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
       <h2 className="text-foreground text-lg">اطلاعات مشتری</h2>
       <div className="flex flex-col gap-4">
-        {clientList.map((item, index) => (
+        {clientList?.map((item, index) => (
           <ClientInfoCard
             key={`client-${index}`}
             clientId={item[0].value}

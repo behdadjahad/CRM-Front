@@ -1,6 +1,7 @@
 "use client";
 
 
+
 import React from "react";
 
 export interface PersonInfoInterface {
@@ -13,8 +14,8 @@ export interface PersonInfoInterface {
 
 export default function PersonInfoContainer({ list }: PersonInfoInterface) {
   return (
-    <div className="w-full bg-city bg-no-repeat bg-cover flex flex-col gap-1 md:gap-8 md:flex-row text-card rounded-tl-xl rounded-tr-xl  p-3 md:p-6">
-      {list.map((item, index) =>
+    <div className="w-full bg-city bg-no-repeat bg-cover flex flex-col gap-1 md:gap-8 md:flex-row md:flex-wrap text-card rounded-tl-xl rounded-tr-xl  p-3 md:p-6">
+      {list?.map((item, index) =>
         item.children ? (
           <div
             key={index}
