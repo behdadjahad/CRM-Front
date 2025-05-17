@@ -111,7 +111,7 @@ export default function ContractCard({
         <div className="flex flex-col text-xs leading-5 gap-1">
           <span>تاریخ ثبت: {header?.submitDate}</span>
 
-          <span>شماره قرارداد: {header?.contractNumber}</span>
+          <div className="flex"><span>شماره قرارداد:</span><span>{header?.contractNumber}</span></div>
         </div>
       </div>
 
@@ -151,7 +151,13 @@ export default function ContractCard({
               ))}
           </div>
 
-          <div className="w-28 flex flex-col items-center">
+          <div
+            className="w-28 flex flex-col items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
             <RatingChart value={score?.final} color="#FFA500" />
 
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
@@ -199,6 +205,7 @@ export default function ContractCard({
                   itemId={id}
                   score={score?.final}
                   totalVotes={score?.totalVotes}
+
                 />
               </CustomModal>
               {/* </Link> */}

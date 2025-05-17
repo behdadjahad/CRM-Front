@@ -43,24 +43,24 @@ export default function Satisfaction({
   });
   useEffect(() => {
     if (callDeviceData) {
-      // const callDeviceOptions = callDeviceData.data.map((item: any) => ({
-      //   id: item.id,
-      //   label: item.name,
-      //   image: item.iconFile,
-      // }));
-      // setCallDevices(callDeviceOptions);
+      const callDeviceOptions = callDeviceData.data.map((item: any) => ({
+        id: item?.id,
+        label: item?.name,
+        image: item?.activePic,
+      }));
+      setCallDevices(callDeviceOptions);
     }
   }, [callDeviceData]);
   useEffect(() => {
     if (SatisfactionLabelsData) {
-      // const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
-      //   (item: any) => ({
-      //     id: item.id,
-      //     label: item.reasonName,
-      //     type: item.satisfactionKind,
-      //   })
-      // );
-      // setSatisfactionLabels(satisfactionLabelsOptions);
+      const satisfactionLabelsOptions = SatisfactionLabelsData.data.map(
+        (item: any) => ({
+          id: item.id,
+          label: item.reasonName,
+          type: item.satisfactionKind,
+        })
+      );
+      setSatisfactionLabels(satisfactionLabelsOptions);
     }
   }, [SatisfactionLabelsData]);
 
@@ -145,7 +145,7 @@ export default function Satisfaction({
     list: [
       {
         label: "ثبت رضایتمندی",
-        value: "1403/04/23",
+        value: "",
         icon: (
           <Image
             src={"/icons/calendar-tick.png"}
@@ -158,7 +158,7 @@ export default function Satisfaction({
       },
       {
         label: "پیگیری رضایتمندی",
-        value: "1403/04/29",
+        value: "",
         icon: (
           <Image
             src={"/icons/calendar-untick.png"}
@@ -208,7 +208,7 @@ export default function Satisfaction({
         <Overview {...overviewProps} />
       </div>
       <SocialMedia
-        // {...overviewProps}
+       
         className="col-span-4 lg:col-span-3 row-span-1"
         list={callDevices}
         form={formik}

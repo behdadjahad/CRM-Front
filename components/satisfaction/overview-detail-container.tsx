@@ -51,6 +51,9 @@ export default function OverviewDetailContainer({
         "flex flex-col gap-4 items-end bg-card p-6 rounded-xl",
         className
       )}
+       onClick={(e) => {
+        e.stopPropagation(); // ✅ Stops bubbling
+      }}
     >
       <span className="text-xs text-foreground w-full">
         لطفامیزان رضایت خودرا از 1تا10ارزیابی کنید.

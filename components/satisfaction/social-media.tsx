@@ -20,6 +20,7 @@ export default function SocialMedia({
   form,
 }: SocialMediaInterface) {
   const staticUrl = `${config.ServerAddress}/public/`;
+  
   return (
     <div
       className={cn(
@@ -37,6 +38,7 @@ export default function SocialMedia({
               // onSendHandler(item.id)
               form.setFieldValue("callDeviceId", item.id);
             }}
+            className="cursor-pointer"
           >
             {/* {item.label} */}
             {/* <NavLink key={item.name} link={item.link}> */}

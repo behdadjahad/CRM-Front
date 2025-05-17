@@ -1,5 +1,5 @@
 "use client";
-import { cn, totalVotes } from "@/lib/utils";
+import { cn, dateType, totalVotes } from "@/lib/utils";
 import Image from "next/image";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
 import {
@@ -12,9 +12,11 @@ import { getCustomerPersonalInfo } from "@/api/customer";
 import { useEffect, useState } from "react";
 
 import { clientAddress, Communicater } from "@/types/globals";
+import { convertDate } from "@/lib/date";
 export function CustomerPersonalInfo() {
   const { id } = useParams();
   const [personalContactInfo, setPersonalContactInfo] = useState<any[]>([]);
+  const [satisfactionSchedule, setSatisfactionSchedule] = useState<any>();
   const [addresses, setAddresses] = useState<any[]>([]);
   const [satisfactionScore, setSatisfactionScore] = useState<number>(0);
   const { data: customerPersonalInfo } = useQuery({
@@ -92,18 +94,38 @@ export function CustomerPersonalInfo() {
           }
         }
       );
+      const satisfactionDate = {
+        submitDate: customerPersonalInfo?.data?.satisfaction?.lastSatisfaction
+          ?.submittedDateTime
+          ? convertDate(
+              customerPersonalInfo?.data?.satisfaction?.lastSatisfaction
+                ?.submittedDateTime,
+              dateType
+            )
+          : "",
+        followUpDate: customerPersonalInfo?.data?.satisfaction?.lastSatisfaction
+          ?.followUpDate
+          ? convertDate(
+              customerPersonalInfo?.data?.satisfaction?.lastSatisfaction
+                ?.followUpDate,
+              dateType
+            )
+          : "",
 
+       
+      };
       setPersonalContactInfo(contactInfoData);
       setAddresses(addressesInfo);
       setSatisfactionScore(score);
+      setSatisfactionSchedule(satisfactionDate);
     }
   }, [customerPersonalInfo]);
-
+console.log(satisfactionSchedule)
   const satisfactionScheduleData: OverviewInterface = {
     list: [
       {
         label: "ثبت رضایتمندی",
-        value: "",
+        value: satisfactionSchedule?.submitDate,
         icon: (
           <Image
             src={"/icons/calendar-tick.png"}
@@ -116,7 +138,7 @@ export function CustomerPersonalInfo() {
       },
       {
         label: "پیگیری رضایتمندی",
-        value: "",
+        value: satisfactionSchedule?.followUpDate,
         icon: (
           <Image
             src={"/icons/calendar-untick.png"}

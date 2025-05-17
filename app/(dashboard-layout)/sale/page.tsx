@@ -24,7 +24,7 @@ import {
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
 import SortDropDown from "@/components/shared/sort-drop-down";
-import {  FaChevronDown } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -68,14 +68,13 @@ export default function Sale() {
   }, [contractTypeData]);
   const formik = useFormik({
     initialValues: {
-
       openContracts: "",
       contractState: [],
       name: "",
       gender: "",
       birthdate: "",
       birthdateType: "",
-      socialNumber: "",
+      idNumber: "",
       career: "",
       location: "",
       contractNumber: "",
@@ -95,11 +94,11 @@ export default function Sale() {
   });
   const limitFormik = useFormik({
     initialValues: {
-      limit:limitForContracts
+      limit: limitForContracts,
     },
     onSubmit: async () => {},
   });
- 
+
   const filterItems = [
     {
       title: " نوع قرارداد (باز-بسته) ",
@@ -178,7 +177,7 @@ export default function Sale() {
               className: "w-full px-0",
             },
             {
-              key: "socialNumber",
+              key: "idNumber",
               component: "input",
               placeholder: "کد ملی",
               type: "text",
@@ -376,24 +375,24 @@ export default function Sale() {
       priceWeBuyRangeEnd: Number(formik.values.maxBuyRange),
       avServices: formik.values.services,
       contractState: formik.values.contractState,
-      // "": formik.values.name,
-      // "": formik.values.gender,
-      // "": formik.values.birthdate
-      //   ? convertToGregorian(
-      //       formik.values.birthdate,
-      //       formik.values?.birthdateType
-      //     )
-      //   : "",
-      // "": formik.values.socialNumber,
-      // "": formik.values.career,
-      // "": formik.values.location,
-      // "": formik.values.contractNumber,
-      // "": formik.values.contractDate
-      //   ? convertToGregorian(
-      //       formik.values.contractDate,
-      //       formik.values?.contractDateType
-      //     )
-      //   : "",
+
+      gender: formik.values.gender,
+      birthDate: formik.values.birthdate
+        ? convertToGregorian(
+            formik.values.birthdate,
+            formik.values.birthdateType
+          )
+        : "",
+      customerIdNumber: formik.values.idNumber,
+      customerJob: formik.values.career,
+      address: formik.values.location,
+      contractNo: formik.values.contractNumber,
+      contractDate: formik.values.contractDate
+        ? convertToGregorian(
+            formik.values.contractDate,
+            formik.values?.contractDateType
+          )
+        : "",
     };
 
     dispatch(
@@ -427,7 +426,7 @@ export default function Sale() {
     dispatch(
       fetchContracts({
         page: 1,
-        limit:Number(limitFormik.values.limit),
+        limit: Number(limitFormik.values.limit),
         filters: filters,
       })
     );
@@ -537,10 +536,10 @@ export default function Sale() {
                 floating: true,
                 className: "w-auto",
                 options: contractRecordList,
-              },]}
+              },
+            ]}
             className="flex flex-row justify-end items-start"
           />
-          
         </div>
       </div>
     </main>
