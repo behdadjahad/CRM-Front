@@ -43,6 +43,7 @@ import { sendServiceData } from "@/api/service";
 import { convertDate, convertToGregorian } from "@/lib/date";
 
 import { getUsers } from "@/api/auth";
+import { CornerDownLeft } from "lucide-react";
 
 export default function Contract() {
   const router = useRouter();
@@ -68,10 +69,11 @@ export default function Contract() {
   const [agencyCityOptions, setAgencyCityOptions] = useState<OptionType[]>([]);
   const [personalInfo, setPersonalInfo] = useState<any>();
   const [addressInfo, setAddressInfo] = useState<any>();
+  const [workAddress, setWorkAddress] = useState<any>();
   const [livingContact, setLivingContact] = useState<any>();
   const [workContact, setWorkContact] = useState<any>();
   const [organizationContact, setOrganizationContact] = useState<any>();
-  //contractId
+
   const { id } = useParams();
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
@@ -113,19 +115,60 @@ export default function Contract() {
           socialNumber: "",
           idNumber: "",
           career: "",
+          personId: "",
           isSubmitted: false,
         });
       }
       if (contract?.data?.mainCustomerSoldto?.address?.length > 0) {
         const addressData = contract?.data?.mainCustomerSoldto?.address;
         setAddressInfo({
-          addressId: addressData?.[0]?.id,
-          address: addressData?.[0]?.address,
-          postalCode: addressData?.[0]?.postalCode,
-          street: addressData?.[0]?.street,
-          cityId: addressData?.[0]?.cityId,
-          countryId: addressData?.[0]?.countryId,
-          provinceId: addressData?.[0]?.provinceId,
+          addressId: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.id,
+          address: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.address,
+          postalCode: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.postalCode,
+          street: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.street,
+          cityId: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.cityId,
+          countryId: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.countryId,
+          provinceId: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.livingAddress
+          )?.provinceId,
+          isSubmitted: true,
+        });
+
+        setWorkAddress({
+          addressId: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.id,
+          workProvince: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.provinceId,
+          workCity: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.cityId,
+          workStreet: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.street,
+          workPostalCode: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.postalCode,
+          workCategory: "",
+          workAddress: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.address,
+          workCountry: addressData?.find(
+            (item: any) => item?.addressTypeId === clientAddress.workAddress
+          )?.countryId,
           isSubmitted: true,
         });
       } else {
@@ -137,6 +180,17 @@ export default function Contract() {
           cityId: "",
           countryId: "",
           provinceId: "",
+          isSubmitted: false,
+        });
+        setWorkAddress({
+          addressId: "",
+          workProvince: "",
+          workCity: "",
+          workStreet: "",
+          workPostalCode: "",
+          workCategory: "",
+          workAddress: "",
+          workCountry: "",
           isSubmitted: false,
         });
       }
@@ -342,21 +396,21 @@ export default function Contract() {
       address: Yup.string().required(REQUIRED_TEXT),
       country: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
     enableReinitialize: true,
+    onSubmit: () => {},
   });
 
   const workFormik = useFormik({
     initialValues: {
-      addressId: "",
-      workProvince: "",
-      workCity: "",
-      workStreet: "",
-      workPostalCode: "",
+      addressId: workAddress?.addressId,
+      workProvince: workAddress?.workProvince,
+      workCity: workAddress?.workCity,
+      workStreet: workAddress?.workStreet,
+      workPostalCode: workAddress?.workPostalCode,
       workCategory: "",
-      workAddress: "",
-      workCountry: undefined,
-      isSubmitted: "",
+      workAddress: workAddress?.workAddress,
+      workCountry: workAddress?.workCountry,
+      isSubmitted: workAddress?.isSubmitted,
     },
     validationSchema: Yup.object().shape({
       workProvince: Yup.string().required(REQUIRED_TEXT),
@@ -367,6 +421,7 @@ export default function Contract() {
       workAddress: Yup.string().required(REQUIRED_TEXT),
       workCountry: Yup.string().required(REQUIRED_TEXT),
     }),
+    enableReinitialize: true,
     onSubmit: () => {},
   });
 
@@ -400,6 +455,7 @@ export default function Contract() {
       organizationPostalCode: Yup.string().required(REQUIRED_TEXT),
       organizationAddress: Yup.string().required(REQUIRED_TEXT),
     }),
+    enableReinitialize: true,
     onSubmit: () => {},
   });
   const { mutate: SubmitterHandler } = useMutation({
@@ -714,78 +770,7 @@ export default function Contract() {
       });
     }
   }
-  // function submitCommunicate() {
-  //   const data = [
-  //     {
-  //       communicationDetails: livingContactFormik.values.personalPhone,
-  //       communicationType: CommunicationType.mobile,
-  //       communicater: Communicater.home,
-  //       customerId: Number(customerId),
-  //     },
-  //     {
-  //       communicationDetails: livingContactFormik.values.homePhone,
-  //       communicationType: CommunicationType.home,
-  //       communicater: Communicater.home,
-  //       customerId: Number(customerId),
-  //     },
-  //     {
-  //       communicationDetails: livingContactFormik.values.email,
-  //       communicationType: CommunicationType.email,
-  //       communicater: Communicater.home,
-  //       customerId: Number(customerId),
-  //     },
-  //     {
-  //       communicationDetails: livingContactFormik.values.website,
-  //       communicationType: CommunicationType.website,
-  //       communicater: Communicater.home,
-  //       customerId: Number(customerId),
-  //     },
-  //   ];
-  //   if (!livingContactFormik.values.isSubmitted) {
-  //     communicateHandler(data);
-  //   } else {
-  //     editCommunicateHandler({
-  //       data: data,
-  //       contactId: livingContactFormik.values.livingContactId,
-  //     });
-  //   }
-  // }
-  // function submitWorkCommunicate() {
-  //   const data = [
-  //     {
-  //       communicationDetails: workContactFormik.values.jobPhone,
-  //       communicationType: CommunicationType.business,
-  //       communicater: Communicater.business,
-  //       customerId: Number(customerId),
-  //       //  organizationId: null,
-  //       // contractId: Number(id),
-  //     },
-  //     {
-  //       communicationDetails: workContactFormik.values.email,
-  //       communicationType: CommunicationType.email,
-  //       communicater: Communicater.business,
-  //       customerId: Number(customerId),
-  //       // organizationId: null,
-  //       // contractId: Number(id),
-  //     },
-  //     {
-  //       communicationDetails: workContactFormik.values.website,
-  //       communicationType: CommunicationType.website,
-  //       communicater: Communicater.business,
-  //       customerId: Number(customerId),
-  //       // organizationId: null,
-  //       // contractId: Number(id),
-  //     },
-  //   ];
-  //   if (!workContactFormik.values.isSubmitted) {
-  //     communicateHandler(data);
-  //   } else {
-  //     editCommunicateHandler({
-  //       data: data,
-  //       contactId: workContactFormik.values.workContactId,
-  //     });
-  //   }
-  // }
+
   return (
     <main>
       <div>
