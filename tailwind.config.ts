@@ -229,6 +229,8 @@ const config: Config = {
         slate: {
           DEFAULT: "hsla(var(--slate))",
           mute:"hsla(var(--slate-mute))",
+          foreground: "hsla(var(--slate-foreground))",
+          background: "hsla(var(--slate-background))",
         },
         danger: {
           DEFAULT: "hsla(var(--danger))",

@@ -11,6 +11,7 @@ import { useParams } from "next/navigation";
 import { fetchCustomerDetailContract } from "@/store/customer-detail-contract-slice";
 import { limitForCustomerDetailContracts } from "@/lib/utils";
 import { CustomerPersonalInfo } from "./customer-personal-info";
+import CustomerDetailReport from "./customer-detail-report";
 // const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 export default function CustomerDetailContent({
   tabList,
@@ -185,9 +186,9 @@ export default function CustomerDetailContent({
           </div>
         </div>
       )}
-      {/* {activeTab === "آماروگزارش ها" && (
+      {activeTab === "آماروگزارش ها" && (
         <CustomerDetailReport serviceData={servicesReportData} />
-      )} */}
+      )}
       {activeTab === "اطلاعات شخصی" && (
        <CustomerPersonalInfo />
       )}
