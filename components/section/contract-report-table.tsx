@@ -34,7 +34,7 @@ export default function ContractReportTable({
         <TableHeader>
           <TableRow className="bg-white sticky top-0 z-10  border-b border-gray-200">
             {tableHeaderLabels.map((label, index) => (
-              <TableHead key={index} className="text-right">
+              <TableHead key={index} className="text-right text-[#757575]">
                 {label}
               </TableHead>
             ))}
@@ -46,21 +46,21 @@ export default function ContractReportTable({
             <Fragment key={index}>
               <TableRow className="border-b border-gray-200 bg-card">
                 {tableHeaderLabels.map((label, idx) => (
-                  <TableCell key={idx} className="text-center text-xs">
+                  <TableCell key={idx} className="text-right text-xs ">
                     {item[label]}
                   </TableCell>
                 ))}
-                <TableCell className="text-center w-36">
+                <TableCell className="text-center w-36 px-0">
                   <Progress
                     value={item.value}
-                    className="h-1 bg-muted/30"
+                    className="h-1 bg-[#F0F4F8] w-full"
                     indicatorClassName={item.indicatorClassName}
                   />
                 </TableCell>
 
                 {/* Extra: percentage text */}
                 <TableCell className="text-center text-xs font-medium">
-                  <div> {item.value}%</div>
+                  <div className={item.labelClassName}> {item.value}%</div>
                 </TableCell>
               </TableRow>
             </Fragment>

@@ -43,9 +43,16 @@ const AnimatedBar = forwardRef<SVGRectElement, any>(
   }
 );
 
-const AnimatedBarChart = ({ data, fill }: { data: any; fill: string }) => {
+const AnimatedBarChart = ({ data, fill, title, info }: { data: any; fill: string, title: string; info: string; }) => {
   return (
-    <div className="w-full min-h-96 bg-card rounded-lg p-6 flex items-center justify-center">
+    <div className="w-full bg-card rounded-lg p-6 flex flex-col items-center justify-center gap-4">
+      <div className="text-right w-full ">
+        
+        <span className="text-lg font-primary-bold">گزارش کلی فروش</span>
+        <span className="text-gray-900 text-md">{title}</span>
+        <div className="text-[#757575] text-xs">{info}</div>
+      </div>
+      <div className="w-full h-80 bg-card rounded-lg  flex flex-col items-center justify-center">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
@@ -70,13 +77,15 @@ const AnimatedBarChart = ({ data, fill }: { data: any; fill: string }) => {
             tick={{ fontSize: 12, dx: -15 }}
             tickLine={false}
             domain={[0, 350]}
-            tickCount={8}
+            // tickCount={8}
+              ticks={[0, 50, 100, 150, 200, 250, 300, 350]} 
             strokeWidth={1}
           />
           <Tooltip cursor={false} content={<CustomTooltip />} />
           <Bar dataKey="value" fill={fill} shape={<AnimatedBar />} />
         </BarChart>
-      </ResponsiveContainer>
+        </ResponsiveContainer>
+        </div>
     </div>
   );
 };
