@@ -10,7 +10,7 @@ export function CustomizePiChart({
   data: any[];
   className?: string;
   legendClassName?: string;
-  labelFontSize?:string;
+  labelFontSize?: string;
 }) {
   return (
     <div className={cn("h-36 w-full grid grid-cols-2 gap-4", className)}>
@@ -19,9 +19,11 @@ export function CustomizePiChart({
           data={data}
           lineWidth={50}
           animate
-          label={({ dataEntry }) => `${dataEntry.value}%`}
+          label={({ dataEntry }) =>
+            dataEntry.value > 0 ? `${dataEntry.value}%` : ""
+          }
           labelStyle={{
-            fontSize: labelFontSize ? labelFontSize :"8px" ,
+            fontSize: labelFontSize ? labelFontSize : "8px",
             fontWeight: "400",
             fill: "#000", // label color
           }}

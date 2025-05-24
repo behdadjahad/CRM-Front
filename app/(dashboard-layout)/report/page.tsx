@@ -1,42 +1,43 @@
 "use client";
 import { CustomizePiChart } from "@/components/chart/customize-pi-chart";
 import MultipleBarChart from "@/components/chart/multiple-bar-chart";
-import PieChartWithLegend from "@/components/chart/pi-chart";
-import TimeFilter from "@/components/report/time-filter";
+
 import ContractReportTable from "@/components/section/contract-report-table";
 import { ProgressBarContainer } from "@/components/section/progress-bar-container";
 import AnimatedBarChart from "@/components/shared/animated-bar-chart";
 import Image from "next/image";
 import Breadcrumb from "@/components/shared/breadcrumb";
-import ProgressBar from "@/components/shared/progress-bar";
+
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
-import { PieChart } from "react-minimal-pie-chart";
+import { cn, getDateRange, subContracts } from "@/lib/utils";
+
 import dynamic from "next/dynamic";
 import { TimeFilterContainer } from "@/components/section/time-filter-container";
-
-
-import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import { useMutation } from "@tanstack/react-query";
+import { getReportData } from "@/api/report";
+import { useEffect, useRef, useState } from "react";
+
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
 });
-const WorldMap = dynamic(() => import('@/components/section/world-map'), {
+const WorldMap = dynamic(() => import("@/components/section/world-map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
 });
-const IranMap = dynamic(() => import('@/components/section/iran-map'), {
+const IranMap = dynamic(() => import("@/components/section/iran-map"), {
   ssr: false,
   loading: () => <p>Loading map...</p>,
 });
 export default function Report() {
   const [activeTime, setActiveTime] = useState<any>("today");
   const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
-
-
-  
+  const [satisfactionData, setSatisafactionData] = useState<any[]>([]);
+  const [salesReportData, setSaleReportData] = useState<any[]>([]);
+  const [provinceData, setProvinceData] = useState<any[]>([]);
+  const [countryData, setCountryData] = useState<any[]>([]);
   const ProfitReportData = {
     list: [
       { month: "فروردین", profit: 750000000, loss: 600000000 },
@@ -52,44 +53,6 @@ export default function Report() {
     ],
   };
 
-  const saleReportData = [
-    {
-      title: "(سود)",
-      fill: "#6CCE81",
-      info: "سود کل 6،607،249،800 تومان",
-      list: [
-        { label: "تورخارجی", value: 100 },
-        { label: "هتل", value: 250 },
-        { label: "ویزا", value: 300 },
-        { label: "سایر", value: 350 },
-        { label: "تورداخلی", value: 50 },
-      ],
-    },
-    {
-      title: "(نفرات)",
-      fill: "#889BFD",
-      info: "تعداد کل 399",
-      list: [
-        { label: "تورخارجی", value: 100 },
-        { label: "هتل", value: 250 },
-        { label: "ویزا", value: 300 },
-        { label: "سایر", value: 350 },
-        { label: "تورداخلی", value: 50 },
-      ],
-    },
-    {
-      title: "(قرارداد)",
-      fill: "#F9CE86",
-      info: "تعداد کل 176",
-      list: [
-        { label: "تورخارجی", value: 100 },
-        { label: "هتل", value: 250 },
-        { label: "ویزا", value: 300 },
-        { label: "سایر", value: 350 },
-        { label: "تورداخلی", value: 50 },
-      ],
-    },
-  ];
   const contactData = [
     {
       title: "سایت",
@@ -199,11 +162,11 @@ export default function Report() {
       value: 50,
     },
   ];
-  const countryData = [
-    { label: "India", value: 10 },
-    { label: "Germany", value: 6 },
-    { label: "Canada", value: 3 },
-  ];
+  // const countryData = [
+  //   { label: "India", value: 10 },
+  //   { label: "Germany", value: 6 },
+  //   { label: "Canada", value: 3 },
+  // ];
   const cityData = [
     { label: "تهران", value: 120 },
     { label: "مشهد", value: 95 },
@@ -214,8 +177,225 @@ export default function Report() {
     { label: "کرمانشاه", value: 40 },
     { label: "قم", value: 35 },
   ];
+  const timeFilteringData = [
+    {
+      label: "ماهانه",
+      value: 1,
+    },
+    {
+      label: "3ماه",
+      value: 3,
+    },
+    {
+      label: "6ماه",
+      value: 6,
+    },
+    {
+      label: "9ماه",
+      value: 9,
+    },
+    {
+      label: "12 ماه",
+      value: 12,
+    },
+  ];
+
+  const { mutate: submitTimeFiltering, data: reportData } = useMutation({
+    mutationFn: (data: any) => {
+      return getReportData(data);
+    },
+    onSuccess: () => {},
+  });
+
+  useEffect(() => {
+    if (reportData && reportData.data) {
+      const satisfactionReport = reportData?.data?.satisfactionReport;
+      const subContractsReport = reportData?.data?.subContractsReport?.stats;
+      const subContractsOveralNo = reportData?.data?.subContractsReport;
+      const provinceReport = reportData?.data?.provinceDistribution;
+      const countryReport = reportData?.data?.countryDistribution;
+      const provinces = provinceReport?.map((item: any) => ({
+        label: item?.provinceName,
+        value: item?.percentage,
+      }));
+      const countries = countryReport?.map((item: any) => ({
+        label: item?.foreignName,
+        fa_label: item?.countryName,
+        value: item?.percentage,
+      }));
+      console.log(countries);
+      const satisafactionList = [
+        {
+          title: "رضایت مندی",
+          value: satisfactionReport?.satisfiedPercentage,
+          color: "#8CDAAA",
+        },
+        {
+          title: "نارضایتی",
+          value: satisfactionReport?.unsatisfiedPercentage,
+          color: "#F64E60",
+        },
+        {
+          title: "نظری نداشتند",
+          value: satisfactionReport?.noSatisfactionPercentage,
+          color: "#F9CE86",
+        },
+      ];
+      const profitList = [];
+      const customerList = [];
+      const contractList = [];
+      for (const key in subContractsReport) {
+        const label = subContracts[key as keyof typeof subContracts];
+        profitList.push({
+          label: label,
+          value: subContractsReport[key].profit,
+        });
+        customerList.push({
+          label: label,
+          value: subContractsReport[key].noCustomers,
+        });
+        contractList.push({
+          label: label,
+          value: subContractsReport[key].noContracts,
+        });
+      }
+      const subContractList = [
+        {
+          title: "(سود)",
+          fill: "#6CCE81",
+          info: `سود کل ${subContractsOveralNo?.overallProfit} تومان`,
+
+          list: profitList,
+        },
+        {
+          title: "(نفرات)",
+          fill: "#889BFD",
+          info: `تعداد کل ${subContractsOveralNo?.overallNoCustomers}`,
+
+          list: customerList,
+        },
+        {
+          title: "(قرارداد)",
+          fill: "#F9CE86",
+          info: `تعداد کل ${subContractsOveralNo?.overallNoContracts}`,
+
+          list: contractList,
+        },
+      ];
+      setSatisafactionData(satisafactionList);
+      setSaleReportData(subContractList);
+      setProvinceData(provinces);
+      setCountryData(countries);
+    }
+    console.log(reportData);
+  }, [reportData]);
+  function timeCheckHandler(value: number) {
+    const timeRange = getDateRange(value);
+    submitTimeFiltering({
+      startDate: timeRange.startDate,
+      endDate: timeRange.endDate,
+    });
+  }
+  useEffect(() => {
+    submitTimeFiltering({});
+  }, []);
+
+  // const exportPDF = async () => {
+  //   // Get the entire page (or a specific container)
+  //   const element = document.getElementById("export-container");
+
+  //   // Use html2canvas to convert to canvas
+  //   const canvas = await html2canvas(element, {
+  //     useCORS: true,
+  //     logging: true,
+  //     scrollY: -window.scrollY, // fix scroll issue
+  //   });
+
+  //   const imgData = canvas.toDataURL("image/png");
+  //   const pdf = new jsPDF("p", "mm", "a4");
+  //   const imgProps = pdf.getImageProperties(imgData);
+  //   const pdfWidth = pdf.internal.pageSize.getWidth();
+  //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  //   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  //   pdf.save("export.pdf");
+  // };
+  const exportPDF = async () => {
+    const element = document.getElementById("export-container");
+    if (!element) return;
+
+    // Expand element to full height
+    const originalHeight = element.style.height;
+    const originalOverflow = element.style.overflow;
+    element.style.height = element.scrollHeight + "px";
+    element.style.overflow = "visible";
+
+    window.scrollTo(0, 0);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const canvas = await html2canvas(element, {
+      useCORS: true,
+      scrollY: -window.scrollY,
+      windowWidth: element.scrollWidth,
+      windowHeight: element.scrollHeight,
+    });
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    const pageHeightInPixels = (canvas.width * pdfHeight) / pdfWidth;
+    let position = 0;
+
+    while (position < canvas.height) {
+      const pageCanvas = document.createElement("canvas");
+      const pageContext = pageCanvas.getContext("2d")!;
+      pageCanvas.width = canvas.width;
+      pageCanvas.height = Math.min(
+        pageHeightInPixels,
+        canvas.height - position
+      );
+
+      pageContext.drawImage(
+        canvas,
+        0,
+        position,
+        canvas.width,
+        pageCanvas.height,
+        0,
+        0,
+        canvas.width,
+        pageCanvas.height
+      );
+
+      const pageData = pageCanvas.toDataURL("image/png");
+      if (position > 0) pdf.addPage();
+      pdf.addImage(
+        pageData,
+        "PNG",
+        0,
+        0,
+        imgWidth,
+        (pageCanvas.height * imgWidth) / canvas.width
+      );
+
+      position += pageHeightInPixels;
+    }
+
+    pdf.save("export.pdf");
+
+    // Restore original styles
+    element.style.height = originalHeight;
+    element.style.overflow = originalOverflow;
+  };
+
   return (
-    <main className="px-0">
+    <main className="px-0" id="export-container">
       <div className="px-8">
         <Title label="گزارش" />
 
@@ -232,18 +412,21 @@ export default function Report() {
         />
       </div>
       <div className="flex px-6 flex-row items-center justify-between">
-        {/* <TimeFilter
-          activeTime={activeTime}
-          setActiveTime={setActiveTime}
-          className="min-h-fit"
-        /> */}
-        <TimeFilterContainer />
+        <TimeFilterContainer
+          listItem={timeFilteringData}
+          onCheckTimeFilter={(value: number) => {
+            timeCheckHandler(value);
+          }}
+          onDateFilterSubmit={(data: any) => {
+            submitTimeFiltering(data);
+          }}
+        />
         <Button
           type="button"
           variant={"foreground"}
           className="bg-quartiery-background text-tertiary-foreground"
-          onClick={() => {}}
-
+          // onClick={() => {}}
+          onClick={exportPDF}
         >
           خروجی
         </Button>
@@ -287,40 +470,30 @@ export default function Report() {
                     ],
                   }}
                   value={item.value}
+                  // valueLabel={{
+                  //   style: {
+                  //     fill: "black", // This controls the text color
+                  //     fontSize: 20,
+                  //   },
+                  //   formatTextValue: (value:string) => `${value}%`,
+                  // }}
+                  className="custom-guage"
                   pointer={{ type: "arrow", elastic: true, length: 1.2 }}
+             
                 />
               </div>
-              <div className="text-lf font-primary-bold">{item.label}</div>
+              <div className="text-lg font-primary-bold">{item.label}</div>
               <div className="text-xs text-[#4079ED]">جزییات بیشتر</div>
             </div>
           ))}
         </div>
         <div className="col-span-1  flex flex-col bg-card rounded-lg p-6 gap-6">
           <div className="font-primary-bold">رضایتمندی ها</div>{" "}
-          <CustomizePiChart
-            data={[
-              {
-                title: "رضایت مندی",
-                value: 48,
-                color: "#8CDAAA",
-              },
-              {
-                title: "نارضایتی",
-                value: 26,
-                color: "#F64E60",
-              },
-              {
-                title: "نظری نداشتند",
-                value: 32,
-                color: "#F9CE86",
-              },
-            ]}
-            labelFontSize="8px"
-          />
+          <CustomizePiChart data={satisfactionData} labelFontSize="8px" />
         </div>
       </div>
       <div className="flex flex-row gap-4 px-6">
-        {saleReportData.map((item, index) => (
+        {salesReportData.map((item, index) => (
           <AnimatedBarChart
             key={index}
             data={item.list}
@@ -427,7 +600,7 @@ export default function Report() {
                   src="/icons/world.png"
                   alt="Iran"
                   className="w-8 h-5"
-                /> 
+                />
               </Button>
             </div>
           </div>
@@ -436,7 +609,7 @@ export default function Report() {
             {isWorldActive ? (
               <WorldMap countryData={countryData} />
             ) : (
-              <IranMap cityData={cityData} />
+              <IranMap cityData={provinceData} />
             )}
           </div>
         </div>

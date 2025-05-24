@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { pick } from "lodash";
 import { title } from "process";
 import { twMerge } from "tailwind-merge";
 
@@ -40,7 +41,32 @@ export const ServerImageAddress = "http://185.126.203.246:3000/public/";
 
 export enum ContractState {
   INPROGRESS = "فعال",
+}
+export function getDateRange(monthsAgo: number): {
+  startDate: string;
+  endDate: string;
+} {
+  const now = new Date();
+  const endDate = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0)
+  );
+  const startDate = new Date(endDate);
+  startDate.setUTCMonth(startDate.getUTCMonth() - monthsAgo);
 
-} 
+  const formatDate = (date: Date): string =>
+    date.toISOString().split(".")[0] + "Z";
 
-
+  return {
+    startDate: formatDate(startDate),
+    endDate: formatDate(endDate),
+  };
+}
+export const subContracts = {
+  flight: "پرواز",
+  visa: "ویزا",
+  pickUp: "پیکاپ",
+  embassyPackage: "سفارت",
+  ensurance: "بیمه",
+  accommodation: "اقامت",
+  other: "سایر",
+};

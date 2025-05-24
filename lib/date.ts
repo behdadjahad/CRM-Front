@@ -92,13 +92,13 @@ export function convertToGregorian(
   } else {
    return ""
   }
-
+  return gregorianDate.utc().format("YYYY-MM-DDTHH:mm:ss[Z]");
   // Return the formatted date in Gregorian with timezone
-  return gregorianDate
-    .format("YYYY/MM/DD HH:mm:ss Z")
-    .replace(/\//g, "-")
-    .replace(" ", "T")
-    .replace(/\s+/g, "");
+  // return gregorianDate
+  //   .format("YYYY/MM/DD HH:mm:ss Z")
+  //   .replace(/\//g, "-")
+  //   .replace(" ", "T")
+  //   .replace(/\s+/g, "");
 }
 export function convertDateTimeToGregorian(
   dateTimeStr: string,

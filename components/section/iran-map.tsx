@@ -22,7 +22,7 @@ export default function IranMap({ cityData }: IranMapProps) {
   }, [cityData]);
 
   useEffect(() => {
-    fetch("/data/iran_geo.json") // your Iran GeoJSON file here
+    fetch("/data/iran.json") // your Iran GeoJSON file here
       .then((res) => res.json())
       .then(setGeoData);
   }, []);
@@ -53,7 +53,7 @@ export default function IranMap({ cityData }: IranMapProps) {
     });
 
     if (value !== undefined) {
-      layer.bindTooltip(`${name}: ${value}`, {
+      layer.bindTooltip(`${name}: %${value}`, {
         sticky: true,
         direction: "top",
         className: "leaflet-tooltip",

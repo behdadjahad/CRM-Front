@@ -250,3 +250,13 @@
 
   border-radius: 4px;
 }
+.custom-guage text{
+  fill:#000 !important;
+  color:#000 !important;
+  text-decoration-color: #000 !important;
+
+}
+.gauge-component-class{
+    fill:#000 !important;
+  color:#000 !important;
+}

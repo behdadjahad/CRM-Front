@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
+import { convertToGregorian } from "@/lib/date";
 
 const data = [
   {
@@ -27,27 +28,57 @@ const data = [
     value: "12 month",
   },
 ];
-
-export function TimeFilterContainer() {
+interface TimeFilterContainer {
+  listItem: {
+    label: string;
+    value: number;
+  }[];
+  onCheckTimeFilter: (value: any) => void;
+  onDateFilterSubmit: (value: any) => void;
+}
+export function TimeFilterContainer({
+  listItem,
+  onCheckTimeFilter,
+  onDateFilterSubmit,
+}: TimeFilterContainer) {
   const [activeTime, setActiveTime] = useState<any>();
   const formik = useFormik({
     initialValues: {
-      startTime: "",
-      endTime: "",
+      startTimeFilter: undefined,
+      startTimeFilterType: "",
+      endTimeFilter: undefined,
+      endTimeFilterType: "",
     },
     onSubmit: async () => {},
   });
+  useEffect(() => {
+    if (formik.values.startTimeFilter && formik.values.endTimeFilter) {
+      onDateFilterSubmit({
+        startDate: convertToGregorian(
+          formik.values.startTimeFilter,
+          formik.values.startTimeFilterType
+        ),
+        endDate: convertToGregorian(
+          formik.values.endTimeFilter,
+          formik.values.endTimeFilterType
+        ),
+      });
+      setActiveTime(null)
+    }
+  }, [formik.values.startTimeFilter, formik.values.endTimeFilter]);
   return (
     <div className={cn("flex flex-row p-0 h-fit")}>
-      {data?.map((item: any, index: number) => (
+      {listItem?.map((item: any, index: number) => (
         <Button
           key={`time-filter-${index}`}
           onClick={() => {
             if (item.value === activeTime) {
-              setActiveTime(null);
+              return;
             } else {
               setActiveTime(item.value);
+              onCheckTimeFilter(item.value);
             }
+            formik.resetForm();
           }}
           variant={
             item.value === activeTime
@@ -66,6 +97,7 @@ export function TimeFilterContainer() {
         fields={[
           {
             key: "startTimeFilter",
+            dependantKey: "startTimeFilterType",
             component: "date",
             placeholder: "ازتاریخ",
             type: "text",
@@ -75,6 +107,7 @@ export function TimeFilterContainer() {
           },
           {
             key: "endTimeFilter",
+            dependantKey: "endTimeFilterType",
             component: "date",
             placeholder: "تاتاریخ",
             type: "text",
