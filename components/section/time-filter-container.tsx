@@ -39,20 +39,24 @@ export function TimeFilterContainer() {
   });
   return (
     <div className={cn("flex flex-row p-0 h-fit")}>
-      {data?.map((item: any,index:number) => (
+      {data?.map((item: any, index: number) => (
         <Button
+          key={`time-filter-${index}`}
           onClick={() => {
-            item.value === activeTime
-              ? setActiveTime(null)
-              : setActiveTime(item.value);
-            setActiveTime(item.value);
+            if (item.value === activeTime) {
+              setActiveTime(null);
+            } else {
+              setActiveTime(item.value);
+            }
           }}
           variant={
             item.value === activeTime
               ? "activeForeground"
               : "deactiveForeground"
           }
-          className={`rounded-none h-10 w-18 ${index === 0 ? "rounded-tr-lg rounded-br-lg":""}`}
+          className={`rounded-none h-10 w-18 ${
+            index === 0 ? "rounded-tr-lg rounded-br-lg" : ""
+          }`}
         >
           {item.label}
         </Button>
@@ -65,18 +69,18 @@ export function TimeFilterContainer() {
             component: "date",
             placeholder: "ازتاریخ",
             type: "text",
-            floating:true,
-            className:"w-36 mr-0  rounded-none px-0",
-            labelClassName:"rounded-none h-10"
+            floating: true,
+            className: "w-36 mr-0  rounded-none px-0",
+            labelClassName: "rounded-none h-10",
           },
           {
             key: "endTimeFilter",
             component: "date",
             placeholder: "تاتاریخ",
             type: "text",
-            floating:true,
-            className:"w-36 rounded-none px-0",
-            labelClassName:"rounded-none h-10 rounded-tl-lg rounded-bl-lg"
+            floating: true,
+            className: "w-36 rounded-none px-0",
+            labelClassName: "rounded-none h-10 rounded-tl-lg rounded-bl-lg",
           },
         ]}
         className="flex flex-row items-center"

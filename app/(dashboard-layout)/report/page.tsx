@@ -16,68 +16,27 @@ import { useRef, useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
 import dynamic from "next/dynamic";
 import { TimeFilterContainer } from "@/components/section/time-filter-container";
-import WorldMap from "@/components/section/world-map";
-import IranMap from "@/components/section/iran-map";
+
+
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
 });
+const WorldMap = dynamic(() => import('@/components/section/world-map'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>,
+});
+const IranMap = dynamic(() => import('@/components/section/iran-map'), {
+  ssr: false,
+  loading: () => <p>Loading map...</p>,
+});
 export default function Report() {
   const [activeTime, setActiveTime] = useState<any>("today");
   const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
-  const reportRef = useRef<HTMLDivElement>(null); // ✅ Declare the ref
 
-  const handleExportPDF = async () => {
-    if (!reportRef.current) return;
 
-    // Backup styles
-    const originalStyles = {
-      height: reportRef.current.style.height,
-      overflow: reportRef.current.style.overflow,
-    };
-
-    // Adjust styles for full capture
-    reportRef.current.style.height = reportRef.current.scrollHeight + "px";
-    reportRef.current.style.overflow = "visible";
-
-    // Wait for maps to render (optional)
-    await new Promise((r) => setTimeout(r, 1000));
-
-    // Capture screenshot
-    const canvas = await html2canvas(reportRef.current, {
-      useCORS: true,
-      scrollY: -window.scrollY,
-      scale: 2,
-    });
-
-    // Restore original styles
-    reportRef.current.style.height = originalStyles.height;
-    reportRef.current.style.overflow = originalStyles.overflow;
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const imgProps = pdf.getImageProperties(imgData);
-    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    let position = 0;
-    let heightLeft = imgHeight;
-
-    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-    heightLeft -= pdf.internal.pageSize.getHeight();
-
-    while (heightLeft > 0) {
-      position -= pdf.internal.pageSize.getHeight();
-      pdf.addPage();
-      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
-      heightLeft -= pdf.internal.pageSize.getHeight();
-    }
-
-    pdf.save("report.pdf");
-  };
- 
+  
   const ProfitReportData = {
     list: [
       { month: "فروردین", profit: 750000000, loss: 600000000 },
@@ -256,7 +215,7 @@ export default function Report() {
     { label: "قم", value: 35 },
   ];
   return (
-    <main className="px-0" ref={reportRef}>
+    <main className="px-0">
       <div className="px-8">
         <Title label="گزارش" />
 
@@ -283,8 +242,8 @@ export default function Report() {
           type="button"
           variant={"foreground"}
           className="bg-quartiery-background text-tertiary-foreground"
-          // onClick={() => {}}
-          onClick={handleExportPDF}
+          onClick={() => {}}
+
         >
           خروجی
         </Button>
@@ -468,7 +427,7 @@ export default function Report() {
                   src="/icons/world.png"
                   alt="Iran"
                   className="w-8 h-5"
-                />
+                /> 
               </Button>
             </div>
           </div>

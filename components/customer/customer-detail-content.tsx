@@ -186,9 +186,9 @@ export default function CustomerDetailContent({
           </div>
         </div>
       )}
-      {activeTab === "آماروگزارش ها" && (
+      {/* {activeTab === "آماروگزارش ها" && (
         <CustomerDetailReport serviceData={servicesReportData} />
-      )}
+      )} */}
       {activeTab === "اطلاعات شخصی" && (
        <CustomerPersonalInfo />
       )}

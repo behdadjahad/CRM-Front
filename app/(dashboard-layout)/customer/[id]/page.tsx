@@ -91,8 +91,8 @@ export default function CustomerDetail() {
       <div>
         <PersonInfoContainer {...customer} />
         <CustomerDetailContent
-          // tabList={["اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
-          tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+          tabList={["اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+          // tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
         />
       </div>
     </main>

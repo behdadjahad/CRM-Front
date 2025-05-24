@@ -4,8 +4,9 @@ import {
 } from "react-circular-progressbar";
 import Image from "next/image";
 import CustomerSatisfactionReport from "./customer-satisfaction-report";
-import MultipleBarChart from "../shared/multiple-bar-chart";
+
 import CustomerReportInfoCard from "./customer-report-info-card";
+import MultipleBarChart from "../chart/multiple-bar-chart";
 export interface CustomerReportInterface {
   serviceData: {
     label: string;

@@ -116,7 +116,7 @@ export default function MultipleBarChart({ data }: { data: any }) {
                     pointerEvents: "none",
                   }}
                 >
-                  {label}: {value.toLocaleString()}
+                  {label}: {value?.toLocaleString()}
                 </div>
               );
             }}
