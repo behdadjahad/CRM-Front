@@ -6,20 +6,78 @@ import TimeFilter from "@/components/report/time-filter";
 import ContractReportTable from "@/components/section/contract-report-table";
 import { ProgressBarContainer } from "@/components/section/progress-bar-container";
 import AnimatedBarChart from "@/components/shared/animated-bar-chart";
-
+import Image from "next/image";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import ProgressBar from "@/components/shared/progress-bar";
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
 import dynamic from "next/dynamic";
+import { TimeFilterContainer } from "@/components/section/time-filter-container";
+import WorldMap from "@/components/section/world-map";
+import IranMap from "@/components/section/iran-map";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
 });
 export default function Report() {
   const [activeTime, setActiveTime] = useState<any>("today");
+  const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
+  const reportRef = useRef<HTMLDivElement>(null); // ✅ Declare the ref
+
+  const handleExportPDF = async () => {
+    if (!reportRef.current) return;
+
+    // Backup styles
+    const originalStyles = {
+      height: reportRef.current.style.height,
+      overflow: reportRef.current.style.overflow,
+    };
+
+    // Adjust styles for full capture
+    reportRef.current.style.height = reportRef.current.scrollHeight + "px";
+    reportRef.current.style.overflow = "visible";
+
+    // Wait for maps to render (optional)
+    await new Promise((r) => setTimeout(r, 1000));
+
+    // Capture screenshot
+    const canvas = await html2canvas(reportRef.current, {
+      useCORS: true,
+      scrollY: -window.scrollY,
+      scale: 2,
+    });
+
+    // Restore original styles
+    reportRef.current.style.height = originalStyles.height;
+    reportRef.current.style.overflow = originalStyles.overflow;
+
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    let position = 0;
+    let heightLeft = imgHeight;
+
+    pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+    heightLeft -= pdf.internal.pageSize.getHeight();
+
+    while (heightLeft > 0) {
+      position -= pdf.internal.pageSize.getHeight();
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdf.internal.pageSize.getHeight();
+    }
+
+    pdf.save("report.pdf");
+  };
+ 
   const ProfitReportData = {
     list: [
       { month: "فروردین", profit: 750000000, loss: 600000000 },
@@ -39,7 +97,7 @@ export default function Report() {
     {
       title: "(سود)",
       fill: "#6CCE81",
-      info:"سود کل 6،607،249،800 تومان",
+      info: "سود کل 6،607،249،800 تومان",
       list: [
         { label: "تورخارجی", value: 100 },
         { label: "هتل", value: 250 },
@@ -51,7 +109,7 @@ export default function Report() {
     {
       title: "(نفرات)",
       fill: "#889BFD",
-      info:"تعداد کل 399",
+      info: "تعداد کل 399",
       list: [
         { label: "تورخارجی", value: 100 },
         { label: "هتل", value: 250 },
@@ -63,7 +121,7 @@ export default function Report() {
     {
       title: "(قرارداد)",
       fill: "#F9CE86",
-      info:"تعداد کل 176",
+      info: "تعداد کل 176",
       list: [
         { label: "تورخارجی", value: 100 },
         { label: "هتل", value: 250 },
@@ -182,8 +240,23 @@ export default function Report() {
       value: 50,
     },
   ];
+  const countryData = [
+    { label: "India", value: 10 },
+    { label: "Germany", value: 6 },
+    { label: "Canada", value: 3 },
+  ];
+  const cityData = [
+    { label: "تهران", value: 120 },
+    { label: "مشهد", value: 95 },
+    { label: "اصفهان", value: 80 },
+    { label: "تبریز", value: 70 },
+    { label: "شیراز", value: 65 },
+    { label: "اهواز", value: 50 },
+    { label: "کرمانشاه", value: 40 },
+    { label: "قم", value: 35 },
+  ];
   return (
-    <main className="px-0">
+    <main className="px-0" ref={reportRef}>
       <div className="px-8">
         <Title label="گزارش" />
 
@@ -199,17 +272,19 @@ export default function Report() {
           ]}
         />
       </div>
-      <div className="flex px-6">
+      <div className="flex px-6 flex-row items-center justify-between">
         {/* <TimeFilter
           activeTime={activeTime}
           setActiveTime={setActiveTime}
           className="min-h-fit"
         /> */}
+        <TimeFilterContainer />
         <Button
           type="button"
           variant={"foreground"}
           className="bg-quartiery-background text-tertiary-foreground"
-          onClick={() => {}}
+          // onClick={() => {}}
+          onClick={handleExportPDF}
         >
           خروجی
         </Button>
@@ -222,6 +297,7 @@ export default function Report() {
                 "w-full rounded-md flex flex-col items-center justify-center",
                 item.className
               )}
+              key={`${item.label}-gauge`}
             >
               <div className="h-30 w-56">
                 <GaugeComponent
@@ -230,7 +306,7 @@ export default function Report() {
                   arc={{
                     cornerRadius: 10,
                     width: 0.15,
-                  padding: -0.5, 
+                    padding: -2,
 
                     subArcs: [
                       {
@@ -252,7 +328,7 @@ export default function Report() {
                     ],
                   }}
                   value={item.value}
-                  pointer={{ type: "arrow", elastic: true ,  length: 1.2}}
+                  pointer={{ type: "arrow", elastic: true, length: 1.2 }}
                 />
               </div>
               <div className="text-lf font-primary-bold">{item.label}</div>
@@ -286,10 +362,13 @@ export default function Report() {
       </div>
       <div className="flex flex-row gap-4 px-6">
         {saleReportData.map((item, index) => (
-          
-          
-          <AnimatedBarChart key={index} data={item.list} fill={item.fill} title={item.title} info={item.info} />
-      
+          <AnimatedBarChart
+            key={index}
+            data={item.list}
+            fill={item.fill}
+            title={item.title}
+            info={item.info}
+          />
         ))}
       </div>
 
@@ -361,8 +440,46 @@ export default function Report() {
             />
           </div>
         </div>
-        <div className="col-span-5 bg-card rounded-lg p-6">
-          <div className="font-primary-bold text-lg">مقاصد خارجی</div>
+        <div className="col-span-5 bg-card rounded-lg p-6 flex flex-col gap-4">
+          <div className="flex flex-row justify-between">
+            <div className="font-primary-bold text-lg">مقاصد خارجی</div>
+            <div className="flex flex-row gap-2">
+              <Button
+                variant={isWorldActive ? "foreground" : "info"}
+                onClick={() => setIsWorldActive(false)}
+                className="p-2"
+              >
+                <Image
+                  width={1024}
+                  height={1024}
+                  src="/icons/iran.png"
+                  alt="Iran"
+                  className="w-6 h-5"
+                />
+              </Button>
+              <Button
+                variant={isWorldActive ? "info" : "foreground"}
+                onClick={() => setIsWorldActive(true)}
+                className="p-2"
+              >
+                <Image
+                  width={1024}
+                  height={1024}
+                  src="/icons/world.png"
+                  alt="Iran"
+                  className="w-8 h-5"
+                />
+              </Button>
+            </div>
+          </div>
+          <div className="w-full  h-full" id="leaflet-map">
+            {" "}
+            {isWorldActive ? (
+              <WorldMap countryData={countryData} />
+            ) : (
+              <IranMap cityData={cityData} />
+            )}
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4 px-6">

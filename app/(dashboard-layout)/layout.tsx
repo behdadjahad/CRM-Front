@@ -8,7 +8,7 @@ import { store } from "../../store";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
-
+import 'leaflet/dist/leaflet.css';
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",

@@ -37,8 +37,8 @@ const buttonVariants = cva(
         transparent: "bg-transparent font-foreground",
         ghost: "hover:bg-muted/5",
         link: "text-primary underline-offset-4 hover:underline",
-        activeForeground: "text-foreground bg-slate-background",
-        deactiveForeground:"bg-card text-foreground-mute"
+        activeForeground: "border ",
+        deactiveForeground:"border bg-card"
       },
       size: {
         default: "text-sm py-2.5 px-4",

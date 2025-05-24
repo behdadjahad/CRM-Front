@@ -239,3 +239,14 @@
   @apply drop-shadow-none; /* reset */
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.07));
 }
+.custom-tooltip {
+  @apply bg-black text-white text-sm rounded px-3 py-1 shadow;
+}
+.leaflet-tooltip {
+  background-color: #000 !important;
+  color: #fff !important;
+  border: none !important;
+  font-size: 13px;
+
+  border-radius: 4px;
+}
