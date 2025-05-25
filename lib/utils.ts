@@ -67,6 +67,24 @@ export const subContracts = {
   pickUp: "پیکاپ",
   embassyPackage: "سفارت",
   ensurance: "بیمه",
-  accommodation: "اقامت",
+  accommodation: "هتل",
   other: "سایر",
+};
+export const contractType = {
+  accommodationContract: "هتل",
+  otherContract: "سایر",
+  visaContract: "ویزا",
+  ticketContract: "پرواز",
+  embassyPackageContract: "سفارت",
+  ensuranceContract: "بیمه",
+  pickUpContract: "پیکاپ",
+};
+export const avServices = {
+  Visa: "ویزا",
+  Pickup: "پیکاپ",
+  Other: "سایر",
+  Ensurance: "بیمه",
+  Accommodation: "هتل",
+  Embassy: "سفارت",
+  Flight: "پرواز",
 };

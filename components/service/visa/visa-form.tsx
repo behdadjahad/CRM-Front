@@ -1,6 +1,6 @@
 import FormMaker from "@/components/shared/form-maker";
 
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import { editVisaData, sendVisaData } from "@/api/visa";
@@ -30,7 +30,7 @@ export default function VisaForm({
       visaTime: visa?.visaTime?.toString(),
       currency: visa?.currency?.toString(),
       description: visa?.description,
-      visaCost: visa?.visaCost,
+      visaCost:visa?.visaCost ? formatPrice(visa?.visaCost):"",
       visaApproval: visa?.visaApproval?.toString(),
       //visaFile: visa?.files,
     },
@@ -49,6 +49,7 @@ export default function VisaForm({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedVisa"] });
     },
   });
   const { mutate: visaEditor } = useMutation({

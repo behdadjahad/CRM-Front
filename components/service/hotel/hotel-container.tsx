@@ -21,7 +21,7 @@ import { getUsers } from "@/api/auth";
 import { config } from "@/config/config";
 export default function HotelContainer() {
   const { id } = useParams();
-const staticUrl = `${config.ServerAddress}/public/`;
+  const staticUrl = `${config.ServerAddress}/public/`;
   const [addedHotels, setAddedHotels] = useState<any[]>([]);
 
   const [countries, setCountries] = useState<OptionType[]>([]);
@@ -54,7 +54,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
           hotels: city.hotel.map((hotel: any) => ({
             label: hotel.name,
             value: hotel.id,
-            accommodationId: hotel.AccommodationAcType.accomodationType.id, 
+            accommodationId: hotel.AccommodationAcType.accomodationType.id,
           })),
         })),
       }));
@@ -113,7 +113,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
   });
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users?.data?.map((item:any) => ({
+      const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),
       }));
@@ -139,6 +139,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
   useEffect(() => {
     if (isHotelLoading) return;
     if (submittedHotels?.data?.length) {
+      console.log(submittedHotels.data);
 
       setAddedHotels(
         submittedHotels.data.map((item: any) => ({
@@ -149,13 +150,17 @@ const staticUrl = `${config.ServerAddress}/public/`;
           id: item.id,
           isSubmitted: true,
           accommodationType:
-          item.accommodation.AccommodationAcType.accomodationType.id.toString(),
-          files: item.voucherPDF.map((item:any) => ({
-            url:`${staticUrl}${item}`
+            item.accommodation.AccommodationAcType.accomodationType.id.toString(),
+          files: item.voucherPDF.map((item: any) => ({
+            url: `${staticUrl}${item}`,
 
-         
-      
-          }))
+            file: {
+              name: `${staticUrl}${item}`.split("/").pop() || "file",
+              type: `${staticUrl}${item}`.endsWith(".pdf")
+                ? "application/pdf"
+                : "image/*",
+            },
+          })),
         }))
       );
     } else {
@@ -167,7 +172,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
           hotel: null,
           serviceType: null,
           isSubmitted: false,
-         files:[]
+          files: [],
         },
       ]);
     }
@@ -183,7 +188,7 @@ const staticUrl = `${config.ServerAddress}/public/`;
         hotel: null,
         serviceType: null,
         isSubmitted: false,
-       files:[]
+        files: [],
       },
     ]);
   }

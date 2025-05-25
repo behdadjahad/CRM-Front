@@ -7,14 +7,17 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { editOtherData, sendOtherData } from "@/api/other";
+import { current } from "@reduxjs/toolkit";
 export default function OtherContainer({
   itemId,
   onRemoveHandler,
   other,
+  currencies,
 }: {
   itemId: any;
   onRemoveHandler: any;
-  other: any;
+    other: any;
+  currencies: any;
 }) {
   // const [otherId, setOtherId] = useState<number>();
   const { id } = useParams();
@@ -26,7 +29,8 @@ export default function OtherContainer({
       description: other?.description,
       otherFile: other?.files,
       isSubmitted: other.isSubmitted,
-    
+      cost: "",
+      currency:""
     },
     validationSchema: Yup.object().shape({
       title: Yup.string().required(REQUIRED_TEXT),
@@ -68,6 +72,8 @@ export default function OtherContainer({
           title: data.title,
           description: data.description,
           files: data.otherFile,
+          priceWeBuy: data.cost,
+          currencyWeBuyId: data.currency,
         },
         id: data.id,
       });
@@ -76,6 +82,8 @@ export default function OtherContainer({
         title: data.title,
         description: data.description,
         files: data.otherFile,
+        priceWeBuy: data.cost,
+        currencyWeBuyId: data.currency,
       });
     }
   }
@@ -140,6 +148,7 @@ export default function OtherContainer({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: currencies,
           },
           {
             key: "broker",

@@ -15,6 +15,11 @@ import {
 } from "@/api/flight";
 import { getTransportationTypeId } from "@/api/transportation";
 import { OptionType } from "@/components/shared/form-maker";
+import { insertSubmitterData } from "@/api/client";
+import RegisteryForm from "@/components/contract/registery-form";
+import { getContractById } from "@/api/contract";
+import { getUsers } from "@/api/auth";
+import { getCurrencies } from "@/api/currency";
 
 export default function TicketContainer({
   transportationType,
@@ -32,6 +37,8 @@ export default function TicketContainer({
   const [flightClasses, setFlightClasses] = useState<OptionType[]>([]);
   const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
   const [airlines, setAirlines] = useState<OptionType[]>([]);
+  const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+    const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const { mutate: getTransportationType } = useMutation({
     mutationFn: () => {
       return getTransportationTypeId(transportationType);
@@ -59,8 +66,6 @@ export default function TicketContainer({
       }
     },
   });
-
-  
 
   const { mutate: getFlightType } = useMutation({
     mutationFn: (item: number) => {
@@ -160,6 +165,8 @@ export default function TicketContainer({
           destinationCityAirport: flight?.destinationStationId,
           destinationTerminal: flight?.destinationTerminalId,
           airline: flight?.transportationCoId,
+          cost:flight?.priceWeBuy,
+          currency:flight?.currencyWeBuyId,
           isSubmitted: true,
           groupOrder: flight?.groupOrder,
           flightStops: flight?.flightStops?.map((stop: any) => ({
@@ -183,6 +190,42 @@ export default function TicketContainer({
       ]);
     }
   }, [ticketData]);
+  const { mutate: SubmitterHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return insertSubmitterData(data, Number(id));
+    },
+    onSuccess: () => {},
+  });
+  const { data: users } = useQuery({
+    queryKey: ["usersInformation"],
+    queryFn: async () => await getUsers(),
+  });
+  const { data: contract } = useQuery({
+    queryKey: ["contract"],
+    queryFn: () => getContractById(Number(id) as number),
+  });
+  useEffect(() => {
+    if (users) {
+      const userOption: OptionType[] = users?.data?.map((item: any) => ({
+        label: item.fullName,
+        value: item.id.toString(),
+      }));
+      setUserOptions(userOption);
+    }
+  }, [users]);
+    const { data: currency } = useQuery({
+      queryKey: ["Currency"],
+      queryFn: () => getCurrencies(),
+    });
+    useEffect(() => {
+      if (currency) {
+        const currencyOptions = currency.data.map((item: any) => ({
+          value: item.id.toString(),
+          label: item.name,
+        }));
+        setCurrencies(currencyOptions);
+      }
+    }, [currency]);
   return (
     <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -205,21 +248,22 @@ export default function TicketContainer({
             flightClasses={flightClasses}
             flightTypes={flightTypes}
             airlines={airlines}
+            currencies={currencies}
           />
         ))}
       </div>
       <div className="flex flex-col gap-4">
         <h2>اطلاعات ثبت کننده</h2>
-        {/* <RegisteryForm
-        submitForm={SubmitterHandler}
-        accountant={
-          contract?.userResponsible?.id
-            ? contract?.userResponsible?.id.toString()
-            : ""
-        }
-        accountantOptions={userOptions}
-        className="flex-row"
-      /> */}
+        <RegisteryForm
+          submitForm={SubmitterHandler}
+          accountant={
+            contract?.data.userResponsible?.id
+              ? contract?.data?.userResponsible?.id.toString()
+              : ""
+          }
+          accountantOptions={userOptions}
+          className="flex-row"
+        />
       </div>
     </div>
   );

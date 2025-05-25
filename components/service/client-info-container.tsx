@@ -131,6 +131,7 @@ export default function ClientInfoContainer() {
 
   useEffect(() => {
     if (contractCustomersData) {
+      console.log(contractCustomersData);
       const clients = contractCustomersData?.data?.map((client: any) => [
         { label: "id", value: client?.id },
         {

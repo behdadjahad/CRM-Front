@@ -6,10 +6,27 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { deleteOtherData, getSubmittedOthers } from "@/api/other";
+import { getCurrencies } from "@/api/currency";
+import { OptionType } from "@/components/shared/form-maker";
 
 export default function OtherContainer() {
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const [currencies, setCurrencies] = useState<OptionType[]>([]);
+  const { data: currency } = useQuery({
+    queryKey: ["Currency"],
+    queryFn: () => getCurrencies(),
+  });
+  useEffect(() => {
+    if (currency) {
+      const currencyOptions = currency.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setCurrencies(currencyOptions);
+    }
+  }, [currency]);
+
   const [addedOthers, setAddedOthers] = useState<any[]>([
     {
       id: "other-1",
@@ -105,6 +122,7 @@ export default function OtherContainer() {
           itemId={item.id}
           onRemoveHandler={removeHandler}
           other={item}
+          currencies={currencies}
         />
       ))}
     </div>

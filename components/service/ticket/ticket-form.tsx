@@ -17,12 +17,14 @@ export default function TicketForm({
   flightClasses,
   airlines,
   flightTypes,
+  currencies,
 }: {
   onRemoveHandler: any;
   ticket: any;
   flightClasses: any;
   airlines: any;
-  flightTypes: any;
+    flightTypes: any;
+  currencies: any;
 }) {
   const [category, setCategory] = useState(ticket?.ticketType || "OneWay");
   const [airports, setAirports] = useState<OptionType[]>([]);
@@ -84,6 +86,7 @@ export default function TicketForm({
           flightTypeOptions={flightTypes}
           airports={airports}
           airlines={airlines}
+          currencies={currencies}
         />
       )}
 
@@ -95,6 +98,7 @@ export default function TicketForm({
           flightTypeOptions={flightTypes}
           airports={airports}
           airlines={airlines}
+             currencies={currencies}
         />
       )}
 
@@ -106,6 +110,7 @@ export default function TicketForm({
           airports={airports}
           airlines={airlines}
           onRemoveHandler={onRemoveHandler}
+             currencies={currencies}
         />
       )}
     </div>

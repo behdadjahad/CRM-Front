@@ -39,9 +39,10 @@ export default function LoginForm() {
     });
 
     if (result) {
-      
+  
       router.push("/sale");
       localStorage.setItem("token", result.data.accessToken);
+
       setIsLoading(false);
     } else {
       // toast

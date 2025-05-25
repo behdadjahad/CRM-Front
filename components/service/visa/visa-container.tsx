@@ -24,6 +24,8 @@ export default function VisaContainer() {
   const { id } = useParams();
   const [addedVisas, setAddedVisas] = useState<any[]>([]);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
+
+  
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [customers, setCustomers] = useState<OptionType[]>([]);
@@ -116,11 +118,11 @@ export default function VisaContainer() {
 
       setCustomers([
         {
-          label: `${contract?.mainCustomerSoldto.person.firstName ?? ""} ${
-            contract?.mainCustomerSoldto.person.lastName ?? ""
+          label: `${contract?.data?.mainCustomerSoldto?.person?.firstName ?? ""} ${
+            contract?.data?.mainCustomerSoldto?.person?.lastName ?? ""
           }`.trim(),
 
-          value: contract?.mainCustomerSoldto.id.toString(),
+          value: contract?.data?.mainCustomerSoldto?.id?.toString(),
         },
       ]);
     }
@@ -131,9 +133,9 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users.map((item:any) => ({
-        label: item.fullName,
-        value: item.id.toString(),
+      const userOption: OptionType[] = users?.data?.map((item:any) => ({
+        label: item?.fullName,
+        value: item?.id?.toString(),
       }));
       setUserOptions(userOption);
     }

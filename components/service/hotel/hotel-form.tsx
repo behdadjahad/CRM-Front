@@ -159,7 +159,7 @@ export default function HotelForm({
       const updatedCities = countries.find(
         (item: any) => item.value == formik.values.country
       )?.cities;
-
+   
       setCityOptions(() => updatedCities);
     }
   }, [formik.values.country]);

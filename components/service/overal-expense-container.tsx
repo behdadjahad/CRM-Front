@@ -14,7 +14,7 @@ export default function OveralExpenseContainer({
   return (
     <div className="flex flex-col w-full bg-primary rounded-lg p-4 gap-4">
       {/* <div className="text-xs text-card font-bold">{overalExpense.title}</div>  */}
-      {data.map((item: any) => (
+      {data?.map((item: any) => (
         
         <div
           className="flex items-center justify-between flex-wrap"
@@ -22,7 +22,7 @@ export default function OveralExpenseContainer({
         >
           <span className="text-card text-xs ">{item.label}</span>
           <div className="flex items-center justify-between gap-4  bg-card-mute  p-2 rounded-lg w-2/3">
-            {item.hasForm && (
+            {item?.hasForm && (
               <Button
                 className="p-0 border-none bg-transparent"
                 onClick={() => setView(!view)}
@@ -35,7 +35,7 @@ export default function OveralExpenseContainer({
               </Button>
             )}
             <div className="text-xs text-card text-left flex flex-1 gap-1">
-              <span>{formatPrice(item.value)}</span>
+              <span>{item?.value && formatPrice(item.value)}</span>
               <span>{contractCurrency?.name ?? ""}</span>
             </div>
           </div>

@@ -1,13 +1,13 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, dateType } from "@/lib/utils";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
-import { convertDateTimeToGregorian } from "@/lib/date";
+import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 import { useParams } from "next/navigation";
 import { editFlightData, sendFlightData } from "@/api/flight";
 export default function RoundTripTicketForm({
@@ -17,6 +17,7 @@ export default function RoundTripTicketForm({
   airlines,
   ticket,
   onRemoveHandler,
+  currencies,
 }: {
   flightTypeOptions: any;
   flightClassOptions: any;
@@ -24,6 +25,7 @@ export default function RoundTripTicketForm({
   airlines: OptionType[];
   ticket: any;
   onRemoveHandler: any;
+  currencies: any;
 }) {
   const formik = useFormik({
     initialValues: {
@@ -34,9 +36,21 @@ export default function RoundTripTicketForm({
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.originTerminal?.toString(),
       exitDateTime: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
-        ?.exitDateTime,
+        ?.exitDateTime
+        ? convertDateTime(
+            ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
+              ?.exitDateTime,
+            dateType
+          )
+        : "",
       arriveDateTime: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
-        ?.arriveDateTime,
+        ?.arriveDateTime
+        ? convertDateTime(
+            ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
+              ?.exitDateTime,
+            dateType
+          )
+        : "",
       exitDateTimeType: "",
       arriveDateTimeType: "",
       destinationCityAirport: ticket?.flights
@@ -45,17 +59,18 @@ export default function RoundTripTicketForm({
       destinationTerminal: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.destinationTerminal?.toString(),
-      airline:ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.airline?.toString(),
-      cost: "",
-      currency: "",
+      airline: ticket?.flights
+        ?.find((obj: any) => obj.groupOrder === 1)
+        ?.airline?.toString(),
+      cost: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost,
+      currency: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
+        ?.currency,
       broker: "",
       flightId: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.flightId,
-      flightClass: ticket?.flights
-        ?.find((obj: any) => obj.groupOrder === 1)
+      flightClass: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.flightClass,
-      flightType: ticket?.flights
-        ?.find((obj: any) => obj.groupOrder === 1)
+      flightType: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.flightType,
       isSubmitted: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.isSubmitted,
@@ -77,10 +92,24 @@ export default function RoundTripTicketForm({
         ?.originTerminal?.toString(),
       returnExitDateTime: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 2)
-        ?.exitDateTime?.toString(),
+        ?.exitDateTime?.toString()
+        ? convertDateTime(
+            ticket?.flights
+              ?.find((obj: any) => obj.groupOrder === 2)
+              ?.exitDateTime?.toString(),
+            dateType
+          )
+        : "",
       returnArriveDateTime: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 2)
-        ?.arriveDateTime?.toString(),
+        ?.arriveDateTime?.toString()
+        ? convertDateTime(
+            ticket?.flights
+              ?.find((obj: any) => obj.groupOrder === 2)
+              ?.arriveDateTime?.toString(),
+            dateType
+          )
+        : "",
       returnExitDateTimeType: "",
       returnArriveDateTimeType: "",
       returnDestinationCityAirport: ticket?.flights
@@ -89,16 +118,20 @@ export default function RoundTripTicketForm({
       returnDestinationTerminal: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 2)
         ?.destinationTerminal?.toString(),
-      returnAirline: "",
-      returnCost: "",
+      returnAirline: ticket?.flights
+        ?.find((obj: any) => obj.groupOrder === 2)
+        ?.airline?.toString(),
+      returnCost: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
+        ?.cost,
       returnBroker: "",
-      returnCurrency: "",
-      returnFlightClass: ticket?.flights
-        ?.find((obj: any) => obj.groupOrder === 2)
-        ?.flightClass,
-      returnFlightType: ticket?.flights
-        ?.find((obj: any) => obj.groupOrder === 2)
-        ?.flightType,
+      returnCurrency: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
+        ?.currency,
+      returnFlightClass: ticket?.flights?.find(
+        (obj: any) => obj.groupOrder === 2
+      )?.flightClass,
+      returnFlightType: ticket?.flights?.find(
+        (obj: any) => obj.groupOrder === 2
+      )?.flightType,
       flightId: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
         ?.flightId,
       isSubmitted: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
@@ -144,7 +177,9 @@ export default function RoundTripTicketForm({
   }
 
   function removeHandler(formId: any) {
-    const updatedAddedStops = addedStops.filter((item) => item.stopId != formId);
+    const updatedAddedStops = addedStops.filter(
+      (item) => item.stopId != formId
+    );
     setAddedStops(updatedAddedStops);
   }
   function removeReturnHandler(formId: any) {
@@ -277,6 +312,8 @@ export default function RoundTripTicketForm({
       ),
       transportationCoId: formik.values.airline,
       groupOrder: formik.values.groupOrder,
+      priceWeBuy: formik.values.cost,
+      currencyWeBuyId: formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({
@@ -310,6 +347,8 @@ export default function RoundTripTicketForm({
       ),
       transportationCoId: returnFormik.values.returnAirline,
       groupOrder: returnFormik.values.groupOrder,
+      priceWeBuy: returnFormik.values.returnCost,
+      currencyWeBuyId: returnFormik.values.returnCurrency,
     };
     if (!returnFormik.values.isSubmitted) {
       submitFlightForm({
@@ -463,6 +502,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
+              options: currencies,
             },
             {
               key: "broker",
@@ -500,9 +540,9 @@ export default function RoundTripTicketForm({
           <StopForm
             key={item.id}
             onRemoveHandler={removeHandler}
-
             flightId={
-              ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.flightId
+              ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
+                ?.flightId
             }
             airports={airports}
             flight={ticket?.flights?.find((obj: any) => obj.groupOrder === 1)}
@@ -628,6 +668,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
+              options: currencies,
             },
             {
               key: "returnBroker",
@@ -665,9 +706,9 @@ export default function RoundTripTicketForm({
           <StopForm
             key={item.id}
             onRemoveHandler={removeReturnHandler}
-    
             flightId={
-              ticket?.flights?.find((obj: any) => obj.groupOrder === 2)?.flightId
+              ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
+                ?.flightId
             }
             airports={airports}
             flight={ticket?.flights?.find((obj: any) => obj.groupOrder === 2)}

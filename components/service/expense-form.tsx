@@ -98,17 +98,18 @@ export default function ExpenseForm({
             type: "text",
             floating: true,
             options: currencies,
-            className: "text-right w-1/4",
+            className: "text-right !flex-row !w-1/4 !rounded-md",
             containerClassName:"!h-6",
             controlClassName:
-              "!bg-card-mute text-xs !h-6 !min-h-6",
+              "!bg-card-mute !text-xs !h-6 !min-h-6 !rounded-md",
             inputClassName: "!text-xs !text-foreground-mute !min-h-6 !h-6 !m-0 !p-0",
             valueContainerClassName: "!p-0 h-6 !text-foreground-mute",
             dropdownIndicatorClassName: "text-foreground-mute !p-0 !h-4 !min-h-4 cursor-pointer hidden",
-            clearIndicatorClassName:"!p-0"
+            clearIndicatorClassName: "!p-0 !text-xs",
+            menuClassName: "!text-xs",
           },
         ]}
-        className="flex flex-row items-center justify-between p-0"
+        className="flex flex-row items-center justify-between p-2"
       />
     </div>
   );

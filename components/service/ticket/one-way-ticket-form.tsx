@@ -17,32 +17,36 @@ export default function OneWayTicketForm({
   airports,
   airlines,
   ticket,
-
+  currencies,
 }: {
   onRemoveHandler: any;
   flightClassOptions: any;
   flightTypeOptions: any;
   airports: OptionType[];
   airlines: OptionType[];
-    ticket: any;
-
+  ticket: any;
+  currencies: OptionType[];
 }) {
   const queryClient = useQueryClient();
   const formik = useFormik({
     initialValues: {
       originCityAirport: ticket?.flights?.[0]?.originCityAirport?.toString(),
       originTerminal: ticket?.flights?.[0]?.originTerminal?.toString(),
-      exitDateTime:ticket?.flights?.[0]?.exitDateTime && convertDateTime(ticket?.flights?.[0]?.exitDateTime,dateType),
-      exitDateTimeType:dateType,
-      arriveDateTime:ticket?.flights?.[0]?.arriveDateTime && convertDateTime(ticket?.flights?.[0]?.arriveDateTime,dateType) ,
+      exitDateTime:
+        ticket?.flights?.[0]?.exitDateTime &&
+        convertDateTime(ticket?.flights?.[0]?.exitDateTime, dateType),
+      exitDateTimeType: dateType,
+      arriveDateTime:
+        ticket?.flights?.[0]?.arriveDateTime &&
+        convertDateTime(ticket?.flights?.[0]?.arriveDateTime, dateType),
       arriveDateTimeType: dateType,
       destinationCityAirport:
         ticket?.flights?.[0]?.destinationCityAirport?.toString(),
       destinationTerminal:
         ticket?.flights?.[0]?.destinationTerminal?.toString(),
       airline: ticket?.flights?.[0]?.airline?.toString(),
-      cost: "",
-      currency: "",
+      cost: ticket?.flights?.[0]?.cost,
+      currency: ticket?.flights?.[0]?.currency,
       broker: "",
       flightId: ticket?.flights?.[0]?.flightId || ticket?.id,
       flightClass: ticket?.flights?.[0]?.flightClass,
@@ -67,13 +71,15 @@ export default function OneWayTicketForm({
       ...addedStops,
       {
         stopId: `stop-${addedStops.length + 1}`,
-        isSubmitted:false
+        isSubmitted: false,
       },
     ]);
   }
 
   function removeHandler(formId: any) {
-    const updatedAddedStops = addedStops.filter((item) => item.stopId != formId);
+    const updatedAddedStops = addedStops.filter(
+      (item) => item.stopId != formId
+    );
     setAddedStops(updatedAddedStops);
   }
   function removeTicketForm(formId: any) {
@@ -155,13 +161,15 @@ export default function OneWayTicketForm({
         formik.values.exitDateTime,
         formik.values.exitDateTimeType
       ),
-    
+
       arriveDateTime: convertDateTimeToGregorian(
         formik.values.arriveDateTime,
         formik.values.arriveDateTimeType
       ),
-   
+
       transportationCoId: formik.values.airline,
+      priceWeBuy: formik.values.cost,
+      currencyWeBuyId: formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({
@@ -176,12 +184,13 @@ export default function OneWayTicketForm({
     }
   }
   useEffect(() => {
-    if (ticket?.flights?.[0]?.flightStops && ticket?.flights?.[0]?.flightStops?.length > 0) {
-
-      setAddedStops(ticket?.flights?.[0]?.flightStops)
+    if (
+      ticket?.flights?.[0]?.flightStops &&
+      ticket?.flights?.[0]?.flightStops?.length > 0
+    ) {
+      setAddedStops(ticket?.flights?.[0]?.flightStops);
     }
-    
-  },[ticket?.flights?.[0]?.flightStops])
+  }, [ticket?.flights?.[0]?.flightStops]);
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
       <div className="flex items-center gap-2">
@@ -307,6 +316,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options: currencies,
           },
           {
             key: "broker",
@@ -344,7 +354,6 @@ export default function OneWayTicketForm({
         <StopForm
           key={item.id}
           onRemoveHandler={removeHandler}
-      
           flightId={ticket?.flights?.[0]?.flightId}
           airports={airports}
           flight={ticket?.flights?.[0]}

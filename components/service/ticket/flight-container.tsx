@@ -12,6 +12,7 @@ export default function FlightContainer({
   airports,
   ticket,
   onRemoveHandler,
+  currencies
 }: {
   flightClassOptions: any;
   flightTypeOptions: any;
@@ -19,6 +20,7 @@ export default function FlightContainer({
     airports: OptionType[];
     ticket: any;
     onRemoveHandler: any;
+    currencies: any;
 
     
   }) {
@@ -68,7 +70,7 @@ export default function FlightContainer({
           airports={airports}
           flight={item}
           ticket={ticket}
-   
+         currencies={currencies}
          
         />
       ))}

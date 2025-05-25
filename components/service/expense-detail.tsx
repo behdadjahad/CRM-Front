@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendSingleExchageRate } from "@/api/currency";
 import { useParams } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
@@ -12,22 +12,21 @@ export default function ExpenseDetail({
   isOpen,
   currency,
   buyPrice,
-  // convertedBuyPrice,
+  convertedBuyPrice,
   onToggle,
   // currencies,
   contractCurrency,
-   serviceName,
+  serviceName,
   onChangeTotalPrice,
   onChangeTotalAmount,
 }: any) {
-
+  const queryClient = useQueryClient();
   const [buyPriceInCurrency, setbuyPriceInCurrency] = useState(0);
 
   const { id } = useParams();
   const formik = useFormik({
     initialValues: {
       exchangeRate: "",
-      exchangeRateLabel: "",
     },
     onSubmit: () => {},
   });
@@ -36,7 +35,9 @@ export default function ExpenseDetail({
     mutationFn: (data: any) => {
       return sendSingleExchageRate(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
   });
   useEffect(() => {
     setbuyPriceInCurrency(Number(formik.values.exchangeRate) * buyPrice);
@@ -44,14 +45,13 @@ export default function ExpenseDetail({
       Number(formik.values.exchangeRate) * buyPrice - buyPriceInCurrency
     );
 
-      onChangeTotalAmount({
-        exchangeRate: Number(formik.values.exchangeRate),
-        buyPrice: buyPrice,
-        currencyId: currency.id,
-        currencyName: currency.name,
-        serviceName:serviceName
-      });
-
+    onChangeTotalAmount({
+      exchangeRate: Number(formik.values.exchangeRate),
+      buyPrice: buyPrice,
+      currencyId: currency.id,
+      currencyName: currency.name,
+      serviceName: serviceName,
+    });
   }, [formik.values.exchangeRate]);
   return (
     <div className="flex flex-col">
@@ -62,7 +62,8 @@ export default function ExpenseDetail({
             <div>{currency.name}</div>
           </div>
           <div className="flex gap-1">
-            <div>{formatPrice(buyPriceInCurrency)}</div>
+            <div>{formatPrice(convertedBuyPrice)}</div>
+            {/* <div>{formatPrice(buyPriceInCurrency)}</div> */}
             <div>{contractCurrency.name}</div>
           </div>
         </div>
@@ -83,9 +84,9 @@ export default function ExpenseDetail({
                   className="border-none p-1 bg-quartiery-background rounded-full flex items-center justify-center "
                   onClick={() => {
                     singleExchangeRateHandler({
-                      currencyId: formik.values.exchangeRateLabel,
+                      currencyId: currency?.id,
                       currencyExchangeRate: Number(formik.values.exchangeRate),
-                      service: "Accommodation",
+                      service: serviceName,
                     });
                   }}
                 >

@@ -1,13 +1,13 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, dateType } from "@/lib/utils";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import StopForm from "./stop-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
-import { convertDateTimeToGregorian } from "@/lib/date";
+import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
 
@@ -20,6 +20,7 @@ export default function FlightForm({
   airports,
   flight,
   ticket,
+  currencies,
 }: {
   onRemoveHandler: any;
   flightClassOptions: any;
@@ -29,6 +30,7 @@ export default function FlightForm({
   airports: OptionType[];
   flight: any;
   ticket: any;
+  currencies: any;
 }) {
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -37,15 +39,19 @@ export default function FlightForm({
     initialValues: {
       originCityAirport: flight?.originCityAirport?.toString(),
       originTerminal: flight?.originTerminal?.toString(),
-      exitDateTime: flight?.exitDateTime?.toString(),
-      arriveDateTime: flight?.arriveDateTime?.toString(),
+      exitDateTime: flight?.exitDateTime?.toString()
+        ? convertDateTime(flight?.exitDateTime?.toString(), dateType)
+        : "",
+      arriveDateTime: flight?.arriveDateTime?.toString()
+        ? convertDateTime(flight?.arriveDateTime?.toString(), dateType)
+        : "",
       exitDateTimeType: "",
       arriveDateTimeType: "",
       destinationCityAirport: flight?.destinationCityAirport?.toString(),
       destinationTerminal: flight?.destinationTerminal?.toString(),
-      airline: "",
-      cost: "",
-      currency: "",
+      airline:flight?.airline,
+      cost: flight?.cost,
+      currency: flight?.currency,
       broker: "",
       flightType: flight?.flightType,
       flightClass: flight?.flightClass,
@@ -67,7 +73,7 @@ export default function FlightForm({
       ...addedStops,
       {
         stopId: `stop-${addedStops.length + 1}`,
-        isSubmitted:false
+        isSubmitted: false,
       },
     ]);
   }
@@ -159,6 +165,8 @@ export default function FlightForm({
         formik.values.arriveDateTime,
         formik.values.arriveDateTimeType
       ),
+       priceWeBuy:formik.values.cost,
+      currencyWeBuyId:formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({
@@ -299,6 +307,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            options:currencies
           },
           {
             key: "broker",
@@ -336,7 +345,6 @@ export default function FlightForm({
         <StopForm
           key={item.id}
           onRemoveHandler={removeHandler}
-         
           flightId={flight?.flightId}
           airports={airports}
           flight={flight}

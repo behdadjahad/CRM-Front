@@ -14,7 +14,6 @@ export interface RoomInterface {
 }
 
 export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
-
   const queryClient = useQueryClient();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
@@ -53,7 +52,9 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       contractDateOut: room?.checkOutDate
         ? convertDate(room?.checkOutDate, "Solar")
         : "",
-      costPerNight:room?.priceWeBuyPerNight ? formatPrice(room?.priceWeBuyPerNight):"",
+      costPerNight: room?.priceWeBuyPerNight
+        ? formatPrice(room?.priceWeBuyPerNight)
+        : "",
       currency: room?.currencyWeBuy?.toString(),
       broker: "",
       roomCount: room?.numberOfRooms,
@@ -88,7 +89,6 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   });
 
   function submitRoom(data: any) {
-
     if (room.isSubmitted) {
       roomEditor({
         data: {
@@ -103,7 +103,6 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             data?.checkOutDateType
           ),
           priceWeBuyPerNight: Number(data.costPerNight),
-          currencyWeBuyExchangeRate: 10,
           currencyWeBuyId: data.currency,
         },
         id: data.id,
@@ -122,7 +121,6 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             data.checkOutDateType
           ),
           priceWeBuyPerNight: Number(data.costPerNight),
-          currencyWeBuyExchangeRate: 10,
           currencyWeBuyId: data.currency,
         },
         id: hotelId,
@@ -197,7 +195,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             className: "w-full md:w-1/3",
             options: currencies,
           },
-       
+
           {
             component: "non-field",
             key: "actions",

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getCurrencies } from "@/api/currency";
 import { OptionType } from "../shared/form-maker";
 import Image from "next/image";
-import { formatPrice } from "@/lib/utils";
+import { avServices, formatPrice } from "@/lib/utils";
 export interface ExpenseCardInterface {
   expenseInfo: {
     price: string;
@@ -22,13 +22,13 @@ export default function ContractExpenseCard({
   groupPrices,
   title,
   contractCurrency,
-  //totalExpenseInCurrency,
+  totalExpenseInCurrency,
   icon,
   onChangeTotalAmount
 }: any) {
   const [openForms, setOpenForms] = useState<string[]>([]);
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
-  const [priceInCurrency, setPriceInCurrency] = useState<number>(0)
+  const [priceInCurrency, setPriceInCurrency] = useState<number>(0);
 
   const { data: currency } = useQuery({
     queryKey: ["Currency"],
@@ -36,7 +36,7 @@ export default function ContractExpenseCard({
   });
   useEffect(() => {
     if (currency) {
-      const currencyOptions = currency.data.map((item: any) => ({
+      const currencyOptions = currency?.data?.map((item: any) => ({
         value: item.id.toString(),
         label: item.name,
       }));
@@ -74,8 +74,8 @@ export default function ContractExpenseCard({
           </div>
         </div>
         <div>
-        {/* <span>{formatPrice(totalExpenseInCurrency)}</span> */}
-          <span>{formatPrice(priceInCurrency)}</span>
+        <span>{formatPrice(totalExpenseInCurrency)}</span>
+          {/* <span>{priceInCurrency && formatPrice(priceInCurrency)}</span> */}
           <span>{contractCurrency.name}</span>
         </div>
       </div>
@@ -85,7 +85,8 @@ export default function ContractExpenseCard({
           return (
             <ExpenseDetail
               key={uniqueKey}
-              serviceName={title}
+              // serviceName={title}
+              serviceName={(Object.keys(avServices)).find((key:any) => avServices[key as keyof typeof avServices] === title)}
               {...item}
               isOpen={openForms.includes(uniqueKey)}
               onToggle={() => toggleForm(uniqueKey)}

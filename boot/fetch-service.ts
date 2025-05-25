@@ -1,7 +1,7 @@
 import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
-import { toast } from "react-toastify";
 
+import { redirect } from "next/navigation";
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
 export interface FetchServiceType {
@@ -13,7 +13,7 @@ export interface FetchServiceType {
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = localStorage.getItem("token");
-
+ 
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,

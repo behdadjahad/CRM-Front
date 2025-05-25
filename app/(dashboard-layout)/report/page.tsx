@@ -292,12 +292,17 @@ export default function Report() {
   function timeCheckHandler(value: number) {
     const timeRange = getDateRange(value);
     submitTimeFiltering({
-      startDate: timeRange.startDate,
-      endDate: timeRange.endDate,
+      beginRangeDateTime: timeRange.startDate,
+      endRangeDateTime: timeRange.endDate,
+      rangeDates: [],
     });
   }
   useEffect(() => {
-    submitTimeFiltering({});
+    submitTimeFiltering({
+      beginRangeDateTime: "",
+      endRangeDateTime: "",
+      rangeDates: [],
+    });
   }, []);
 
   // const exportPDF = async () => {
@@ -418,7 +423,11 @@ export default function Report() {
             timeCheckHandler(value);
           }}
           onDateFilterSubmit={(data: any) => {
-            submitTimeFiltering(data);
+            submitTimeFiltering({
+              beginRangeDateTime: data.startDate,
+              endRangeDateTime:data.endDate,
+              rangeDates: [],
+            });
           }}
         />
         <Button
@@ -479,7 +488,6 @@ export default function Report() {
                   // }}
                   className="custom-guage"
                   pointer={{ type: "arrow", elastic: true, length: 1.2 }}
-             
                 />
               </div>
               <div className="text-lg font-primary-bold">{item.label}</div>

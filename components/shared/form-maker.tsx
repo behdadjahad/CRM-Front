@@ -72,6 +72,7 @@ export interface FieldType {
   dropdownIndicatorClassName?: string;
   clearIndicatorClassName?: string;
   containerClassName?: string;
+  menuClassName?: string;
   isFormattedNumber?: boolean;
   onClick?: () => void;
 }

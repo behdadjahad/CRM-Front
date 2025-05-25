@@ -23,13 +23,23 @@ import {
   serviceOptions,
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
-import SortDropDown from "@/components/shared/sort-drop-down";
-import { FaChevronDown } from "react-icons/fa";
+
+import { useRouter } from "next/navigation";
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
   );
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    } else {
+      router.push("/sale");
+    }
+  }, []);
   const contractLists = useSelector((state: any) => state.contract.items);
   const pages = useSelector((state: any) => state.contract.totalPages);
   const filters = useSelector((state: any) => state.contract.filters);
