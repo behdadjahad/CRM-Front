@@ -5,7 +5,7 @@ import {
   sendHotelData,
 } from "@/api/accommodation";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { cn, REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
@@ -26,7 +26,6 @@ export default function HotelForm({
   hotel,
   className,
 }: any) {
- 
   const queryClient = useQueryClient();
   const [hotelId, setHotelId] = useState<number>();
   const [addedRooms, setAddedRooms] = useState<any[]>([]);
@@ -41,10 +40,9 @@ export default function HotelForm({
       hotelName: hotel?.hotel,
       serviceType: hotel?.serviceType,
       accommodationType: hotel?.accommodationType,
-      voucherFile:hotel?.files,
+      voucherFile: hotel?.files,
       id: hotel?.id,
       isSubmitted: hotel.isSubmitted,
-      
     },
     validationSchema: Yup.object().shape({
       city: Yup.string().required(REQUIRED_TEXT),
@@ -53,30 +51,50 @@ export default function HotelForm({
     enableReinitialize: true,
   });
 
-  const { mutate: roomMutation } = useMutation({
-    mutationKey: ["submittedRooms"],
-    mutationFn: (id: number) => getSubmittedRooms(id),
-    onSuccess: ({ data }) => {
-   
-      setAddedRooms(
-        data.map((item: any) => ({
-          checkInDate: item?.checkInDate,
-          checkOutDate: item?.checkOutDate,
-          numberOfRooms: item?.numberOfRooms,
-          currencyWeBuy:item?.currencyWeBuy.id,
-          priceWeBuyPerNight: item?.priceWeBuyPerNight,
-          id: item?.id,
-          roomTypeId: item?.acRoomType.roomType.id,
-          isSubmitted: true,
-        }))
-      );
-    },
+  // const { mutate: roomMutation } = useMutation({
+  //   mutationKey: ["submittedRooms"],
+  //   mutationFn: (id: number) => getSubmittedRooms(id),
+  //   onSuccess: ({ data }) => {
+  //     setAddedRooms(
+  //       data.map((item: any) => ({
+  //         checkInDate: item?.checkInDate,
+  //         checkOutDate: item?.checkOutDate,
+  //         numberOfRooms: item?.numberOfRooms,
+  //         currencyWeBuy: item?.currencyWeBuy.id,
+  //         priceWeBuyPerNight: item?.priceWeBuyPerNight,
+  //         id: item?.id,
+  //         roomTypeId: item?.acRoomType.roomType.id,
+  //         isSubmitted: true,
+  //       }))
+  //     );
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   if (hotel?.id && hotel.isSubmitted) roomMutation(hotel?.id);
+  // }, []);
+  const { data: submittedRoomsData} = useQuery({
+    queryKey: ["submittedRooms",hotel?.id],
+    queryFn: () => getSubmittedRooms(Number(hotel?.id)),
+    enabled: !!hotel?.id && hotel.isSubmitted,
   });
 
   useEffect(() => {
-    if (hotel?.id && hotel.isSubmitted) roomMutation(hotel?.id);
-  }, []);
-
+    if (submittedRoomsData && submittedRoomsData.data.length > 0) {
+      setAddedRooms(
+        submittedRoomsData?.data?.map((item: any) => ({
+          checkInDate: item?.checkInDate,
+          checkOutDate: item?.checkOutDate,
+          numberOfRooms: item?.numberOfRooms,
+          currencyWeBuy: item?.currencyWeBuy?.id,
+          priceWeBuyPerNight: item?.priceWeBuyPerNight,
+          id: item?.id,
+          roomTypeId: item?.acRoomType?.roomType?.id,
+          isSubmitted: true,
+        }))
+      );
+    }
+  }, [submittedRoomsData]);
   const { mutate: hotelSubmitter } = useMutation({
     mutationFn: (data: any) => {
       return sendHotelData(data, Number(id));
@@ -85,7 +103,7 @@ export default function HotelForm({
       setHotelId(data.id);
       queryClient.invalidateQueries({
         queryKey: ["submittedHotels"],
-      })
+      });
     },
   });
 
@@ -115,42 +133,43 @@ export default function HotelForm({
   }
 
   function addRoomForm() {
-    setAddedRooms([...addedRooms, {
-      checkInDate: null,
-      checkOutDate: null,
-      numberOfRooms: null,
-      priceWeBuyPerNight: null,
-      id:`room-${addedRooms.length + 1}` ,
-      roomTypeId: null,
-      isSubmitted:false
-    }]);
+    setAddedRooms([
+      ...addedRooms,
+      {
+        checkInDate: null,
+        checkOutDate: null,
+        numberOfRooms: null,
+        priceWeBuyPerNight: null,
+        id: `room-${addedRooms.length + 1}`,
+        roomTypeId: null,
+        isSubmitted: false,
+      },
+    ]);
   }
 
   function removeForm(formId: string) {
     onRemoveHandler(formId);
   }
 
-
-    const { mutate: removeRoom } = useMutation({
-      mutationFn: (id: number) => {
-        return deleteRoomData(id);
-      },
-      onSuccess: () => {},
-    });
+  const { mutate: removeRoom } = useMutation({
+    mutationFn: (id: number) => {
+      return deleteRoomData(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedRooms"] });
+    },
+  });
   function removeRoomHandler(formId: string | number) {
     const selectedRoom = addedRooms.find((item) => item.id == formId);
     if (selectedRoom.isSubmitted) {
       removeRoom(selectedRoom.id);
-      const updatedAddedHotels = addedRooms.filter(
-        (item) => item.id != formId
-      );
+      const updatedAddedHotels = addedRooms.filter((item) => item.id != formId);
       setAddedRooms(updatedAddedHotels);
-    } else  {
-      const updatedAddedHotels = addedRooms.filter(
-        (item) => item.id != formId
-      );
+    } else {
+      const updatedAddedHotels = addedRooms.filter((item) => item.id != formId);
       setAddedRooms(updatedAddedHotels);
-    } 
+    }
   }
   useEffect(() => {
     if (!formik.values.country) {
@@ -159,7 +178,7 @@ export default function HotelForm({
       const updatedCities = countries.find(
         (item: any) => item.value == formik.values.country
       )?.cities;
-   
+
       setCityOptions(() => updatedCities);
     }
   }, [formik.values.country]);
@@ -180,7 +199,12 @@ export default function HotelForm({
   }, [formik.values.accommodationType, formik.values.city]);
 
   return (
-    <div className={cn("flex flex-col gap-4 border border-gray-400 rounded-md p-3", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-4 border border-gray-400 rounded-md p-3",
+        className
+      )}
+    >
       <div className="flex flex-row items-center gap-4 p-2">
         <h2>اقامتگاه</h2>
         <Button

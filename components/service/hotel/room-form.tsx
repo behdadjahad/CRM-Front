@@ -1,6 +1,6 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import { formatPrice, REQUIRED_TEXT } from "@/lib/utils";
+import { cleanFormatPrice, dateType, formatPrice, REQUIRED_TEXT } from "@/lib/utils";
 import * as Yup from "yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { editRoomData, getRooms, sendRoomData } from "@/api/accommodation";
@@ -43,6 +43,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       setCurrencies(currencyOptions);
     }
   }, [currency]);
+  console.log(room)
   const formik = useFormik({
     initialValues: {
       roomType: room?.roomTypeId?.toString(),
@@ -58,6 +59,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       currency: room?.currencyWeBuy?.toString(),
       broker: "",
       roomCount: room?.numberOfRooms,
+      isSubmitted:room?.isSubmitted,
       id: room?.id,
     },
     validationSchema: Yup.object().shape({
@@ -77,6 +79,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       sendRoomData(data, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedRooms", hotelId] });
     },
   });
 
@@ -85,24 +88,34 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       editRoomData(data, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedRooms", hotelId] });
     },
   });
 
   function submitRoom(data: any) {
+    console.log(data.isSubmitted)
     if (room.isSubmitted) {
       roomEditor({
         data: {
           roomTypeId: data.roomType,
           numberOfRooms: Number(data.roomCount),
+          // checkInDate: convertToGregorian(
+          //   data?.contractDateIn,
+          //   data?.checkInDateType
+          // ),
           checkInDate: convertToGregorian(
             data?.contractDateIn,
-            data?.checkInDateType
+           dateType
           ),
+          // checkOutDate: convertToGregorian(
+          //   data?.contractDateOut,
+          //   data?.checkOutDateType
+          // ),
           checkOutDate: convertToGregorian(
             data?.contractDateOut,
-            data?.checkOutDateType
+            dateType
           ),
-          priceWeBuyPerNight: Number(data.costPerNight),
+          priceWeBuyPerNight: cleanFormatPrice(data.costPerNight),
           currencyWeBuyId: data.currency,
         },
         id: data.id,
@@ -120,7 +133,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             data.contractDateOut,
             data.checkOutDateType
           ),
-          priceWeBuyPerNight: Number(data.costPerNight),
+          priceWeBuyPerNight: cleanFormatPrice(data.costPerNight),
           currencyWeBuyId: data.currency,
         },
         id: hotelId,
@@ -185,6 +198,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            formatted: true,
           },
           {
             key: "currency",

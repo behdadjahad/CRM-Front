@@ -38,7 +38,7 @@ export default function TicketContainer({
   const [flightTypes, setFlightTypes] = useState<OptionType[]>([]);
   const [airlines, setAirlines] = useState<OptionType[]>([]);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
-    const [currencies, setCurrencies] = useState<OptionType[]>([]);
+  const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const { mutate: getTransportationType } = useMutation({
     mutationFn: () => {
       return getTransportationTypeId(transportationType);
@@ -113,6 +113,7 @@ export default function TicketContainer({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function removeHandler(formId: any) {
@@ -165,8 +166,8 @@ export default function TicketContainer({
           destinationCityAirport: flight?.destinationStationId,
           destinationTerminal: flight?.destinationTerminalId,
           airline: flight?.transportationCoId,
-          cost:flight?.priceWeBuy,
-          currency:flight?.currencyWeBuyId,
+          cost: flight?.priceWeBuy,
+          currency: flight?.currencyWeBuyId,
           isSubmitted: true,
           groupOrder: flight?.groupOrder,
           flightStops: flight?.flightStops?.map((stop: any) => ({
@@ -213,19 +214,19 @@ export default function TicketContainer({
       setUserOptions(userOption);
     }
   }, [users]);
-    const { data: currency } = useQuery({
-      queryKey: ["Currency"],
-      queryFn: () => getCurrencies(),
-    });
-    useEffect(() => {
-      if (currency) {
-        const currencyOptions = currency.data.map((item: any) => ({
-          value: item.id.toString(),
-          label: item.name,
-        }));
-        setCurrencies(currencyOptions);
-      }
-    }, [currency]);
+  const { data: currency } = useQuery({
+    queryKey: ["Currency"],
+    queryFn: () => getCurrencies(),
+  });
+  useEffect(() => {
+    if (currency) {
+      const currencyOptions = currency.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setCurrencies(currencyOptions);
+    }
+  }, [currency]);
   return (
     <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between">

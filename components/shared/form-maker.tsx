@@ -75,6 +75,7 @@ export interface FieldType {
   menuClassName?: string;
   isFormattedNumber?: boolean;
   onClick?: () => void;
+  formatted?: boolean;
 }
 
 export interface FormMakerInterface {

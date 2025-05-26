@@ -3,7 +3,7 @@ import FormMaker, { OptionType } from "../../shared/form-maker";
 import { Button } from "../../ui/button";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
-import { cn, dateType } from "@/lib/utils";
+import { cleanFormatPrice, cn, dateType, formatPrice } from "@/lib/utils";
 import StopForm from "./stop-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getAirportTerminal } from "@/api/ticket";
@@ -45,7 +45,7 @@ export default function OneWayTicketForm({
       destinationTerminal:
         ticket?.flights?.[0]?.destinationTerminal?.toString(),
       airline: ticket?.flights?.[0]?.airline?.toString(),
-      cost: ticket?.flights?.[0]?.cost,
+      cost: ticket?.flights?.[0]?.cost ? formatPrice(ticket?.flights?.[0]?.cost):"",
       currency: ticket?.flights?.[0]?.currency,
       broker: "",
       flightId: ticket?.flights?.[0]?.flightId || ticket?.id,
@@ -135,6 +135,7 @@ export default function OneWayTicketForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   const { mutate: editFlightForm } = useMutation({
@@ -145,6 +146,7 @@ export default function OneWayTicketForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function submitHandler() {
@@ -168,7 +170,7 @@ export default function OneWayTicketForm({
       ),
 
       transportationCoId: formik.values.airline,
-      priceWeBuy: formik.values.cost,
+      priceWeBuy: cleanFormatPrice(formik.values.cost),
       currencyWeBuyId: formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
@@ -307,6 +309,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            formatted:true
           },
 
           {

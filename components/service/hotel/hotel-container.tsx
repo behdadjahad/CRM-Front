@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FaPlus } from "react-icons/fa";
 import HotelForm from "./hotel-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   deleteHotelData,
   getAccommodationTypes,
@@ -21,6 +21,7 @@ import { getUsers } from "@/api/auth";
 import { config } from "@/config/config";
 export default function HotelContainer() {
   const { id } = useParams();
+    const queryClient = useQueryClient();
   const staticUrl = `${config.ServerAddress}/public/`;
   const [addedHotels, setAddedHotels] = useState<any[]>([]);
 
@@ -196,7 +197,9 @@ export default function HotelContainer() {
     mutationFn: (id: number) => {
       return deleteHotelData(id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+  queryClient.invalidateQueries({ queryKey: ["submittedHotels"] });
+    },
   });
   function removeHandler(formId: string | number) {
     const selectedHotel = addedHotels.find((item) => item.id == formId);

@@ -1,6 +1,6 @@
 import FormMaker from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { REQUIRED_TEXT } from "@/lib/utils";
+import { cleanFormatPrice, formatPrice, REQUIRED_TEXT } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
 
@@ -16,7 +16,7 @@ export default function OtherContainer({
 }: {
   itemId: any;
   onRemoveHandler: any;
-    other: any;
+  other: any;
   currencies: any;
 }) {
   // const [otherId, setOtherId] = useState<number>();
@@ -29,8 +29,8 @@ export default function OtherContainer({
       description: other?.description,
       otherFile: other?.files,
       isSubmitted: other.isSubmitted,
-      cost: "",
-      currency:""
+      cost: other?.cost ? formatPrice(other?.cost):"",
+      currency: other?.currency,
     },
     validationSchema: Yup.object().shape({
       title: Yup.string().required(REQUIRED_TEXT),
@@ -52,6 +52,7 @@ export default function OtherContainer({
       queryClient.invalidateQueries({
         queryKey: ["submittedOthers"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
 
@@ -63,6 +64,7 @@ export default function OtherContainer({
       queryClient.invalidateQueries({
         queryKey: ["submittedOthers"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function submitForm(data: any) {
@@ -72,7 +74,7 @@ export default function OtherContainer({
           title: data.title,
           description: data.description,
           files: data.otherFile,
-          priceWeBuy: data.cost,
+          priceWeBuy: cleanFormatPrice(data.cost),
           currencyWeBuyId: data.currency,
         },
         id: data.id,
@@ -82,7 +84,7 @@ export default function OtherContainer({
         title: data.title,
         description: data.description,
         files: data.otherFile,
-        priceWeBuy: data.cost,
+        priceWeBuy: cleanFormatPrice(data.cost),
         currencyWeBuyId: data.currency,
       });
     }
@@ -139,6 +141,7 @@ export default function OtherContainer({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            formatted:true
           },
 
           {

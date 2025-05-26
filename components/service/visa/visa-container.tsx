@@ -9,7 +9,7 @@ import {
 import RegisteryForm from "@/components/contract/registery-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -21,11 +21,11 @@ import { OptionType } from "@/components/shared/form-maker";
 import { getCurrencies } from "@/api/currency";
 
 export default function VisaContainer() {
+   const queryClient = useQueryClient();
   const { id } = useParams();
   const [addedVisas, setAddedVisas] = useState<any[]>([]);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
 
-  
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [customers, setCustomers] = useState<OptionType[]>([]);
@@ -86,11 +86,9 @@ export default function VisaContainer() {
             visaApproval: item.visaEntranceTypeId,
             visaTime: item.visaDurationTypeId,
             visaCost: item.priceWeBuy,
-            currency:item.currencyWeBuyId
-
+            currency: item.currencyWeBuyId,
           }))
         );
-
       } else {
         setAddedVisas([
           {
@@ -104,7 +102,7 @@ export default function VisaContainer() {
             visaApproval: null,
             visaTime: null,
             visaCost: null,
-            currency:null
+            currency: null,
           },
         ]);
       }
@@ -115,10 +113,11 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (contract) {
-
       setCustomers([
         {
-          label: `${contract?.data?.mainCustomerSoldto?.person?.firstName ?? ""} ${
+          label: `${
+            contract?.data?.mainCustomerSoldto?.person?.firstName ?? ""
+          } ${
             contract?.data?.mainCustomerSoldto?.person?.lastName ?? ""
           }`.trim(),
 
@@ -133,7 +132,7 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (users) {
-      const userOption: OptionType[] = users?.data?.map((item:any) => ({
+      const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item?.fullName,
         value: item?.id?.toString(),
       }));
@@ -155,7 +154,7 @@ export default function VisaContainer() {
         visaApproval: null,
         visaTime: null,
         visaCost: null,
-        currency:null
+        currency: null,
       },
     ]);
   }
@@ -163,7 +162,10 @@ export default function VisaContainer() {
     mutationFn: (id: number) => {
       return deleteVisaData(id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedRooms"] });
+    },
   });
   function removeHandler(formId: string | number) {
     const selectedVisa = addedVisas.find((item) => item.id == formId);
@@ -197,7 +199,6 @@ export default function VisaContainer() {
   });
   useEffect(() => {
     if (visaDurationTypesData) {
-   
       const visaDurationTypeOptions: OptionType[] =
         visaDurationTypesData.data.map((item: any) => ({
           label: `${item.value} ${

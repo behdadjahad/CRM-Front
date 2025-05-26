@@ -1,6 +1,6 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { cn, dateType } from "@/lib/utils";
+import { cleanFormatPrice, cn, dateType, formatPrice } from "@/lib/utils";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -51,8 +51,8 @@ export default function RoundTripTicketForm({
             dateType
           )
         : "",
-      exitDateTimeType: "",
-      arriveDateTimeType: "",
+      exitDateTimeType: dateType,
+      arriveDateTimeType:dateType,
       destinationCityAirport: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.destinationCityAirport?.toString(),
@@ -62,7 +62,7 @@ export default function RoundTripTicketForm({
       airline: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.airline?.toString(),
-      cost: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost,
+      cost: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost ? formatPrice(ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost):"",
       currency: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.currency,
       broker: "",
@@ -110,8 +110,8 @@ export default function RoundTripTicketForm({
             dateType
           )
         : "",
-      returnExitDateTimeType: "",
-      returnArriveDateTimeType: "",
+      returnExitDateTimeType: dateType,
+      returnArriveDateTimeType: dateType,
       returnDestinationCityAirport: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 2)
         ?.destinationCityAirport?.toString(),
@@ -122,7 +122,8 @@ export default function RoundTripTicketForm({
         ?.find((obj: any) => obj.groupOrder === 2)
         ?.airline?.toString(),
       returnCost: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
-        ?.cost,
+        ?.cost ? formatPrice(ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
+        ?.cost):"",
       returnBroker: "",
       returnCurrency: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
         ?.currency,
@@ -280,6 +281,7 @@ export default function RoundTripTicketForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   const { mutate: editFlightForm } = useMutation({
@@ -290,6 +292,7 @@ export default function RoundTripTicketForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function submitHandler() {
@@ -312,7 +315,7 @@ export default function RoundTripTicketForm({
       ),
       transportationCoId: formik.values.airline,
       groupOrder: formik.values.groupOrder,
-      priceWeBuy: formik.values.cost,
+      priceWeBuy: cleanFormatPrice(formik.values.cost),
       currencyWeBuyId: formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
@@ -347,7 +350,7 @@ export default function RoundTripTicketForm({
       ),
       transportationCoId: returnFormik.values.returnAirline,
       groupOrder: returnFormik.values.groupOrder,
-      priceWeBuy: returnFormik.values.returnCost,
+      priceWeBuy: cleanFormatPrice(returnFormik.values.returnCost),
       currencyWeBuyId: returnFormik.values.returnCurrency,
     };
     if (!returnFormik.values.isSubmitted) {
@@ -493,6 +496,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
+              formatted:true
             },
 
             {
@@ -659,6 +663,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
+              formatted:true
             },
 
             {

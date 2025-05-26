@@ -52,6 +52,8 @@ export default function OtherContainer() {
           isSubmitted: true,
           description: item.description,
           title: item.title,
+           cost: item?.priceWeBuy,
+          currency: item?.currencyWeBuyId,
         }))
       );
     } else {
@@ -86,6 +88,7 @@ export default function OtherContainer() {
       queryClient.invalidateQueries({
         queryKey: ["submittedOthers"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function removeHandler(formId: string | number) {

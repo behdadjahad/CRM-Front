@@ -1,6 +1,6 @@
 import FormMaker from "@/components/shared/form-maker";
 
-import { cn, formatPrice } from "@/lib/utils";
+import { cleanFormatPrice, cn, formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import { editVisaData, sendVisaData } from "@/api/visa";
@@ -58,6 +58,7 @@ export default function VisaForm({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedVisa"] });
     },
   });
 
@@ -70,7 +71,7 @@ export default function VisaForm({
           description: data.description,
           customerSoldToId: data.clientName,
           countryId: data.country,
-          priceWeBuy: data.visaCost,
+          priceWeBuy: cleanFormatPrice(data.visaCost),
           currencyWeBuyId: data.currency,
           visaEntranceTypeId: data.visaApproval,
           visaDurationTypeId: data.visaTime,
@@ -84,7 +85,7 @@ export default function VisaForm({
         description: data.description,
         customerSoldToId: data.clientName,
         countryId: data.country,
-        priceWeBuy: data.visaCost,
+        priceWeBuy: cleanFormatPrice(data.visaCost),
         currencyWeBuyId: data.currency,
         visaEntranceTypeId: data.visaApproval,
         visaDurationTypeId: data.visaTime,
@@ -144,6 +145,7 @@ export default function VisaForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            formatted: true,
           },
           {
             key: "currency",

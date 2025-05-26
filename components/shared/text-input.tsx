@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FormMakerInterface } from "./form-maker";
-import { cn,  } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
 
@@ -33,6 +33,16 @@ export default function TextInput({
   //   // Set the formatted value in the local state for the input field
   //   setInputValue(formattedValue);
   // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+
+    if (item.formatted) {
+      const rawValue = value.replace(/,/g, "");
+      value = formatPrice(rawValue);
+    }
+
+    form.setFieldValue(item.key, value);
+  };
   return (
     <div
       className={cn("relative w-full", { "input-container": item.floating })}
@@ -40,12 +50,20 @@ export default function TextInput({
       <input
         key={item.key}
         placeholder={item.floating ? " " : item.placeholder}
-        value={item.defaultValue ? item.defaultValue : form.values[item.key]}
-        //value={inputValue}
+        // value={item.defaultValue ? item.defaultValue : form.values[item.key]}
+        value={
+          item.formatted
+            ? item.defaultValue
+              ? formatPrice(item.defaultValue)
+              : formatPrice(form.values[item.key])
+            : item.defaultValue
+            ? item.defaultValue
+            : form.values[item.key]
+        }
         type={passwordVisible ? "text" : item.type}
         multiple={true}
-        // onChange={handleInputChange}
-        onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
+        onChange={handleChange}
+        // onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
           "text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
           //item.className,

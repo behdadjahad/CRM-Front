@@ -13,6 +13,10 @@ export function formatPrice(priceString: any) {
   const price = priceString.toString();
   return price.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+export function cleanFormatPrice(priceString: any) {
+  const price = priceString.toString();
+  return Number(price.replace(/,/g, ""));
+}
 export const totalVotes = 10;
 export const limitForCustomers = 6;
 export const limitForContracts = 6;

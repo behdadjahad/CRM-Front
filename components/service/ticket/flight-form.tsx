@@ -1,6 +1,6 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { cn, dateType } from "@/lib/utils";
+import { cleanFormatPrice, cn, dateType, formatPrice } from "@/lib/utils";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
@@ -45,12 +45,12 @@ export default function FlightForm({
       arriveDateTime: flight?.arriveDateTime?.toString()
         ? convertDateTime(flight?.arriveDateTime?.toString(), dateType)
         : "",
-      exitDateTimeType: "",
-      arriveDateTimeType: "",
+      exitDateTimeType: dateType,
+      arriveDateTimeType: dateType,
       destinationCityAirport: flight?.destinationCityAirport?.toString(),
       destinationTerminal: flight?.destinationTerminal?.toString(),
-      airline:flight?.airline,
-      cost: flight?.cost,
+      airline: flight?.airline,
+      cost: flight?.cost ? formatPrice(flight?.cost):"",
       currency: flight?.currency,
       broker: "",
       flightType: flight?.flightType,
@@ -135,6 +135,7 @@ export default function FlightForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   const { mutate: editFlightForm } = useMutation({
@@ -145,6 +146,7 @@ export default function FlightForm({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   function submitHandler() {
@@ -165,8 +167,8 @@ export default function FlightForm({
         formik.values.arriveDateTime,
         formik.values.arriveDateTimeType
       ),
-       priceWeBuy:formik.values.cost,
-      currencyWeBuyId:formik.values.currency,
+      priceWeBuy: cleanFormatPrice(formik.values.cost),
+      currencyWeBuyId: formik.values.currency,
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({
@@ -298,6 +300,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
+            formatted:true
           },
 
           {
@@ -307,7 +310,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            options:currencies
+            options: currencies,
           },
           {
             key: "broker",
