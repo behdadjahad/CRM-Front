@@ -48,15 +48,15 @@ export default function ContractExpenseContainer() {
     if (allExpenses) {
       console.log(allExpenses);
       const overalExpenseData = [
-        { label: "هزینه", value: allExpenses.buyPrice },
+        { label: "هزینه", value: allExpenses?.data?.buyPrice },
         {
           label: "درآمد",
-          value: allExpenses.sellPrice,
+          value: allExpenses?.data?.sellPrice,
           hasForm: true,
         },
         {
-          label: "سود و زیان",
-          value: allExpenses.profit,
+          label:allExpenses?.data?.profit > 0 ? "سود":  "زیان",
+          value: Math.abs(allExpenses?.data?.profit),
         },
       ];
       const contractExchangeRate = allExpenses?.data?.contractCurrency;
@@ -248,8 +248,8 @@ export default function ContractExpenseContainer() {
         <div className="border-b-2 border-gray-600 border-dashed p-2">
           {totalExpenses && totalExpenses?.map((item: any) => (
             <div key={item.id} className="flex items-center justify-between">
-              {/* <span>{item?.total ? formatPrice(item.total):""}</span> */}
-              <span>{item?.total}</span>
+              <span>{item?.total ? formatPrice(item.total):""}</span>
+         
               <span>{item.name}</span>
             </div>
           ))}

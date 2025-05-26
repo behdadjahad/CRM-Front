@@ -5,7 +5,7 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendSingleExchageRate } from "@/api/currency";
 import { useParams } from "next/navigation";
-import { formatPrice } from "@/lib/utils";
+import { cleanFormatPrice, formatPrice } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export default function ExpenseDetail({
@@ -85,7 +85,7 @@ export default function ExpenseDetail({
                   onClick={() => {
                     singleExchangeRateHandler({
                       currencyId: currency?.id,
-                      currencyExchangeRate: Number(formik.values.exchangeRate),
+                      currencyExchangeRate: cleanFormatPrice(formik.values.exchangeRate),
                       service: serviceName,
                     });
                   }}
@@ -105,6 +105,7 @@ export default function ExpenseDetail({
               floating: true,
               className: "text-right flex-1 p-0 h-6 text-xs rounded-md",
               labelClassName: "text-right flex-1 px-3 h-6 text-xs rounded-md",
+              formatted:true
             },
             // {
             //   key: "exchangeRateLabel",

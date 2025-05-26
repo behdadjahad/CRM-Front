@@ -49,7 +49,7 @@ export default function FlightForm({
       arriveDateTimeType: dateType,
       destinationCityAirport: flight?.destinationCityAirport?.toString(),
       destinationTerminal: flight?.destinationTerminal?.toString(),
-      airline: flight?.airline,
+      airline: flight?.airline?.toString(),
       cost: flight?.cost ? formatPrice(flight?.cost):"",
       currency: flight?.currency,
       broker: "",
@@ -169,6 +169,7 @@ export default function FlightForm({
       ),
       priceWeBuy: cleanFormatPrice(formik.values.cost),
       currencyWeBuyId: formik.values.currency,
+      transportationCoId:formik.values.airline
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({

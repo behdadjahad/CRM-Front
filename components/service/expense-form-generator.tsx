@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ExpenseForm from "./expense-form";
 import { OptionType } from "../shared/form-maker";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   addIncomeData,
   deleteIncomeData,
@@ -10,7 +10,9 @@ import {
 } from "@/api/currency";
 import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
+import { cleanFormatPrice } from "@/lib/utils";
 export default function ExpenseFormGenerator() {
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [addedExpenseForm, setAddedExpenseForm] = useState<any>([
@@ -30,7 +32,7 @@ export default function ExpenseFormGenerator() {
       return addIncomeData(data, Number(id));
     },
     onSuccess: () => {
-   
+  queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   useEffect(() => {
@@ -94,7 +96,9 @@ export default function ExpenseFormGenerator() {
     mutationFn: (id: number) => {
       return deleteIncomeData(id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
   });
   function removeHandler(formId: string | number) {
     const selectedExpenseForm = addedExpenseForm.find(
@@ -125,8 +129,8 @@ export default function ExpenseFormGenerator() {
     
     addExchangeRateHandler(
       formValues.map((item) => ({
-        incomeAmount: Number(item.income),
-        incomeCurrencyExchangeRate: Number(item.exchangeRate),
+        incomeAmount: cleanFormatPrice(item.income),
+        incomeCurrencyExchangeRate: cleanFormatPrice(item.exchangeRate),
         incomeCurrencyId: item.exchangeRateLabel,
       })).filter(
         (item) =>

@@ -18,8 +18,8 @@ export default function ExpenseForm({
 }: any) {
   const formik = useFormik({
     initialValues: {
-      income: expenseFormData.income,
-      exchangeRate: expenseFormData.incomeExchangeRate,
+      income: expenseFormData?.income ? expenseFormData?.income: "",
+      exchangeRate: expenseFormData?.incomeExchangeRate ? expenseFormData?.incomeExchangeRate:"",
       exchangeRateLabel: expenseFormData.currency,
       id: expenseFormData.id,
       isSubmitted: expenseFormData.isSubmitted,
@@ -80,6 +80,8 @@ export default function ExpenseForm({
             className: "text-right p-0 h-6 text-xs rounded-md border border-slate-mute w-1/4",
             labelClassName:
               "text-right flex-1 p-1 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute bg-card-mute",
+            formatted:true
+        
           },
           {
             key: "exchangeRate",
@@ -90,6 +92,7 @@ export default function ExpenseForm({
             className: "text-right p-0 h-6 text-xs rounded-md border border-slate-mute w-1/4",
             labelClassName:
               "text-right p-1 h-6 text-xs rounded-md text-xs text-foreground-mute border border-1 border-border-mute bg-card-mute",
+            formatted:true
           },
           {
             key: "exchangeRateLabel",
