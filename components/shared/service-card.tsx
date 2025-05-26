@@ -18,7 +18,7 @@ export interface ServiceCardInterface {
   children?: any;
   name?: string;
   form?: any;
-
+  disable?: boolean;
 }
 
 export default function ServiceCard({
@@ -35,8 +35,7 @@ export default function ServiceCard({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg w-28 h-36 bg-card",
-        className
+        "flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg w-28 h-36 bg-card",className
       )}
       onClick={clickFunction}
     >

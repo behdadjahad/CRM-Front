@@ -181,7 +181,7 @@ export default function HotelForm({
 
       setCityOptions(() => updatedCities);
     }
-  }, [formik.values.country]);
+  }, [formik.values.country,cities]);
 
   useEffect(() => {
     if (!formik.values.accommodationType) {
@@ -196,7 +196,7 @@ export default function HotelForm({
 
       setHotelOptions(updatedHotels);
     }
-  }, [formik.values.accommodationType, formik.values.city]);
+  }, [formik.values.accommodationType, formik.values.city,hotels]);
 
   return (
     <div

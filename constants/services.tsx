@@ -1,9 +1,7 @@
-
 import HotelContainer from "@/components/service/hotel/hotel-container";
 import OtherContainer from "@/components/service/other/other-container";
 import TicketContainer from "@/components/service/ticket/ticket-container";
 import VisaContainer from "@/components/service/visa/visa-container";
-
 
 import { ServiceCardInterface } from "@/components/shared/service-card";
 
@@ -18,6 +16,7 @@ export const services: ServiceCardInterface[] = [
     // children: <ServiceForm {...visaForm} />,
     name: "Visa",
     form: <VisaContainer />,
+    disable: false,
   },
   {
     id: 2,
@@ -29,7 +28,7 @@ export const services: ServiceCardInterface[] = [
     //children: <ServiceForm {...flightForm} />,
     name: "Flight",
     form: <TicketContainer transportationType="Airline" />,
- 
+    disable: false,
   },
   {
     id: 3,
@@ -40,7 +39,8 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-airport.png",
     // children: <ServiceForm {...flightForm} />,
     name: "Flight",
-    form: <TicketContainer transportationType="Airline"/>,
+    form: <TicketContainer transportationType="Airline" />,
+    disable: false,
   },
   {
     id: 4,
@@ -49,8 +49,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-suitcase.png",
     activeImage: "/images/services/success/success-suit-case.png",
-    name: "Other",
+    name: "",
     form: <>Tour Form</>,
+    disable: true,
   },
   {
     id: 5,
@@ -59,8 +60,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-suitcase.png",
     activeImage: "/images/services/success/success-suit-case.png",
-    name: "Ticket",
+    name: "",
     form: <>Tour Form</>,
+    disable: true,
   },
   {
     id: 6,
@@ -72,6 +74,7 @@ export const services: ServiceCardInterface[] = [
     // children: <ServiceForm {...hotelForm} />,
     name: "Accommodation",
     form: <HotelContainer />,
+    disable: false,
   },
   {
     id: 7,
@@ -83,6 +86,7 @@ export const services: ServiceCardInterface[] = [
     // children: <ServiceForm {...hotelForm} />,
     name: "Accommodation",
     form: <HotelContainer />,
+    disable: false,
   },
   {
     id: 8,
@@ -91,8 +95,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-train.png",
     activeImage: "/images/services/success/success-train.png",
-    name: "Other",
+    name: "",
     form: <>Tour Form</>,
+    disable: true,
   },
   {
     id: 9,
@@ -101,8 +106,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-bus.png",
     activeImage: "/images/services/success/success-bus.png",
-    name: "Other",
+    name: "",
     form: <>Bus Form</>,
+    disable: true,
   },
   {
     id: 10,
@@ -111,8 +117,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-car.png",
     activeImage: "/images/services/success/success-car.png",
-    name: "Other",
+    name: "",
     form: <>car Form</>,
+    disable: true,
   },
   {
     id: 11,
@@ -122,8 +129,9 @@ export const services: ServiceCardInterface[] = [
     selectedImage: "/images/services/primary/primary-pickup.png",
     activeImage: "/images/services/success/success-pickup.png",
     //children: <ServiceForm {...pickupForm} />,
-    name: "Pickup",
+    name: "",
     form: <>Pickup Form</>,
+    disable: true,
   },
   {
     id: 12,
@@ -132,8 +140,9 @@ export const services: ServiceCardInterface[] = [
     isSelected: false,
     selectedImage: "/images/services/primary/primary-nature.png",
     activeImage: "/images/services/success/success-nature.png",
-    name: "Nature",
+    name: "",
     form: <>Nature Form</>,
+    disable: true,
   },
   {
     id: 13,
@@ -144,5 +153,6 @@ export const services: ServiceCardInterface[] = [
     activeImage: "/images/services/success/success-nature.png",
     name: "Other",
     form: <OtherContainer />,
+    disable: false,
   },
 ];

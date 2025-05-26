@@ -36,13 +36,13 @@ export default function Service() {
   });
   useEffect(() => {
     if (updatedServiceData) {
-
       const updatedServices = services.map((obj) => ({
         ...obj,
         isSelected: updatedServiceData.data?.avServices?.includes(obj.name)
           ? true
           : obj.isSelected,
       }));
+      console.log("updatedServices", updatedServices);
       setServiceList(updatedServices);
     }
   }, [updatedServiceData]);
@@ -58,7 +58,7 @@ export default function Service() {
           ? true
           : obj.isSelected,
       }));
-
+      console.log("updatedServices", updatedServices);
       setServiceList(updatedServices);
     }
   }, [contract]);
@@ -72,14 +72,20 @@ export default function Service() {
         label: "تاریخ ثبت درخواست",
         value:
           contract?.data?.submitDateTime && contract?.data?.dateType
-            ? convertDate(contract?.data?.submitDateTime, contract?.data?.dateType)
+            ? convertDate(
+                contract?.data?.submitDateTime,
+                contract?.data?.dateType
+              )
             : "",
       },
       {
         label: "تاریخ قرارداد",
         value:
           contract?.data?.contractDate && contract?.data?.dateType
-            ? convertDate(contract?.data?.contractDate, contract?.data?.dateType)
+            ? convertDate(
+                contract?.data?.contractDate,
+                contract?.data?.dateType
+              )
             : "",
       },
       {
@@ -202,6 +208,7 @@ export default function Service() {
               }}
               isActive={activeItem && activeItem.title == item.title}
               isSelected={item.isSelected}
+              className={item.disable ? "cursor-not-allowed" : "cursor-pointer"}
             />
           ))}
         </div>

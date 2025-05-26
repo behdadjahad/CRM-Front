@@ -13,8 +13,8 @@ export function CustomizePiChart({
   labelFontSize?: string;
 }) {
   return (
-    <div className={cn("h-36 w-full grid grid-cols-2 gap-4", className)}>
-      <div className="h-full col-span-1 flex items-center justify-center">
+    <div className={cn(" w-full grid grid-cols-2 gap-4", className)}>
+      <div className="h-36 col-span-1 flex items-center justify-center">
         <PieChart
           data={data}
           lineWidth={50}

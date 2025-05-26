@@ -72,8 +72,8 @@ export default function IranMap({ cityData }: IranMapProps) {
         center={[32.0, 53.0]}
         zoom={5}
         style={{ width: "100%", height: "100%", background: "#fff" }}
-        scrollWheelZoom={true}
-        zoomControl={true}
+        scrollWheelZoom={false}
+        zoomControl={false}
         attributionControl={false}
       >
         <GeoJSON data={geoData} onEachFeature={onEachCity} />

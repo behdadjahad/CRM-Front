@@ -126,8 +126,8 @@ if (!geoData || Object.keys(valueMap).length === 0) {
         center={[20, 0]}
         zoom={1}
         style={{ width: "100%", height: "100%", backgroundColor: "#ffffff" }}
-        scrollWheelZoom={true}
-        zoomControl={true}
+        scrollWheelZoom={false}
+        zoomControl={false}
         attributionControl={false}
       >
         <GeoJSON data={geoData} onEachFeature={onEachCountry}  key={JSON.stringify(valueMap)} />

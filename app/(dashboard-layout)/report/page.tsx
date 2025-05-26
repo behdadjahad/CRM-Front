@@ -440,8 +440,8 @@ export default function Report() {
           خروجی
         </Button>
       </div>
-      <div className="grid grid-cols-4 gap-6 px-6">
-        <div className="col-span-3 bg-card rounded-lg p-6 flex flex-row gap-4">
+      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-2 lg:gap-6 px-6">
+        <div className="grid grid-cols-2 lg:col-span-3 bg-card rounded-lg p-6 lg:flex flex-row gap-4">
           {overalData.map((item: any) => (
             <div
               className={cn(
@@ -450,7 +450,7 @@ export default function Report() {
               )}
               key={`${item.label}-gauge`}
             >
-              <div className="h-30 w-56">
+              <div className="h-30 w-48">
                 <GaugeComponent
                   id="gauge-component4"
                   type="semicircle"
@@ -497,10 +497,10 @@ export default function Report() {
         </div>
         <div className="col-span-1  flex flex-col bg-card rounded-lg p-6 gap-6">
           <div className="font-primary-bold">رضایتمندی ها</div>{" "}
-          <CustomizePiChart data={satisfactionData} labelFontSize="8px" />
+          <CustomizePiChart data={satisfactionData} labelFontSize="8px"/>
         </div>
       </div>
-      <div className="flex flex-row gap-4 px-6">
+      <div className="flex flex-col lg:flex-row gap-4 px-6">
         {salesReportData.map((item, index) => (
           <AnimatedBarChart
             key={index}
@@ -512,7 +512,7 @@ export default function Report() {
         ))}
       </div>
 
-      <div className="grid grid-cols-12 gap-4 px-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 px-6">
         <div className="col-span-7">
           <div className="w-full bg-card p-6 rounded-lg flex flex-col gap-4">
             <div className="text-lg font-primary-bold">
@@ -622,7 +622,7 @@ export default function Report() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-12 gap-4 px-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 px-6">
         <div className="col-span-5 flex flex-col bg-card rounded-lg p-6 gap-4">
           <div className="text-lg font-primary-bold">نحوه آشنایی</div>{" "}
           <CustomizePiChart
@@ -637,7 +637,7 @@ export default function Report() {
           <MultipleBarChart data={ProfitReportData} />
         </div>
       </div>
-      <div className="grid grid-cols-2 px-6 gap-4">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 px-6 gap-4">
         {progressBarData.map((item: any) => (
           <div
             key={item.title}
