@@ -76,7 +76,10 @@ export default function ServiceContainer({
             key={item.id}
             {...item}
             clickFunction={() => {
-              if (multiChosen) {
+              if (item.disable) {
+                return;
+              } else {
+                 if (multiChosen) {
                 const isExist = activeItem.some(
                   (obj: any) => obj.id === item.id
                 );
@@ -98,6 +101,8 @@ export default function ServiceContainer({
                 setActiveItem(item);
                 onActiveItemChange(item);
               }
+              }
+             
             }}
             isActive={
               multiChosen

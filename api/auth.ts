@@ -101,6 +101,8 @@ export interface LoginOutput {
   accessToken: string;
   data: {
     accessToken: string;
+    refreshToken: string;
+
   };
 }
 
@@ -108,6 +110,7 @@ const loginStaticOutput: LoginOutput = {
   accessToken: "",
   data: {
     accessToken: "",
+    refreshToken:""
   },
   success: false,
 };

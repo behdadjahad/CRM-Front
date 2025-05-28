@@ -61,7 +61,7 @@ export default function FlightContainer({
     <div className="bg-card rounded-xl flex flex-col gap-4">
       {addedFlights.map((item, index) => (
         <FlightForm
-          key={item.id}
+          key={`multi-way-${index}`}
           onRemoveHandler={removeHandler}
           flightClassOptions={flightClassOptions}
           flightTypeOptions={flightTypeOptions}

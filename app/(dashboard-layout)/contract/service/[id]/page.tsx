@@ -200,10 +200,14 @@ export default function Service() {
               key={item.id}
               {...item}
               clickFunction={() => {
-                if (activeItem && activeItem.title === item.title) {
-                  setActiveItem(null);
+                if (item.disable) {
+                  return;
                 } else {
-                  setActiveItem(item);
+                  if (activeItem && activeItem.title === item.title) {
+                    setActiveItem(null);
+                  } else {
+                    setActiveItem(item);
+                  }
                 }
               }}
               isActive={activeItem && activeItem.title == item.title}

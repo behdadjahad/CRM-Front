@@ -1,6 +1,6 @@
 import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
-
+import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
@@ -12,12 +12,16 @@ export interface FetchServiceType {
 }
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
-  const token = localStorage.getItem("token");
- 
+  // const token = localStorage.getItem("token");
+  const accessToken = Cookies.get("accesstoken"); // watch for exact key
+  const refreshToken = Cookies.get("refreshToken");
+
+  // Use accessToken if it exists, otherwise use refreshToken
+  const tokenToUse = accessToken || refreshToken;
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${tokenToUse}`,
   };
 }
 
