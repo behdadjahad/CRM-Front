@@ -76,7 +76,7 @@ export default function ContractExpenseCard({
         <div>
         <span>{formatPrice(totalExpenseInCurrency)}</span>
           {/* <span>{priceInCurrency && formatPrice(priceInCurrency)}</span> */}
-          <span>{contractCurrency.name}</span>
+          <span>{contractCurrency?.name}</span>
         </div>
       </div>
       <div className="flex justify-between flex-col gap-2">

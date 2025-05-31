@@ -65,7 +65,7 @@ export default function CustomerDetail() {
           },
           {
             label: "رضایتمندی",
-            value:"",
+            value: "",
           },
         ],
       };
@@ -75,7 +75,7 @@ export default function CustomerDetail() {
 
   return (
     <main>
-      <Title label="ثبت سرویس هتل" />
+      <Title label="اطلاعات مشتری" />
 
       <Breadcrumb
         list={[

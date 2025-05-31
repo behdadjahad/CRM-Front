@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie";
 export interface ProfileDropDownInterface {
   className?: string;
 }
@@ -46,6 +46,8 @@ export default function ProfileDropDown({
     onSuccess: () => {
       localStorage.removeItem("token");
       router.push("/login");
+      // Cookies.remove('accessToken', { path: '/' });
+      // Cookies.remove('refreshToken', { path: '/' });
     },
   });
 

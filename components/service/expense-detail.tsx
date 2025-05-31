@@ -64,7 +64,7 @@ export default function ExpenseDetail({
           <div className="flex gap-1">
             <div>{formatPrice(convertedBuyPrice)}</div>
             {/* <div>{formatPrice(buyPriceInCurrency)}</div> */}
-            <div>{contractCurrency.name}</div>
+            <div>{contractCurrency?.name}</div>
           </div>
         </div>
         <Button className="outline-none border-none p-0" onClick={onToggle}>

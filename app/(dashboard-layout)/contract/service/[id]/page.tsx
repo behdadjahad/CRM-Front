@@ -137,7 +137,7 @@ export default function Service() {
     <main className="flex flex-col lg:flex-row">
       <div className=" flex flex-col w-full xl:w-3/4 gap-4">
         <div>
-          <Title label="ثبت سرویس هتل" />
+          <Title label="ثبت سرویس" />
 
           <Breadcrumb
             list={[

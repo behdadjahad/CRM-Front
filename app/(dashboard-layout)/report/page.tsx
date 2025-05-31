@@ -1,13 +1,13 @@
 "use client";
 import { CustomizePiChart } from "@/components/chart/customize-pi-chart";
 import MultipleBarChart from "@/components/chart/multiple-bar-chart";
-
+import { useReactToPrint } from "react-to-print";
 import ContractReportTable from "@/components/section/contract-report-table";
 import { ProgressBarContainer } from "@/components/section/progress-bar-container";
 import AnimatedBarChart from "@/components/shared/animated-bar-chart";
 import Image from "next/image";
 import Breadcrumb from "@/components/shared/breadcrumb";
-
+import { pdf } from '@react-pdf/renderer';
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
 import { cn, getDateRange, subContracts } from "@/lib/utils";
@@ -19,6 +19,9 @@ import jsPDF from "jspdf";
 import { useMutation } from "@tanstack/react-query";
 import { getReportData } from "@/api/report";
 import { useEffect, useRef, useState } from "react";
+import { exportMultipleSheets } from "@/lib/exportToExcel";
+import { ReportPDF } from "@/components/section/report-pdf";
+import { captureAllCharts } from "@/lib/pdf";
 
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
@@ -32,12 +35,12 @@ const IranMap = dynamic(() => import("@/components/section/iran-map"), {
   loading: () => <p>Loading map...</p>,
 });
 export default function Report() {
-  const [activeTime, setActiveTime] = useState<any>("today");
   const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
   const [satisfactionData, setSatisafactionData] = useState<any[]>([]);
   const [salesReportData, setSaleReportData] = useState<any[]>([]);
   const [provinceData, setProvinceData] = useState<any[]>([]);
   const [countryData, setCountryData] = useState<any[]>([]);
+  const printRef = useRef<HTMLDivElement>(null);
   const ProfitReportData = {
     list: [
       { month: "فروردین", profit: 750000000, loss: 600000000 },
@@ -167,16 +170,16 @@ export default function Report() {
   //   { label: "Germany", value: 6 },
   //   { label: "Canada", value: 3 },
   // ];
-  const cityData = [
-    { label: "تهران", value: 120 },
-    { label: "مشهد", value: 95 },
-    { label: "اصفهان", value: 80 },
-    { label: "تبریز", value: 70 },
-    { label: "شیراز", value: 65 },
-    { label: "اهواز", value: 50 },
-    { label: "کرمانشاه", value: 40 },
-    { label: "قم", value: 35 },
-  ];
+  // const cityData = [
+  //   { label: "تهران", value: 120 },
+  //   { label: "مشهد", value: 95 },
+  //   { label: "اصفهان", value: 80 },
+  //   { label: "تبریز", value: 70 },
+  //   { label: "شیراز", value: 65 },
+  //   { label: "اهواز", value: 50 },
+  //   { label: "کرمانشاه", value: 40 },
+  //   { label: "قم", value: 35 },
+  // ];
   const timeFilteringData = [
     {
       label: "ماهانه",
@@ -223,7 +226,7 @@ export default function Report() {
         fa_label: item?.countryName,
         value: item?.percentage,
       }));
-      console.log(countries);
+
       const satisafactionList = [
         {
           title: "رضایت مندی",
@@ -287,7 +290,6 @@ export default function Report() {
       setProvinceData(provinces);
       setCountryData(countries);
     }
-    console.log(reportData);
   }, [reportData]);
   function timeCheckHandler(value: number) {
     const timeRange = getDateRange(value);
@@ -305,102 +307,144 @@ export default function Report() {
     });
   }, []);
 
-  // const exportPDF = async () => {
-  //   // Get the entire page (or a specific container)
-  //   const element = document.getElementById("export-container");
+  const handlePrint = useReactToPrint({
+    content: () => {
+      const element = printRef.current;
+      if (!element) return null;
 
-  //   // Use html2canvas to convert to canvas
+      // Temporarily expand styles before printing
+      const originalHeight = element.style.height;
+      const originalOverflow = element.style.overflow;
+      element.style.height = element.scrollHeight + "px";
+      element.style.overflow = "visible";
+
+      // Cleanup after print
+      setTimeout(() => {
+        element.style.height = originalHeight;
+        element.style.overflow = originalOverflow;
+      }, 500); // allow time for printing
+
+      return element;
+    },
+    documentTitle: "My Document",
+  });
+
+
+  // const exportPDF = async () => {
+  //   const element = document.getElementById("export-container");
+  //   if (!element) return;
+
+  //   // Expand element to full height
+  //   const originalHeight = element.style.height;
+  //   const originalOverflow = element.style.overflow;
+  //   element.style.height = element.scrollHeight + "px";
+  //   element.style.overflow = "visible";
+
+  //   window.scrollTo(0, 0);
+  //   await new Promise((resolve) => setTimeout(resolve, 500));
+
   //   const canvas = await html2canvas(element, {
   //     useCORS: true,
-  //     logging: true,
-  //     scrollY: -window.scrollY, // fix scroll issue
+  //     scrollY: -window.scrollY,
+  //     windowWidth: element.scrollWidth,
+  //     windowHeight: element.scrollHeight,
   //   });
 
   //   const imgData = canvas.toDataURL("image/png");
   //   const pdf = new jsPDF("p", "mm", "a4");
-  //   const imgProps = pdf.getImageProperties(imgData);
+
   //   const pdfWidth = pdf.internal.pageSize.getWidth();
-  //   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+  //   const pdfHeight = pdf.internal.pageSize.getHeight();
 
-  //   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+  //   const imgWidth = pdfWidth;
+  //   const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+  //   const pageHeightInPixels = (canvas.width * pdfHeight) / pdfWidth;
+  //   let position = 0;
+
+  //   while (position < canvas.height) {
+  //     const pageCanvas = document.createElement("canvas");
+  //     const pageContext = pageCanvas.getContext("2d")!;
+  //     pageCanvas.width = canvas.width;
+  //     pageCanvas.height = Math.min(
+  //       pageHeightInPixels,
+  //       canvas.height - position
+  //     );
+
+  //     pageContext.drawImage(
+  //       canvas,
+  //       0,
+  //       position,
+  //       canvas.width,
+  //       pageCanvas.height,
+  //       0,
+  //       0,
+  //       canvas.width,
+  //       pageCanvas.height
+  //     );
+
+  //     const pageData = pageCanvas.toDataURL("image/png");
+  //     if (position > 0) pdf.addPage();
+  //     pdf.addImage(
+  //       pageData,
+  //       "PNG",
+  //       0,
+  //       0,
+  //       imgWidth,
+  //       (pageCanvas.height * imgWidth) / canvas.width
+  //     );
+
+  //     position += pageHeightInPixels;
+  //   }
+
   //   pdf.save("export.pdf");
+
+  //   // Restore original styles
+  //   element.style.height = originalHeight;
+  //   element.style.overflow = originalOverflow;
   // };
-  const exportPDF = async () => {
-    const element = document.getElementById("export-container");
-    if (!element) return;
 
-    // Expand element to full height
-    const originalHeight = element.style.height;
-    const originalOverflow = element.style.overflow;
-    element.style.height = element.scrollHeight + "px";
-    element.style.overflow = "visible";
-
-    window.scrollTo(0, 0);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    const canvas = await html2canvas(element, {
-      useCORS: true,
-      scrollY: -window.scrollY,
-      windowWidth: element.scrollWidth,
-      windowHeight: element.scrollHeight,
-    });
-
-    const imgData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p", "mm", "a4");
-
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    const pageHeightInPixels = (canvas.width * pdfHeight) / pdfWidth;
-    let position = 0;
-
-    while (position < canvas.height) {
-      const pageCanvas = document.createElement("canvas");
-      const pageContext = pageCanvas.getContext("2d")!;
-      pageCanvas.width = canvas.width;
-      pageCanvas.height = Math.min(
-        pageHeightInPixels,
-        canvas.height - position
-      );
-
-      pageContext.drawImage(
-        canvas,
-        0,
-        position,
-        canvas.width,
-        pageCanvas.height,
-        0,
-        0,
-        canvas.width,
-        pageCanvas.height
-      );
-
-      const pageData = pageCanvas.toDataURL("image/png");
-      if (position > 0) pdf.addPage();
-      pdf.addImage(
-        pageData,
-        "PNG",
-        0,
-        0,
-        imgWidth,
-        (pageCanvas.height * imgWidth) / canvas.width
-      );
-
-      position += pageHeightInPixels;
-    }
-
-    pdf.save("export.pdf");
-
-    // Restore original styles
-    element.style.height = originalHeight;
-    element.style.overflow = originalOverflow;
+  const handleExport = () => {
+    exportMultipleSheets([
+      {
+        sheetName: "رضایت مندی",
+        data: satisfactionData.map((item) => ({
+          عنوان: item.title,
+          "درصد افراد": item.value,
+        })),
+      },
+      {
+        sheetName: "میزان سود فروش", data: salesReportData?.[0]?.list.map((item:any) => ({
+          "سرویس": item?.label,
+          "میزان سود":item?.value
+      })) },
+      { sheetName: "تعداد نفرات فروش", data: salesReportData?.[1]?.list.map((item:any) => ({
+          "سرویس": item?.label,
+          "تعداد نفرات":item?.value
+      })) }, 
+      { sheetName: "تعداد قرارداد فروش", data: salesReportData?.[2]?.list.map((item:any) => ({
+          "سرویس": item?.label,
+          "تعداد قرارداد":item?.value
+      })) }, 
+    ]);
   };
+  const [showOptions, setShowOptions] = useState(false);
+  
+  
+  const handleClick = async () => {
+    const chartImages = await captureAllCharts();
+    const blob = await pdf(<ReportPDF chartImages={chartImages} />).toBlob();
 
+    // Download manually
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "report.pdf";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   return (
-    <main className="px-0" id="export-container">
+    <main className="px-0" id="export-container" ref={printRef}>
       <div className="px-8">
         <Title label="گزارش" />
 
@@ -425,22 +469,64 @@ export default function Report() {
           onDateFilterSubmit={(data: any) => {
             submitTimeFiltering({
               beginRangeDateTime: data.startDate,
-              endRangeDateTime:data.endDate,
+              endRangeDateTime: data.endDate,
               rangeDates: [],
             });
           }}
         />
-        <Button
-          type="button"
-          variant={"foreground"}
-          className="bg-quartiery-background text-tertiary-foreground"
-          // onClick={() => {}}
-          onClick={exportPDF}
+        <div
+          className="flex flex-row gap-2"
+          onMouseEnter={() => setShowOptions(true)}
+          onMouseLeave={() => setShowOptions(false)}
         >
-          خروجی
-        </Button>
+          {" "}
+          {!showOptions && (
+            <Button
+              type="button"
+              variant={"info"}
+              className="bg-quartiery-background text-tertiary-foreground"
+            >
+              <span>خروجی</span>
+              <Image
+                src={"/icons/dark-download.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+              />
+            </Button>
+          )}
+          {showOptions && (
+            <Button type="button" variant={"foreground"} className="">
+              <Image
+                src={"/icons/pdf.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handleClick}
+              />
+              <Image
+                src={"/icons/excel.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handleExport}
+              />
+              <Image
+                src={"/icons/print.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handlePrint}
+              />
+            </Button>
+          )}
+        </div>
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-2 lg:gap-6 px-6">
+      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-2 lg:gap-6 px-6" id="gauge-chart">
         <div className="grid grid-cols-2 lg:col-span-3 bg-card rounded-lg p-6 lg:flex flex-row gap-4">
           {overalData.map((item: any) => (
             <div
@@ -497,10 +583,10 @@ export default function Report() {
         </div>
         <div className="col-span-1  flex flex-col bg-card rounded-lg p-6 gap-6">
           <div className="font-primary-bold">رضایتمندی ها</div>{" "}
-          <CustomizePiChart data={satisfactionData} labelFontSize="8px"/>
+          <CustomizePiChart data={satisfactionData} labelFontSize="8px" />
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4 px-6">
+      <div className="flex flex-col lg:flex-row gap-4 px-6 "  id='sale-bar-chart'>
         {salesReportData.map((item, index) => (
           <AnimatedBarChart
             key={index}
@@ -508,12 +594,13 @@ export default function Report() {
             fill={item.fill}
             title={item.title}
             info={item.info}
+           
           />
         ))}
       </div>
 
       <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 px-6">
-        <div className="col-span-7">
+        <div className="col-span-7" id="report-table">
           <div className="w-full bg-card p-6 rounded-lg flex flex-col gap-4">
             <div className="text-lg font-primary-bold">
               درصد قرارداد ها بر اساس تماس
@@ -632,16 +719,17 @@ export default function Report() {
             labelFontSize="6px"
           />
         </div>
-        <div className="col-span-7 bg-card rounded-lg p-6 flex flex-col gap-4">
+        <div className="col-span-7 bg-card rounded-lg p-6 flex flex-col gap-4" id="multiple-bar-chart">
           <div className="text-lg font-primary-bold">گزارش سود و زیان</div>
           <MultipleBarChart data={ProfitReportData} />
         </div>
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-2 px-6 gap-4">
-        {progressBarData.map((item: any) => (
+      <div className="flex flex-col lg:grid lg:grid-cols-2 px-6 gap-4" id="progress-bar">
+        {progressBarData.map((item: any,index:number) => (
           <div
             key={item.title}
             className="col-span-1 bg-card rounded-lg p-6 flex flex-col gap-4"
+            id={`progress-bar-${index}`}
           >
             <div className="font-semibold text-lg">{item.title}</div>
             <ProgressBarContainer data={item.list} />

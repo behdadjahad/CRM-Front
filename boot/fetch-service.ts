@@ -12,16 +12,16 @@ export interface FetchServiceType {
 }
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
-  // const token = localStorage.getItem("token");
-  const accessToken = Cookies.get("accesstoken"); // watch for exact key
-  const refreshToken = Cookies.get("refreshToken");
+  const token = localStorage.getItem("token");
+  // const accessToken = Cookies.get("accesstoken"); // watch for exact key
+  // const refreshToken = Cookies.get("refreshToken");
 
   // Use accessToken if it exists, otherwise use refreshToken
-  const tokenToUse = accessToken || refreshToken;
+  // const tokenToUse = accessToken || refreshToken;
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
-    Authorization: `Bearer ${tokenToUse}`,
+    Authorization: `Bearer ${token}`,
   };
 }
 

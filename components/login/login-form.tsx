@@ -40,22 +40,22 @@ export default function LoginForm() {
 
     if (result) {
      console.log(result)
-      Cookies.set("accessToken", result.data.accessToken, {
-        path: "/",
-        secure: true,
-        sameSite: "Strict",
-        expires: 1, // 1 hour
-      });
+      // Cookies.set("accessToken", result.data.accessToken, {
+      //   path: "/",
+      //   secure: true,
+      //   sameSite: "Strict",
+      //   expires: 1, // 1 hour
+      // });
 
-      //Set refreshToken (still client-side!)
-      Cookies.set("refreshToken", result.data.refreshToken, {
-        path: "/",
-        secure: true,
-        sameSite: "Strict",
-        expires: 7, // 7 days
-      });
+      // //Set refreshToken (still client-side!)
+      // Cookies.set("refreshToken", result.data.refreshToken, {
+      //   path: "/",
+      //   secure: true,
+      //   sameSite: "Strict",
+      //   expires: 7, // 7 days
+      // });
        router.push("/sale");
-      // localStorage.setItem("token", result.data.accessToken);
+      localStorage.setItem("token", result.data.accessToken);
 
       setIsLoading(false);
     } else {

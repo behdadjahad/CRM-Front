@@ -166,14 +166,14 @@ export default function ContractExpenseContainer() {
   const prevTotalAmount = useRef<any>(null); // Track last totalAmount object
   
   const totalAmountHandler = (totalAmount: any) => {
-    if (totalAmount.currencyId === contractCurrency.id) {
+    if (totalAmount.currencyId === contractCurrency?.id) {
       return;
     }
   
     setTotalExpenses((prevExpenses: any) =>
       prevExpenses.map((expense: any) => {
         // Check if this is the target expense
-        if (expense.id === contractCurrency.id) {
+        if (expense.id === contractCurrency?.id) {
           let updatedTotal = expense.total;
   
           // If only the exchange rate has changed (totalAmount itself has NOT changed), remove old effect
