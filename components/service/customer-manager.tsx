@@ -41,10 +41,9 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        email: customer?.email[0]?.email,
-        // email: "alirezaRezaei@gmail.com",
-        // phone:"989127359952",
-        phone:customer?.phone[0]?.number ,
+        email: customer?.communication?.email?.[0]?.communicationDetails,
+    
+        phone:customer?.communication?.mobile?.[0]?.communicationDetails ,
       }));
       setCustomers(customersData);
       setFilteredCustomers(customersData);
@@ -62,8 +61,8 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
       [
         customer.firstName,
         customer.lastName,
-        // customer.email,
-        // customer.phone,
+        customer.email,
+        customer.phone,
         customer.ssd,
       ].some((field) => field?.toLowerCase().includes(keyword))
     );
@@ -72,7 +71,7 @@ export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (c
   }, [customerSearchFormik.values.clientKeyWord, customers]);
   const highlightMatch = (text: string, keyword: string) => {
     if (!keyword) return text;
-
+    if (!text) return;
     const regex = new RegExp(`(${keyword})`, "gi"); // Case-insensitive match
     const parts = text.split(regex);
 

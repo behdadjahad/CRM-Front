@@ -1,4 +1,4 @@
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import ExpenseFormGenerator from "./expense-form-generator";
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
@@ -8,14 +8,12 @@ export default function OveralExpenseContainer({
   data,
   contractCurrency,
 }: any) {
+  const [view, setView] = useState(false);
 
-    const [view, setView] = useState(false);
-   
   return (
     <div className="flex flex-col w-full bg-primary rounded-lg p-4 gap-4">
       {/* <div className="text-xs text-card font-bold">{overalExpense.title}</div>  */}
       {data?.map((item: any) => (
-        
         <div
           className="flex items-center justify-between flex-wrap"
           key={item.label}
@@ -34,16 +32,24 @@ export default function OveralExpenseContainer({
                 )}
               </Button>
             )}
-            <div className="text-xs text-card text-left flex flex-1 gap-1">
-              <span>{item?.value && formatPrice(item.value)}</span>
+            <div
+              className={cn(
+                "text-xs text-card text-left flex flex-1 gap-1",
+                item.className
+              )}
+            >
+              <div className="flex items-center gap-2">
+                {" "}
+                <span> {item.children && item.children}</span>
+                <span> {item?.value && formatPrice(item.value)}</span>
+              </div>
               <span>{contractCurrency?.name ?? ""}</span>
             </div>
           </div>
           <div className="w-full mt-2">
             {view && item.hasForm && <ExpenseFormGenerator />}
           </div>
-          </div>
-       
+        </div>
       ))}
     </div>
   );

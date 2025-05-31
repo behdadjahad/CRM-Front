@@ -71,7 +71,7 @@ export function CustomerPersonalInfo() {
                     postalCode: { label: "کدپستی", value: item?.postalCode },
                     phone: {
                       label: "تلفن",
-                      value: contactInfo.homePhone[0].communicationDetails,
+                      value: contactInfo?.homePhone?.[0]?.communicationDetails,
                     },
                   },
                 ],

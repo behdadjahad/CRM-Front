@@ -13,6 +13,7 @@ export interface ContractState {
     label: string;
     value: number;
   }[];
+  limit: number;
 }
 
 const initialState: ContractState = {
@@ -25,6 +26,7 @@ const initialState: ContractState = {
     { label: "قرار داد تکمیل شده", value: 0 },
     { label: " قرار داد ناقص", value: 0 },
   ],
+  limit:limitForContracts
 };
 
 const contractSlice = createSlice({
@@ -85,16 +87,18 @@ const contractSlice = createSlice({
         {
           label: " قرار داد کل",
           // value: (action?.payload?.doneCount && action?.payload?.inProgressCount) ? (action?.payload?.doneCount + action?.payload?.inProgressCount) : "",
-          value:(action?.payload?.doneCount ?? 0) + (action?.payload?.inProgressCount ?? 0)  
+          value:(action?.payload?.meta?.doneCount ?? 0) + (action?.payload?.meta?.inProgressCount ?? 0)  
         },
-        { label: "قرار داد تکمیل شده", value: action?.payload?.doneCount ?? ""},
-        { label: " قرار داد ناقص", value: action?.payload?.inProgressCount ?? ""},
+        { label: "قرار داد تکمیل شده", value: action?.payload?.meta?.doneCount ?? ""},
+        { label: " قرار داد ناقص", value: action?.payload?.meta?.inProgressCount ?? ""},
       ];
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(totalItems / action?.payload?.pagination?.limit);
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
     });
   },
 });

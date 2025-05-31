@@ -14,7 +14,7 @@ export default function CustomerContainer({
 
   return (
     <div className={cn("flex flex-col gap-4 bg-transparent", className)}>
-      {customers.map((item, index) => (
+      {customers?.map((item, index) => (
         <Link
           href={`/customer/${item.id}`}
           style={{ display: "contents" }}

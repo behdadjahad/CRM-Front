@@ -97,7 +97,7 @@ export default function ExpenseForm({
           {
             key: "exchangeRateLabel",
             component: "Select",
-            placeholder: "تومان",
+            placeholder: "ارز",
             type: "text",
             floating: true,
             options: currencies,

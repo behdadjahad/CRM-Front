@@ -9,9 +9,9 @@ import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
-import FormMaker from "@/components/shared/form-maker";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
 import { fetchContracts } from "@/store/contract-slice";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,13 +51,13 @@ export default function Sale() {
     queryKey: ["contractTypeQuery"],
     queryFn: () => getContractTypes(),
   });
-
+  const limit = useSelector((state: any) => state.contract.limit);
   const handlePageChange = (selectedItem: any) => {
     const selectedPage = selectedItem.selected + 1;
     dispatch(
       fetchContracts({
         page: selectedPage,
-        limit: limitForContracts,
+        limit: limit,
         filters: filters,
       })
     );
@@ -104,7 +104,7 @@ export default function Sale() {
   });
   const limitFormik = useFormik({
     initialValues: {
-      limit: limitForContracts,
+      limit: limit,
     },
     onSubmit: async () => {},
   });
@@ -359,7 +359,7 @@ export default function Sale() {
     dispatch(
       fetchContracts({
         page: 1,
-        limit: limitForContracts,
+        limit: limit,
         filters: sortData,
       })
     );
@@ -408,7 +408,7 @@ export default function Sale() {
     dispatch(
       fetchContracts({
         page: 1,
-        limit: limitForContracts,
+        limit: limit,
         filters: cleanObject(filterData),
       })
     );
@@ -418,7 +418,7 @@ export default function Sale() {
     dispatch(
       fetchContracts({
         page: 1,
-        limit: limitForContracts,
+        limit: limit,
         filters: {},
       })
     );
@@ -426,21 +426,27 @@ export default function Sale() {
   useEffect(() => {
     dispatch(
       fetchContracts({
-        page: 1,
-        limit: limitForContracts,
+        page: currentPage,
+        limit: limit,
         filters: {},
       })
     );
   }, [dispatch]);
-  useEffect(() => {
-    dispatch(
-      fetchContracts({
-        page: 1,
-        limit: Number(limitFormik.values.limit),
-        filters: filters,
-      })
-    );
-  }, [limitFormik.values.limit]);
+  // const isFirstRender = useRef(true);
+  // useEffect(() => {
+  //   if (isFirstRender.current) {
+  //     isFirstRender.current = false;
+  //     return;
+  //   } else {
+  //     dispatch(
+  //       fetchContracts({
+  //         page: 1,
+  //         limit: Number(limitFormik.values.limit),
+  //         filters: filters,
+  //       })
+  //     );
+  //   }
+  // }, [limitFormik.values.limit]);
 
   const contractRecordList = [
     {
@@ -464,6 +470,15 @@ export default function Sale() {
       value: "102",
     },
   ];
+  function limitHandler(data: any) {
+    dispatch(
+      fetchContracts({
+        page: 1,
+        limit: Number(data),
+        filters: filters,
+      })
+    );
+  }
   return (
     <main>
       <div className="flex items-center justify-between">
@@ -546,6 +561,10 @@ export default function Sale() {
                 floating: true,
                 className: "w-auto",
                 options: contractRecordList,
+
+                onChange: (data: any) => {
+                  limitHandler(Number(data.value));
+                },
               },
             ]}
             className="flex flex-row justify-end items-start"

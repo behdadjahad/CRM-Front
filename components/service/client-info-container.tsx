@@ -78,10 +78,8 @@ export default function ClientInfoContainer() {
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        email: customer?.email?.[0]?.email,
-          phone: customer?.phone?.[0]?.number,
-        // email: "alirezaRezaei@gmail.com",
-        // phone: "989127359952",
+        phone: customer?.communication?.mobile?.[0]?.communicationDetails,
+        email: customer?.communication?.email?.[0]?.communicationDetails,
       }));
 
       setCustomers(customersData);
@@ -136,11 +134,17 @@ export default function ClientInfoContainer() {
         { label: "id", value: client?.id },
         {
           label: "نام و نام خانوادگی",
-          value: client?.customer?.person?.fullName,
+          value: client?.person?.fullName,
         },
-        { label: "کدملی", value: client?.customer?.person?.idNumber },
-        { label: "شماره تلفن", value: client?.customer?.phone?.[0]?.number },
-        { label: "ایمیل", value: client?.customer?.email?.[0]?.email },
+        { label: "کدملی", value: client?.person?.idNumber },
+        {
+          label: "شماره تلفن",
+          value: client?.communication?.mobile?.[0]?.communicationDetails,
+        },
+        {
+          label: "ایمیل",
+          value: client?.communication?.email?.[0]?.communicationDetails,
+        },
       ]);
 
       const clientsInfo = contractCustomersData?.data?.map((client: any) => ({
@@ -148,8 +152,8 @@ export default function ClientInfoContainer() {
         name: client?.customer?.person?.firstName,
         family: client?.customer?.person?.lastName,
         ssd: client?.customer?.person?.idNumber,
-        phone: client?.customer?.phone?.[0]?.number,
-        email: client?.customer?.email?.[0]?.email,
+        phone: client?.communication?.mobile?.[0]?.communicationDetails,
+        email: client?.communication?.email?.[0]?.communicationDetails,
       }));
 
       setClientList(clients);

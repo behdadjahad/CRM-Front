@@ -7,7 +7,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
     links: [
       {
         label: "قرارداد جدید",
-        link: "/",
+        link: "/sale",
         icon: (
           <Image
             src={"/icons/file-add.png"}
@@ -17,25 +17,25 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      {
-        label: "کاربر",
-        link: "/user",
-        icon: (
-          <Image src={"/icons/user.png"} alt="کاربر" width={22} height={22} />
-        ),
-      },
-      {
-        label: "کارگزار",
-        link: "/broker",
-        icon: (
-          <Image
-            src={"/icons/user-dollar.png"}
-            alt="کارگزار"
-            width={22}
-            height={22}
-          />
-        ),
-      },
+      // {
+      //   label: "کاربر",
+      //   link: "/user",
+      //   icon: (
+      //     <Image src={"/icons/user.png"} alt="کاربر" width={22} height={22} />
+      //   ),
+      // },
+      // {
+      //   label: "کارگزار",
+      //   link: "/broker",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/user-dollar.png"}
+      //       alt="کارگزار"
+      //       width={22}
+      //       height={22}
+      //     />
+      //   ),
+      // },
       {
         label: "مشتری",
         link: "/customer",
@@ -67,30 +67,13 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      // {
-      //   label: "قرارداد ها",
-      //   link: "/sale",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/document.png"}
-      //       alt="قرارداد ها"
-      //       width={22}
-      //       height={22}
-      //     />
-      //   ),
-      // },
-    ],
-  },
-  {
-    category: "تنظیمات",
-    links: [
       {
-        label: "تنظیمات",
-        link: "/setting",
+        label: "قرارداد ها",
+        link: "/sale",
         icon: (
           <Image
-            src={"/icons/setting.png"}
-            alt="تنظیمات"
+            src={"/icons/document.png"}
+            alt="قرارداد ها"
             width={22}
             height={22}
           />
@@ -98,4 +81,21 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       },
     ],
   },
+  // {
+  //   category: "تنظیمات",
+  //   links: [
+  //     {
+  //       label: "تنظیمات",
+  //       link: "/setting",
+  //       icon: (
+  //         <Image
+  //           src={"/icons/setting.png"}
+  //           alt="تنظیمات"
+  //           width={22}
+  //           height={22}
+  //         />
+  //       ),
+  //     },
+  //   ],
+  // },
 ];

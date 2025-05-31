@@ -18,6 +18,9 @@ import {
 import { Button } from "../ui/button";
 import { useFormik } from "formik";
 import Overview, { OverviewInterface } from "../satisfaction/overview";
+import { fetchContracts } from "@/store/contract-slice";
+import { limitForContracts } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Satisfaction({
   onCloseHandler,
@@ -29,7 +32,8 @@ export default function Satisfaction({
   itemId: string;
   score: number;
   totalVotes: number;
-}) {
+  }) {
+    const dispatch = useDispatch<any>();
   const [callDevices, setCallDevices] = useState<any[]>([]);
   const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
 
@@ -63,12 +67,22 @@ export default function Satisfaction({
       setSatisfactionLabels(satisfactionLabelsOptions);
     }
   }, [SatisfactionLabelsData]);
-
+  const filters = useSelector((state: any) => state.contract.filters);
+  const currentPage = useSelector((state: any) => state.contract.currentPage);
+  const limit = useSelector((state: any) => state.contract.limit);
   const { mutate: satisfactionSubmitHandler } = useMutation({
     mutationFn: ({ data, id }: { data: any; id: number }) => {
       return submitSatisfaction(data, id);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      dispatch(
+        fetchContracts({
+          page: currentPage,
+          limit: limit,
+          filters: filters,
+        })
+      );
+    },
   });
   function submit() {
     const data = {
@@ -208,7 +222,6 @@ export default function Satisfaction({
         <Overview {...overviewProps} />
       </div>
       <SocialMedia
-       
         className="col-span-4 lg:col-span-3 row-span-1"
         list={callDevices}
         form={formik}

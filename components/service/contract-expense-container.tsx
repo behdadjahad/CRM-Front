@@ -12,6 +12,7 @@ import { useParams } from "next/navigation";
 import OveralExpenseContainer from "./overal-expense-container";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatPrice } from "@/lib/utils";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 export interface ExpenseContainerInterface {
   expenseList: ExpenseCardInterface[];
@@ -38,6 +39,7 @@ export default function ContractExpenseContainer() {
     },
     onSuccess: (data) => {
       setContractCurrency(data.contractCurrency);
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
     },
   });
   const { data: allExpenses } = useQuery({
@@ -55,17 +57,36 @@ export default function ContractExpenseContainer() {
           hasForm: true,
         },
         {
-          label:allExpenses?.data?.profit > 0 ? "سود":  "زیان",
+          label:
+            allExpenses?.data?.profit > 0
+              ? "سود"
+              : allExpenses?.data?.profit< 0
+              ? "زیان"
+              : "سود/زیان",
           value: Math.abs(allExpenses?.data?.profit),
+          className:
+            allExpenses?.data?.profit > 0
+              ? "text-[#47E9A0]"
+              : allExpenses?.data?.profit < 0
+              ? "text-[#FF6C86]"
+              : "",
+          children:
+            allExpenses?.data?.profit > 0 ? (
+              <FaChevronUp className="text-[#47E9A0]" size={10} />
+            ) : allExpenses?.data?.profit < 0 ? (
+              <FaChevronDown className="text-[#FF6C86]" size={10} />
+            ) : (
+              ""
+            ),
         },
       ];
       const contractExchangeRate = allExpenses?.data?.contractCurrency;
       //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
       //     return {},
       //   });
-      const servicePrices = Object?.entries(allExpenses?.data?.servicePrices).map(
-        ([key, value]) => ({ key, ...(value as any) })
-      );
+      const servicePrices = Object?.entries(
+        allExpenses?.data?.servicePrices
+      ).map(([key, value]) => ({ key, ...(value as any) }));
       const totalServiceExpenses = servicePrices
         .filter((item) => item.groupedBuyPrices.length > 0)
         .map((item) => ({
@@ -97,7 +118,11 @@ export default function ContractExpenseContainer() {
             //   (price: any) =>
             //     price.currency.id === allExpenses?.data?.contractCurrency?.id
             // )
-            .reduce((sum: number, price: any) => sum + price.totalBuyPriceInContractCurrency, 0),
+            .reduce(
+              (sum: number, price: any) =>
+                sum + price.totalBuyPriceInContractCurrency,
+              0
+            ),
         }));
       const resultMap = new Map();
 
@@ -125,18 +150,13 @@ export default function ContractExpenseContainer() {
 
       const totalAmountArray = Array.from(resultMap.values());
       setTotalExpenses(totalAmountArray);
-   
+
       setContractCurrency(contractExchangeRate);
       setOveralExpense(overalExpenseData);
       setServiceExpenses(totalServiceExpenses);
-      console.log(allExpenses)
+      console.log(allExpenses);
     }
   }, [allExpenses]);
-  useEffect(() => {
-    if (contractCurrency) {
-      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
-    }
-  }, [contractCurrency, queryClient]);
 
 
   // const prevExchangeRate = useRef<number>(0);
@@ -158,47 +178,51 @@ export default function ContractExpenseContainer() {
   //         : expense
   //     )
   //   );
-  
+
   //   // Update previous exchange rate AFTER updating the state
   //   prevExchangeRate.current = totalAmount.exchangeRate;
   // };
   const prevExchangeRate = useRef<number>(0);
   const prevTotalAmount = useRef<any>(null); // Track last totalAmount object
-  
+
   const totalAmountHandler = (totalAmount: any) => {
     if (totalAmount.currencyId === contractCurrency?.id) {
       return;
     }
-  
+
     setTotalExpenses((prevExpenses: any) =>
       prevExpenses.map((expense: any) => {
         // Check if this is the target expense
         if (expense.id === contractCurrency?.id) {
           let updatedTotal = expense.total;
-  
+
           // If only the exchange rate has changed (totalAmount itself has NOT changed), remove old effect
-          if (prevTotalAmount.current && prevTotalAmount.current.currencyId === totalAmount.currencyId && prevTotalAmount.current.buyPrice === totalAmount.buyPrice) {
+          if (
+            prevTotalAmount.current &&
+            prevTotalAmount.current.currencyId === totalAmount.currencyId &&
+            prevTotalAmount.current.buyPrice === totalAmount.buyPrice
+          ) {
             updatedTotal -= prevExchangeRate.current * totalAmount.buyPrice; // Remove old exchange rate effect
           }
-  
+
           // Always apply the new exchange rate effect
           updatedTotal += totalAmount.exchangeRate * totalAmount.buyPrice;
-  
+
           return {
             ...expense,
-            total: updatedTotal
+            total: updatedTotal,
           };
         }
-  
+
         return expense;
       })
     );
-  
+
     // Update previous values AFTER updating the state
     prevExchangeRate.current = totalAmount.exchangeRate;
     prevTotalAmount.current = { ...totalAmount }; // Store a copy to track changes
   };
-  
+
   // const totalAmountHandler = (totalAmount: any) => {
   //   // If totalAmount.currencyId is the same as contractCurrency, do nothing
   //   if (totalAmount.currencyId === contractCurrency.id) {
@@ -231,7 +255,6 @@ export default function ContractExpenseContainer() {
   //   prevExchangeRate.current = totalAmount.exchangeRate || 0;
   // };
 
-  
   return (
     <div className="rounded-lg bg-white p-4">
       <div className="flex flex-col gap-2">
@@ -246,13 +269,14 @@ export default function ContractExpenseContainer() {
           />
         </div>
         <div className="border-b-2 border-gray-600 border-dashed p-2">
-          {totalExpenses && totalExpenses?.map((item: any) => (
-            <div key={item.id} className="flex items-center justify-between">
-              <span>{item?.total ? formatPrice(item.total):""}</span>
-         
-              <span>{item.name}</span>
-            </div>
-          ))}
+          {totalExpenses &&
+            totalExpenses?.map((item: any) => (
+              <div key={item.id} className="flex items-center justify-between">
+                <span>{item?.total ? formatPrice(item.total) : ""}</span>
+
+                <span>{item.name}</span>
+              </div>
+            ))}
         </div>
       </div>
       {serviceExpenses?.map((item: any) => (
