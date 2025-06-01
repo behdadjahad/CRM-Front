@@ -27,11 +27,11 @@ export default function LoginForm() {
   });
 
   async function loginHandler() {
-    const isValid = await formik.validateForm();
-    if (!isValid) {
-      // toast
-      return;
-    }
+    // const isValid = await formik.validateForm();
+    // if (!isValid) {
+    //   // toast
+    //   return;
+    // }
     setIsLoading(true);
     const result = await login({
       usernameOrUniqueId: formik.values["email"],
@@ -39,7 +39,7 @@ export default function LoginForm() {
     });
 
     if (result) {
-     console.log(result)
+      console.log(result);
       // Cookies.set("accessToken", result.data.accessToken, {
       //   path: "/",
       //   secure: true,
@@ -54,13 +54,17 @@ export default function LoginForm() {
       //   sameSite: "Strict",
       //   expires: 7, // 7 days
       // });
-       router.push("/sale");
-      localStorage.setItem("token", result.data.accessToken);
+      if (result.status === "success") {
+        router.push("/sale");
+        localStorage.setItem("token", result.data.accessToken);
 
-      setIsLoading(false);
+    
+      }
     } else {
       // toast
+      // router.push("/login");
     }
+        setIsLoading(false);
   }
 
   return (
@@ -80,7 +84,7 @@ export default function LoginForm() {
             key: "email",
             component: "input",
             placeholder: "نام کاربری",
-            type: "email",
+            type: "text",
             floating: true,
             className: "m-0 w-full",
           },

@@ -5,18 +5,18 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
   {
     category: "خانه",
     links: [
-      {
-        label: "قرارداد جدید",
-        link: "/sale",
-        icon: (
-          <Image
-            src={"/icons/file-add.png"}
-            alt="قرارداد جدید"
-            width={22}
-            height={22}
-          />
-        ),
-      },
+      // {
+      //   label: "قرارداد جدید",
+      //   link: "/sale",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/file-add.png"}
+      //       alt="قرارداد جدید"
+      //       width={22}
+      //       height={22}
+      //     />
+      //   ),
+      // },
       // {
       //   label: "کاربر",
       //   link: "/user",
@@ -55,18 +55,18 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      {
-        label: "فروش",
-        link: "/sale",
-        icon: (
-          <Image
-            src={"/icons/report.png"}
-            alt="فروش"
-            width={22}
-            height={22}
-          />
-        ),
-      },
+      // {
+      //   label: "فروش",
+      //   link: "/sale",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/report.png"}
+      //       alt="فروش"
+      //       width={22}
+      //       height={22}
+      //     />
+      //   ),
+      // },
       {
         label: "قرارداد ها",
         link: "/sale",

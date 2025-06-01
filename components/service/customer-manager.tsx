@@ -43,9 +43,9 @@ export default function
         ssd: customer?.person?.idNumber,
         job: customer?.person?.personJobs?.[0]?.jobs?.name,
         lastName: customer?.person?.lastName,
-        email: customer?.communication?.email?.[0]?.communicationDetails,
+        email: customer?.Communication?.email?.[0]?.communicationDetails,
     
-        phone:customer?.communication?.mobile?.[0]?.communicationDetails ,
+        phone:customer?.Communication?.mobile?.[0]?.communicationDetails ,
       }));
       setCustomers(customersData);
       setFilteredCustomers(customersData);
@@ -113,6 +113,7 @@ export default function
               key={customer.id}
               className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
             >
+              <div className="flex items-center gap-2">
               <Checkbox
                 onCheckedChange={(checked) =>
                   checkCustomerHandler(customer, Boolean(checked))
@@ -120,22 +121,25 @@ export default function
                 checked={isChecked}
               />
               <div className="flex items-center gap-2">
-                {" "}
+                  {" "}
+                  <div className="rounded-full flex items-center justify-center bg-[#F5F5F5] border border-gray-200 w-10 h-10">
                 <Image
                   src={"/icons/customer.png"}
                   alt="edit"
                   width={18}
                   height={18}
-                />
+                    />
+                    </div>
                 <div className="flex flex-col">
                   <span className="text-sm font-primary-bold">
                     {highlightMatch(customer.firstName, keyword)}{" "}
                     {highlightMatch(customer.lastName, keyword)}
                   </span>
                   <span className="text-sm text-foreground-mute">
-                    {/* {highlightMatch(customer.email, keyword)} */}
+                    {highlightMatch(customer.email, keyword)}
                   </span>
                 </div>
+              </div>
               </div>
               <div className="flex items-center text-foreground-mute gap-2">
                 <Image
@@ -144,7 +148,7 @@ export default function
                   width={12}
                   height={12}
                 />
-                {/* <span>{highlightMatch(customer.phone, keyword)}</span> */}
+                <span>{highlightMatch(customer.phone, keyword)}</span>
               </div>
               <div className="flex items-center text-foreground-mute gap-2">
                 <Image

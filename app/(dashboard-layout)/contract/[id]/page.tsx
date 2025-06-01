@@ -43,7 +43,6 @@ import { sendServiceData } from "@/api/service";
 import { convertDate, convertToGregorian } from "@/lib/date";
 
 import { getUsers } from "@/api/auth";
-import { CornerDownLeft } from "lucide-react";
 
 export default function Contract() {
   const router = useRouter();
@@ -309,12 +308,14 @@ export default function Contract() {
     },
 
     validationSchema: Yup.object().shape({
-      name: Yup.string().required(REQUIRED_TEXT),
-      familyName: Yup.string().required(REQUIRED_TEXT),
-      birthdate: Yup.string().required(REQUIRED_TEXT),
-      socialNumber: Yup.string().required(REQUIRED_TEXT),
-      idNumber: Yup.string().required(REQUIRED_TEXT),
-      career: Yup.string().required(REQUIRED_TEXT),
+      // name: Yup.string().required(REQUIRED_TEXT),
+      // familyName: Yup.string().required(REQUIRED_TEXT),
+      // birthdate: Yup.string().required(REQUIRED_TEXT),
+      // socialNumber: Yup.string().required(REQUIRED_TEXT),
+      idNumber: Yup.string()
+        .required(REQUIRED_TEXT)
+        .matches(/^\d{10}$/, "کدملی باید یک  عدد ده رقمی باشد"),
+      // career: Yup.string().required(REQUIRED_TEXT),
     }),
     onSubmit: () => {},
     enableReinitialize: true,
@@ -743,7 +744,11 @@ export default function Contract() {
   function serviceHandler(services: any) {
     setContractServices(services.map((obj: any) => obj.name));
   }
-  function submitPersonalForm() {
+  async function submitPersonalForm() {
+    const errors = await personalFormik.validateForm();
+    personalFormik.setTouched({ idNumber: true }); // Optional: shows error in UI
+
+    if (Object.keys(errors).length > 0) return;
     const data = {
       firstName: personalFormik.values.name,
       lastName: personalFormik.values.familyName,

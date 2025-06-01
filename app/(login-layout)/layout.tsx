@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../../globals.css";
-
+import { Toaster } from "react-hot-toast";
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -36,6 +36,7 @@ export default function RootLayout({
         className={`${iranSansBold.variable} ${iranSansMedium.variable} ${iranSans.variable} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );

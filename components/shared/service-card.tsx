@@ -19,6 +19,7 @@ export interface ServiceCardInterface {
   name?: string;
   form?: any;
   disable?: boolean;
+  disableImage?: string;
 }
 
 export default function ServiceCard({
@@ -31,6 +32,8 @@ export default function ServiceCard({
   isSelected,
   selectedImage,
   activeImage,
+  disable,
+  disableImage
 }: ServiceCardInterface) {
   return (
     <div
@@ -44,7 +47,9 @@ export default function ServiceCard({
           isSelected && selectedImage
             ? selectedImage
             : isActive && activeImage
-            ? activeImage
+              ? activeImage
+              : disable && disableImage
+              ? disableImage
             : image
         }
         alt={title}

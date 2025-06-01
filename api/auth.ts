@@ -1,7 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
 import { UserData } from "@/store/user-slice";
 
-export async function login(data: LoginInput): Promise<LoginOutput> {
+export async function login(data: LoginInput): Promise<any> {
   try {
     const result: LoginOutput = await fetchService("auth/login", {
       method: "POST",
@@ -10,7 +10,7 @@ export async function login(data: LoginInput): Promise<LoginOutput> {
 
     return result;
   } catch {
-    return loginStaticOutput;
+    return;
   }
 }
 
@@ -98,6 +98,7 @@ export interface LoginInput {
 
 export interface LoginOutput {
   success: boolean;
+  status: string;
   accessToken: string;
   data: {
     accessToken: string;
@@ -107,6 +108,7 @@ export interface LoginOutput {
 }
 
 const loginStaticOutput: LoginOutput = {
+  status:"",
   accessToken: "",
   data: {
     accessToken: "",

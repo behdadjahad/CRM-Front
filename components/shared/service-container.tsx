@@ -109,7 +109,7 @@ export default function ServiceContainer({
                 ? activeItem.some((obj: any) => obj.id === item.id)
                 : activeItem && activeItem.id == item.id
             }
-            className={item.disable ? "cursor-not-allowed":"cursor-pointer"}
+            className={item.disable ? "cursor-not-allowed text-foreground-mute":"cursor-pointer"}
           />
         ))}
       </div>

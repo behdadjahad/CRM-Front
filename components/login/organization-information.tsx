@@ -24,13 +24,13 @@ export default function OrganizationInformation({
       <h1 className="absolute left-10 top-1/4 text-primary-foreground text-5xl">
         {credentialData.login.label}
       </h1>
-
+{/* 
       <span className="absolute left-36 bottom-10 text-white flex gap-2 text-lg">
         شماره تماس:{" "}
         <Link href={credentialData.phoneNumber.link}>
           {credentialData.phoneNumber.label}
         </Link>
-      </span>
+      </span> */}
     </div>
   );
 }

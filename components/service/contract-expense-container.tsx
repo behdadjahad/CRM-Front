@@ -60,7 +60,7 @@ export default function ContractExpenseContainer() {
           label:
             allExpenses?.data?.profit > 0
               ? "سود"
-              : allExpenses?.data?.profit< 0
+              : allExpenses?.data?.profit < 0
               ? "زیان"
               : "سود/زیان",
           value: Math.abs(allExpenses?.data?.profit),
@@ -157,7 +157,6 @@ export default function ContractExpenseContainer() {
       console.log(allExpenses);
     }
   }, [allExpenses]);
-
 
   // const prevExchangeRate = useRef<number>(0);
 
@@ -258,15 +257,17 @@ export default function ContractExpenseContainer() {
   return (
     <div className="rounded-lg bg-white p-4">
       <div className="flex flex-col gap-2">
-        <h2 className="text-lg text-gray-900 font-bold">
-          واحد ارزی کل قرارداد
-        </h2>
         <div className="flex items-center justify-between">
-          <div>هزینه های قرارداد</div>
+          <h2 className="text-lg text-gray-900 font-bold">
+            واحد ارزی کل قرارداد
+          </h2>
           <CurrencyDropDown
             contractCurrency={contractCurrency}
             onCurrencyHandler={exchangeRateHandler}
           />
+        </div>
+        <div className="flex items-center justify-between">
+          <div>هزینه های قرارداد</div>
         </div>
         <div className="border-b-2 border-gray-600 border-dashed p-2">
           {totalExpenses &&

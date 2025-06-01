@@ -223,7 +223,7 @@ export default function Service() {
                 isActive={activeItem && activeItem.title == item.title}
                 isSelected={item.isSelected}
                 className={
-                  item.disable ? "cursor-not-allowed" : "cursor-pointer"
+                  item.disable ? "cursor-not-allowed text-foreground-mute" : "cursor-pointer"
                 }
               />
             ))}
