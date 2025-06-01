@@ -70,6 +70,8 @@ const contractSlice = createSlice({
           title: item?.contractType?.name,
         },
         score: {
+          id: item?.contractSatisfaction[0]?.id,
+          isSubmitted:item?.contractSatisfaction[0]?.satisfactionScore ? true:false,
           final: item?.contractSatisfaction[0]?.satisfactionScore
             ? ((item?.contractSatisfaction[0]?.satisfactionScore * 100) / totalVotes)
             : 0,

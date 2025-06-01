@@ -9,6 +9,7 @@ import { useParams } from "next/navigation";
 import { getTicketData } from "@/api/ticket";
 import {
   deleteFlightData,
+  deleteTicketData,
   getAirlinesData,
   getFightClassData,
   getFightTypeData,
@@ -136,7 +137,7 @@ export default function TicketContainer({
         setAddedTickets(updatedTickets);
       }
     } else {
-      if (addedTickets.length > 0) {
+      if (addedTickets.length > 1) {
         const updatedTickets = addedTickets.filter(
           (item: any) => item.id !== formId
         );
@@ -227,6 +228,33 @@ export default function TicketContainer({
       setCurrencies(currencyOptions);
     }
   }, [currency]);
+  const { mutate: deleteTicketForm } = useMutation({
+    mutationFn: (groupId: number) => {
+      return deleteTicketData(groupId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
+    },
+  });
+  function removeGroupHandler(groupId: any) {
+    const selectedTicket = addedTickets.find(
+      (item: any) => item.id === groupId
+    );
+    if (selectedTicket) {
+      if (selectedTicket.isSubmitted) {
+        deleteTicketForm(groupId)
+      } else {
+        if (addedTickets.length > 1) {
+          setAddedTickets(
+            addedTickets.filter((item: any) => item.id !== groupId)
+          );
+        } else return;
+      }
+    } else return;
+  }
   return (
     <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -250,6 +278,7 @@ export default function TicketContainer({
             flightTypes={flightTypes}
             airlines={airlines}
             currencies={currencies}
+            onRemoveGroupHandler={removeGroupHandler}
           />
         ))}
       </div>

@@ -104,3 +104,12 @@ export async function deleteFlightData(id: number) {
     return result;
   } catch {}
 }
+export async function deleteTicketData(id: number) {
+  try {
+    const result = await fetchService(`flight-group/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}

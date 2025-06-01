@@ -12,53 +12,61 @@ export default function FlightContainer({
   airports,
   ticket,
   onRemoveHandler,
-  currencies
+  currencies,
+  onRemoveGroupHandler,
 }: {
   flightClassOptions: any;
   flightTypeOptions: any;
-    airlines: OptionType[];
-    airports: OptionType[];
-    ticket: any;
-    onRemoveHandler: any;
-    currencies: any;
-
-    
-  }) {
-  
+  airlines: OptionType[];
+  airports: OptionType[];
+  ticket: any;
+  onRemoveHandler: any;
+  currencies: any;
+  onRemoveGroupHandler: any;
+}) {
   const [addedFlights, setAddedFlights] = useState<any[]>([]);
   useEffect(() => {
     if (ticket && ticket?.flights?.length > 0) {
-      setAddedFlights(ticket.flights)
+      setAddedFlights(ticket.flights);
     } else {
-      setAddedFlights([{
-        id: `flight-1`,
-        isSubmitted:false
-      }])
+      setAddedFlights([
+        {
+          flightId: `flight-1`,
+          isSubmitted: false,
+        },
+      ]);
     }
-    
-  },[ticket])
+  }, [ticket]);
   function addFlightForm() {
     setAddedFlights([
       ...addedFlights,
       {
-        id: `flight-${addedFlights.length + 1}`,
-        isSubmitted:false
+        flightId: `flight-${addedFlights.length + 1}`,
+        isSubmitted: false,
       },
     ]);
   }
-  function removeHandler(formId: any) {
-    onRemoveHandler(formId)
-    // if (addedFlights.length > 1) {
-    //   const updatedAddedFlights = addedFlights.filter(
-    //     (item) => item.flightId != formId
-    //   );
-     
-    //   setAddedFlights(updatedAddedFlights);
-    // } else return;
+  function removeHandler(flightId: any) {
+    const selectedFlight = addedFlights.find(
+      (item) => item.flightId === flightId
+    );
+    if (selectedFlight) {
+      if (selectedFlight.isSubmitted) {
+        onRemoveHandler(flightId);
+      } else {
+        if (addedFlights.length > 1) {
+          setAddedFlights(
+            addedFlights.filter((item) => item.flightId !== flightId)
+          );
+        } else return;
+      }
+    } else {
+      return;
+    }
   }
 
   return (
-    <div className="bg-card rounded-xl flex flex-col gap-4">
+    <div className="bg-card rounded-xl flex flex-col gap-4 border border-gray-400 p-3">
       {addedFlights.map((item, index) => (
         <FlightForm
           key={`multi-way-${index}`}
@@ -70,8 +78,7 @@ export default function FlightContainer({
           airports={airports}
           flight={item}
           ticket={ticket}
-         currencies={currencies}
-         
+          currencies={currencies}
         />
       ))}
       <Button
@@ -82,6 +89,18 @@ export default function FlightContainer({
         <FaPlus />
         اضافه کردن پرواز
       </Button>
+      <div className=" flex justify-end w-full">
+        {" "}
+        <Button
+          onClick={() => {
+            onRemoveGroupHandler(ticket?.id);
+          }}
+          className="text-danger border-danger"
+          variant={"foreground"}
+        >
+          حذف بلیط
+        </Button>
+      </div>
     </div>
   );
 }

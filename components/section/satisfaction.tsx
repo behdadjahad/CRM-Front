@@ -7,6 +7,7 @@ import SocialMedia from "../satisfaction/social-media";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
+  editSatisfaction,
   getCallDevices,
   getSatisfactionLabels,
   submitSatisfaction,
@@ -26,14 +27,14 @@ export default function Satisfaction({
   onCloseHandler,
   itemId,
   score,
-  totalVotes,
-}: {
+}: // totalVotes,
+{
   onCloseHandler: () => any;
   itemId: string;
-  score: number;
-  totalVotes: number;
-  }) {
-    const dispatch = useDispatch<any>();
+  score: any;
+  // totalVotes: number;
+}) {
+  const dispatch = useDispatch<any>();
   const [callDevices, setCallDevices] = useState<any[]>([]);
   const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
 
@@ -84,6 +85,20 @@ export default function Satisfaction({
       );
     },
   });
+  const { mutate: satisfactionEditHandler } = useMutation({
+    mutationFn: ({ data, id }: { data: any; id: number }) => {
+      return editSatisfaction(data, id);
+    },
+    onSuccess: () => {
+      dispatch(
+        fetchContracts({
+          page: currentPage,
+          limit: limit,
+          filters: filters,
+        })
+      );
+    },
+  });
   function submit() {
     const data = {
       satisfactionReasonId: formik.values.satisfactionLableId,
@@ -91,13 +106,16 @@ export default function Satisfaction({
       satisfactionScore: formik.values.score,
       description: formik.values.explanation,
     };
-
-    satisfactionSubmitHandler({ data, id: Number(itemId) });
+    if (score.isSubmitted) {
+      satisfactionEditHandler({ data: data, id: score?.id });
+    } else {
+      satisfactionSubmitHandler({ data, id: Number(itemId) });
+    }
   }
   const formik = useFormik({
     initialValues: {
       explanation: "",
-      score: 0,
+      score: score,
       satisfactionLableId: undefined,
       callDeviceId: undefined,
     },
@@ -202,7 +220,7 @@ export default function Satisfaction({
           </span> */}
           <div className="w-36 h-36">
             <CircularProgressbarWithChildren
-              value={score}
+              value={score?.final ? score?.final : 0}
               styles={buildStyles({
                 pathColor: "#FFA500",
                 trailColor: "#E9EAEB",
@@ -211,7 +229,7 @@ export default function Satisfaction({
               <div className="text-center  text-sm flex flex-col gap-2">
                 <span>میانگین امتیاز</span>
                 <span className="font-bold text-info">
-                  {totalVotes} / {(score * totalVotes) / 100}
+                  {score.totalVotes} / {(score.final * score.totalVotes) / 100}
                 </span>
               </div>
               {/* <FaStar style={{ fontSize: "32px", color: "#00bcd4" }} /> */}

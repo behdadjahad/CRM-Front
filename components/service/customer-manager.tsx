@@ -5,7 +5,9 @@ import FormMaker from "../shared/form-maker";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCustomers } from "@/api/customer";
-export default function CustomerManager({ onCheckHandler }: { onCheckHandler: (customer: any, isChecked: boolean) => void }) {
+export default function 
+
+  CustomerManager({ onCheckHandler }: { onCheckHandler: (customer: any, isChecked: boolean) => void }) {
   const [customers, setCustomers] = useState<any[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<any[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);

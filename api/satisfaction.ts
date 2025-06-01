@@ -30,3 +30,15 @@ export async function submitSatisfaction(data: any, id: number) {
       return {};
     }
   }
+export async function editSatisfaction(data: any, id: number) {
+    try {
+      const result = await fetchService(`contract-satisfaction/${id}`, {
+        method: "PUT",
+        body: data,
+      });
+  
+      return result;
+    } catch {
+      return {};
+    }
+  }

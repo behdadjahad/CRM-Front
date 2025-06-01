@@ -35,6 +35,8 @@ export interface ContractCardInterface {
   score: {
     totalVotes: number;
     final: number;
+    id: number;
+    isSubmitted: boolean;
   };
   services: ServiceCardInterface[];
   footer: {
@@ -111,7 +113,10 @@ export default function ContractCard({
         <div className="flex flex-col text-xs leading-5 gap-1">
           <span>تاریخ ثبت: {header?.submitDate}</span>
 
-          <div className="flex"><span>شماره قرارداد:</span><span>{header?.contractNumber}</span></div>
+          <div className="flex">
+            <span>شماره قرارداد:</span>
+            <span>{header?.contractNumber}</span>
+          </div>
         </div>
       </div>
 
@@ -203,9 +208,9 @@ export default function ContractCard({
                     setOpenModal(false);
                   }}
                   itemId={id}
-                  score={score?.final}
-                  totalVotes={score?.totalVotes}
-
+                  // score={score?.final}
+                  // totalVotes={score?.totalVotes}
+                  score={score}
                 />
               </CustomModal>
               {/* </Link> */}
