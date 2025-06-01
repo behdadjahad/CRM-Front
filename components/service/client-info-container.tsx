@@ -134,7 +134,7 @@ export default function ClientInfoContainer() {
         { label: "id", value: client?.id },
         {
           label: "نام و نام خانوادگی",
-          value: client?.person?.fullName,
+          value: client?.person?.firstName + " " + client?.person?.lastName,
         },
         { label: "کدملی", value: client?.person?.idNumber },
         {

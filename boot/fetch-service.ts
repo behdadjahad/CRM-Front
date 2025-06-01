@@ -56,15 +56,14 @@ export async function fetchService(
     options
   );
   const result = await response.json();
-  console.log(result.ui.type)
-  console.log(result)
+  
   if (result.ui.type === "toast") {
     CustomToast({
       type: result.status,
       message: result.message,
     });
 
-    console.log(result.ui)
+
     // toast(data.error, {
     //   position: "top-center",
     //   style: {

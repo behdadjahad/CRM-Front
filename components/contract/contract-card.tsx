@@ -31,6 +31,7 @@ export interface ContractCardInterface {
     submitter: string;
     destination: string;
     unit: string;
+    customer: string;
   };
   score: {
     totalVotes: number;
@@ -71,7 +72,7 @@ export default function ContractCard({
     {
       icon: "/icons/user-mute.png",
       label: "مشتری",
-      value: "",
+      value: contract?.customer,
     },
     {
       icon: "/icons/map.png",

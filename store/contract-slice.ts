@@ -26,7 +26,7 @@ const initialState: ContractState = {
     { label: "قرار داد تکمیل شده", value: 0 },
     { label: " قرار داد ناقص", value: 0 },
   ],
-  limit:limitForContracts
+  limit: limitForContracts,
 };
 
 const contractSlice = createSlice({
@@ -49,8 +49,15 @@ const contractSlice = createSlice({
               ? convertDate(item?.contractDate, item?.dateType)
               : "",
           destination: item?.destinationCountry?.name ?? "",
-          submitter:  item?.userSubmitter?.fullName ?? "",
-          unit: "",
+          submitter: item?.userSubmitter?.fullName ?? "",
+          unit: item?.contractCurrency?.name,
+          customer:
+            item?.mainCustomerSoldto?.person?.firstName &&
+            item?.mainCustomerSoldto?.person?.lastName
+              ? item?.mainCustomerSoldto?.person?.firstName +
+                " " +
+                item?.mainCustomerSoldto?.person?.lastName
+              : "",
         },
         footer: {
           cost: item.buyPrice?.toString() ?? "0",
@@ -62,7 +69,9 @@ const contractSlice = createSlice({
         },
         header: {
           contractNumber: item.contractNo,
-          icon:item?.contractType?.iconFile && ServerImageAddress + item?.contractType?.iconFile,
+          icon:
+            item?.contractType?.iconFile &&
+            ServerImageAddress + item?.contractType?.iconFile,
           submitDate:
             item?.submitDateTime && item?.dateType
               ? convertDate(item?.submitDateTime, item?.dateType)
@@ -71,9 +80,12 @@ const contractSlice = createSlice({
         },
         score: {
           id: item?.contractSatisfaction[0]?.id,
-          isSubmitted:item?.contractSatisfaction[0]?.satisfactionScore ? true:false,
+          isSubmitted: item?.contractSatisfaction[0]?.satisfactionScore
+            ? true
+            : false,
           final: item?.contractSatisfaction[0]?.satisfactionScore
-            ? ((item?.contractSatisfaction[0]?.satisfactionScore * 100) / totalVotes)
+            ? (item?.contractSatisfaction[0]?.satisfactionScore * 100) /
+              totalVotes
             : 0,
           totalVotes: totalVotes,
         },
@@ -89,13 +101,23 @@ const contractSlice = createSlice({
         {
           label: " قرار داد کل",
           // value: (action?.payload?.doneCount && action?.payload?.inProgressCount) ? (action?.payload?.doneCount + action?.payload?.inProgressCount) : "",
-          value:(action?.payload?.meta?.doneCount ?? 0) + (action?.payload?.meta?.inProgressCount ?? 0)  
+          value:
+            (action?.payload?.meta?.doneCount ?? 0) +
+            (action?.payload?.meta?.inProgressCount ?? 0),
         },
-        { label: "قرار داد تکمیل شده", value: action?.payload?.meta?.doneCount ?? ""},
-        { label: " قرار داد ناقص", value: action?.payload?.meta?.inProgressCount ?? ""},
+        {
+          label: "قرار داد تکمیل شده",
+          value: action?.payload?.meta?.doneCount ?? "",
+        },
+        {
+          label: " قرار داد ناقص",
+          value: action?.payload?.meta?.inProgressCount ?? "",
+        },
       ];
       const totalItems = action?.payload?.pagination?.total;
-      state.totalPages = Math.ceil(totalItems / action?.payload?.pagination?.limit);
+      state.totalPages = Math.ceil(
+        totalItems / action?.payload?.pagination?.limit
+      );
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;
@@ -108,7 +130,6 @@ const contractSlice = createSlice({
 export const fetchContracts = createAsyncThunk<any, any>(
   "contract/fetchContracts",
   async ({ page, limit, filters }) => {
-  
     try {
       const result = await fetchService(
         `contract-chadco-customer/filter-contracts?page=${page}&limit=${limit}`,
@@ -117,7 +138,7 @@ export const fetchContracts = createAsyncThunk<any, any>(
           body: filters,
         }
       );
-  
+
       return result;
     } catch {
       return {};

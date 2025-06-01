@@ -7,7 +7,7 @@ import { ProgressBarContainer } from "@/components/section/progress-bar-containe
 import AnimatedBarChart from "@/components/shared/animated-bar-chart";
 import Image from "next/image";
 import Breadcrumb from "@/components/shared/breadcrumb";
-import { pdf } from '@react-pdf/renderer';
+import { pdf } from "@react-pdf/renderer";
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
 import { cn, getDateRange, subContracts } from "@/lib/utils";
@@ -329,7 +329,6 @@ export default function Report() {
     documentTitle: "My Document",
   });
 
-
   // const exportPDF = async () => {
   //   const element = document.getElementById("export-container");
   //   if (!element) return;
@@ -414,23 +413,30 @@ export default function Report() {
         })),
       },
       {
-        sheetName: "میزان سود فروش", data: salesReportData?.[0]?.list.map((item:any) => ({
-          "سرویس": item?.label,
-          "میزان سود":item?.value
-      })) },
-      { sheetName: "تعداد نفرات فروش", data: salesReportData?.[1]?.list.map((item:any) => ({
-          "سرویس": item?.label,
-          "تعداد نفرات":item?.value
-      })) }, 
-      { sheetName: "تعداد قرارداد فروش", data: salesReportData?.[2]?.list.map((item:any) => ({
-          "سرویس": item?.label,
-          "تعداد قرارداد":item?.value
-      })) }, 
+        sheetName: "میزان سود فروش",
+        data: salesReportData?.[0]?.list.map((item: any) => ({
+          سرویس: item?.label,
+          "میزان سود": item?.value,
+        })),
+      },
+      {
+        sheetName: "تعداد نفرات فروش",
+        data: salesReportData?.[1]?.list.map((item: any) => ({
+          سرویس: item?.label,
+          "تعداد نفرات": item?.value,
+        })),
+      },
+      {
+        sheetName: "تعداد قرارداد فروش",
+        data: salesReportData?.[2]?.list.map((item: any) => ({
+          سرویس: item?.label,
+          "تعداد قرارداد": item?.value,
+        })),
+      },
     ]);
   };
   const [showOptions, setShowOptions] = useState(false);
-  
-  
+
   const handleClick = async () => {
     const chartImages = await captureAllCharts();
     const blob = await pdf(<ReportPDF chartImages={chartImages} />).toBlob();
@@ -445,37 +451,25 @@ export default function Report() {
   };
   return (
     <main className="px-0" id="export-container" ref={printRef}>
-      <div className="px-8">
-        <Title label="گزارش" />
+      <div className="w-full flex items-end justify-between px-8">
+        {" "}
+        <div className="">
+          <Title label="گزارش" />
 
-        <Breadcrumb
-          list={[
-            {
-              label: "داشبورد",
-              link: "/",
-            },
-            {
-              label: "گزارش",
-            },
-          ]}
-        />
-      </div>
-      <div className="flex px-6 flex-row items-center justify-between">
-        <TimeFilterContainer
-          listItem={timeFilteringData}
-          onCheckTimeFilter={(value: number) => {
-            timeCheckHandler(value);
-          }}
-          onDateFilterSubmit={(data: any) => {
-            submitTimeFiltering({
-              beginRangeDateTime: data.startDate,
-              endRangeDateTime: data.endDate,
-              rangeDates: [],
-            });
-          }}
-        />
+          <Breadcrumb
+            list={[
+              {
+                label: "داشبورد",
+                link: "/",
+              },
+              {
+                label: "گزارش",
+              },
+            ]}
+          />
+        </div>
         <div
-          className="flex flex-row gap-2"
+          className="flex flex-row xl:hidden gap-2"
           onMouseEnter={() => setShowOptions(true)}
           onMouseLeave={() => setShowOptions(false)}
         >
@@ -526,8 +520,78 @@ export default function Report() {
           )}
         </div>
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-4 gap-2 lg:gap-6 px-6" id="gauge-chart">
-        <div className="grid grid-cols-2 lg:col-span-3 bg-card rounded-lg p-6 lg:flex flex-row gap-4">
+
+      <div className="flex px-6 flex-row items-center justify-between">
+        <TimeFilterContainer
+          listItem={timeFilteringData}
+          onCheckTimeFilter={(value: number) => {
+            timeCheckHandler(value);
+          }}
+          onDateFilterSubmit={(data: any) => {
+            submitTimeFiltering({
+              beginRangeDateTime: data.startDate,
+              endRangeDateTime: data.endDate,
+              rangeDates: [],
+            });
+          }}
+        />
+        <div
+          className="hidden xl:flex xl:flex-row gap-2"
+          onMouseEnter={() => setShowOptions(true)}
+          onMouseLeave={() => setShowOptions(false)}
+        >
+          {" "}
+          {!showOptions && (
+            <Button
+              type="button"
+              variant={"info"}
+              className="bg-quartiery-background text-tertiary-foreground"
+            >
+              <span>خروجی</span>
+              <Image
+                src={"/icons/dark-download.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+              />
+            </Button>
+          )}
+          {showOptions && (
+            <Button type="button" variant={"foreground"} className="">
+              <Image
+                src={"/icons/pdf.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handleClick}
+              />
+              <Image
+                src={"/icons/excel.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handleExport}
+              />
+              <Image
+                src={"/icons/print.png"}
+                alt={"تصویر"}
+                width={107}
+                height={107}
+                className="h-4 w-4"
+                onClick={handlePrint}
+              />
+            </Button>
+          )}
+        </div>
+      </div>
+      <div
+        className="flex flex-col xl:grid xl:grid-cols-4 gap-2 xl:gap-6 px-6"
+        id="gauge-chart"
+      >
+        <div className="grid grid-cols-2 xl:col-span-3 bg-card rounded-lg p-6 xl:flex flex-row gap-4">
           {overalData.map((item: any) => (
             <div
               className={cn(
@@ -586,7 +650,10 @@ export default function Report() {
           <CustomizePiChart data={satisfactionData} labelFontSize="8px" />
         </div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4 px-6 "  id='sale-bar-chart'>
+      <div
+        className="flex flex-col xl:flex-row gap-4 px-6 "
+        id="sale-bar-chart"
+      >
         {salesReportData.map((item, index) => (
           <AnimatedBarChart
             key={index}
@@ -594,12 +661,11 @@ export default function Report() {
             fill={item.fill}
             title={item.title}
             info={item.info}
-           
           />
         ))}
       </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 px-6">
+      <div className="flex flex-col xl:grid xl:grid-cols-12 gap-4 px-6">
         <div className="col-span-7" id="report-table">
           <div className="w-full bg-card p-6 rounded-lg flex flex-col gap-4">
             <div className="text-lg font-primary-bold">
@@ -709,7 +775,7 @@ export default function Report() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 px-6">
+      <div className="flex flex-col xl:grid xl:grid-cols-12 gap-4 px-6">
         <div className="col-span-5 flex flex-col bg-card rounded-lg p-6 gap-4">
           <div className="text-lg font-primary-bold">نحوه آشنایی</div>{" "}
           <CustomizePiChart
@@ -719,13 +785,19 @@ export default function Report() {
             labelFontSize="6px"
           />
         </div>
-        <div className="col-span-7 bg-card rounded-lg p-6 flex flex-col gap-4" id="multiple-bar-chart">
+        <div
+          className="col-span-7 bg-card rounded-lg p-6 flex flex-col gap-4"
+          id="multiple-bar-chart"
+        >
           <div className="text-lg font-primary-bold">گزارش سود و زیان</div>
           <MultipleBarChart data={ProfitReportData} />
         </div>
       </div>
-      <div className="flex flex-col lg:grid lg:grid-cols-2 px-6 gap-4" id="progress-bar">
-        {progressBarData.map((item: any,index:number) => (
+      <div
+        className="flex flex-col xl:grid xl:grid-cols-2 px-6 gap-4"
+        id="progress-bar"
+      >
+        {progressBarData.map((item: any, index: number) => (
           <div
             key={item.title}
             className="col-span-1 bg-card rounded-lg p-6 flex flex-col gap-4"
