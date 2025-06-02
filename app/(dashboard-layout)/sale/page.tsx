@@ -25,6 +25,7 @@ import {
 import ContractOverview from "@/components/sale/contract-overview";
 
 import { useRouter } from "next/navigation";
+import { renewAccessToken } from "@/boot/fetch-service";
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -479,6 +480,7 @@ export default function Sale() {
       })
     );
   }
+ 
   return (
     <main>
       <div className="flex items-center justify-between">

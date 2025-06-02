@@ -56,13 +56,12 @@ export async function fetchService(
     options
   );
   const result = await response.json();
-  
+
   if (result.ui.type === "toast") {
     CustomToast({
       type: result.status,
       message: result.message,
     });
-
 
     // toast(data.error, {
     //   position: "top-center",
@@ -121,7 +120,7 @@ export async function fetchService(
 //       response = await executeFetch(); // retry original request with new token
 //     } else {
 //       localStorage.removeItem("token");
-//       Cookies.remove("refreshToken");
+//       Cookies.remove("token");
 //       window.location.href = "/login"; // or router.push("/login")
 //       return;
 //     }
@@ -139,36 +138,38 @@ export async function fetchService(
 //   return result;
 // }
 
-
-
-async function renewAccessToken() {
-  const refreshToken = Cookies.get("refreshToken");
+export async function renewAccessToken() {
+  const refreshToken = localStorage.getItem("refreshToken");
+  const accessToken = localStorage.getItem("refreshToken");
+  console.log(refreshToken);
   if (!refreshToken) return null;
 
   try {
-    const response = await fetch(`${config.ServerAddress}/api/v1/auth/refresh`, {
+    const response = await fetch(`${config.ServerAddress}/api/v1/auth/renew`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        _rt: `${refreshToken}`,
+        Authorization: `Bearer ${accessToken}`, // 👈 custom header for refresh token
       },
-      body: JSON.stringify({ refreshToken }),
     });
 
     const result = await response.json();
+    console.log(result);
+    if (result.status === "success" && result?.data?.accessToken) {
+      // Save new tokens
+      // localStorage.setItem("token", result.data.accessToken);
 
-    if (response.ok && result?.data?.accessToken) {
-      // Save new token
-      localStorage.setItem("token", result.data.accessToken);
-      Cookies.set("refreshToken", result.data.refreshToken, {
-        path: "/",
-        secure: true,
-        sameSite: "Strict",
-        expires: 7,
-      });
+      // Cookies.set("token", result.data.accessToken, {
+      //   path: "/",
+      //   secure: true,
+      //   sameSite: "Strict",
+      //   expires: 1, // 7 days
+      // });
       return result.data.accessToken;
+    } else {
+      return null;
     }
-
-    return null;
   } catch (error) {
     return null;
   }

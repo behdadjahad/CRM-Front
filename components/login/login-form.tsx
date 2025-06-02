@@ -57,14 +57,13 @@ export default function LoginForm() {
       if (result.status === "success") {
         router.push("/sale");
         localStorage.setItem("token", result.data.accessToken);
-
-    
+        localStorage.setItem("refreshToken", result.data.refreshToken);
       }
     } else {
       // toast
       // router.push("/login");
     }
-        setIsLoading(false);
+    setIsLoading(false);
   }
 
   return (

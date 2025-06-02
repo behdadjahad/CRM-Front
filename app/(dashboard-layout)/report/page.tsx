@@ -14,8 +14,7 @@ import { cn, getDateRange, subContracts } from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 import { TimeFilterContainer } from "@/components/section/time-filter-container";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+
 import { useMutation } from "@tanstack/react-query";
 import { getReportData } from "@/api/report";
 import { useEffect, useRef, useState } from "react";

@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 import Image from "next/image";
 
 import CustomModal from "../shared/custom-modal";
@@ -41,9 +41,9 @@ export interface ContractCardInterface {
   };
   services: ServiceCardInterface[];
   footer: {
-    income: string;
-    cost: string;
-    overall: string;
+    income: number;
+    cost: number;
+    overall: number;
   };
   className?: string;
 }
@@ -234,9 +234,16 @@ export default function ContractCard({
       </div>
 
       <div className="py-3.5 px-6 text-xs flex items-center justify-between gap-4 border-t text-muted-active">
-        <span>درآمد: {footer?.income}</span>
-        <span>هزینه: {footer?.cost}</span>
-        <span>سود/زیان: {footer?.overall}</span>
+        <span>درآمد: {formatPrice(footer?.income)}</span>
+        <span>هزینه: {formatPrice(footer?.cost)}</span>
+        <span>
+          {footer?.overall < 0
+            ? "زیان"
+            : footer?.overall > 0
+            ? "سود"
+            : "سود/زیان"}{" "}
+          :{formatPrice(Math.abs(footer?.overall).toString())}
+        </span>
       </div>
     </Link>
   );

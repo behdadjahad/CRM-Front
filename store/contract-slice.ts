@@ -1,7 +1,12 @@
 import { fetchService } from "@/boot/fetch-service";
 import { services } from "@/constants/services";
 import { convertDate } from "@/lib/date";
-import { limitForContracts, ServerImageAddress, totalVotes } from "@/lib/utils";
+import {
+  formatPrice,
+  limitForContracts,
+  ServerImageAddress,
+  totalVotes,
+} from "@/lib/utils";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface ContractState {
@@ -60,12 +65,15 @@ const contractSlice = createSlice({
               : "",
         },
         footer: {
-          cost: item.buyPrice?.toString() ?? "0",
-          income: item.sellPrice?.toString() ?? "0",
-          overall:
-            item.sellPrice && item.buyPrice
-              ? (item.sellPrice - item.buyPrice).toString()
-              : "0",
+          // cost: item?.buyPrice ? item?.buyPrice : 0,
+          cost: item?.buyPrice,
+          // income: item.sellPrice ? item?.sellPrice : 0,
+          income: item?.sellPrice,
+          // overall:
+          //   item?.sellPrice && item?.buyPrice
+          //     ? item.sellPrice - item.buyPrice
+          //     : 0,
+          overall: item?.sellPrice - item?.buyPrice,
         },
         header: {
           contractNumber: item.contractNo,
