@@ -13,7 +13,7 @@ export function CustomizePiChart({
   labelFontSize?: string;
 }) {
   return (
-    <div className={cn(" w-full grid grid-cols-2 gap-4", className)}>
+    <div className={cn("w-full grid grid-cols-2 gap-4", className)}>
       <div className="h-36 col-span-1 flex items-center justify-center">
         <PieChart
           data={data}
@@ -25,9 +25,11 @@ export function CustomizePiChart({
           labelStyle={{
             fontSize: labelFontSize ? labelFontSize : "8px",
             fontWeight: "400",
-            fill: "#000", // label color
+            fill: "#000",
+        
           }}
           labelPosition={75}
+          
         />
       </div>
       <div

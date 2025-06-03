@@ -10,7 +10,14 @@ import Breadcrumb from "@/components/shared/breadcrumb";
 import { pdf } from "@react-pdf/renderer";
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
-import { cn, getDateRange, subContracts } from "@/lib/utils";
+import {
+  cn,
+  colors,
+  getDateRange,
+  getRandomColor,
+  kpiType,
+  subContracts,
+} from "@/lib/utils";
 
 import dynamic from "next/dynamic";
 import { TimeFilterContainer } from "@/components/section/time-filter-container";
@@ -21,6 +28,7 @@ import { useEffect, useRef, useState } from "react";
 import { exportMultipleSheets } from "@/lib/exportToExcel";
 import { ReportPDF } from "@/components/section/report-pdf";
 import { captureAllCharts } from "@/lib/pdf";
+import { splitRangeBySolarMonths } from "@/lib/date";
 
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
@@ -39,131 +47,100 @@ export default function Report() {
   const [salesReportData, setSaleReportData] = useState<any[]>([]);
   const [provinceData, setProvinceData] = useState<any[]>([]);
   const [countryData, setCountryData] = useState<any[]>([]);
+  const [contactData, setContactData] = useState<any[]>([]);
+  const [profitReportData, setProfitReportData] = useState<any>();
+  const [overalData, setOveralData] = useState<any[]>([]);
+  const [customerTypeData, setCustomerTypeData] = useState<any[]>([]);
+  const [callReportData, setCallReportData] = useState<any[]>([]);
+   
   const printRef = useRef<HTMLDivElement>(null);
-  const ProfitReportData = {
-    list: [
-      { month: "فروردین", profit: 750000000, loss: 600000000 },
-      { month: "اردیبهشت", profit: 900000000, loss: 550000000 },
-      { month: "خرداد", profit: 800000000, loss: 450000000 },
-      { month: "تیر", profit: 650000000, loss: 700000000 },
-      { month: "مرداد", profit: 500000000, loss: 400000000 },
-      { month: "شهریور", profit: 750000000, loss: 350000000 },
-    ],
-    chartSeries: [
-      { key: "profit", label: "سود", fill: "#89D89A" },
-      { key: "loss", label: "زیان", fill: "#F64E60" },
-    ],
-  };
 
-  const contactData = [
-    {
-      title: "سایت",
-      value: 16,
-      color: "#6993FF",
-    },
-    {
-      title: "گروه واتس اپ",
-      value: 28,
-      color: "#E94B5C",
-    },
+  // const ProfitReportData = {
+  //   list: [
+  //     { month: "فروردین", profit: 750000000, loss: 600000000 },
+  //     { month: "اردیبهشت", profit: 900000000, loss: 550000000 },
+  //     { month: "خرداد", profit: 800000000, loss: 450000000 },
+  //     { month: "تیر", profit: 650000000, loss: 700000000 },
+  //     { month: "مرداد", profit: 500000000, loss: 400000000 },
+  //     { month: "شهریور", profit: 750000000, loss: 350000000 },
+  //   ],
+  //   chartSeries: [
+  //     { key: "profit", label: "سود", fill: "#89D89A" },
+  //     { key: "loss", label: "زیان", fill: "#F64E60" },
+  //   ],
+  // };
 
-    {
-      title: "دوستان",
-      value: 5,
-      color: "#FFDA44",
-    },
-    {
-      title: "همکاران",
-      value: 23,
-      color: "#8CDAAA",
-    },
-    {
-      title: "مسافران قدیمی",
-      value: 32,
-      color: "#A0AFFD",
-    },
-    {
-      title: "پیامک",
-      value: 18,
-      color: "#FAD89E",
-    },
+  // const progressBarData = [
+  //   {
+  //     title: "درصد مراجعه ها",
+  //     list: [
+  //       {
+  //         label: "مسافرجدید",
+  //         value: 61,
+  //         valueInPercent: 39,
+  //         fill: "#0BB783",
+  //       },
+  //       {
+  //         label: "مسافرقدیمی",
+  //         value: 69,
+  //         valueInPercent: 35,
+  //         fill: "#F3A56E",
+  //       },
+  //       {
+  //         label: "آژانس همکار",
+  //         value: 46,
+  //         valueInPercent: 26,
+  //         fill: "#A0AFFD",
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     title: "نتیجه پیگیری تماس ها",
+  //     list: [
+  //       {
+  //         label: "جواب دادند",
+  //         value: 92,
+  //         valueInPercent: 76,
+  //         fill: "#0BB783",
+  //       },
+  //       {
+  //         label: "جواب ندادند",
+  //         value: 7,
+  //         valueInPercent: 6,
+  //         fill: "#F64E60",
+  //       },
+  //       {
+  //         label: "براساس تاریخ امکان تماس نیست",
+  //         value: 22,
+  //         valueInPercent: 16,
+  //         fill: "#FAD89E",
+  //       },
+  //     ],
+  //   },
+  // ];
+  // const overalData = [
+  //   {
+  //     className: "bg-[#6CCE811A]",
+  //     label: "سود",
+  //     value: 72,
 
-    {
-      title: "تبلیغات شهری",
-      value: 16,
-      color: "#E9EDF0",
-    },
-  ];
-  const progressBarData = [
-    {
-      title: "درصد مراجعه ها",
-      list: [
-        {
-          label: "مسافرجدید",
-          value: 61,
-          valueInPercent: 39,
-          fill: "#0BB783",
-        },
-        {
-          label: "مسافرقدیمی",
-          value: 69,
-          valueInPercent: 35,
-          fill: "#F3A56E",
-        },
-        {
-          label: "آژانس همکار",
-          value: 46,
-          valueInPercent: 26,
-          fill: "#A0AFFD",
-        },
-      ],
-    },
-    {
-      title: "نتیجه پیگیری تماس ها",
-      list: [
-        {
-          label: "جواب دادند",
-          value: 92,
-          valueInPercent: 76,
-          fill: "#0BB783",
-        },
-        {
-          label: "جواب ندادند",
-          value: 7,
-          valueInPercent: 6,
-          fill: "#F64E60",
-        },
-        {
-          label: "براساس تاریخ امکان تماس نیست",
-          value: 22,
-          valueInPercent: 16,
-          fill: "#FAD89E",
-        },
-      ],
-    },
-  ];
-  const overalData = [
-    {
-      className: "bg-[#6CCE811A]",
-      label: "سود",
-      value: 72,
-    },
-    {
-      className: "bg-[#F8C2681A]",
-      label: "تعداد قرارداد",
-      value: 93,
-    },
-    {
-      className: "bg-[#BC29700F]",
-      label: "تعداد مسافر",
-      value: 28,
-    },
-    {
-      className: "bg-[#70BCFD1A]",
-      label: "فروش",
-      value: 50,
-    },
-  ];
+  //   },
+  //   {
+  //     className: "bg-[#F8C2681A]",
+  //     label: "تعداد قرارداد",
+  //     value: 93,
+  //   },
+  //   {
+  //     className: "bg-[#BC29700F]",
+  //     label: "تعداد مسافر",
+  //     value: 28,
+  //   },
+  //   {
+  //     className: "bg-[#70BCFD1A]",
+  //     label: "فروش",
+  //     value: 50,
+  //   },
+  // ];
   // const countryData = [
   //   { label: "India", value: 10 },
   //   { label: "Germany", value: 6 },
@@ -216,6 +193,11 @@ export default function Report() {
       const subContractsOveralNo = reportData?.data?.subContractsReport;
       const provinceReport = reportData?.data?.provinceDistribution;
       const countryReport = reportData?.data?.countryDistribution;
+      const contactReport = reportData?.data?.howIntroducedReport;
+      const profitLossReport = reportData?.data?.contractsProfitReport;
+      const overalReport = reportData?.data?.kpisReport;
+      const customerTypeReport = reportData?.data?.customerType?.report;
+      const callReport = reportData?.data?.callsReport;
       const provinces = provinceReport?.map((item: any) => ({
         label: item?.provinceName,
         value: item?.percentage,
@@ -284,26 +266,78 @@ export default function Report() {
           list: contractList,
         },
       ];
+      const contactTypes = contactReport.report.map((item: any) => ({
+        title: item.howIntroducedName,
+        value: item.percentage,
+        color: getRandomColor(colors),
+      }));
+      const profitLossList = {
+        list: profitLossReport?.map((item: any) => ({
+          month: item?.month,
+          profit: item?.profit,
+          loss: item?.loss,
+        })),
+        chartSeries: [
+          { key: "profit", label: "سود", fill: "#89D89A" },
+          { key: "loss", label: "زیان", fill: "#F64E60" },
+        ],
+      };
+      const overalReportList = overalReport?.map((item: any) => ({
+        className: "bg-[#6CCE811A]",
+        label: kpiType[item.kpiType.name as keyof typeof kpiType],
+        value: item.percentage,
+        arcs: item.splits.map((item: any) => ({
+          limit: item?.endPercent,
+          color: item?.color,
+          showTick: true,
+        })),
+      }));
+      // const customerTypeList = customerTypeReport.map((item: any) => ({
+      //   label: item.name ==="oldCustomer"?"مشتری قدیمی":item.name ==="newCustomer"?"مشتری جدید":item.name,
+      //   value: 46,
+      //   valueInPercent: 26,
+      //   fill: "#A0AFFD",
+      // }));
+      // const callReportList = callReport.map((item: any) => ({
+      //   label: "جواب دادند",
+      //   value: 92,
+      //   valueInPercent: 76,
+      //   fill: "#0BB783",
+      // }));
+      setOveralData(overalReportList);
       setSatisafactionData(satisafactionList);
       setSaleReportData(subContractList);
       setProvinceData(provinces);
       setCountryData(countries);
+      setContactData(contactTypes);
+      setProfitReportData(profitLossList);
+      // setCustomerTypeData(customerTypeList)
+      // setCallReportData(callReportList)
     }
   }, [reportData]);
   function timeCheckHandler(value: number) {
     const timeRange = getDateRange(value);
+    const rangeDatesArray = splitRangeBySolarMonths(
+      timeRange.startDate,
+      timeRange.endDate
+    );
+    const rangeDates = rangeDatesArray?.map((item: any) => ({
+      month: item.name,
+      date: item.start,
+    }));
     submitTimeFiltering({
       beginRangeDateTime: timeRange.startDate,
-      endRangeDateTime: timeRange.endDate,
-      rangeDates: [],
+      endRangeDateTime: timeRange.endDate.replace("00:00:00Z", "23:59:59Z"),
+      rangeDates: rangeDates,
     });
   }
   useEffect(() => {
-    submitTimeFiltering({
-      beginRangeDateTime: "",
-      endRangeDateTime: "",
-      rangeDates: [],
-    });
+    // submitTimeFiltering({
+    //   beginRangeDateTime: "",
+    //   endRangeDateTime: "",
+    //   rangeDates: [],
+    // });
+    timeCheckHandler(6);
   }, []);
 
   const handlePrint = useReactToPrint({
@@ -432,6 +466,13 @@ export default function Report() {
           "تعداد قرارداد": item?.value,
         })),
       },
+      {
+        sheetName: "نحوه آشنایی با مجموعه ",
+        data: contactData.map((item: any) => ({
+          " نحوه آشنایی": item?.title,
+          درصدافراد: item?.value,
+        })),
+      },
     ]);
   };
   const [showOptions, setShowOptions] = useState(false);
@@ -527,10 +568,18 @@ export default function Report() {
             timeCheckHandler(value);
           }}
           onDateFilterSubmit={(data: any) => {
+            const rangeDatesArray = splitRangeBySolarMonths(
+              data.startDate,
+              data.endDate
+            );
+            const rangeDates = rangeDatesArray?.map((item: any) => ({
+              month: item.name,
+              date: item.start,
+            }));
             submitTimeFiltering({
               beginRangeDateTime: data.startDate,
-              endRangeDateTime: data.endDate,
-              rangeDates: [],
+              endRangeDateTime: data.endDate.replace("00:00:00Z", "23:59:59Z"),
+              rangeDates: rangeDates,
             });
           }}
         />
@@ -591,7 +640,7 @@ export default function Report() {
         id="gauge-chart"
       >
         <div className="grid grid-cols-2 xl:col-span-3 bg-card rounded-lg p-6 xl:flex flex-row gap-4">
-          {overalData.map((item: any) => (
+          {overalData?.map((item: any) => (
             <div
               className={cn(
                 "w-full rounded-md flex flex-col items-center justify-center",
@@ -607,25 +656,25 @@ export default function Report() {
                     cornerRadius: 10,
                     width: 0.15,
                     padding: -2,
+                    subArcs: item.arcs,
+                    // subArcs: [
+                    //   {
+                    //     limit: 33, // up to 50%
 
-                    subArcs: [
-                      {
-                        limit: 33, // up to 50%
-
-                        color: "#E5AE21", // yellow
-                        showTick: true,
-                      },
-                      {
-                        limit: 66,
-                        color: "#E65F2B", // green (from 50% to 100%)
-                        showTick: true,
-                      },
-                      {
-                        limit: 100,
-                        color: "#1A932E", // green (from 50% to 100%)
-                        showTick: true,
-                      },
-                    ],
+                    //     color: "#E5AE21", // yellow
+                    //     showTick: true,
+                    //   },
+                    //   {
+                    //     limit: 66,
+                    //     color: "#E65F2B", // green (from 50% to 100%)
+                    //     showTick: true,
+                    //   },
+                    //   {
+                    //     limit: 100,
+                    //     color: "#1A932E", // green (from 50% to 100%)
+                    //     showTick: true,
+                    //   },
+                    // ],
                   }}
                   value={item.value}
                   // valueLabel={{
@@ -665,7 +714,7 @@ export default function Report() {
       </div>
 
       <div className="flex flex-col xl:grid xl:grid-cols-12 gap-4 px-6">
-        <div className="col-span-7" id="report-table">
+        <div className="col-span-7 " id="report-table">
           <div className="w-full bg-card p-6 rounded-lg flex flex-col gap-4">
             <div className="text-lg font-primary-bold">
               درصد قرارداد ها بر اساس تماس
@@ -732,7 +781,7 @@ export default function Report() {
             />
           </div>
         </div>
-        <div className="col-span-5 bg-card rounded-lg p-6 flex flex-col gap-4">
+        <div className="col-span-5 bg-card rounded-lg p-6 flex flex-col gap-4 min-h-[480px]">
           <div className="flex flex-row justify-between">
             <div className="font-primary-bold text-lg">مقاصد خارجی</div>
             <div className="flex flex-row gap-2">
@@ -779,7 +828,7 @@ export default function Report() {
           <div className="text-lg font-primary-bold">نحوه آشنایی</div>{" "}
           <CustomizePiChart
             data={contactData}
-            className="flex flex-col gap-4 items-center justify-center h-48 mt-8"
+            className="flex flex-col gap-4 items-center justify-center  mt-8"
             legendClassName="flex flex-row flex-wrap gap-2 items-center justify-between mt-8 grid grid-cols-4 w-full"
             labelFontSize="6px"
           />
@@ -789,14 +838,14 @@ export default function Report() {
           id="multiple-bar-chart"
         >
           <div className="text-lg font-primary-bold">گزارش سود و زیان</div>
-          <MultipleBarChart data={ProfitReportData} />
+          <MultipleBarChart data={profitReportData} />
         </div>
       </div>
       <div
         className="flex flex-col xl:grid xl:grid-cols-2 px-6 gap-4"
         id="progress-bar"
       >
-        {progressBarData.map((item: any, index: number) => (
+        {/* {progressBarData.map((item: any, index: number) => (
           <div
             key={item.title}
             className="col-span-1 bg-card rounded-lg p-6 flex flex-col gap-4"
@@ -805,7 +854,19 @@ export default function Report() {
             <div className="font-semibold text-lg">{item.title}</div>
             <ProgressBarContainer data={item.list} />
           </div>
-        ))}
+        ))} */}
+        {/* <div className="col-span-1 bg-card rounded-lg p-6 flex flex-col gap-4">
+          <div className="font-semibold text-lg">درصد مراجعه ها</div>
+          <ProgressBarContainer
+            data={customerTypeData}
+          />
+        </div>
+        <div className="col-span-1 bg-card rounded-lg p-6 flex flex-col gap-4">
+          <div className="font-semibold text-lg">نتیجه پیگیری تماس ها</div>
+          <ProgressBarContainer
+            data={callReportData}
+          />
+        </div> */}
       </div>
     </main>
   );

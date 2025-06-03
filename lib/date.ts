@@ -141,3 +141,55 @@ export function convertDateTimeToGregorian(
   // Format as UTC string
   return gregorianDate.format("YYYY-MM-DDTHH:mm:ss[Z]");
 }
+const solarMonthNames = [
+  "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+  "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+];
+
+export function splitRangeBySolarMonths(startUTC: string, endUTC: string) {
+  const result = [];
+
+  let [startYear, startMonth] = convertDate(startUTC, "Solar").split("/").map(Number);
+  const [endYear, endMonth] = convertDate(endUTC, "Solar").split("/").map(Number);
+
+  while (
+    startYear < endYear || (startYear === endYear && startMonth <= endMonth)
+  ) {
+    const currentMonthStr = `${startYear.toString().padStart(4, "0")}/${startMonth
+      .toString()
+      .padStart(2, "0")}/01`;
+
+    const nextMonth = startMonth === 12 ? 1 : startMonth + 1;
+    const nextYear = startMonth === 12 ? startYear + 1 : startYear;
+
+    const nextMonthStr = `${nextYear.toString().padStart(4, "0")}/${nextMonth
+      .toString()
+      .padStart(2, "0")}/01`;
+
+    const monthStartUTC = convertToGregorian(currentMonthStr, "Solar");
+    const monthEndUTC = convertToGregorian(nextMonthStr, "Solar");
+
+    const clampedStart = new Date(
+      Math.max(new Date(monthStartUTC).getTime(), new Date(startUTC).getTime())
+    ).toISOString();
+
+    const clampedEnd = new Date(
+      Math.min(new Date(monthEndUTC).getTime() - 1, new Date(endUTC).getTime())
+    ).toISOString();
+
+    result.push({
+      name: solarMonthNames[startMonth - 1],
+      start: clampedStart,
+      end: clampedEnd,
+    });
+
+    if (startMonth === 12) {
+      startYear += 1;
+      startMonth = 1;
+    } else {
+      startMonth += 1;
+    }
+  }
+
+  return result;
+}

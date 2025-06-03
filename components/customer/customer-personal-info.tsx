@@ -111,8 +111,6 @@ export function CustomerPersonalInfo() {
               dateType
             )
           : "",
-
-       
       };
       setPersonalContactInfo(contactInfoData);
       setAddresses(addressesInfo);
@@ -120,7 +118,7 @@ export function CustomerPersonalInfo() {
       setSatisfactionSchedule(satisfactionDate);
     }
   }, [customerPersonalInfo]);
-console.log(satisfactionSchedule)
+  console.log(satisfactionSchedule);
   const satisfactionScheduleData: OverviewInterface = {
     list: [
       {
@@ -178,40 +176,44 @@ console.log(satisfactionSchedule)
         ))}
       </div>
       <div className="col-span-3 flex flex-col bg-transparent rounded-lg gap-4">
-        {addresses?.map((item, index) => (
-          <div
-            className="bg-card rounded-lg p-6 flex flex-col gap-4"
-            key={index}
-          >
-            <div>{item?.title}</div>
-            {item?.list?.map((listItem: any, index: number) => (
-              <div key={index} className="flex flex-col gap-4">
-                <div className="flex flex-row gap-2 items-center">
-                  {" "}
-                  <Image
-                    src="/icons/primary-location.png"
-                    alt="address"
-                    width={24}
-                    height={24}
-                    className="w-3 h-4"
-                  />
-                  <div>{listItem.address}</div>
-                </div>
-                <div className="flex justify-between">
-                  {" "}
-                  <div className="flex">
-                    <span>{listItem.postalCode.label}:</span>
-                    <span>{listItem.postalCode.value}</span>
+        {addresses.length > 0 ? (
+          addresses?.map((item, index) => (
+            <div
+              className="bg-card rounded-lg p-6 flex flex-col gap-4"
+              key={index}
+            >
+              <div>{item?.title}</div>
+              {item?.list?.map((listItem: any, index: number) => (
+                <div key={index} className="flex flex-col gap-4">
+                  <div className="flex flex-row gap-2 items-center">
+                    <Image
+                      src="/icons/primary-location.png"
+                      alt="address"
+                      width={24}
+                      height={24}
+                      className="w-3 h-4"
+                    />
+                    <div>{listItem.address}</div>
                   </div>
-                  <div className="flex">
-                    <span>{listItem.phone.label}:</span>
-                    <span>{listItem.phone.value}</span>
+                  <div className="flex justify-between">
+                    <div className="flex">
+                      <span>{listItem.postalCode.label}:</span>
+                      <span>{listItem.postalCode.value}</span>
+                    </div>
+                    <div className="flex">
+                      <span>{listItem.phone.label}:</span>
+                      <span>{listItem.phone.value}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          ))
+        ) : (
+          <div className="bg-card rounded-lg p-6 flex flex-col gap-4">
+            آدرسی یافت نشد
           </div>
-        ))}
+        )}
       </div>
       <div className="bg-[#C9D3F4] rounded-lg p-6 col-span-1 flex flex-col items-center justify-between gap-2">
         <h2>میزان رضایت مندی</h2>

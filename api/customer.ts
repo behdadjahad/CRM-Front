@@ -1,9 +1,9 @@
 import { fetchService } from "@/boot/fetch-service";
 
 /*Get All Customers*/
-export async function getAllCustomers(page: number) {
+export async function getAllCustomers() {
   try {
-    const result = await fetchService(`customer/filter?page=${page}&limit=6`);
+    const result = await fetchService(`customer/filter`);
 
     return result;
   } catch {

@@ -9,7 +9,7 @@ import {
 import { Button } from "../ui/button";
 import { Fragment, useState } from "react";
 import React from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaCircle, FaDotCircle } from "react-icons/fa";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -38,6 +38,11 @@ export default function CustomerTableContainer({
       label: "برنز",
       value: "Bronze",
       className: "bg-[#FFE6CE] text-[#B55D04] border border-[#B55D04]",
+    },
+    {
+      label: "آبی",
+      value: "Blue",
+      className: "bg-[#EEF8FF] text-[#0475B5] border border-[#0475B5]",
     },
   ];
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -110,16 +115,11 @@ export default function CustomerTableContainer({
                         {label === "رتبه مشتری" ? (
                           <div
                             className={cn(
-                              "flex items-center rounded-md justify-around",
+                              "flex items-center rounded-xl justify-around w-16 h-6 p-2",
                               rankMatch?.className
                             )}
                           >
-                            <span
-                              className={cn(
-                                "border-none inline-block w-4 h-4 rounded-full mr-2",
-                                rankMatch?.className
-                              )}
-                            ></span>
+                            <FaCircle className="w-2 h-2"/>
                             <span>
                               {" "}
                               {rankMatch?.label

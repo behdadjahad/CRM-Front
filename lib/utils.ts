@@ -92,3 +92,39 @@ export const avServices = {
   Embassy: "سفارت",
   Flight: "پرواز",
 };
+export const colors = [
+  "#E9EDF0",
+  "#FAD89E",
+  "#A0AFFD",
+  "#8CDAAA",
+  "#FFDA44",
+  "#E94B5C",
+  "#6993FF",
+];
+
+let shuffled: any[] = [];
+let index = 0;
+
+function shuffle(array: any) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+export function getRandomColor(colors:string[]) {
+  if (index === 0 || index >= shuffled.length) {
+    shuffled = shuffle(colors);
+    index = 0;
+  }
+  return shuffled[index++];
+}
+
+export const kpiType = {
+  passengers: "مشتری",
+  contract: "قرارداد",
+  profit: "سود",
+  sellPrice: "فروش",
+};

@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import { useState } from "react";
-import Cookies from "js-cookie";
+
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();

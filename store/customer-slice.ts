@@ -32,7 +32,7 @@ const customerSlice = createSlice({
       state.items = action?.payload?.data?.map((item: any) => ({
         id: item?.id,
         info: {
-          "نام ونام خانوادگی": item?.person?.fullName,
+          "نام ونام خانوادگی": item?.person?.firstName + " " + item?.person?.lastName,
           "کدملی": item?.person?.idNumber,
           "ایمیل": item?.Communication?.email?.find((item:any)=>item?.communicater===Communicater.home)?.communicationDetails,
           "شماره تماس": item?.Communication?.mobile?.[0]?.communicationDetails,
@@ -40,7 +40,7 @@ const customerSlice = createSlice({
           "موضوع قرارداد": item?.lastContract?.contractType,
           "رتبه مشتری": item?.rank,
           "قرارداد": convertDate(item?.lastContract?.submitDate, dateType),
-          "مبلغ آخرین قرارداد": `${item?.lastContract?.price}`,
+          "مبلغ آخرین قرارداد": `${item?.lastContract?.price && formatPrice(item?.lastContract?.price)}`,
         },
         subInfo: {
           [item?.profit < 0 ? "ضرر و زیان" : "سود"]: formatPrice(

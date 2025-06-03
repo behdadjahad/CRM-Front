@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { fetchUserData } from "@/store/user-slice";
 import { Button } from "../ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -34,8 +34,11 @@ export default function ProfileDropDown({
 
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,
-    onError: () => {
-      router.push("/login");
+    onError: (response: any) => {
+      console.log(38, response);
+      if (response.status === 403) {
+        router.push("/login");
+      }
     },
   });
 
@@ -45,15 +48,26 @@ export default function ProfileDropDown({
     },
     onSuccess: () => {
       localStorage.removeItem("token");
+      localStorage.removeItem("refreshToken");
       router.push("/login");
       // Cookies.remove('accessToken', { path: '/' });
       // Cookies.remove('refreshToken', { path: '/' });
     },
   });
-
+  // const { data: userResponse } = useQuery({
+  //   queryKey: ["userResponse"],
+  //   queryFn: () => getMe(),
+  // });
   useEffect(() => {
-    fetchMe();
+    const token = localStorage.getItem("token");
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!token && !refreshToken) {
+      router.push("/login");
+    }
   }, []);
+  // useEffect(() => {
+  //   fetchMe();
+  // }, []);
 
   return (
     <DropdownMenu>

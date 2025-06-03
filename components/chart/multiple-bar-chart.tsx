@@ -14,7 +14,7 @@ import {
 export default function MultipleBarChart({ data }: { data: any }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <ComposedChart data={data.list}>
+      <ComposedChart data={data?.list}>
         {/* <BarChart data={data.list}> */}
         <XAxis
           dataKey="month"
@@ -81,7 +81,7 @@ export default function MultipleBarChart({ data }: { data: any }) {
             activeDot={false}
           />
         ))}
-        {data.chartSeries.map((item: any, index: number) => (
+        {data?.chartSeries.map((item: any, index: number) => (
           <Tooltip
             key={`tooltip-${item.key}-${index}`}
             cursor={false}
@@ -128,7 +128,7 @@ export default function MultipleBarChart({ data }: { data: any }) {
             dataKey={item.key}
             fill={item.fill}
             name={item.label}
-            barSize={15}
+            barSize={8}
           />
         ))}
 

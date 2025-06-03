@@ -117,9 +117,9 @@ if (value) {
 }
 };
   if (!geoData) return <p>Loading map...</p>;
-if (!geoData || Object.keys(valueMap).length === 0) {
-  return <p>Loading map...</p>;
-}
+// if (!geoData || Object.keys(valueMap).length === 0) {
+//   return <p>Loading map...</p>;
+// }
   return (
     <div style={{ width: "100%", height: "100%", background: "#ffffff" }}>
       <MapContainer

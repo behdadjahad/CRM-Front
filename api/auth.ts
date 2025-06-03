@@ -53,7 +53,7 @@ export async function logOut() {
   }
 }
 
-export async function getMe(): Promise<UserData> {
+export async function getMe(): Promise<any> {
   try {
     const result = await fetchService("user");
     return result;

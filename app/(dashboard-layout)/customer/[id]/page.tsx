@@ -39,7 +39,7 @@ export default function CustomerDetail() {
           },
           {
             label: "نام و نام خانوادگی",
-            value: customerPersonalData?.data?.person?.fullName,
+            value: customerPersonalData?.data?.person?.firstName + " " + customerPersonalData?.data?.person?.lastName,
           },
           {
             label: "کدملی",

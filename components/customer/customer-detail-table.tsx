@@ -1,5 +1,5 @@
 "use client";
-import { cn, totalVotes } from "@/lib/utils";
+import { cleanFormatPrice, cn, totalVotes } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 import { Fragment } from "react";
 import React from "react";
 import { Rating } from "react-simple-star-rating";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 export default function CustomerDetailTable({
   tableHeaderLabels,
@@ -57,17 +58,36 @@ export default function CustomerDetailTable({
 
                 {tableHeaderLabels.map((label, idx) => (
                   <TableCell key={idx} className="text-center text-xs">
-                    {item[label]}
+                    {label === "سود و زیان" ? (
+                      <div
+                        className={
+                          cleanFormatPrice(item[label]) > 0
+                            ? "text-[#039855]"
+                            : cleanFormatPrice(item[label]) < 0
+                            ? "text-[#D80027]"
+                            : ""
+                        }
+                      >
+                        <div className="flex flex-row items-center gap-2">
+                          {cleanFormatPrice(item[label]) > 0 ? <FaChevronUp /> :cleanFormatPrice(item[label]) < 0 ? <FaChevronDown />:""}
+                          <span>{item[label]}</span></div>
+                       
+                      </div>
+                    ) : (
+                      <div>
+                        {item[label]}
 
-                    {label === "رضایتمندی" && (
-                      <Rating
-                        iconsCount={1} // Only 1 star
-                        size={20} // Optional: size of the star
-                        onClick={(rate) => console.log(rate)}
-                        readonly
-                        allowFraction={true}
-                        initialValue={item[label]} // Optional: handle click
-                      />
+                        {label === "رضایتمندی" && (
+                          <Rating
+                            iconsCount={1} // Only 1 star
+                            size={20} // Optional: size of the star
+                            onClick={(rate) => console.log(rate)}
+                            readonly
+                            allowFraction={true}
+                            initialValue={item[label]} // Optional: handle click
+                          />
+                        )}
+                      </div>
                     )}
                   </TableCell>
                 ))}

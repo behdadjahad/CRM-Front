@@ -476,11 +476,13 @@ export default function Contract() {
       queryClient.invalidateQueries({
         queryKey: ["contract"],
       });
-      const customerId = result?.data?.customerId;
-      const url = organizationId
-        ? `?customerId=${customerId}&organizationId=${organizationId}`
-        : `?customerId=${customerId}`;
-      router.push(url);
+      if (result.status === "success") {
+        const customerId = result?.data?.customerId;
+        const url = organizationId
+          ? `?customerId=${customerId}&organizationId=${organizationId}`
+          : `?customerId=${customerId}`;
+        router.push(url);
+      }
     },
   });
   const { mutate: personalEditHandler } = useMutation({
@@ -494,11 +496,13 @@ export default function Contract() {
       return createOrganization(data);
     },
     onSuccess: (result) => {
-      const organizationId = result.data.id;
-      const url = customerId
-        ? `?customerId=${customerId}&organizationId=${organizationId}`
-        : `?organizationId=${organizationId}`;
-      router.push(url);
+      if (result.status === "success") {
+        const organizationId = result.data.id;
+        const url = customerId
+          ? `?customerId=${customerId}&organizationId=${organizationId}`
+          : `?organizationId=${organizationId}`;
+        router.push(url);
+      }
     },
   });
   const { mutate: addressInfoHandler } = useMutation({
