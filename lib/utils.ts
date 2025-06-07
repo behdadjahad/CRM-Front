@@ -128,3 +128,4 @@ export const kpiType = {
   profit: "سود",
   sellPrice: "فروش",
 };
+export const limitForInfiniteCustomers = 8;

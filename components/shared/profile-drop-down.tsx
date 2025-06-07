@@ -65,9 +65,9 @@ export default function ProfileDropDown({
       router.push("/login");
     }
   }, []);
-  // useEffect(() => {
-  //   fetchMe();
-  // }, []);
+  useEffect(() => {
+    fetchMe();
+  }, []);
 
   return (
     <DropdownMenu>
