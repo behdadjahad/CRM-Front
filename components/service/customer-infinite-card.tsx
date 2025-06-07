@@ -11,14 +11,49 @@ type CustomerInfiniteCardProps = {
     lastName: string;
     phone: string;
     email: string;
-    };
-    onCheckCustomerhandler: any;
+  };
+  onCheckCustomerhandler: any;
+  searchKeyWord: string;
+};
+// const highlightMatch = (text: string, keyword: string) => {
+//   if (!keyword) return text;
+//   if (!text) return;
+//   const regex = new RegExp(`(${keyword})`, "gi"); // Case-insensitive match
+//   const parts = text.split(regex);
+
+//   return parts.map((part, index) =>
+//     part.toLowerCase() === keyword.toLowerCase() ? (
+//       <span key={index} className="text-yellow-600 font-bold">
+//         {part}
+//       </span>
+//     ) : (
+//       part
+//     )
+//   );
+// };
+const highlightMatch = (text: string, keyword: string) => {
+  if (!text || !keyword.trim()) return text;
+
+  const escapedKeyword = keyword
+    .trim()
+    .replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  const regex = new RegExp(escapedKeyword, "gi");
+
+  return text.split(regex).reduce<React.ReactNode[]>((acc, part, i, arr) => {
+    acc.push(part);
+    if (i < arr.length - 1) {
+      acc.push(
+        <span key={i} className="text-yellow-600 font-bold">
+          {text.match(regex)?.[i]}
+        </span>
+      );
+    }
+    return acc;
+  }, []);
 };
 
-
 const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
-    ({ customer, onCheckCustomerhandler }, ref) => {
-        console.log(customer)
+  ({ customer, onCheckCustomerhandler, searchKeyWord }, ref) => {
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
@@ -43,10 +78,16 @@ const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-primary-bold">
-                {customer.firstName + " " + customer.lastName}
+                <>
+                  {/* {customer.firstName + " " + customer.lastName} */}
+                  {highlightMatch(customer.firstName, searchKeyWord)}{" "}
+                  {highlightMatch(customer.lastName, searchKeyWord)}
+                </>
               </span>
+
               <span className="text-sm text-foreground-mute">
-                {customer.email}
+                {highlightMatch(customer.email, searchKeyWord)}
+                {/* {customer.email} */}
               </span>
             </div>
           </div>
@@ -58,7 +99,10 @@ const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
             width={12}
             height={12}
           />
-          <span>{customer.phone}</span>
+          <span>
+            {/* {customer.phone} */}
+            {highlightMatch(customer.phone, searchKeyWord)}
+          </span>
         </div>
         <div className="flex items-center text-foreground-mute gap-2">
           <Image
@@ -67,17 +111,18 @@ const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
             width={18}
             height={18}
           />
-          <span>{customer.idNumber}</span>
+          <span>
+            {/* {customer.idNumber} */}
+            {highlightMatch(customer.idNumber, searchKeyWord)}
+          </span>
         </div>
       </div>
     );
 
     const content = ref ? (
-      <article  ref={ref}>
-        {customerInfiniteCardContent}
-      </article>
+      <article ref={ref}>{customerInfiniteCardContent}</article>
     ) : (
-      <article >{customerInfiniteCardContent}</article>
+      <article>{customerInfiniteCardContent}</article>
     );
 
     return content;

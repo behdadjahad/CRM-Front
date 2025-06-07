@@ -61,6 +61,7 @@ export default function CustomerInfiniteContainer({
               key={customer.id}
               customer={customer}
               onCheckCustomerhandler={onCheckCustomerhandler}
+              searchKeyWord={searchKeyWord}
             />
           );
         }
@@ -69,6 +70,7 @@ export default function CustomerInfiniteContainer({
             key={customer.id}
             customer={customer}
             onCheckCustomerhandler={onCheckCustomerhandler}
+            searchKeyWord={searchKeyWord}
           />
         );
       })
