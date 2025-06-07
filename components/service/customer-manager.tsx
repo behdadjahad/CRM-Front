@@ -1,32 +1,23 @@
-import {
-  addCustomerData,
-  addMultipleCustomerData,
-  getAllCustomers,
-} from "@/api/customer";
-import {
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { addCustomerData, addMultipleCustomerData } from "@/api/customer";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { FaPlus } from "react-icons/fa";
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
-import CustomerListSection, { Customer } from "./customer-list-section";
+
 import FormMaker from "../shared/form-maker";
-import Image from "next/image";
-import CustomerInfiniteContainer from "./customer-infinite-container";
+
+import CustomerListSection from "./customer-list-section";
 export default function CustomerManager() {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
   const [openThirdModal, setOpenThirdModal] = useState(false);
-  const [customers, setCustomers] = useState<Customer[]>([]);
+
   const [selectedCustomersId, setSelectedCustomersId] = useState<number[]>([]);
 
   const formik = useFormik({
@@ -38,10 +29,6 @@ export default function CustomerManager() {
       clientEmail: "",
     },
     onSubmit: async () => {},
-  });
-  const { data: allCustomers } = useQuery({
-    queryKey: ["allCustomers"],
-    queryFn: () => getAllCustomers(),
   });
 
   const { mutate: submitCustomerHandler } = useMutation({
@@ -67,15 +54,7 @@ export default function CustomerManager() {
       email: formik.values.clientEmail,
     });
   }
-  const checkCustomerHandler = (customer: any) => {
-    // if (isChecked) {
-    //   setSelectedCustomers((prevState) => [...prevState, customer]);
-    // } else {
-    //   setSelectedCustomers((prevState) =>
-    //     prevState.filter((item) => item.id !== customer.id)
-    //   );
-    // }
-  };
+
   const { mutate: submitMultipleCustomerHandler } = useMutation({
     mutationFn: (data: any) => {
       return addMultipleCustomerData(data, Number(id));
@@ -89,87 +68,14 @@ export default function CustomerManager() {
       });
     },
   });
-  function submitMultipleHandler(data: any) {
-    const updatedData = data.map((obj: any) => obj.id);
-    submitMultipleCustomerHandler(updatedData);
-  }
-  const filteredCustomers = useMemo(() => {
-    if (!customers?.length) return []; // No customers available
-
-    // If all filter values are empty, return an empty array
-    if (Object.values(formik.values).every((value) => !value)) return [];
-
-    return customers.filter(
-      (customer) =>
-        (formik.values.clientName
-          ? customer.firstName
-              .toLowerCase()
-              .includes(formik.values.clientName.toLowerCase().trim())
-          : true) &&
-        (formik.values.clientFamily
-          ? customer.lastName
-              .toLowerCase()
-              .includes(formik.values.clientFamily.toLowerCase().trim())
-          : true) &&
-        (formik.values.clientSSD
-          ? customer.idNumber
-              ?.toLowerCase()
-              .includes(formik.values.clientSSD.toLowerCase())
-          : true) &&
-        (formik.values.clientPhoneNumber
-          ? customer.phone
-              ?.toLowerCase()
-              .includes(formik.values.clientPhoneNumber.toLowerCase())
-          : true) &&
-        (formik.values.clientEmail
-          ? customer.email
-              ?.toLowerCase()
-              .includes(formik.values.clientEmail.toLowerCase())
-          : true)
-    );
-  }, [formik.values, customers]);
-
-  // const LIMIT = 10;
-  // const {
-  //   data: customersData,
-  //   fetchNextPage,
-  //   hasNextPage,
-  //   isFetchingNextPage,
-  // } = useInfiniteQuery({
-  //   queryKey: ["customersData"],
-  //   queryFn: ({ pageParam = 1 }) => getAllCustomers(pageParam),
-  //   getNextPageParam:  (lastPage, allPages) => {
-  //       const nextPage =
-  //         lastPage.length === LIMIT ? allPages.length + 1 : undefined;
-  //       return nextPage;
-  //     },
-  //   initialPageParam: 1,
-  // });
-
-
-  useEffect(() => {
-    if (allCustomers) {
-      console.log(allCustomers);
-      const customerList = allCustomers?.data?.map((client: any) => [
-        { label: "id", value: client?.id },
-        {
-          label: "نام و نام خانوادگی",
-          value: client?.person?.firstName + " " + client?.person?.lastName,
-        },
-        { label: "کدملی", value: client?.person?.idNumber },
-        {
-          label: "شماره تلفن",
-          value: client?.communication?.mobile?.[0]?.communicationDetails,
-        },
-        {
-          label: "ایمیل",
-          value: client?.communication?.email?.[0]?.communicationDetails,
-        },
-      ]);
-
-      setCustomers(customerList);
+  function submitMultipleHandler(customerId: number, checked: boolean) {
+    if (checked) {
+      setSelectedCustomersId((prev) => [...prev, customerId]);
+    } else {
+      setSelectedCustomersId((prev) => prev.filter((id) => id !== customerId));
     }
-  }, [allCustomers]);
+  }
+
   return (
     <div className="flex items-center justify-end">
       <Button
@@ -211,19 +117,12 @@ export default function CustomerManager() {
           />
         </div>
 
-        {/* <CustomerListSection
-          list={customers}
-          onCheckHandler={checkCustomerHandler}
-          hasNextPage={hasNextPage}
-          fetchNextPage={fetchNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-        /> */}
-         <CustomerInfiniteContainer />
+        <CustomerListSection onCheckCustomerhandler={submitMultipleHandler} />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
             onClick={() => {
-              submitMultipleHandler(selectedCustomersId);
+              submitMultipleCustomerHandler(selectedCustomersId);
             }}
           >
             ثبت
@@ -292,18 +191,14 @@ export default function CustomerManager() {
               />
             </div>
 
-            {/* <CustomerListSection
-              list={customers}
-              onCheckHandler={checkCustomerHandler}
-              hasNextPage={hasNextPage}
-              fetchNextPage={fetchNextPage}
-              isFetchingNextPage={isFetchingNextPage}
-            /> */}
+            <CustomerListSection
+              onCheckCustomerhandler={submitMultipleHandler}
+            />
             <div className="flex flex-row gap-4 items-center justify-end">
               <Button
                 variant={"info"}
                 onClick={() => {
-                  submitMultipleHandler(selectedCustomersId);
+                  submitMultipleCustomerHandler(selectedCustomersId);
                 }}
               >
                 ثبت
@@ -370,7 +265,7 @@ export default function CustomerManager() {
             className="flex flex-row w-full"
           />
         </div>
-        {filteredCustomers.length > 0 && (
+        {/* {filteredCustomers.length > 0 && (
           <div className="p-2 max-h-60 overflow-y-auto flex flex-col gap-2">
             {filteredCustomers.map((customer) => {
               const highlightMatch = (text = "", search = "") => {
@@ -461,7 +356,7 @@ export default function CustomerManager() {
               );
             })}
           </div>
-        )}
+        )} */}
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button variant={"info"} onClick={submitHandler}>
             ثبت

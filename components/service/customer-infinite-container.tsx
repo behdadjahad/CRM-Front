@@ -7,7 +7,13 @@ import { limitForInfiniteCustomers } from "@/lib/utils";
 import { getAllCustomers } from "@/api/customer";
 import CustomerInfiniteCard from "./customer-infinite-card";
 
-export default function CustomerInfiniteContainer() {
+export default function CustomerInfiniteContainer({
+  onCheckCustomerhandler,
+  searchKeyWord
+}: {
+    onCheckCustomerhandler: any;
+  searchKeyWord:string
+}) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
 
@@ -18,9 +24,9 @@ export default function CustomerInfiniteContainer() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["customersData"],
+    queryKey: ["customersData",searchKeyWord],
     queryFn: ({ pageParam = 1 }) =>
-      getAllCustomers({ page: pageParam, limit: limitForInfiniteCustomers }),
+      getAllCustomers({ page: pageParam, limit: limitForInfiniteCustomers,keyword:searchKeyWord}),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
         lastPage.data.length === LIMIT ? allPages.length + 1 : undefined;
@@ -45,8 +51,8 @@ export default function CustomerInfiniteContainer() {
           idNumber: item?.person?.idNumber,
           job: item?.person?.personJobs?.[0]?.jobs?.name,
           lastName: item?.person?.lastName,
-          phone: item?.communication?.mobile?.[0]?.communicationDetails,
-          email: item?.communication?.email?.[0]?.communicationDetails,
+          phone: item?.Communication?.mobile?.[0]?.communicationDetails,
+          email: item?.Communication?.email?.[0]?.communicationDetails,
         };
         if (page.data.length === i + 1) {
           return (
@@ -54,15 +60,22 @@ export default function CustomerInfiniteContainer() {
               ref={ref}
               key={customer.id}
               customer={customer}
+              onCheckCustomerhandler={onCheckCustomerhandler}
             />
           );
         }
-        return <CustomerInfiniteCard key={customer.id} customer={customer} />;
+        return (
+          <CustomerInfiniteCard
+            key={customer.id}
+            customer={customer}
+            onCheckCustomerhandler={onCheckCustomerhandler}
+          />
+        );
       })
     );
 
   return (
-    <div className="max-h-64 overflow-scroll">
+    <div className="max-h-64 overflow-scroll flex flex-col gap-4">
       {content}
       {isFetchingNextPage && <h3>Loading...</h3>}
     </div>

@@ -13,6 +13,7 @@ export interface ClientInfoContainerInterface {
 export default function ClientInfoContainer() {
   const { id } = useParams();
   const [clientList, setClientList] = useState<any[]>([]);
+  const [clientsInfo, setClientsInfo] = useState<any[]>([]);
 
   const { data: contractCustomersData } = useQuery({
     queryKey: ["contractCustomersData"],
@@ -23,7 +24,6 @@ export default function ClientInfoContainer() {
     if (contractCustomersData) {
       console.log(contractCustomersData);
       const clients = contractCustomersData?.data?.map((client: any) => [
-        { label: "id", value: client?.id },
         {
           label: "نام و نام خانوادگی",
           value: client?.person?.firstName + " " + client?.person?.lastName,
@@ -38,8 +38,18 @@ export default function ClientInfoContainer() {
           value: client?.communication?.email?.[0]?.communicationDetails,
         },
       ]);
+      const clientInfoList = contractCustomersData?.data?.map((client: any) => ({
+        editKey:client?.id,
+        deleteKey:client?.contractCustomers?.[0]?.id,
+        name:client?.person?.firstName,
+        family:client?.person?.lastName,
+        idNumber:client?.person?.idNumber,
+        phone:client?.communication?.mobile?.[0]?.communicationDetails,
+        email:client?.communication?.email?.[0]?.communicationDetails,
+      }))
 
       setClientList(clients);
+      setClientsInfo(clientInfoList)
     }
   }, [contractCustomersData]);
 
@@ -50,9 +60,9 @@ export default function ClientInfoContainer() {
         {clientList?.map((item, index) => (
           <ClientInfoCard
             key={`client-${index}`}
-            clientId={item[0].value}
+   
             clientData={item}
-            clientInfo={clientList[index]}
+            clientInfo={clientsInfo[index]}
           />
         ))}
       </div>

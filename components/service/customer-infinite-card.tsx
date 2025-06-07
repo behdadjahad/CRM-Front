@@ -1,7 +1,8 @@
 import React, { forwardRef } from "react";
 import Image from "next/image";
-// Define the props type
-type TodoProps = {
+import { Checkbox } from "../ui/checkbox";
+
+type CustomerInfiniteCardProps = {
   customer: {
     id: number;
     firstName: string;
@@ -10,25 +11,26 @@ type TodoProps = {
     lastName: string;
     phone: string;
     email: string;
-  };
+    };
+    onCheckCustomerhandler: any;
 };
 
-// Forward ref to an HTMLElement (article element)
-const CustomerInfiniteCard = forwardRef<HTMLElement, TodoProps>(({ customer }, ref) => {
 
-  const customerInfiniteCardContent = (
-
+const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
+    ({ customer, onCheckCustomerhandler }, ref) => {
+        console.log(customer)
+    const customerInfiniteCardContent = (
       <div
         key={customer.id}
         className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
       >
         <div className="flex items-center gap-2">
-          {/* <Checkbox
-                    onCheckedChange={(checked) =>
-                        checkCustomerHandler(customer.id, Boolean(checked))
-                    }
-                    checked={isChecked}
-                /> */}
+          <Checkbox
+            onCheckedChange={(checked) =>
+              onCheckCustomerhandler(customer.id, Boolean(checked))
+            }
+            // checked={isChecked}
+          />
           <div className="flex items-center gap-2">
             {" "}
             <div className="rounded-full flex items-center justify-center bg-[#F5F5F5] border border-gray-200 w-10 h-10">
@@ -68,20 +70,20 @@ const CustomerInfiniteCard = forwardRef<HTMLElement, TodoProps>(({ customer }, r
           <span>{customer.idNumber}</span>
         </div>
       </div>
+    );
 
-  );
+    const content = ref ? (
+      <article  ref={ref}>
+        {customerInfiniteCardContent}
+      </article>
+    ) : (
+      <article >{customerInfiniteCardContent}</article>
+    );
 
-  const content = ref ? (
-    <article className="article" ref={ref}>
-      {customerInfiniteCardContent}
-    </article>
-  ) : (
-    <article className="article">{customerInfiniteCardContent}</article>
-  );
+    return content;
+  }
+);
 
-  return content;
-});
-
-CustomerInfiniteCard.displayName = "Todo";
+CustomerInfiniteCard.displayName = "CustomerInfinite";
 
 export default CustomerInfiniteCard;

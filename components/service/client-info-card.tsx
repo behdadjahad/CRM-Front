@@ -32,11 +32,9 @@ export interface ClientInfoCardInterface {
 
 export default function ClientInfoCard({
   clientData,
-  clientId,
   clientInfo,
 }: {
   clientData: any[];
-  clientId: number;
   clientInfo: any;
 }) {
   const queryClient = useQueryClient();
@@ -45,7 +43,7 @@ export default function ClientInfoCard({
     initialValues: {
       clientName: clientInfo?.name,
       clientFamily: clientInfo?.family,
-      clientSSD: clientInfo?.ssd,
+      clientSSD: clientInfo?.idNumber,
       clientPhoneNumber: clientInfo?.phone,
       clientEmail: clientInfo?.email,
     },
@@ -71,9 +69,12 @@ export default function ClientInfoCard({
     },
     onSuccess: () => {
       setOpenModal(false);
+      queryClient.invalidateQueries({
+        queryKey: ["contractCustomersData"],
+      });
     },
   });
-
+  console.log(clientInfo);
   return (
     <div className="flex flex-col rounded-lg overflow-hidden  items-start border border-border/20  border-r-primary border-r-[6px]">
       <div
@@ -82,17 +83,14 @@ export default function ClientInfoCard({
         } transition-all duration-300 ease-in-out`}
       >
         <div className="w-4/5 flex flex-col gap-1">
-          {clientData.map(
-            (item: any, index: number) =>
-              index > 0 && (
-                <div key={item.label} className="flex flex-row">
-                  <span className="text-subtitle/80 text-xs w-1/2">
-                    {item.label}
-                  </span>
-                  <span className="text-xs w-1/2">{item.value}</span>
-                </div>
-              )
-          )}
+          {clientData.map((item: any, index: number) => (
+            <div key={item.label} className="flex flex-row">
+              <span className="text-subtitle/80 text-xs w-1/2">
+                {item.label}
+              </span>
+              <span className="text-xs w-1/2">{item.value}</span>
+            </div>
+          ))}
         </div>
 
         <div className="w-1/5 flex flex-col gap-2">
@@ -105,7 +103,7 @@ export default function ClientInfoCard({
                 height={1024}
                 className="w-5 h-5"
                 onClick={() => {
-                  deleteCustomerHandler(clientId);
+                  deleteCustomerHandler(clientInfo.deleteKey);
                 }}
               />
             </Button>
@@ -190,7 +188,7 @@ export default function ClientInfoCard({
                   variant={"info"}
                   onClick={() => {
                     editCustomerHandler({
-                      id: clientInfo.id,
+                      id: clientInfo.editKey,
                       data: {
                         firstName: formik.values.clientName,
                         lastName: formik.values.clientFamily,
