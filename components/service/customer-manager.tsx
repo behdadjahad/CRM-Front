@@ -48,7 +48,6 @@ export default function CustomerManager() {
     submitCustomerHandler({
       firstName: formik.values.clientName,
       lastName: formik.values.clientFamily,
-
       idNumber: formik.values.clientSSD,
       phoneNumber: formik.values.clientPhoneNumber,
       email: formik.values.clientEmail,
@@ -89,7 +88,10 @@ export default function CustomerManager() {
       </Button>
       <Button
         variant={"foreground"}
-        onClick={() => setOpenThirdModal(true)}
+        onClick={() => {
+          setOpenThirdModal(true);
+          queryClient.removeQueries({ queryKey: ["customersData"] });
+        }}
         className="border-none"
       >
         <FaPlus size={10} className="text-primary-active" />
@@ -117,7 +119,10 @@ export default function CustomerManager() {
           />
         </div>
 
-        <CustomerListSection onCheckCustomerhandler={submitMultipleHandler} />
+        <CustomerListSection
+          onCheckCustomerhandler={submitMultipleHandler}
+          key="third-modal"
+        />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
@@ -162,7 +167,12 @@ export default function CustomerManager() {
 
             <Button
               variant={"foreground"}
-              onClick={() => setOpenSecondModal(true)}
+              onClick={() => {
+                setOpenSecondModal(true);
+                queryClient.removeQueries({
+                  queryKey: ["customersData"],
+                });
+              }}
               className="border-none self-end"
             >
               <FaPlus size={10} className="text-primary-active" />
@@ -193,6 +203,7 @@ export default function CustomerManager() {
 
             <CustomerListSection
               onCheckCustomerhandler={submitMultipleHandler}
+              key="second-modal"
             />
             <div className="flex flex-row gap-4 items-center justify-end">
               <Button

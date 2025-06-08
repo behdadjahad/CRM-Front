@@ -232,7 +232,7 @@ export default function Report() {
         const label = subContracts[key as keyof typeof subContracts];
         profitList.push({
           label: label,
-          value: subContractsReport[key].profit,
+          value: subContractsReport[key].profit < 0 ? 0 : subContractsReport[key].profit,
         });
         customerList.push({
           label: label,
@@ -247,7 +247,7 @@ export default function Report() {
         {
           title: "(سود)",
           fill: "#6CCE81",
-          info: `سود کل ${subContractsOveralNo?.overallProfit} تومان`,
+          info: `سود کل ${subContractsOveralNo?.overallProfit < 0 ? 0:subContractsOveralNo?.overallProfit } تومان`,
 
           list: profitList,
         },
@@ -275,7 +275,7 @@ export default function Report() {
         list: profitLossReport?.map((item: any) => ({
           month: item?.month,
           profit: item?.profit,
-          loss: item?.loss,
+          loss: Math.abs(item?.loss),
         })),
         chartSeries: [
           { key: "profit", label: "سود", fill: "#89D89A" },
