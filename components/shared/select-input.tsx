@@ -42,6 +42,7 @@ const SelectInput = React.memo(function SelectInput({
   return (
     <Creatable
       isClearable
+      menuPlacement={item?.menuPlacement ? item?.menuPlacement:"auto"}
       isValidNewOption={() => false}
       options={item.options}
       onChange={(data: any) => {

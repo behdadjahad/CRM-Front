@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { editVisaData, sendVisaData } from "@/api/visa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import ServiceCustomerManager from "../service-customer-manager";
 
 export default function VisaForm({
   visa,
@@ -18,6 +19,7 @@ export default function VisaForm({
   visaDurationTypes,
   visaEntranceTypes,
 }: any) {
+  
   const { id } = useParams();
   const queryClient = useQueryClient();
   const formik = useFormik({
@@ -95,8 +97,9 @@ export default function VisaForm({
   }
   return (
     <div className={cn("flex flex-col gap-4 border border-gray-400 rounded-md p-3")}>
-      <div className="flex flex-row items-center gap-4 p-2">
+      <div className="flex flex-row items-center  p-2 justify-between">
         <h2>ویزا</h2>
+        <ServiceCustomerManager />
       </div>
 
       <FormMaker

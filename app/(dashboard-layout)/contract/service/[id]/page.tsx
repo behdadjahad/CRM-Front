@@ -122,8 +122,8 @@ export default function Service() {
       },
       {
         label: "نام و نام خانوادگی",
-      
-        value:contract?.data?.userResponsible?.fullName
+
+        value: contract?.data?.userResponsible?.fullName,
       },
       {
         label: "نام دپارتمان",
@@ -157,10 +157,14 @@ export default function Service() {
             ]}
           />
         </div>
-
+        {/* 
         <Button variant={"foreground"} className="">
-          <Link href="/sale">برگشت</Link>
-        </Button>
+          <Link href="/sale" scroll={true}>
+            برگشت
+          </Link>
+        </Button> */}
+
+        <Link href="/sale">برگشت</Link>
       </div>
       <div className="flex flex-col lg:flex-row gap-4">
         {" "}
@@ -223,7 +227,9 @@ export default function Service() {
                 isActive={activeItem && activeItem.title == item.title}
                 isSelected={item.isSelected}
                 className={
-                  item.disable ? "cursor-not-allowed text-foreground-mute" : "cursor-pointer"
+                  item.disable
+                    ? "cursor-not-allowed text-foreground-mute"
+                    : "cursor-pointer"
                 }
               />
             ))}

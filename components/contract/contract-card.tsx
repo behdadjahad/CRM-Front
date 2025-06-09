@@ -12,6 +12,8 @@ import { MdClose } from "react-icons/md";
 import dynamic from "next/dynamic";
 import Satisfaction from "../section/satisfaction";
 import Link from "next/link";
+import { setScrollPosition } from "@/store/contract-slice";
+import { useDispatch } from "react-redux";
 // import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
@@ -46,6 +48,7 @@ export interface ContractCardInterface {
     overall: number;
   };
   className?: string;
+  mainRef: any;
 }
 
 export default function ContractCard({
@@ -57,6 +60,7 @@ export default function ContractCard({
   services,
   user,
   className,
+  mainRef,
 }: ContractCardInterface) {
   const contractData = [
     {
@@ -85,7 +89,7 @@ export default function ContractCard({
       value: contract?.unit ?? "",
     },
   ];
-
+  const dispatch = useDispatch<any>();
   const RatingChart = dynamic(() => import("../shared/rating-chart"), {
     ssr: false,
   });
@@ -93,12 +97,16 @@ export default function ContractCard({
   return (
     <Link
       className={cn(
-        "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F]",
+        "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F] border",
         className
       )}
       href={`/contract/service/${id}`}
+      onClick={() => {
+        const scrollTop = mainRef.current?.scrollTop || 0;
+        dispatch(setScrollPosition(scrollTop));
+      }}
     >
-      <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground">
+      <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground border">
         <div className="flex items-center gap-2">
           <Image
             src={header?.icon}
@@ -226,14 +234,14 @@ export default function ContractCard({
               <ServiceCard
                 {...item}
                 key={item?.title + header?.title + user?.name}
-                className="min-w-20 max-w-20 h-auto text-[8px] text-right items-start "
+                className="min-w-20 max-w-20 h-auto text-[12px] text-center items-center "
                 imageClassName="min-w-0 h-16"
               />
             ))}
         </div>
       </div>
 
-      <div className="py-3.5 px-6 text-xs flex items-center justify-between gap-4 border-t text-muted-active">
+      <div className="py-3.5 px-6 text-sm flex items-center justify-between gap-4 border-t text-foreground bg-[#DEEBFB]">
         <span>درآمد: {formatPrice(footer?.income)}</span>
         <span>هزینه: {formatPrice(footer?.cost)}</span>
         <span>

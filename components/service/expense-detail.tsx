@@ -57,11 +57,11 @@ export default function ExpenseDetail({
     <div className="flex flex-col">
       <div className="flex flex-row w-full items-center justify-between gap-1">
         <div className="flex items-center justify-between w-full">
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <div>{formatPrice(buyPrice)}</div>
             <div>{currency.name}</div>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             <div>{formatPrice(convertedBuyPrice)}</div>
             {/* <div>{formatPrice(buyPriceInCurrency)}</div> */}
             <div>{contractCurrency?.name}</div>

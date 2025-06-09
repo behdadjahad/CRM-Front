@@ -6,11 +6,13 @@ import { cn } from "@/lib/utils";
 export interface ContractContainerInterface {
   list: ContractCardInterface[];
   className?: string;
+  mainRef: any;
 }
 
 export default function ContractContainer({
   list,
   className,
+  mainRef
 }: ContractContainerInterface) {
 
   return (
@@ -24,6 +26,7 @@ export default function ContractContainer({
         <ContractCard
           {...item}
           key={item?.header?.submitDate + item?.user?.name + index}
+          mainRef={mainRef}
         />
  
       ))}

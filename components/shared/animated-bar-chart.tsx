@@ -11,12 +11,13 @@ import {
 import { motion } from "framer-motion";
 import { forwardRef } from "react";
 import { TooltipProps } from "recharts";
+import { formatPrice } from "@/lib/utils";
 
 const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-black text-white px-6 py-1 rounded text-sm shadow">
-        {payload[0].value}
+        {formatPrice(payload[0].value)}
       </div>
     );
   }
@@ -43,49 +44,71 @@ const AnimatedBar = forwardRef<SVGRectElement, any>(
   }
 );
 
-const AnimatedBarChart = ({ data, fill, title, info }: { data: any; fill: string, title: string; info: string; }) => {
+const AnimatedBarChart = ({
+  data,
+  fill,
+  title,
+  info,
+}: {
+  data: any;
+  fill: string;
+  title: string;
+  info: string;
+}) => {
+  const maxValue = Math.max(...data.map((item: any) => item.value));
+  const roundedMax = Math.ceil(maxValue / 10) * 10; // Round up to nearest 10
+  const niceStep = Math.pow(10, Math.floor(Math.log10(roundedMax / 6))); // dynamic step base
+  const tickStep = Math.ceil(roundedMax / 6 / niceStep) * niceStep;
+  const yAxisMax = Math.ceil(roundedMax / tickStep) * tickStep;
+  const safeTicks = Array.from(
+    { length: Math.floor(yAxisMax / tickStep) + 1 },
+    (_, i) => i * tickStep
+  );
+
   return (
     <div className="w-full bg-card rounded-lg p-6 flex flex-col items-center justify-center gap-4">
       <div className="text-right w-full ">
-        
         <span className="text-lg font-primary-bold">گزارش کلی فروش</span>
         <span className="text-gray-900 text-md">{title}</span>
         <div className="text-[#757575] text-xs">{info}</div>
       </div>
       <div className="w-full h-80 bg-card rounded-lg  flex flex-col items-center justify-center">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          margin={{ top: 20, right: 20, left: 20, bottom: 40 }}
-          barCategoryGap="20%"
-          barSize={15}
-        >
-          <CartesianGrid
-            stroke="#94a3b8"
-            strokeWidth={1} // Stroke thickness
-            strokeDasharray="1 2"
-            vertical={false}
-          />
-          <XAxis
-            dataKey="label"
-            interval={0}
-            tick={{ fontSize: 12 }}
-            tickLine={false}
-            strokeWidth={1}
-          />
-          <YAxis
-            tick={{ fontSize: 12, dx: -15 }}
-            tickLine={false}
-            domain={[0, 350]}
-            // tickCount={8}
-              ticks={[0, 50, 100, 150, 200, 250, 300, 350]} 
-            strokeWidth={1}
-          />
-          <Tooltip cursor={false} content={<CustomTooltip />} />
-          <Bar dataKey="value" fill={fill} shape={<AnimatedBar />} />
-        </BarChart>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            margin={{ top: 20, right: 20, left: 20, bottom: 40 }}
+            barCategoryGap="20%"
+            barSize={15}
+          >
+            <CartesianGrid
+              stroke="#94a3b8"
+              strokeWidth={1} // Stroke thickness
+              strokeDasharray="1 2"
+              vertical={false}
+            />
+            <XAxis
+              dataKey="label"
+              interval={0}
+              tick={{ fontSize: 12 }}
+              tickLine={false}
+              strokeWidth={1}
+            />
+            <YAxis
+              tick={{ fontSize: 12, dx: -15 }}
+              tickLine={false}
+              // domain={[0, 350]}
+              // // tickCount={8}
+              // ticks={[0, 50, 100, 150, 200, 250, 300, 350]}
+              strokeWidth={1}
+              domain={[0, yAxisMax]}
+              ticks={safeTicks}
+                tickFormatter={formatPrice}
+            />
+            <Tooltip cursor={false} content={<CustomTooltip />} />
+            <Bar dataKey="value" fill={fill} shape={<AnimatedBar />} />
+          </BarChart>
         </ResponsiveContainer>
-        </div>
+      </div>
     </div>
   );
 };

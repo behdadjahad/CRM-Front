@@ -16,10 +16,12 @@ export default function Drawer({ state, setState }: DrawerInterface) {
       className={cn(
         "hidden lg:block w-0 absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
         {
-          "lg:w-20.5": !state,
+          // "lg:w-20.5": !state,
+          "lg:w-20.5 overflow-visible": !state,
         },
         {
-          "z-50 block w-4/5 max-w-96": state,
+          // "z-50 block w-4/5 max-w-96": state,
+          "z-50 block w-4/5 max-w-96 overflow-x-hidden": state,
         }
       )}
     >
@@ -43,13 +45,20 @@ export default function Drawer({ state, setState }: DrawerInterface) {
               </div>
 
               {item.links.map((linkItem) => (
-                <NavLink
-                  {...linkItem}
-                  key={linkItem.label}
-                  className="text-primary-foreground text-xs p-3 rounded-xl relative"
-                  activeClassName="bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9"
-                  labelClass={!state ? "hidden" : ""}
-                />
+                <div key={linkItem.label} className="relative group">
+                  {!state && (
+                    <span className="absolute right-full top-1/2 -translate-y-1/2 mr-0 hidden group-hover:flex whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 z-100 shadow-lg transition-opacity">
+                      {linkItem.label}
+                    </span>
+                  )}
+                  <NavLink
+                    {...linkItem}
+                    key={linkItem.label}
+                    className="text-primary-foreground text-xs p-3 rounded-xl relative"
+                    activeClassName="bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9"
+                    labelClass={!state ? "hidden" : ""}
+                  />
+                </div>
               ))}
             </div>
           ))}

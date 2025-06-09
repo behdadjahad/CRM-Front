@@ -164,7 +164,7 @@ export default function VisaContainer() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allExpenses"] });
-      queryClient.invalidateQueries({ queryKey: ["submittedRooms"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedVisa"] });
     },
   });
   function removeHandler(formId: string | number) {

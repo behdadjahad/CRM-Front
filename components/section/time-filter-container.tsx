@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { activeFilterTime, cn } from "@/lib/utils";
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
 import { convertToGregorian } from "@/lib/date";
@@ -41,7 +41,7 @@ export function TimeFilterContainer({
   onCheckTimeFilter,
   onDateFilterSubmit,
 }: TimeFilterContainer) {
-  const [activeTime, setActiveTime] = useState<any>();
+  const [activeTime, setActiveTime] = useState<any>(activeFilterTime);
   const formik = useFormik({
     initialValues: {
       startTimeFilter: undefined,

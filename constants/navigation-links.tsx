@@ -40,7 +40,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         label: "مشتری",
         link: "/customer",
         icon: (
-          <Image src={"/icons/users.png"} alt="مشتری" width={22} height={22} />
+          <Image src={"/icons/users.png"} alt="مشتری" width={1024} height={1024} className="w-6 h-6"/>
         ),
       },
       {
@@ -48,10 +48,11 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         link: "/report",
         icon: (
           <Image
-            src={"/icons/report.png"}
+            src={"/icons/report-menu-icon.png"}
             alt="گزارش ها"
-            width={22}
-            height={22}
+            width={1024}
+            height={1024}
+            className="w-5.5 h-5.5"
           />
         ),
       },
@@ -74,8 +75,9 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           <Image
             src={"/icons/document.png"}
             alt="قرارداد ها"
-            width={22}
-            height={22}
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
           />
         ),
       },

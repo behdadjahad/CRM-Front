@@ -13,9 +13,9 @@ import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
-import { fetchContracts } from "@/store/contract-slice";
+import { fetchContracts, setScrollPosition } from "@/store/contract-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { cleanObject, limitForContracts, priceOptions } from "@/lib/utils";
+import { cleanObject, priceOptions } from "@/lib/utils";
 import ReactPaginate from "react-paginate";
 import { convertToGregorian } from "@/lib/date";
 import {
@@ -24,8 +24,8 @@ import {
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
 
-import { useRouter } from "next/navigation";
-import { renewAccessToken } from "@/boot/fetch-service";
+import { usePathname, useRouter } from "next/navigation";
+
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -41,6 +41,13 @@ export default function Sale() {
       router.push("/sale");
     }
   }, []);
+
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, scrollY);
+    }
+  }, []);
+
   const contractLists = useSelector((state: any) => state.contract.items);
   const pages = useSelector((state: any) => state.contract.totalPages);
   const filters = useSelector((state: any) => state.contract.filters);
@@ -48,6 +55,9 @@ export default function Sale() {
   const ContractOverviewList = useSelector(
     (state: any) => state.contract.ContractOverviewList
   );
+  const scrollY = useSelector((state: any) => state.contract.scrollPosition);
+  const mainRef = useRef<HTMLDivElement>(null);
+ 
   const { data: contractTypeData } = useQuery({
     queryKey: ["contractTypeQuery"],
     queryFn: () => getContractTypes(),
@@ -480,9 +490,9 @@ export default function Sale() {
       })
     );
   }
- 
+
   return (
-    <main>
+    <main ref={mainRef}>
       <div className="flex items-center justify-between">
         <div>
           <Title label="فروش" />
@@ -524,7 +534,7 @@ export default function Sale() {
       </div>
 
       <div className="md:bg-background-active rounded-xl md:p-6">
-        <ContractContainer list={contractLists} />
+        <ContractContainer list={contractLists} mainRef={mainRef} />
       </div>
       <div className="grid grid-cols-2 custom-shadow bg-card p-3 rounded-md">
         {" "}
@@ -563,7 +573,7 @@ export default function Sale() {
                 floating: true,
                 className: "w-auto",
                 options: contractRecordList,
-
+                menuPlacement: "top",
                 onChange: (data: any) => {
                   limitHandler(Number(data.value));
                 },

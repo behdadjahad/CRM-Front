@@ -76,6 +76,7 @@ export interface FieldType {
   isFormattedNumber?: boolean;
   onClick?: () => void;
   formatted?: boolean;
+ menuPlacement?: "top" | "bottom" | "auto";
 }
 
 export interface FormMakerInterface {

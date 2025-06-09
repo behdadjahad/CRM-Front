@@ -129,3 +129,4 @@ export const kpiType = {
   sellPrice: "فروش",
 };
 export const limitForInfiniteCustomers = 8;
+export const activeFilterTime = 6;

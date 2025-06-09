@@ -7,7 +7,7 @@ import {
   ServerImageAddress,
   totalVotes,
 } from "@/lib/utils";
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk,PayloadAction  } from "@reduxjs/toolkit";
 
 export interface ContractState {
   items: any[];
@@ -19,6 +19,7 @@ export interface ContractState {
     value: number;
   }[];
   limit: number;
+  scrollPosition: number;
 }
 
 const initialState: ContractState = {
@@ -32,6 +33,7 @@ const initialState: ContractState = {
     { label: " قرار داد ناقص", value: 0 },
   ],
   limit: limitForContracts,
+  scrollPosition: 0,
 };
 
 const contractSlice = createSlice({
@@ -43,6 +45,9 @@ const contractSlice = createSlice({
     //     console.log(action.payload);
     //     state.currentPage = 1;
     //   },
+    setScrollPosition(state, action: PayloadAction<number>) {
+      state.scrollPosition = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchContracts.fulfilled, (state, action) => {
@@ -154,3 +159,4 @@ export const fetchContracts = createAsyncThunk<any, any>(
   }
 );
 export default contractSlice.reducer;
+export const { setScrollPosition } = contractSlice.actions;

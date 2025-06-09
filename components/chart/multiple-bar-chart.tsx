@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -29,6 +30,7 @@ export default function MultipleBarChart({ data }: { data: any }) {
           domain={[0, 1000000000]}
           tickCount={10}
           strokeWidth={1}
+          tickFormatter={formatPrice}
         />
         {/* <Tooltip
           cursor={false}

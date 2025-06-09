@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   cn,
   colors,
+  formatPrice,
   getDateRange,
   getRandomColor,
   kpiType,
@@ -247,7 +248,7 @@ export default function Report() {
         {
           title: "(سود)",
           fill: "#6CCE81",
-          info: `سود کل ${subContractsOveralNo?.overallProfit < 0 ? 0:subContractsOveralNo?.overallProfit } تومان`,
+          info: `سود کل ${subContractsOveralNo?.overallProfit < 0 ? 0:formatPrice(subContractsOveralNo?.overallProfit) } تومان`,
 
           list: profitList,
         },
