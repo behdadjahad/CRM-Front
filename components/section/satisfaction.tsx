@@ -30,7 +30,7 @@ export default function Satisfaction({
 }: // totalVotes,
 {
   onCloseHandler: () => any;
-  itemId: string;
+  itemId: any;
   score: any;
   // totalVotes: number;
 }) {
@@ -220,7 +220,7 @@ export default function Satisfaction({
           </span> */}
           <div className="w-36 h-36">
             <CircularProgressbarWithChildren
-              value={score?.final ? score?.final : 0}
+              value={score?.scoreInPercent ? score?.scoreInPercent : 0}
               styles={buildStyles({
                 pathColor: "#FFA500",
                 trailColor: "#E9EAEB",
@@ -229,7 +229,7 @@ export default function Satisfaction({
               <div className="text-center  text-sm flex flex-col gap-2">
                 <span>میانگین امتیاز</span>
                 <span className="font-bold text-info">
-                  {score.totalVotes} / {(score.final * score.totalVotes) / 100}
+                  {`${score.totalVotes} / ${score.final}  `}
                 </span>
               </div>
               {/* <FaStar style={{ fontSize: "32px", color: "#00bcd4" }} /> */}

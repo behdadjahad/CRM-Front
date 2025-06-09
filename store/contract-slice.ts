@@ -7,7 +7,7 @@ import {
   ServerImageAddress,
   totalVotes,
 } from "@/lib/utils";
-import { createSlice, createAsyncThunk,PayloadAction  } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ContractState {
   items: any[];
@@ -97,8 +97,10 @@ const contractSlice = createSlice({
             ? true
             : false,
           final: item?.contractSatisfaction[0]?.satisfactionScore
-            ? (item?.contractSatisfaction[0]?.satisfactionScore * 100) /
-              totalVotes
+            ? item?.contractSatisfaction[0]?.satisfactionScore
+            : 0,
+          scoreInPercent: item?.contractSatisfaction?.[0]?.satisfactionScore
+            ? (item?.contractSatisfaction?.[0]?.satisfactionScore * 100) / 10
             : 0,
           totalVotes: totalVotes,
         },

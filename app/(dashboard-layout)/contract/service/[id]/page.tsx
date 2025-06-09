@@ -26,9 +26,12 @@ import ExpertInfoContainer, {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { totalVotes } from "@/lib/utils";
+import { OptionType } from "@/components/shared/form-maker";
 export default function Service() {
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
+
   const { id } = useParams();
   const { mutate: submitService, data: updatedServiceData } = useMutation({
     mutationFn: (data: any) => {
@@ -99,9 +102,35 @@ export default function Service() {
         label: "موضوع قرارداد",
         value: contract?.data?.contractType?.name ?? "",
       },
+
       {
         label: "توضیحات",
         value: contract?.data?.description ?? "",
+      },
+      {
+        label: "رضایت مندی",
+        value: contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
+          ? contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
+          : 0,
+        score: {
+          id: contract?.data?.contractSatisfaction?.[0]?.id,
+          isSubmitted: contract?.data?.contractSatisfaction?.[0]
+            ?.satisfactionScore
+            ? true
+            : false,
+          final: contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
+            ? (contract?.data?.contractSatisfaction?.[0]?.satisfactionScore *
+                100) /
+              totalVotes
+            : 0,
+          scoreInPercent: contract?.data?.contractSatisfaction?.[0]
+            ?.satisfactionScore
+            ? (contract?.data?.contractSatisfaction?.[0]?.satisfactionScore *
+                100) /
+              10
+            : 0,
+          totalVotes: totalVotes,
+        },
       },
     ],
   };
@@ -157,21 +186,17 @@ export default function Service() {
             ]}
           />
         </div>
-        {/* 
-        <Button variant={"foreground"} className="">
-          <Link href="/sale" scroll={true}>
-            برگشت
-          </Link>
-        </Button> */}
 
-        <Link href="/sale">برگشت</Link>
+        <Button variant={"foreground"} className="">
+          <Link href="/sale">برگشت</Link>
+        </Button>
       </div>
       <div className="flex flex-col lg:flex-row gap-4">
         {" "}
         <div className=" flex flex-col w-full xl:w-3/4 gap-4">
           <div className="flex flex-col gap-1">
             <ExpertInfoContainer {...expert} />
-            <ContractInfoContainer {...contractInfo} />
+            <ContractInfoContainer {...contractInfo} contract={contract} />
           </div>
 
           {activeItem && activeItem.isSelected === false && (
@@ -199,10 +224,7 @@ export default function Service() {
                     setActiveItem(null);
                   }}
                 />
-                <label
-                  htmlFor=""
-                  className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
+                <label className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   خیر
                 </label>
               </div>

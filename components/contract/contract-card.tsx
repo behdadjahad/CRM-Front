@@ -40,6 +40,7 @@ export interface ContractCardInterface {
     final: number;
     id: number;
     isSubmitted: boolean;
+    scoreInPercent: number;
   };
   services: ServiceCardInterface[];
   footer: {
@@ -93,6 +94,7 @@ export default function ContractCard({
   const RatingChart = dynamic(() => import("../shared/rating-chart"), {
     ssr: false,
   });
+  
   const [openModal, setOpenModal] = useState(false);
   return (
     <Link
@@ -172,7 +174,7 @@ export default function ContractCard({
               e.stopPropagation();
             }}
           >
-            <RatingChart value={score?.final} color="#FFA500" />
+            <RatingChart value={score?.scoreInPercent} color="#FFA500" />
 
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
               از مجموع {score?.totalVotes} امتیاز
@@ -217,8 +219,6 @@ export default function ContractCard({
                     setOpenModal(false);
                   }}
                   itemId={id}
-                  // score={score?.final}
-                  // totalVotes={score?.totalVotes}
                   score={score}
                 />
               </CustomModal>
