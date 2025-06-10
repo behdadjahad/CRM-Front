@@ -5,13 +5,18 @@ import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 import ServiceCustomerContainer from "./service-customer-container";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCustomersData } from "@/api/customer";
-export default function ServiceCustomerManager() {
+import { addServiceCustomerData } from "@/api/customer-service";
+export default function ServiceCustomerManager({
+  entityId,
+}: {
+  entityId: number;
+}) {
   const [openModal, setOpenModal] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
   const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);
-
+  const queryClient = useQueryClient();
   const { id } = useParams();
 
   const { data: contractCustomersData } = useQuery({
@@ -43,8 +48,23 @@ export default function ServiceCustomerManager() {
       );
     }
   }
+  const { mutate: submitCustomerService } = useMutation({
+    mutationFn: (data: any) => {
+      return addServiceCustomerData(data, Number(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["submittedVisa"] });
+    },
+  });
   function submitHandler() {
-    console.log(selectedCustomers);
+    const data = {
+      avService: "Visa",
+      customerIds: selectedCustomers,
+
+      entityId: entityId,
+    };
+
+    submitCustomerService(data);
   }
   return (
     <div className="flex items-center justify-end">
@@ -83,6 +103,7 @@ export default function ServiceCustomerManager() {
             variant={"info"}
             onClick={() => {
               submitHandler();
+              setOpenModal(false);
             }}
           >
             ثبت

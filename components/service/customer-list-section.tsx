@@ -46,6 +46,8 @@ export default function CustomerListSection({
       <CustomerInfiniteContainer
         onCheckCustomerhandler={onCheckCustomerhandler}
         searchKeyWord={searchKeyWord}
+    
+        key="notSuggested"
       />
     </div>
   );

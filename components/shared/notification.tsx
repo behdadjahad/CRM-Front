@@ -4,17 +4,22 @@ import NotificationDrawer from "./notification-drawer";
 import { useState } from "react";
 const notificationList = [
   {
+    heading: "ویژگی جدید اضافه شد",
     user: {
       name: "",
       image: "",
     },
-    content: "",
+    content:
+      "خوشحالیم که نسخه به‌روزشده و بهتر تجربه ساخت قالب رو به شما معرفی کنیم.",
     button: {
       className: "",
-      title: "",
+      title: "الان امتحان کن",
+      variant:"info"
     },
     icon: "",
     review: "",
+    time: "2 دقیقه پیش",
+    className: "",
   },
 ];
 const tabList = [
@@ -60,6 +65,7 @@ export default function Notification({
         setState={setOpenNotification}
         state={openNotification}
         tabList={tabList}
+        list={notificationList}
       />
     </div>
   );

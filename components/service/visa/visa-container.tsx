@@ -21,17 +21,18 @@ import { OptionType } from "@/components/shared/form-maker";
 import { getCurrencies } from "@/api/currency";
 
 export default function VisaContainer() {
-   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const { id } = useParams();
   const [addedVisas, setAddedVisas] = useState<any[]>([]);
   const [userOptions, setUserOptions] = useState<OptionType[]>([]);
 
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [countries, setCountries] = useState<OptionType[]>([]);
-  const [customers, setCustomers] = useState<OptionType[]>([]);
+
   const [visaTypes, setVisaTypes] = useState<OptionType[]>([]);
   const [visaDurationTypes, setVisaDurationTypes] = useState<OptionType[]>([]);
   const [visaEntranceTypes, setVisaEntranceTypes] = useState<OptionType[]>([]);
+  const [visaCustomers, setVisaCustomers] = useState<any[]>([]);
   const { data: currency } = useQuery({
     queryKey: ["Currency"],
     queryFn: () => getCurrencies(),
@@ -80,13 +81,19 @@ export default function VisaContainer() {
             isSubmitted: true,
             files: item.files,
             description: item.description,
-            customerSoldToId: item.customerSoldToId,
+            // customerSoldToId: item.customerSoldToId,
             country: item.countryId,
             visaType: item.visaTypeId,
             visaApproval: item.visaEntranceTypeId,
             visaTime: item.visaDurationTypeId,
             visaCost: item.priceWeBuy,
             currency: item.currencyWeBuyId,
+            customers: item.customers.map((customer: any) => ({
+              customerId:customer?.id,
+              firstName: customer?.person?.firstName,
+              lastName: customer?.person?.lastName,
+              idNumber:customer?.person?.idNumber
+            })),
           }))
         );
       } else {
@@ -96,13 +103,14 @@ export default function VisaContainer() {
             isSubmitted: false,
             files: null,
             description: null,
-            customerSoldToId: null,
+            // customerSoldToId: null,
             country: null,
             visaType: null,
             visaApproval: null,
             visaTime: null,
             visaCost: null,
             currency: null,
+            customers: [],
           },
         ]);
       }
@@ -111,21 +119,7 @@ export default function VisaContainer() {
     queryKey: ["contract"],
     queryFn: () => getContractById(Number(id) as number),
   });
-  useEffect(() => {
-    if (contract) {
-      setCustomers([
-        {
-          label: `${
-            contract?.data?.mainCustomerSoldto?.person?.firstName ?? ""
-          } ${
-            contract?.data?.mainCustomerSoldto?.person?.lastName ?? ""
-          }`.trim(),
 
-          value: contract?.data?.mainCustomerSoldto?.id?.toString(),
-        },
-      ]);
-    }
-  }, [contract]);
   const { data: users } = useQuery({
     queryKey: ["usersInformation"],
     queryFn: async () => await getUsers(),
@@ -251,10 +245,10 @@ export default function VisaContainer() {
             onRemoveHandler={removeHandler}
             currencies={currencies}
             countries={countries}
-            customers={customers}
             visaTypes={visaTypes}
             visaDurationTypes={visaDurationTypes}
             visaEntranceTypes={visaEntranceTypes}
+            customers={visaCustomers}
           />
         ))}
       </div>

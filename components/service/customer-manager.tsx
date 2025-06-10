@@ -8,9 +8,9 @@ import { FaPlus } from "react-icons/fa";
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 
-import FormMaker from "../shared/form-maker";
-
 import CustomerListSection from "./customer-list-section";
+
+import CustomerSubmitterContainer from "./customer-submitter-container";
 export default function CustomerManager() {
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -29,6 +29,7 @@ export default function CustomerManager() {
       clientEmail: "",
     },
     onSubmit: async () => {},
+    enableReinitialize: true,
   });
 
   const { mutate: submitCustomerHandler } = useMutation({
@@ -121,7 +122,7 @@ export default function CustomerManager() {
 
         <CustomerListSection
           onCheckCustomerhandler={submitMultipleHandler}
-          key="third-modal"
+          key={`customer-list-third-${openThirdModal}`}
         />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
@@ -203,7 +204,7 @@ export default function CustomerManager() {
 
             <CustomerListSection
               onCheckCustomerhandler={submitMultipleHandler}
-              key="second-modal"
+              key={`customer-list-second-${openSecondModal}`}
             />
             <div className="flex flex-row gap-4 items-center justify-end">
               <Button
@@ -228,146 +229,8 @@ export default function CustomerManager() {
           {/*Second Modal*/}
         </div>
 
-        <div className="w-full flex flex-col items-end gap-8">
-          <FormMaker
-            form={formik}
-            fields={[
-              {
-                key: "clientName",
-                component: "input",
-                placeholder: "نام",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/2",
-              },
-              {
-                key: "clientFamily",
-                component: "input",
-                placeholder: "نام خانوادگی",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/2",
-              },
-              {
-                key: "clientSSD",
-                component: "input",
-                placeholder: "کدملی",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/2",
-              },
-              {
-                key: "clientPhoneNumber",
-                component: "input",
-                placeholder: "شماره تماس",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/2",
-              },
-              {
-                key: "clientEmail",
-                component: "input",
-                placeholder: "ایمیل",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/2",
-              },
-            ]}
-            className="flex flex-row w-full"
-          />
-        </div>
-        {/* {filteredCustomers.length > 0 && (
-          <div className="p-2 max-h-60 overflow-y-auto flex flex-col gap-2">
-            {filteredCustomers.map((customer) => {
-              const highlightMatch = (text = "", search = "") => {
-                if (!search.trim()) return text;
-                const parts = text.split(new RegExp(`(${search})`, "gi"));
-                return parts.map((part, index) =>
-                  part.toLowerCase() === search.toLowerCase() ? (
-                    <span key={index} className="text-yellow-600 font-bold">
-                      {part}
-                    </span>
-                  ) : (
-                    <span key={index}>{part}</span>
-                  )
-                );
-              };
+        <CustomerSubmitterContainer formik={formik} />
 
-              return (
-                <div
-                  key={customer.id}
-                  className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
-                  onClick={() => {
-                    formik.setValues({
-                      clientName: customer.firstName || "",
-                      clientFamily: customer.lastName || "",
-                      clientSSD: customer.idNumber || "",
-                      clientPhoneNumber: customer.phone || "",
-                      clientEmail: customer.email || "",
-                    });
-                  }}
-                >
-                  {" "}
-                  <div className="flex items-center gap-2">
-                    {" "}
-                    <Image
-                      src={"/icons/customer.png"}
-                      alt="edit"
-                      width={18}
-                      height={18}
-                    />
-                    <div className="flex flex-col">
-                      <span className="text-sm font-primary-bold">
-                        {highlightMatch(
-                          customer.firstName,
-                          formik.values.clientName
-                        )}{" "}
-                        {highlightMatch(
-                          customer.lastName,
-                          formik.values.clientFamily
-                        )}
-                      </span>
-                      <span className="text-sm text-foreground-mute">
-                        {highlightMatch(
-                          customer.email,
-                          formik.values.clientEmail
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center text-foreground-mute gap-2">
-                    <Image
-                      src={"/icons/customerMobile.png"}
-                      alt="edit"
-                      width={12}
-                      height={12}
-                    />
-                    <span>
-                      {highlightMatch(
-                        customer.phone,
-                        formik.values.clientPhoneNumber
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex items-center text-foreground-mute gap-2">
-                    <Image
-                      src={"/icons/customerID.png"}
-                      alt="edit"
-                      width={18}
-                      height={18}
-                    />
-                    <span>
-                      {highlightMatch(
-                        customer.idNumber,
-                        formik.values.clientSSD
-                      )}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )} */}
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button variant={"info"} onClick={submitHandler}>
             ثبت

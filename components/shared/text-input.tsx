@@ -42,6 +42,7 @@ export default function TextInput({
     }
 
     form.setFieldValue(item.key, value);
+    
   };
   return (
     <div

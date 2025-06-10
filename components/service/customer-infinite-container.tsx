@@ -9,14 +9,18 @@ import CustomerInfiniteCard from "./customer-infinite-card";
 
 export default function CustomerInfiniteContainer({
   onCheckCustomerhandler,
-  searchKeyWord
+  searchKeyWord,
+
 }: {
-    onCheckCustomerhandler: any;
-  searchKeyWord:string
+  onCheckCustomerhandler?: any;
+  searchKeyWord?: string;
+
 }) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
-
+useEffect(() => {
+  console.log("✅ CustomerInfiniteContainer mounted");
+}, []);
   const {
     data: customersData,
     isSuccess,
@@ -24,9 +28,14 @@ export default function CustomerInfiniteContainer({
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["customersData",searchKeyWord],
+    queryKey: ["customersData", searchKeyWord],
     queryFn: ({ pageParam = 1 }) =>
-      getAllCustomers({ page: pageParam, limit: limitForInfiniteCustomers,keyword:searchKeyWord}),
+      getAllCustomers({
+        page: pageParam,
+        limit: limitForInfiniteCustomers,
+        keyword: searchKeyWord,
+    
+      }),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
         lastPage.data.length === LIMIT ? allPages.length + 1 : undefined;
@@ -61,7 +70,8 @@ export default function CustomerInfiniteContainer({
               key={customer.id}
               customer={customer}
               onCheckCustomerhandler={onCheckCustomerhandler}
-              searchKeyWord={searchKeyWord}
+              searchKeyWord={searchKeyWord ? searchKeyWord : ""}
+      
             />
           );
         }
@@ -70,7 +80,8 @@ export default function CustomerInfiniteContainer({
             key={customer.id}
             customer={customer}
             onCheckCustomerhandler={onCheckCustomerhandler}
-            searchKeyWord={searchKeyWord}
+            searchKeyWord={searchKeyWord ? searchKeyWord : ""}
+         
           />
         );
       })

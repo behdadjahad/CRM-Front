@@ -14,6 +14,7 @@ type CustomerInfiniteCardProps = {
   };
   onCheckCustomerhandler: any;
   searchKeyWord: string;
+
 };
 // const highlightMatch = (text: string, keyword: string) => {
 //   if (!keyword) return text;
@@ -32,7 +33,7 @@ type CustomerInfiniteCardProps = {
 //   );
 // };
 const highlightMatch = (text: string, keyword: string) => {
-  if (!text || !keyword.trim()) return text;
+  if (!text || !keyword) return text;
 
   const escapedKeyword = keyword
     .trim()
@@ -53,14 +54,16 @@ const highlightMatch = (text: string, keyword: string) => {
 };
 
 const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
-  ({ customer, onCheckCustomerhandler, searchKeyWord }, ref) => {
+  ({ customer, onCheckCustomerhandler, searchKeyWord}, ref) => {
+    console.log(customer)
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
         className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
+     
       >
         <div className="flex items-center gap-2">
-          <Checkbox
+      <Checkbox
             onCheckedChange={(checked) =>
               onCheckCustomerhandler(customer.id, Boolean(checked))
             }

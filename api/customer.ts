@@ -1,10 +1,31 @@
 import { fetchService } from "@/boot/fetch-service";
 
 /*Get All Customers*/
-export async function getAllCustomers({page,limit,keyword}:{page?:number,limit?:number,keyword?:string}) {
+export async function getAllCustomers({
+  page,
+  limit,
+  keyword,
+  firstName,
+  lastName,
+  idNumber,
+  email,
+  phone,
+}: {
+  page?: number;
+  limit?: number;
+  keyword?: string;
+  firstName?: string;
+  lastName?: string;
+  idNumber?: string;
+  email?: string;
+  phone?: string;
+}) {
   try {
-    const result = await fetchService(`customer/filter?page=${page}&limit=${limit}&keyword=${keyword}`);
+    const result = await fetchService(
+      `customer/filter?page=${page}&limit=${limit}&keyword=${keyword}&firstName=${firstName}&lastName=${lastName}&idNumber=${idNumber}&email=${email}&phone=${phone}`
+    );
 
+    
     return result;
   } catch {
     return {};
@@ -71,12 +92,15 @@ export async function addMultipleCustomerData(data: any, id: number) {
     return {};
   }
 }
-export async function getCustomers(page:number , limit:number, body?:any) {
+export async function getCustomers(page: number, limit: number, body?: any) {
   try {
-    const result = await fetchService(`customer/rank?page=${page}&limit=${limit}`, {
-      method: "POST",
-      body: body ? body : {},
-    });
+    const result = await fetchService(
+      `customer/rank?page=${page}&limit=${limit}`,
+      {
+        method: "POST",
+        body: body ? body : {},
+      }
+    );
 
     return result;
   } catch {
