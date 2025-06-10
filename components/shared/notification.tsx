@@ -1,5 +1,28 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import NotificationDrawer from "./notification-drawer";
+import { useState } from "react";
+const notificationList = [
+  {
+    user: {
+      name: "",
+      image: "",
+    },
+    content: "",
+    button: {
+      className: "",
+      title: "",
+    },
+    icon: "",
+    review: "",
+  },
+];
+const tabList = [
+  { label: "همه اعلان ها", value: "all", count: 5 },
+  { label: "خوانده نشده ها", value: "unread", count: 1 },
+  { label: "خوانده شده ها", value: "read", count: 2 },
+  { label: "رد شده", value: "decline", count: 2 },
+];
 
 export interface NotificationInterface {
   unread: boolean;
@@ -10,6 +33,7 @@ export default function Notification({
   unread,
   className,
 }: NotificationInterface) {
+  const [openNotification, setOpenNotification] = useState(false);
   return (
     <div
       className={cn(
@@ -28,8 +52,15 @@ export default function Notification({
           alt="notification"
           width={22}
           height={22}
+          onClick={() => setOpenNotification(true)}
+          className="cursor-pointer"
         />
       </div>
+      <NotificationDrawer
+        setState={setOpenNotification}
+        state={openNotification}
+        tabList={tabList}
+      />
     </div>
   );
 }

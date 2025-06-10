@@ -119,9 +119,7 @@ export default function Service() {
             ? true
             : false,
           final: contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
-            ? (contract?.data?.contractSatisfaction?.[0]?.satisfactionScore *
-                100) /
-              totalVotes
+            ? contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
             : 0,
           scoreInPercent: contract?.data?.contractSatisfaction?.[0]
             ?.satisfactionScore

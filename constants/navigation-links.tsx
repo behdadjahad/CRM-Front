@@ -83,21 +83,21 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       },
     ],
   },
-  // {
-  //   category: "تنظیمات",
-  //   links: [
-  //     {
-  //       label: "تنظیمات",
-  //       link: "/setting",
-  //       icon: (
-  //         <Image
-  //           src={"/icons/setting.png"}
-  //           alt="تنظیمات"
-  //           width={22}
-  //           height={22}
-  //         />
-  //       ),
-  //     },
-  //   ],
-  // },
+  {
+    category: "تنظیمات",
+    links: [
+      {
+        label: "تنظیمات",
+        link: "/setting/service",
+        icon: (
+          <Image
+            src={"/icons/setting.png"}
+            alt="تنظیمات"
+            width={22}
+            height={22}
+          />
+        ),
+      },
+    ],
+  },
 ];

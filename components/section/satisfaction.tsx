@@ -5,7 +5,7 @@ import Image from "next/image";
 import OverviewDetailContainer from "../satisfaction/overview-detail-container";
 import SocialMedia from "../satisfaction/social-media";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   editSatisfaction,
   getCallDevices,
@@ -37,7 +37,7 @@ export default function Satisfaction({
   const dispatch = useDispatch<any>();
   const [callDevices, setCallDevices] = useState<any[]>([]);
   const [satisfactionLabels, setSatisfactionLabels] = useState<any[]>([]);
-
+  const queryClient = useQueryClient();
   const { data: callDeviceData } = useQuery({
     queryKey: ["callDeviceData"],
     queryFn: async () => await getCallDevices(),
@@ -83,6 +83,9 @@ export default function Satisfaction({
           filters: filters,
         })
       );
+       queryClient.invalidateQueries({
+        queryKey: ["contract"],
+      });
     },
   });
   const { mutate: satisfactionEditHandler } = useMutation({
@@ -97,6 +100,9 @@ export default function Satisfaction({
           filters: filters,
         })
       );
+        queryClient.invalidateQueries({
+        queryKey: ["contract"],
+      });
     },
   });
   function submit() {
