@@ -52,8 +52,8 @@ useEffect(() => {
 
   const content =
     isSuccess &&
-    customersData.pages.map((page) =>
-      page.data.map((item: any, i: number) => {
+    customersData?.pages?.map((page) =>
+      page?.data?.map((item: any, i: number) => {
         const customer = {
           id: item?.id,
           firstName: item?.person?.firstName,

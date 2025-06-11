@@ -8,6 +8,9 @@ import * as Yup from "yup";
 import { useParams } from "next/navigation";
 import { editOtherData, sendOtherData } from "@/api/other";
 import { current } from "@reduxjs/toolkit";
+import ServiceCustomerManager from "../service-customer-manager";
+import ServiceCustomerList from "../service-customer-list";
+import { deleteServiceCustomerData } from "@/api/customer-service";
 export default function OtherContainer({
   itemId,
   onRemoveHandler,
@@ -29,7 +32,7 @@ export default function OtherContainer({
       description: other?.description,
       otherFile: other?.files,
       isSubmitted: other.isSubmitted,
-      cost: other?.cost ? formatPrice(other?.cost):"",
+      cost: other?.cost ? formatPrice(other?.cost) : "",
       currency: other?.currency,
     },
     validationSchema: Yup.object().shape({
@@ -89,9 +92,21 @@ export default function OtherContainer({
       });
     }
   }
+  const { mutate: deleteCustomerService } = useMutation({
+    mutationFn: (data: any) => {
+      return deleteServiceCustomerData(data, Number(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["submittedOthers"] });
+    },
+  });
   return (
     <div className="bg-card flex flex-col gap-4 border border-gray-400 rounded-md p-3">
-      <h2>سایر </h2>
+      <div className="flex flex-row items-center  p-2 justify-between">
+        <h2>سایر </h2>
+        <ServiceCustomerManager entityId={other?.id} avService="Other" />
+      </div>
+
       <FormMaker
         form={formik}
         fields={[
@@ -141,7 +156,7 @@ export default function OtherContainer({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            formatted:true
+            formatted: true,
           },
 
           {
@@ -189,6 +204,14 @@ export default function OtherContainer({
         ]}
         className=""
       />
+      {other?.customers?.length > 0 && (
+        <ServiceCustomerList
+          onDeleteHandler={deleteCustomerService}
+          customers={other?.customers}
+          entityId={other?.id}
+          avService={"Other"}
+        />
+      )}
     </div>
   );
 }

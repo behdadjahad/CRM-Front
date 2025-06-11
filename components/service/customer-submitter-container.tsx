@@ -2,7 +2,6 @@ import FormMaker from "../shared/form-maker";
 import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 
-
 import CustomerSuggestionInfiniteContainer from "./customer-suggestion-infinite-container";
 
 export default function CustomerSubmitterContainer({
@@ -11,6 +10,7 @@ export default function CustomerSubmitterContainer({
   formik?: any;
 }) {
   const [customerValues, setCustomerValues] = useState({});
+  const [state, setState] = useState(false);
 
   const debouncedSuggestion = useCallback(
     debounce((values: any) => {
@@ -27,10 +27,23 @@ export default function CustomerSubmitterContainer({
   );
 
   useEffect(() => {
-    console.log(Object.values(formik.touched));
     debouncedSuggestion(formik.values);
-    return () => debouncedSuggestion.cancel();
+    return () => {
+      debouncedSuggestion.cancel();
+    };
   }, [formik.values, debouncedSuggestion]);
+
+  useEffect(() => {
+    const hasAnyNonEmptyField = Object.values(formik.values).some(
+      (value) => value !== ""
+    );
+    if (hasAnyNonEmptyField) {
+      setState(true);
+    } else {
+      setState(false);
+    }
+  }, [formik.values]);
+
   function fillCustomerHandler(data: any) {
     const values = {
       clientName: data.firstName || "",
@@ -90,10 +103,12 @@ export default function CustomerSubmitterContainer({
         ]}
         className="flex flex-row w-full"
       />
-      <CustomerSuggestionInfiniteContainer
-        data={customerValues}
-        onFillCustomerHandler={fillCustomerHandler}
-      />
+      {state && (
+        <CustomerSuggestionInfiniteContainer
+          data={customerValues}
+          onFillCustomerHandler={fillCustomerHandler}
+        />
+      )}
     </div>
   );
 }

@@ -60,6 +60,8 @@ export default function ServiceCustomerManager({
       queryClient.invalidateQueries({
         queryKey: ["ticketData"],
       });
+      queryClient.invalidateQueries({ queryKey: ["submittedOthers"] });
+      queryClient.invalidateQueries({ queryKey: ["submittedRooms"] });
     },
   });
   function submitHandler() {

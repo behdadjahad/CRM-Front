@@ -71,6 +71,7 @@ export default function CustomerSuggestionInfiniteContainer({
               key={customer.id}
               customer={customer}
               onFillCustomerHandler={onFillCustomerHandler}
+              data={data}
             />
           );
         }
@@ -79,6 +80,7 @@ export default function CustomerSuggestionInfiniteContainer({
             key={customer.id}
             customer={customer}
             onFillCustomerHandler={onFillCustomerHandler}
+            data={data}
           />
         );
       })

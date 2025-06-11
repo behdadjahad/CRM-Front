@@ -12,10 +12,14 @@ type CustomerSuggestionInfiniteCardProps = {
     phone: string;
     email: string;
   };
-
+  data: any;
   onFillCustomerHandler: any;
 };
-
+//  firstName: values.clientName,
+//       lastName: values.clientFamily,
+//       idNumber: values.clientSSD,
+//       phone: values.clientPhoneNumber,
+//       email: values.clientEmail,
 const highlightMatch = (text: string, keyword: string) => {
   if (!text || !keyword) return text;
 
@@ -40,7 +44,8 @@ const highlightMatch = (text: string, keyword: string) => {
 const CustomerSuggestionInfiniteCard = forwardRef<
   HTMLElement,
   CustomerSuggestionInfiniteCardProps
->(({ customer, onFillCustomerHandler }, ref) => {
+>(({ customer, onFillCustomerHandler, data }, ref) => {
+  console.log(data);
   const customerInfiniteCardContent = (
     <div
       key={customer.id}
@@ -61,12 +66,21 @@ const CustomerSuggestionInfiniteCard = forwardRef<
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-primary-bold">
+            {/* <span className="text-sm font-primary-bold">
               <>{customer.firstName + " " + customer.lastName}</>
+            </span> */}
+            <span>
+              <>
+                <span>
+                  <>
+                    {highlightMatch(customer.firstName, data.firstName)}{" "}
+                    {highlightMatch(customer.lastName, data.lastName)}
+                  </>
+                </span>
+              </>
             </span>
-
             <span className="text-sm text-foreground-mute">
-              {customer.email}
+              {highlightMatch(customer.email, data.email)}
             </span>
           </div>
         </div>
@@ -78,7 +92,7 @@ const CustomerSuggestionInfiniteCard = forwardRef<
           width={12}
           height={12}
         />
-        <span>{customer.phone}</span>
+        <span> {highlightMatch(customer.phone, data.phone)}</span>
       </div>
       <div className="flex items-center text-foreground-mute gap-2">
         <Image
@@ -87,7 +101,8 @@ const CustomerSuggestionInfiniteCard = forwardRef<
           width={18}
           height={18}
         />
-        <span>{customer.idNumber}</span>
+
+        <span> {highlightMatch(customer.idNumber, data.idNumber)}</span>
       </div>
     </div>
   );

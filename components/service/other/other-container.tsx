@@ -52,8 +52,14 @@ export default function OtherContainer() {
           isSubmitted: true,
           description: item.description,
           title: item.title,
-           cost: item?.priceWeBuy,
+          cost: item?.priceWeBuy,
           currency: item?.currencyWeBuyId,
+          customers: item?.customers?.map((customer: any) => ({
+            customerId: customer?.id,
+            firstName: customer?.person?.firstName,
+            lastName: customer?.person?.lastName,
+            idNumber: customer?.person?.idNumber,
+          })),
         }))
       );
     } else {
@@ -66,6 +72,7 @@ export default function OtherContainer() {
           files: [],
           cost: "",
           currency: "",
+          customers: [],
         },
       ]);
     }

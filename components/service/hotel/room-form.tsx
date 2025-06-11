@@ -1,6 +1,11 @@
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import { cleanFormatPrice, dateType, formatPrice, REQUIRED_TEXT } from "@/lib/utils";
+import {
+  cleanFormatPrice,
+  dateType,
+  formatPrice,
+  REQUIRED_TEXT,
+} from "@/lib/utils";
 import * as Yup from "yup";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { editRoomData, getRooms, sendRoomData } from "@/api/accommodation";
@@ -9,14 +14,19 @@ import { getCurrencies } from "@/api/currency";
 import { useQueryClient } from "@tanstack/react-query";
 import { convertDate, convertToGregorian } from "@/lib/date";
 import { Button } from "@/components/ui/button";
+import ServiceCustomerManager from "../service-customer-manager";
+import ServiceCustomerList from "../service-customer-list";
+import { deleteServiceCustomerData } from "@/api/customer-service";
+import { useParams } from "next/navigation";
 export interface RoomInterface {
   hotelId: number;
 }
 
-export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
+export default function RoomForm({ roomId, hotelId, onRemoveHandler, room }: any) {
   const queryClient = useQueryClient();
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
   const [roomTypes, setRoomTypes] = useState<OptionType[]>([]);
+    const { id } = useParams();
   const { data: roomType } = useQuery({
     queryKey: ["roomType"],
     queryFn: () => getRooms(),
@@ -43,7 +53,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       setCurrencies(currencyOptions);
     }
   }, [currency]);
-  console.log(room)
+  console.log(room);
   const formik = useFormik({
     initialValues: {
       roomType: room?.roomTypeId?.toString(),
@@ -59,7 +69,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
       currency: room?.currencyWeBuy?.toString(),
       broker: "",
       roomCount: room?.numberOfRooms,
-      isSubmitted:room?.isSubmitted,
+      isSubmitted: room?.isSubmitted,
       id: room?.id,
     },
     validationSchema: Yup.object().shape({
@@ -93,7 +103,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   });
 
   function submitRoom(data: any) {
-    console.log(data.isSubmitted)
+    console.log(data.isSubmitted);
     if (room.isSubmitted) {
       roomEditor({
         data: {
@@ -103,18 +113,12 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
           //   data?.contractDateIn,
           //   data?.checkInDateType
           // ),
-          checkInDate: convertToGregorian(
-            data?.contractDateIn,
-           dateType
-          ),
+          checkInDate: convertToGregorian(data?.contractDateIn, dateType),
           // checkOutDate: convertToGregorian(
           //   data?.contractDateOut,
           //   data?.checkOutDateType
           // ),
-          checkOutDate: convertToGregorian(
-            data?.contractDateOut,
-            dateType
-          ),
+          checkOutDate: convertToGregorian(data?.contractDateOut, dateType),
           priceWeBuyPerNight: cleanFormatPrice(data.costPerNight),
           currencyWeBuyId: data.currency,
         },
@@ -144,9 +148,21 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
   function removeForm(formId: string) {
     onRemoveHandler(formId);
   }
+   const { mutate: deleteCustomerService } = useMutation({
+      mutationFn: (data: any) => {
+        return deleteServiceCustomerData(data, Number(id));
+      },
+      onSuccess: () => {
+         queryClient.invalidateQueries({ queryKey: ["submittedRooms"] });
+      },
+    });
   return (
     <div className="bg-card flex flex-col gap-4 border border-gray-400 rounded-md p-3">
-      <h2>مدت اقامت</h2>
+      <div className="flex flex-row items-center  p-2 justify-between">
+        <h2>مدت اقامت</h2>
+        <ServiceCustomerManager entityId={room?.id} avService="Accommodation" />
+      </div>
+
       <FormMaker
         form={formik}
         fields={[
@@ -225,7 +241,7 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
                 </Button>
                 <Button
                   onClick={() => {
-                    removeForm(id);
+                    removeForm(roomId);
                   }}
                   className="text-danger border-danger"
                 >
@@ -237,6 +253,14 @@ export default function RoomForm({ id, hotelId, onRemoveHandler, room }: any) {
         ]}
         className="flex flex-row w-full"
       />
+      {room?.customers?.length > 0 && (
+        <ServiceCustomerList
+          onDeleteHandler={deleteCustomerService}
+          customers={room?.customers}
+          entityId={room?.id}
+          avService={"Accommodation"}
+        />
+      )}
     </div>
   );
 }

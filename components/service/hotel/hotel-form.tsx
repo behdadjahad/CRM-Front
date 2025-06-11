@@ -73,8 +73,8 @@ export default function HotelForm({
   // useEffect(() => {
   //   if (hotel?.id && hotel.isSubmitted) roomMutation(hotel?.id);
   // }, []);
-  const { data: submittedRoomsData} = useQuery({
-    queryKey: ["submittedRooms",hotel?.id],
+  const { data: submittedRoomsData } = useQuery({
+    queryKey: ["submittedRooms", hotel?.id],
     queryFn: () => getSubmittedRooms(Number(hotel?.id)),
     enabled: !!hotel?.id && hotel.isSubmitted,
   });
@@ -91,6 +91,14 @@ export default function HotelForm({
           id: item?.id,
           roomTypeId: item?.acRoomType?.roomType?.id,
           isSubmitted: true,
+          customers: item.customers.map((customer: any) => ({
+            customerId: customer?.id,
+            firstName: customer?.person?.firstName,
+            lastName: customer?.person?.lastName,
+            idNumber: customer?.person?.idNumber,
+            email: "",
+            phone: "",
+          })),
         }))
       );
     }
@@ -181,7 +189,7 @@ export default function HotelForm({
 
       setCityOptions(() => updatedCities);
     }
-  }, [formik.values.country,cities]);
+  }, [formik.values.country, cities]);
 
   useEffect(() => {
     if (!formik.values.accommodationType) {
@@ -196,7 +204,7 @@ export default function HotelForm({
 
       setHotelOptions(updatedHotels);
     }
-  }, [formik.values.accommodationType, formik.values.city,hotels]);
+  }, [formik.values.accommodationType, formik.values.city, hotels]);
 
   return (
     <div
@@ -309,7 +317,7 @@ export default function HotelForm({
 
       {addedRooms.map((item: any, index: any) => (
         <RoomForm
-          id={item.id}
+          roomId={item.id}
           key={item.id}
           hotelId={hotel ? hotel.id : hotelId}
           onRemoveHandler={removeRoomHandler}

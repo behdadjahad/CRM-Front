@@ -92,7 +92,9 @@ export default function VisaContainer() {
               customerId:customer?.id,
               firstName: customer?.person?.firstName,
               lastName: customer?.person?.lastName,
-              idNumber:customer?.person?.idNumber
+              idNumber: customer?.person?.idNumber,
+              email:"",
+              phone:"",
             })),
           }))
         );
