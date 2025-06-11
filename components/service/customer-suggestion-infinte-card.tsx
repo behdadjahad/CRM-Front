@@ -45,7 +45,7 @@ const CustomerSuggestionInfiniteCard = forwardRef<
   HTMLElement,
   CustomerSuggestionInfiniteCardProps
 >(({ customer, onFillCustomerHandler, data }, ref) => {
-  console.log(data);
+
   const customerInfiniteCardContent = (
     <div
       key={customer.id}

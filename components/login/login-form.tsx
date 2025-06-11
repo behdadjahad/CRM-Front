@@ -39,7 +39,7 @@ export default function LoginForm() {
     });
 
     if (result) {
-      console.log(result);
+ 
       // Cookies.set("accessToken", result.data.accessToken, {
       //   path: "/",
       //   secure: true,

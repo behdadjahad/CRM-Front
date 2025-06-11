@@ -30,7 +30,7 @@ export default function WorldMap({ countryData }: WorldMapProps) {
   }
   return { valueMap, labelMap };
 }, [countryData]);
-console.log( { valueMap, labelMap });
+
   useEffect(() => {
     // fetch("/data/countries.geojson")
     fetch("/data/countries.json")

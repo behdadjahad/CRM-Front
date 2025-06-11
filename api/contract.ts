@@ -3,7 +3,7 @@ import { fetchService } from "@/boot/fetch-service";
 export async function getContractTypes(): Promise<ServiceOutput> {
   try {
     const result: ServiceOutput = await fetchService("contract-type");
-    console.log(result)
+
     return result;
     
   } catch {

@@ -35,7 +35,6 @@ export default function ProfileDropDown({
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,
     onError: (response: any) => {
-      console.log(38, response);
       if (response.status === 403) {
         router.push("/login");
       }

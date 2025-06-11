@@ -118,7 +118,7 @@ export function CustomerPersonalInfo() {
       setSatisfactionSchedule(satisfactionDate);
     }
   }, [customerPersonalInfo]);
-  console.log(satisfactionSchedule);
+ 
   const satisfactionScheduleData: OverviewInterface = {
     list: [
       {

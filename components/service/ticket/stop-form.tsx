@@ -43,10 +43,10 @@ export default function StopForm({
   function removeForm(formId: any) {
     if (formik.values.isSubmitted) {
       deleteStopForm(formId);
-      console.log("true");
+   
     } else {
       onRemoveHandler(formId);
-      console.log("false");
+      
     }
   }
   const { mutate: submitStopForm } = useMutation({

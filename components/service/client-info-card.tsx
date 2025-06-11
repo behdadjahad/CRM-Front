@@ -74,7 +74,7 @@ export default function ClientInfoCard({
       });
     },
   });
-  console.log(clientInfo);
+
   return (
     <div className="flex flex-col rounded-lg overflow-hidden  items-start border border-border/20  border-r-primary border-r-[6px]">
       <div

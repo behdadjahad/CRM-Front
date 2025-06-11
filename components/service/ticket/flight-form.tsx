@@ -34,7 +34,7 @@ export default function FlightForm({
   ticket: any;
   currencies: any;
   }) {
-  console.log(flight)
+
   const { id } = useParams();
   const queryClient = useQueryClient();
 

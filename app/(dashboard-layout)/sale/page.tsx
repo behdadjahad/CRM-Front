@@ -84,7 +84,7 @@ export default function Sale() {
             "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
-      console.log(contractTypeData);
+    
     }
   }, [contractTypeData]);
   const formik = useFormik({

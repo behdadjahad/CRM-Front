@@ -118,11 +118,11 @@ export default function TicketContainer({
     },
   });
   function removeHandler(formId: any) {
-    console.log(formId);
+ 
     const selectedFlight = addedTickets
       .flatMap((ticket) => ticket.flights)
       .find((flight) => flight.flightId === formId);
-    console.log(selectedFlight);
+    
     if (selectedFlight) {
       if (selectedFlight.isSubmitted === true) {
         deleteFlightForm(formId);

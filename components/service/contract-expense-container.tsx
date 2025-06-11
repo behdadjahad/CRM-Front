@@ -48,7 +48,7 @@ export default function ContractExpenseContainer() {
   });
   useEffect(() => {
     if (allExpenses) {
-      console.log(allExpenses);
+    
       const overalExpenseData = [
         { label: "هزینه", value: allExpenses?.data?.buyPrice },
         {
@@ -154,7 +154,7 @@ export default function ContractExpenseContainer() {
       setContractCurrency(contractExchangeRate);
       setOveralExpense(overalExpenseData);
       setServiceExpenses(totalServiceExpenses);
-      console.log(allExpenses);
+      
     }
   }, [allExpenses]);
 

@@ -38,7 +38,8 @@ export default function CurrencyDropDown({
         label: item.name,
       }));
       setCurrencies(currencyOptions);
-      console.log(currency)
+
+      
     }
   }, [currency]);
 

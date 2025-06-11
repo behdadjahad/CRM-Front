@@ -140,7 +140,7 @@ export default function HotelContainer() {
   useEffect(() => {
     if (isHotelLoading) return;
     if (submittedHotels?.data?.length) {
-      console.log(submittedHotels.data);
+      
 
       setAddedHotels(
         submittedHotels.data.map((item: any) => ({

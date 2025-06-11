@@ -55,7 +55,7 @@ const highlightMatch = (text: string, keyword: string) => {
 
 const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
   ({ customer, onCheckCustomerhandler, searchKeyWord}, ref) => {
-    console.log(customer)
+  
     const customerInfiniteCardContent = (
       <div
         key={customer.id}

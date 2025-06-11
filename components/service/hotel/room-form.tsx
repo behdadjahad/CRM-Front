@@ -53,7 +53,7 @@ export default function RoomForm({ roomId, hotelId, onRemoveHandler, room }: any
       setCurrencies(currencyOptions);
     }
   }, [currency]);
-  console.log(room);
+
   const formik = useFormik({
     initialValues: {
       roomType: room?.roomTypeId?.toString(),
@@ -103,7 +103,8 @@ export default function RoomForm({ roomId, hotelId, onRemoveHandler, room }: any
   });
 
   function submitRoom(data: any) {
-    console.log(data.isSubmitted);
+
+    
     if (room.isSubmitted) {
       roomEditor({
         data: {

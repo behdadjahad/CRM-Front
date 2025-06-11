@@ -28,7 +28,7 @@ export default function ServiceCustomerManager({
   });
   useEffect(() => {
     if (contractCustomersData) {
-      console.log(22, contractCustomersData);
+  
       const customerList = contractCustomersData?.data?.map((item: any) => ({
         id: item?.id,
         firstName: item?.person?.firstName,

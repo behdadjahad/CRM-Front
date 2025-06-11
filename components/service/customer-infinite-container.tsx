@@ -18,9 +18,7 @@ export default function CustomerInfiniteContainer({
 }) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
-useEffect(() => {
-  console.log("✅ CustomerInfiniteContainer mounted");
-}, []);
+
   const {
     data: customersData,
     isSuccess,

@@ -47,7 +47,7 @@ export default function Service() {
           ? true
           : obj.isSelected,
       }));
-      console.log("updatedServices", updatedServices);
+
       setServiceList(updatedServices);
     }
   }, [updatedServiceData]);
@@ -63,7 +63,7 @@ export default function Service() {
           ? true
           : obj.isSelected,
       }));
-      console.log("updatedServices", updatedServices);
+
       setServiceList(updatedServices);
     }
   }, [contract]);

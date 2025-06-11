@@ -98,7 +98,7 @@ export default function ContractCreation({
 
   useEffect(() => {
     if (users) {
-      console.log(users);
+
       const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),

@@ -113,11 +113,11 @@ export async function fetchService(
   };
 
   let response = await executeFetch();
-  console.log(response);
+
   // If access token expired
   if (response.status === 401) {
     const newAccessToken = await renewAccessToken();
-    console.log(newAccessToken);
+
     if (newAccessToken) {
       response = await executeFetch(); // retry original request with new token
     } else {
@@ -144,7 +144,7 @@ export async function fetchService(
 export async function renewAccessToken() {
   const refreshToken = localStorage.getItem("refreshToken");
   const accessToken = localStorage.getItem("token");
-  console.log(refreshToken);
+
   if (!refreshToken) return null;
 
   try {
@@ -157,7 +157,7 @@ export async function renewAccessToken() {
     });
 
     const result = await response.json();
-    console.log(result);
+
     if (result.status === "success" && result?.data?.accessToken) {
       // Save new tokens
       localStorage.setItem("token", result.data.accessToken);
