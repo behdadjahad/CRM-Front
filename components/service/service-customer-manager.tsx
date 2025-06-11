@@ -8,10 +8,13 @@ import { useParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getCustomersData } from "@/api/customer";
 import { addServiceCustomerData } from "@/api/customer-service";
+import { cn } from "@/lib/utils";
 export default function ServiceCustomerManager({
   entityId,
+  avService,
 }: {
   entityId: number;
+  avService: string;
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [customers, setCustomers] = useState<any[]>([]);
@@ -54,11 +57,14 @@ export default function ServiceCustomerManager({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["submittedVisa"] });
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
     },
   });
   function submitHandler() {
     const data = {
-      avService: "Visa",
+      avService: avService,
       customerIds: selectedCustomers,
 
       entityId: entityId,
@@ -69,13 +75,12 @@ export default function ServiceCustomerManager({
   return (
     <div className="flex items-center justify-end">
       <Button
-        variant={"foreground"}
+        variant={"transparent"}
+        className={cn("text-aqua-foreground flex justify-end w-full")}
         onClick={() => setOpenModal(true)}
-        className="border-none"
       >
-        <FaPlus size={10} className="text-primary-active" />
-
-        <span className="text-xs text-primary-active">افزودن مشتری</span>
+        <FaPlus />
+        افزودن مشتری
       </Button>
       <CustomModal
         minWidth="0"

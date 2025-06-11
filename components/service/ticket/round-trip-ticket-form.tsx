@@ -10,6 +10,9 @@ import { getAirportTerminal } from "@/api/ticket";
 import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 import { useParams } from "next/navigation";
 import { editFlightData, sendFlightData } from "@/api/flight";
+import ServiceCustomerManager from "../service-customer-manager";
+import ServiceCustomerList from "../service-customer-list";
+import { deleteServiceCustomerData } from "@/api/customer-service";
 export default function RoundTripTicketForm({
   flightClassOptions,
   flightTypeOptions,
@@ -52,7 +55,7 @@ export default function RoundTripTicketForm({
           )
         : "",
       exitDateTimeType: dateType,
-      arriveDateTimeType:dateType,
+      arriveDateTimeType: dateType,
       destinationCityAirport: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.destinationCityAirport?.toString(),
@@ -62,7 +65,11 @@ export default function RoundTripTicketForm({
       airline: ticket?.flights
         ?.find((obj: any) => obj.groupOrder === 1)
         ?.airline?.toString(),
-      cost: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost ? formatPrice(ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost):"",
+      cost: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost
+        ? formatPrice(
+            ticket?.flights?.find((obj: any) => obj.groupOrder === 1)?.cost
+          )
+        : "",
       currency: ticket?.flights?.find((obj: any) => obj.groupOrder === 1)
         ?.currency,
       broker: "",
@@ -122,8 +129,11 @@ export default function RoundTripTicketForm({
         ?.find((obj: any) => obj.groupOrder === 2)
         ?.airline?.toString(),
       returnCost: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
-        ?.cost ? formatPrice(ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
-        ?.cost):"",
+        ?.cost
+        ? formatPrice(
+            ticket?.flights?.find((obj: any) => obj.groupOrder === 2)?.cost
+          )
+        : "",
       returnBroker: "",
       returnCurrency: ticket?.flights?.find((obj: any) => obj.groupOrder === 2)
         ?.currency,
@@ -387,9 +397,19 @@ export default function RoundTripTicketForm({
       );
     }
   }, [ticket?.flights?.find((obj: any) => obj.groupOrder === 2)?.flightStops]);
-
+  const { mutate: deleteCustomerService } = useMutation({
+    mutationFn: (data: any) => {
+      return deleteServiceCustomerData(data, Number(id));
+    },
+    onSuccess: () => {
+     queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
+  });
   return (
-    <>
+    <div className="flex flex-col gap-4  rounded-md p-3">
+      <ServiceCustomerManager entityId={ticket?.id} avService={"Flight"} />
       <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
         <div className="flex items-center gap-2">
           <h2 className="p-3">رفت</h2>
@@ -496,7 +516,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              formatted:true
+              formatted: true,
             },
 
             {
@@ -663,7 +683,7 @@ export default function RoundTripTicketForm({
               type: "text",
               floating: true,
               className: "w-full md:w-1/3",
-              formatted:true
+              formatted: true,
             },
 
             {
@@ -721,6 +741,15 @@ export default function RoundTripTicketForm({
           />
         ))}
       </div>
-    </>
+
+      {ticket?.customers?.length > 0 && (
+        <ServiceCustomerList
+          onDeleteHandler={deleteCustomerService}
+          customers={ticket?.customers}
+          entityId={ticket?.id}
+          avService={"Flight"}
+        />
+      )}
+    </div>
   );
 }

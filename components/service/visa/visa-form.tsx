@@ -7,8 +7,9 @@ import { editVisaData, sendVisaData } from "@/api/visa";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import ServiceCustomerManager from "../service-customer-manager";
-import Image from "next/image";
+
 import { deleteServiceCustomerData } from "@/api/customer-service";
+import ServiceCustomerList from "../service-customer-list";
 
 export default function VisaForm({
   visa,
@@ -19,7 +20,7 @@ export default function VisaForm({
   visaTypes,
   visaDurationTypes,
   visaEntranceTypes,
-  customers,
+
 }: any) {
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -109,7 +110,7 @@ export default function VisaForm({
     >
       <div className="flex flex-row items-center  p-2 justify-between">
         <h2>ویزا</h2>
-        <ServiceCustomerManager entityId={visa?.id} />
+        <ServiceCustomerManager entityId={visa?.id} avService="Visa"/>
       </div>
 
       <FormMaker
@@ -229,72 +230,12 @@ export default function VisaForm({
         className=""
       />
       {visa?.customers?.length > 0 && (
-        <div className="flex flex-col gap-2 border border-gray-400 rounded-md p-3">
-          <h2> لیست مشتری </h2>
-          {visa?.customers?.length > 0 &&
-            visa?.customers?.map((customer: any) => (
-              <div className="flex justify-between items-center w-full gap-4">
-                <div
-                  key={customer.id}
-                  className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between w-full bg-[#FAFAFA]"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-2">
-                      {" "}
-                      <div className="rounded-full flex items-center justify-center bg-[#F5F5F5] border border-gray-200 w-10 h-10">
-                        <Image
-                          src={"/icons/customer.png"}
-                          alt="edit"
-                          width={18}
-                          height={18}
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-primary-bold">
-                          <>{customer.firstName + " " + customer.lastName}</>
-                        </span>
-
-                        <span className="text-sm text-foreground-mute">
-                          {customer?.email}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center text-foreground-mute gap-2">
-                    <Image
-                      src={"/icons/customerMobile.png"}
-                      alt="edit"
-                      width={12}
-                      height={12}
-                    />
-                    <span>{customer?.phone}</span>
-                  </div>
-                  <div className="flex items-center text-foreground-mute gap-2">
-                    <Image
-                      src={"/icons/customerID.png"}
-                      alt="edit"
-                      width={18}
-                      height={18}
-                    />
-                    <span>{customer.idNumber}</span>
-                  </div>
-                </div>
-                <Button
-                  onClick={() => {
-                    const data = {
-                      avService: "Visa",
-                      customerIds: [customer.customerId],
-                      entityId: visa?.id,
-                    };
-                    deleteCustomerService(data);
-                  }}
-                  className="text-danger border-danger"
-                >
-                  حذف
-                </Button>
-              </div>
-            ))}
-        </div>
+        <ServiceCustomerList
+          onDeleteHandler={deleteCustomerService}
+          customers={visa?.customers}
+          entityId={visa?.id}
+          avService={"Visa"}
+        />
       )}
     </div>
   );

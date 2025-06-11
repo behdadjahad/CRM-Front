@@ -35,7 +35,7 @@ export default function RegisteryForm({
   });
 
   return (
-    <div className="w-full flex flex-col items-end gap-4">
+    <div className="bg-card w-full flex flex-col items-end gap-4">
       <FormMaker
         form={formik}
         fields={[

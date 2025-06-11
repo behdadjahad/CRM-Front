@@ -10,6 +10,8 @@ import { getAirportTerminal } from "@/api/ticket";
 import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
+import ServiceCustomerManager from "../service-customer-manager";
+import ServiceCustomerList from "../service-customer-list";
 
 export default function FlightForm({
   onRemoveHandler,
@@ -31,7 +33,8 @@ export default function FlightForm({
   flight: any;
   ticket: any;
   currencies: any;
-}) {
+  }) {
+  console.log(flight)
   const { id } = useParams();
   const queryClient = useQueryClient();
 
@@ -50,7 +53,7 @@ export default function FlightForm({
       destinationCityAirport: flight?.destinationCityAirport?.toString(),
       destinationTerminal: flight?.destinationTerminal?.toString(),
       airline: flight?.airline?.toString(),
-      cost: flight?.cost ? formatPrice(flight?.cost):"",
+      cost: flight?.cost ? formatPrice(flight?.cost) : "",
       currency: flight?.currency,
       broker: "",
       flightType: flight?.flightType,
@@ -169,7 +172,7 @@ export default function FlightForm({
       ),
       priceWeBuy: cleanFormatPrice(formik.values.cost),
       currencyWeBuyId: formik.values.currency,
-      transportationCoId:formik.values.airline
+      transportationCoId: formik.values.airline,
     };
     if (!formik.values.isSubmitted) {
       submitFlightForm({
@@ -192,20 +195,23 @@ export default function FlightForm({
   }, [flight?.flightStops]);
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
-      <div className="flex items-center gap-2">
-        <h2 className="p-3">
-          پرواز شماره <span>{count}</span>
-        </h2>
-        <Button
-          variant={"transparent"}
-          onClick={addStopForm}
-          className={cn(
-            "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
-          )}
-        >
-          <FaPlus className="text-white" />
-        </Button>
-      </div>
+
+        <div className="flex items-center gap-2">
+          <h2 className="p-3">
+            پرواز شماره <span>{count}</span>
+          </h2>
+          <Button
+            variant={"transparent"}
+            onClick={addStopForm}
+            className={cn(
+              "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
+            )}
+          >
+            <FaPlus className="text-white" />
+          </Button>
+        </div>
+    
+
       <FormMaker
         form={formik}
         fields={[
@@ -301,7 +307,7 @@ export default function FlightForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            formatted:true
+            formatted: true,
           },
 
           {
@@ -355,6 +361,15 @@ export default function FlightForm({
           stop={item}
         />
       ))}
+
+      {/* {ticket?.customers?.length > 0 && (
+        <ServiceCustomerList
+          onDeleteHandler={() => {}}
+          customers={ticket?.customers}
+          entityId={ticket?.id}
+          avService={"Flight"}
+        />
+      )} */}
     </div>
   );
 }

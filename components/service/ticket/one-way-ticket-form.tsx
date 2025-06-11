@@ -10,6 +10,9 @@ import { getAirportTerminal } from "@/api/ticket";
 import { editFlightData, sendFlightData } from "@/api/flight";
 import { useParams } from "next/navigation";
 import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
+import ServiceCustomerManager from "../service-customer-manager";
+import ServiceCustomerList from "../service-customer-list";
+import { deleteServiceCustomerData } from "@/api/customer-service";
 export default function OneWayTicketForm({
   onRemoveHandler,
   flightClassOptions,
@@ -45,7 +48,9 @@ export default function OneWayTicketForm({
       destinationTerminal:
         ticket?.flights?.[0]?.destinationTerminal?.toString(),
       airline: ticket?.flights?.[0]?.airline?.toString(),
-      cost: ticket?.flights?.[0]?.cost ? formatPrice(ticket?.flights?.[0]?.cost):"",
+      cost: ticket?.flights?.[0]?.cost
+        ? formatPrice(ticket?.flights?.[0]?.cost)
+        : "",
       currency: ticket?.flights?.[0]?.currency,
       broker: "",
       flightId: ticket?.flights?.[0]?.flightId || ticket?.id,
@@ -193,19 +198,32 @@ export default function OneWayTicketForm({
       setAddedStops(ticket?.flights?.[0]?.flightStops);
     }
   }, [ticket?.flights?.[0]?.flightStops]);
+  const { mutate: deleteCustomerService } = useMutation({
+    mutationFn: (data: any) => {
+      return deleteServiceCustomerData(data, Number(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["ticketData"],
+      });
+    },
+  });
   return (
     <div className="flex flex-col gap-4 border border-gray-400 rounded-md p-3">
-      <div className="flex items-center gap-2">
-        <h2 className="p-3">یک طرفه</h2>
-        <Button
-          variant={"transparent"}
-          onClick={addStopForm}
-          className={cn(
-            "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
-          )}
-        >
-          <FaPlus className="text-white" />
-        </Button>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <h2 className="p-3">یک طرفه</h2>
+          <Button
+            variant={"transparent"}
+            onClick={addStopForm}
+            className={cn(
+              "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
+            )}
+          >
+            <FaPlus className="text-white" />
+          </Button>
+        </div>
+        <ServiceCustomerManager entityId={ticket?.id} avService={"Flight"} />
       </div>
       <FormMaker
         form={formik}
@@ -309,7 +327,7 @@ export default function OneWayTicketForm({
             type: "text",
             floating: true,
             className: "w-full md:w-1/3",
-            formatted:true
+            formatted: true,
           },
 
           {
@@ -363,6 +381,14 @@ export default function OneWayTicketForm({
           stop={item}
         />
       ))}
+      {ticket?.customers?.length > 0 && (
+        <ServiceCustomerList
+          onDeleteHandler={deleteCustomerService}
+          customers={ticket?.customers}
+          entityId={ticket?.id}
+          avService={"Flight"}
+        />
+      )}
     </div>
   );
 }

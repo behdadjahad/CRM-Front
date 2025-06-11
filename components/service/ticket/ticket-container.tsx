@@ -179,6 +179,12 @@ export default function TicketContainer({
             stopTime: stop?.stopDateTime,
           })),
         })),
+        customers: item?.customers?.map((customer: any) => ({
+          customerId: customer?.id,
+          firstName: customer?.person?.firstName,
+          lastName: customer?.person?.lastName,
+          idNumber: customer?.person?.idNumber,
+        })),
         isSubmitted: true,
       }));
       setAddedTickets(ticketInfo);
@@ -245,7 +251,7 @@ export default function TicketContainer({
     );
     if (selectedTicket) {
       if (selectedTicket.isSubmitted) {
-        deleteTicketForm(groupId)
+        deleteTicketForm(groupId);
       } else {
         if (addedTickets.length > 1) {
           setAddedTickets(
@@ -256,8 +262,8 @@ export default function TicketContainer({
     } else return;
   }
   return (
-    <div className="bg-card p-6 rounded-xl flex flex-col gap-4">
-      <div className="flex items-center justify-between">
+    <div className="p-6 rounded-xl flex flex-col">
+      <div className="bg-card flex items-center justify-between px-6 pt-6 pb-0 rounded-tl-xl rounded-tr-xl">
         <h2>سرویس مدیریت پروازها</h2>
         <Button
           variant={"transparent"}
@@ -268,7 +274,7 @@ export default function TicketContainer({
           افزودن بلیط
         </Button>
       </div>
-      <div className="flex flex-col-reverse">
+      <div className="flex flex-col-reverse gap-8">
         {addedTickets.map((item) => (
           <TicketForm
             key={item.id}
@@ -282,7 +288,7 @@ export default function TicketContainer({
           />
         ))}
       </div>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 bg-card p-3 rounded-md mt-8">
         <h2>اطلاعات ثبت کننده</h2>
         <RegisteryForm
           submitForm={SubmitterHandler}

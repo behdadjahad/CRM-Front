@@ -2,7 +2,7 @@ import FormMaker from "../shared/form-maker";
 import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 
-import CustomerInfiniteContainer from "./customer-infinite-container";
+
 import CustomerSuggestionInfiniteContainer from "./customer-suggestion-infinite-container";
 
 export default function CustomerSubmitterContainer({
