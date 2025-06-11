@@ -89,12 +89,12 @@ export default function VisaContainer() {
             visaCost: item.priceWeBuy,
             currency: item.currencyWeBuyId,
             customers: item.customers.map((customer: any) => ({
-              customerId:customer?.id,
+              customerId: customer?.id,
               firstName: customer?.person?.firstName,
               lastName: customer?.person?.lastName,
               idNumber: customer?.person?.idNumber,
-              email:"",
-              phone:"",
+              phone: customer?.Communication?.mobile?.[0]?.communicationDetails,
+              email: customer?.Communication?.email?.[0]?.communicationDetails,
             })),
           }))
         );

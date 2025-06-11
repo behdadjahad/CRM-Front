@@ -36,7 +36,7 @@ export default function CustomerInfiniteContainer({
       }),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
-        lastPage.data.length === LIMIT ? allPages.length + 1 : undefined;
+        lastPage?.data?.length === LIMIT ? allPages.length + 1 : undefined;
       return nextPage;
     },
     initialPageParam: 1,

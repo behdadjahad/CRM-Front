@@ -96,8 +96,8 @@ export default function HotelForm({
             firstName: customer?.person?.firstName,
             lastName: customer?.person?.lastName,
             idNumber: customer?.person?.idNumber,
-            email: "",
-            phone: "",
+            phone: customer?.Communication?.mobile?.[0]?.communicationDetails,
+            email: customer?.Communication?.email?.[0]?.communicationDetails,
           })),
         }))
       );

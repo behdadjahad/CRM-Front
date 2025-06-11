@@ -31,11 +31,11 @@ export default function ClientInfoContainer() {
         { label: "کدملی", value: client?.person?.idNumber },
         {
           label: "شماره تلفن",
-          value: client?.communication?.mobile?.[0]?.communicationDetails,
+          value: client?.Communication?.mobile?.[0]?.communicationDetails,
         },
         {
           label: "ایمیل",
-          value: client?.communication?.email?.[0]?.communicationDetails,
+          value: client?.Communication?.email?.[0]?.communicationDetails,
         },
       ]);
       const clientInfoList = contractCustomersData?.data?.map((client: any) => ({
@@ -44,8 +44,8 @@ export default function ClientInfoContainer() {
         name:client?.person?.firstName,
         family:client?.person?.lastName,
         idNumber:client?.person?.idNumber,
-        phone:client?.communication?.mobile?.[0]?.communicationDetails,
-        email:client?.communication?.email?.[0]?.communicationDetails,
+        phone:client?.Communication?.mobile?.[0]?.communicationDetails,
+        email:client?.Communication?.email?.[0]?.communicationDetails,
       }))
 
       setClientList(clients);

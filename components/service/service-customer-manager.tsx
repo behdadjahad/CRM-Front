@@ -21,7 +21,7 @@ export default function ServiceCustomerManager({
   const [selectedCustomers, setSelectedCustomers] = useState<any[]>([]);
   const queryClient = useQueryClient();
   const { id } = useParams();
-
+console.log(customers)
   const { data: contractCustomersData } = useQuery({
     queryKey: ["contractCustomersData"],
     queryFn: () => getCustomersData(Number(id)),

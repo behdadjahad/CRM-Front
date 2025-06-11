@@ -118,11 +118,10 @@ export default function TicketContainer({
     },
   });
   function removeHandler(formId: any) {
- 
     const selectedFlight = addedTickets
       .flatMap((ticket) => ticket.flights)
       .find((flight) => flight.flightId === formId);
-    
+
     if (selectedFlight) {
       if (selectedFlight.isSubmitted === true) {
         deleteFlightForm(formId);
@@ -184,6 +183,8 @@ export default function TicketContainer({
           firstName: customer?.person?.firstName,
           lastName: customer?.person?.lastName,
           idNumber: customer?.person?.idNumber,
+          phone: customer?.Communication?.mobile?.[0]?.communicationDetails,
+          email: customer?.Communication?.email?.[0]?.communicationDetails,
         })),
         isSubmitted: true,
       }));

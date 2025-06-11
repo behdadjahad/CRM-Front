@@ -59,6 +59,8 @@ export default function OtherContainer() {
             firstName: customer?.person?.firstName,
             lastName: customer?.person?.lastName,
             idNumber: customer?.person?.idNumber,
+            phone: customer?.Communication?.mobile?.[0]?.communicationDetails,
+            email: customer?.Communication?.email?.[0]?.communicationDetails,
           })),
         }))
       );
