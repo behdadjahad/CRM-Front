@@ -2,27 +2,51 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import NotificationDrawer from "./notification-drawer";
 import { useState } from "react";
-const notificationList = [
+import { NotificationCardInterface } from "../notification/notification-card";
+const notificationList: NotificationCardInterface[] = [
   {
+    id: 1,
     heading: "ویژگی جدید اضافه شد",
     user: {
       name: "",
       image: "",
+      isOnline: false,
     },
     content:
       "خوشحالیم که نسخه به‌روزشده و بهتر تجربه ساخت قالب رو به شما معرفی کنیم.",
     button: {
       className: "",
       title: "الان امتحان کن",
-      variant:"info"
+      variant: "info",
     },
     icon: "",
     review: "",
     time: "2 دقیقه پیش",
     className: "",
+    hasResponse: true,
+  },
+  {
+    id: 2,
+    heading: "",
+    user: {
+      name: "",
+      image: "",
+      isOnline: true,
+    },
+    content: "قرارداد جدید از شرکت سیمرغ پرواز ثبت شد و در حال بررسی است.",
+    button: {
+      className: "",
+      title: "الان امتحان کن",
+      variant: "info",
+    },
+    icon: "",
+    review: "",
+    time: "9 اردیبهشت",
+    className: "",
+    hasResponse: false,
   },
 ];
-const tabList = [
+export const tabList = [
   { label: "همه اعلان ها", value: "all", count: 5 },
   { label: "خوانده نشده ها", value: "unread", count: 1 },
   { label: "خوانده شده ها", value: "read", count: 2 },
@@ -64,7 +88,7 @@ export default function Notification({
       <NotificationDrawer
         setState={setOpenNotification}
         state={openNotification}
-        tabList={tabList}
+   
         list={notificationList}
       />
     </div>

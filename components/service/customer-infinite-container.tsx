@@ -86,7 +86,7 @@ export default function CustomerInfiniteContainer({
     );
 
   return (
-    <div className="max-h-64 overflow-scroll flex flex-col gap-4">
+    <div className="max-h-64 overflow-y-scroll flex flex-col gap-4">
       {content}
       {isFetchingNextPage && <h3>Loading...</h3>}
     </div>

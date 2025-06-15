@@ -217,7 +217,9 @@ export default function Satisfaction({
       onClick={(e) => {
         e.stopPropagation(); // ✅ Stops bubbling
       }}
+      className="w-full h-full flex flex-col gap-2"
     >
+      <div className="flex flex-col gap-4 max-h-[550px] overflow-y-auto">
       <div className="w-full flex gap-6">
         <div className="rounded-xl  w-full p-3 bg-card items-center justify-center flex flex-col  shadow-[0px_12px_24px_-4px_#919EAB1F]">
           {/* <RatingChart value={score} color="#FFA500" />
@@ -256,6 +258,7 @@ export default function Satisfaction({
         labels={satisfactionLabels}
         form={formik}
       />
+      </div>
       <div className="flex flex-row gap-4 items-center justify-end">
         <Button
           variant={"info"}

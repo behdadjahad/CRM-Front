@@ -272,16 +272,15 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           )
         : "",
       avServices: formik.values.services,
-      dateTimeRangeStart: formik.values.startDate ?convertToGregorian(
-        formik.values.startDate,
-        formik.values.startDateType
-      )
-    : "",
-      dateTimeRangeEnd:formik.values.endDate ? convertToGregorian(
-        formik.values.endDate,
-        formik.values.endDateType
-      )
-    : "",
+      dateTimeRangeStart: formik.values.startDate
+        ? convertToGregorian(
+            formik.values.startDate,
+            formik.values.startDateType
+          )
+        : "",
+      dateTimeRangeEnd: formik.values.endDate
+        ? convertToGregorian(formik.values.endDate, formik.values.endDateType)
+        : "",
       minPrice: Number(formik.values.minSellPrice),
       maxPrice: Number(formik.values.maxSellPrice),
     };
@@ -377,7 +376,6 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
     );
   }, [dispatch]);
   function submitSort(itemValue: string, type?: string) {
- 
     const sortData = {
       sortKind: itemValue,
       sortOrder: type,
@@ -402,7 +400,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   }
   return (
     <div className="bg-card rounded-lg p-6">
-      <div>
+      <div className="gap-4 flex flex-col">
         <FilterContainer
           onFilterHandler={() => {
             submitFilter();
@@ -410,31 +408,31 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           rangeItems={rangeItems}
           filterItems={filterItems}
           sortList={customerSortlist}
-          onSortHandler={(item: string,itemType?:string) => {
-            submitSort(item,itemType);
+          onSortHandler={(item: string, itemType?: string) => {
+            submitSort(item, itemType);
           }}
           onCancleHandler={cancleFilter}
         />
-      </div>
-      <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">
-        {tabList.map((tab: any) => (
-          <button
-            key={tab}
-            className={`w-full text-center h-full py-2 ${
-              activeTab === tab
-                ? "border-b-2 border-black font-bold text-black"
-                : "text-neutral-500"
-            }`}
-            onClick={() => {
-              setActiveTab(tab);
-              setTabData(tab);
-            }}
-          >
-            {tab.toUpperCase()}
-          </button>
-        ))}
-      </div>
 
+        <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">
+          {tabList.map((tab: any) => (
+            <button
+              key={tab}
+              className={`w-full text-center h-full py-2 ${
+                activeTab === tab
+                  ? "border-b-2 border-black font-bold text-black"
+                  : "text-neutral-500"
+              }`}
+              onClick={() => {
+                setActiveTab(tab);
+                setTabData(tab);
+              }}
+            >
+              {tab.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="mt-4 h-full">
         {activeTab === "همه مشتری ها" && (
           <CustomerTabContent customerList={customerList} />

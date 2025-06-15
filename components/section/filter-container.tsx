@@ -30,10 +30,10 @@ export default function FilterContainer({
     <div className="flex items-center gap-4 text-sm">
       <Button
         onClick={() => setOpenFilter(true)}
-        variant={"ghost"}
-        className="flex items-center gap-2"
+        variant={"foreground"}
+        className="flex items-center gap-2 border"
       >
-        <Image src={"/icons/filter.png"} alt="Filter" width={24} height={24} />
+        <Image src={"/icons/filter.png"} alt="Filter" width={1024} height={1024} className="w-5 h-5"/>
 
         <span>فیلتر</span>
       </Button>

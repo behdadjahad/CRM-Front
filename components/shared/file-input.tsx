@@ -55,7 +55,8 @@ export default function FileInput({
         >
           {item.icon && (
             <Image
-              src={item.icon}
+              // src={item.icon}
+              src={"/icons/vector.png"}
               alt={"تصویر"}
               width={160}
               height={160}

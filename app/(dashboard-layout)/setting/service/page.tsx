@@ -89,7 +89,7 @@ export default function ServiceSetting() {
               />
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <div className="rounded-md border border-gray-400 p-3 flex flex-col gap-4">
               <h2> ثبت ایرلاین</h2>{" "}
               <FormMaker
@@ -120,7 +120,7 @@ export default function ServiceSetting() {
                 className=""
               />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className=" bg-card rounded-xl col-span-1 p-3">
           <h2>موارد ثبت شده</h2>

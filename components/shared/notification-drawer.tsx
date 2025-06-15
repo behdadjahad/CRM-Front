@@ -3,20 +3,35 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import Link from "next/link";
 import { NotificationList } from "./notification-list";
+import NotificationContainer from "../notification/notification-container";
+import NotificationHeader from "../notification/notification-header";
+
+import { NotificationCardInterface } from "../notification/notification-card";
+const tabList = [
+  { label: "همه اعلان ها", value: "all", count: 5 },
+  { label: "خوانده نشده ها", value: "unread", count: 1 },
+  { label: "خوانده شده ها", value: "read", count: 2 },
+  { label: "رد شده", value: "decline", count: 2 },
+];
 
 export interface NotificationDrawerInterface {
   state: boolean;
-  setState: (prev: any) => any;
-  tabList: any[];
-  list: any[];
+  setState: (prev: boolean) => void;
+
+  list: NotificationCardInterface[];
 }
+export const headerProps = {
+  title: "اعلان ها",
+  list: tabList,
+  action: {
+    title: "خوانده شدن همه",
+  },
+};
 export default function NotificationDrawer({
   state,
   setState,
-  tabList,
   list,
 }: NotificationDrawerInterface) {
-  const [activeTab, setActiveTab] = useState("all");
   return (
     <div
       className={cn("h-0 w-0 overflow-hidden top-0 left-0 z-50 fixed", {
@@ -31,35 +46,13 @@ export default function NotificationDrawer({
         className={cn(
           "h-screen rounded-r-2xl fixed top-0 z-50 left-0 w-0 bg-card text-foreground overflow-x-hidden duration-200 transition-all",
           {
-            "w-110": state,
+            "w-[440px]": state,
           }
         )}
       >
-        <div className="flex flex-col w-full h-full justify-between">
-          <div className="flex flex-col gap-4 p-5">
-            <span className="font-bold text-base">اعلان ها</span>
-            <div className="flex flex-row w-full justify-between">
-              {" "}
-              {tabList.map((item) => {
-                return (
-                  <Button
-                    key={item.label}
-                    onClick={() => setActiveTab(item.value)}
-                    className={`text-sm min-w-fit w-full p-1 rounded-none text-[#757575] text-right flex-gap-1 ${
-                      activeTab === item.value
-                        ? "border-b-2 text-foreground border-b-[#DF9832]"
-                        : ""
-                    }`}
-                    variant={"transparent"}
-                  >
-                    <span> {item.label}</span>
-                    <span className="w-5 h-5 rounded-full bg-[#F2F4F7] flex item-center justify-center">
-                      {item.count}
-                    </span>
-                  </Button>
-                );
-              })}
-            </div>
+        <div className="flex flex-col h-full justify-between">
+          <div className="flex flex-col gap-2 p-3">
+            <NotificationHeader {...headerProps} />
             <NotificationList list={list} />
           </div>
 

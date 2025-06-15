@@ -92,7 +92,7 @@ export default function TextInput({
           alt={item.key}
           width={20}
           height={20}
-          className="absolute right-3 top-3 cursor-pointer"
+          className={cn("absolute right-3 top-3 cursor-pointer",item.iconClassName)}
           onClick={item.onClick}
         />
       ) : (

@@ -20,10 +20,10 @@ export default function SortDropDown({
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          "bg-badge p-2 rounded-lg flex flex-row items-center gap-3 outline-none h-10"
+          "bg-card p-2.5 rounded-lg flex flex-row items-center gap-3 outline-none border"
         )}
       >
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-2 text-sm">
           <Image
             src={"/icons/sort-ascending.png"}
             alt="Sort"
