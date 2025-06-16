@@ -24,7 +24,7 @@ import {
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
 
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 
 export default function Sale() {
   const dispatch = useDispatch<any>();

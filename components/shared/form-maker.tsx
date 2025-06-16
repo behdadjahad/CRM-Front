@@ -16,6 +16,7 @@ import FilePreview from "./file-preview";
 import ListPreview from "./list-preview";
 import DateTimeInput from "./date-time-input";
 import TimeInput from "./time-input";
+import SuggestionInput from "./suggestion-input";
 
 export interface OptionType {
   label: string;
@@ -27,6 +28,7 @@ export interface FieldType {
   component:
     | "input"
     | "Select"
+    | "SuggestionInput"
     | "date"
     | "date-time"
     | "phone"
@@ -76,7 +78,7 @@ export interface FieldType {
   isFormattedNumber?: boolean;
   onClick?: () => void;
   formatted?: boolean;
- menuPlacement?: "top" | "bottom" | "auto";
+  menuPlacement?: "top" | "bottom" | "auto";
 }
 
 export interface FormMakerInterface {
@@ -95,6 +97,8 @@ export default function FormMaker({
       switch (item.component) {
         case "Select":
           return <SelectInput form={form} item={item} />;
+        case "SuggestionInput":
+          return <SuggestionInput form={form} item={item} />;
         case "input":
           return <TextInput item={item} form={form} />;
         case "phone":

@@ -4,6 +4,8 @@ import userReducer from "./user-slice";
 import customerReducer from "./customer-slice";
 import customerDetailContractReducer from "./customer-detail-contract-slice";
 import contractReducer from "./contract-slice";
+import stationReducer from "./station-slice";
+
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +13,7 @@ export const store = configureStore({
     customer: customerReducer,
     customerDetailContract:customerDetailContractReducer,
     contract: contractReducer,
+    station:stationReducer
   },
 });
 

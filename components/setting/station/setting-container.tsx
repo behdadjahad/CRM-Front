@@ -5,8 +5,14 @@ import ReactPaginate from "react-paginate";
 import SettingTableContainer from "./setting-table-container";
 import FormMaker from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
+import { useEffect } from "react";
+import { fetchStations } from "@/store/station-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { getCities, getCountries } from "@/api/location";
 
 export default function SettingContainer() {
+ 
   const settingSearchFormik = useFormik({
     initialValues: {
       settingKeyWord: "",
@@ -14,13 +20,27 @@ export default function SettingContainer() {
     onSubmit: async () => {},
   });
 
+
+  const currentPage = useSelector((state: any) => state.station.currentPage);
+  const limit = useSelector((state: any) => state.station.limit);
+  const stations = useSelector((state: any) => state.station.items);
+  const dispatch = useDispatch<any>();
+  useEffect(() => {
+    dispatch(
+      fetchStations({
+        page: currentPage,
+        limit: limit,
+        filters: {},
+      })
+    );
+  }, [dispatch]);
   const tableHeaderLabels = [
     "ردیف",
     "کشور",
     "شهر",
     "فرودگاه",
     "تاریخ ثبت",
-  
+    "ثبت کننده",
   ];
   const stationData = [
     {
@@ -29,7 +49,7 @@ export default function SettingContainer() {
       شهر: "تهران",
       فرودگاه: "مهرآباد",
       "تاریخ ثبت": "1402/01/01",
-
+      "ثبت کننده": "علی رضایی",
     },
   ];
   return (
@@ -63,8 +83,8 @@ export default function SettingContainer() {
           </div>
           <SettingTableContainer
             tableHeaderLabels={tableHeaderLabels}
-            list={stationData}
-            className="hidden xl:flex"
+            list={stations}
+            // className="hidden xl:flex"
           />
 
           <div className="w-full mt-4">
