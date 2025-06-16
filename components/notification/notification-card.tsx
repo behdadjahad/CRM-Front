@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Button, buttonVariants } from "../ui/button";
-import { FaEllipsisH } from "react-icons/fa";
+import { Button } from "../ui/button";
+
+import NotificationDropDown from "./notification-drop-down";
 export interface NotificationCardInterface {
   id: number;
   heading: string;
@@ -21,7 +22,20 @@ export interface NotificationCardInterface {
   className: string;
   hasResponse: boolean;
 }
-
+const dropDownList = [
+  {
+    label: "عنوان خوانده شده",
+    value: "read",
+  },
+  {
+    label: "آرشیو",
+    value: "archive",
+  },
+  {
+    label: "اعلان ها را خاموش کنید",
+    value: "off",
+  },
+];
 export default function NotificationCard({
   id,
   heading,
@@ -37,7 +51,7 @@ export default function NotificationCard({
   return (
     <div className="border-b flex flex-row justify-between items-start gap-2 p-3 w-full">
       <div className="flex flex-col justify-start gap-2">
-          <div className="text-xs text-foreground-mute min-w-fit">{time}</div>
+        <div className="text-xs text-foreground-mute min-w-fit">{time}</div>
         <div className="flex flex-row items-start gap-3">
           <div className="h-12 min-w-12">
             <Image
@@ -63,7 +77,7 @@ export default function NotificationCard({
       <div className="flex flex-col items-center gap-2">
         <div className="text-xs text-foreground-mute min-w-fit">{time}</div>
         <div>
-          <FaEllipsisH />
+          <NotificationDropDown list={dropDownList} />
         </div>
       </div>
     </div>

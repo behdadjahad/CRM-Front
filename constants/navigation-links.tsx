@@ -40,7 +40,13 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         label: "مشتری",
         link: "/customer",
         icon: (
-          <Image src={"/icons/users.png"} alt="مشتری" width={1024} height={1024} className="w-6 h-6"/>
+          <Image
+            src={"/icons/users.png"}
+            alt="مشتری"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
         ),
       },
       {
@@ -88,7 +94,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
     links: [
       {
         label: "تنظیمات",
-        link: "/setting/service",
+        link: "",
         icon: (
           <Image
             src={"/icons/setting.png"}
@@ -97,6 +103,12 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
             height={22}
           />
         ),
+        subMenu: [
+          {
+            label: "پرواز",
+            link: "/setting/ticket",
+          },
+        ],
       },
     ],
   },
