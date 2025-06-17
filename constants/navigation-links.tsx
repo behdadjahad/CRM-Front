@@ -106,7 +106,11 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         subMenu: [
           {
             label: "فرودگاه",
-            link: "/setting/station",
+            link: "/setting/airport",
+          },
+          {
+            label: "هتل",
+            link: "/setting/hotel",
           },
         ],
       },

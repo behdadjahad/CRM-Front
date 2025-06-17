@@ -8,18 +8,25 @@ import FilterContainer from "@/components/section/filter-container";
 import { useEffect } from "react";
 import { fetchStations } from "@/store/station-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
-import { getCities, getCountries } from "@/api/location";
+import { createSettingHeaderLabels } from "@/constants/setting";
+import { useParams } from "next/navigation";
 
-export default function SettingContainer() {
- 
+export default function SettingContainer({
+  cities,
+  countries,
+  airports,
+}: {
+  cities: any[];
+  countries: any[];
+  airports: any[];
+}) {
+  const { service } = useParams();
   const settingSearchFormik = useFormik({
     initialValues: {
       settingKeyWord: "",
     },
     onSubmit: async () => {},
   });
-
 
   const currentPage = useSelector((state: any) => state.station.currentPage);
   const limit = useSelector((state: any) => state.station.limit);
@@ -42,16 +49,7 @@ export default function SettingContainer() {
     "تاریخ ثبت",
     "ثبت کننده",
   ];
-  const stationData = [
-    {
-      ردیف: 1,
-      کشور: "ایران",
-      شهر: "تهران",
-      فرودگاه: "مهرآباد",
-      "تاریخ ثبت": "1402/01/01",
-      "ثبت کننده": "علی رضایی",
-    },
-  ];
+
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -82,9 +80,10 @@ export default function SettingContainer() {
             />
           </div>
           <SettingTableContainer
-            tableHeaderLabels={tableHeaderLabels}
+            tableHeaderLabels={createSettingHeaderLabels(service)}
             list={stations}
-            // className="hidden xl:flex"
+            countries={countries} cities={cities} airports={airports}
+      
           />
 
           <div className="w-full mt-4">

@@ -3,24 +3,27 @@
 import { getCities, getCountries } from "@/api/location";
 import { submitAirport } from "@/api/setting-airport";
 import { getAirports } from "@/api/ticket";
+import SettingCreateForm from "@/components/setting/setting-create-form";
 import SettingContainer from "@/components/setting/station/setting-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import Title from "@/components/shared/title";
 import { Button } from "@/components/ui/button";
+import {
+  createSettingFormFields,
+  createSettingFormValues,
+} from "@/constants/setting";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function ServiceSetting() {
+  const { service } = useParams();
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
   const formik = useFormik({
-    initialValues: {
-      country: "",
-      city: "",
-      airport: "",
-    },
+    initialValues: createSettingFormValues(service),
     onSubmit: () => {},
   });
   const { data: countryData } = useQuery({
@@ -82,16 +85,17 @@ export default function ServiceSetting() {
     },
     onSuccess: () => {},
   });
-  function submitHandler() {
-    const data = {
-      name: formik.values.airport,
-      transportationTypeId: 301,
-      countryId: formik.values.country,
-      cityId: formik.values.city,
-    };
-    submitAirportHandler(data);
-  }
- 
+  // function submitHandler() {
+  //   const data = {
+  //     name: formik.values.airport,
+  //     transportationTypeId: 301,
+  //     countryId: formik.values.country,
+  //     cityId: formik.values.city,
+  //   };
+  //   submitAirportHandler(data);
+  // }
+
+
   return (
     <main>
       <Title label="ثبت اطلاعات سرویس" />
@@ -106,67 +110,12 @@ export default function ServiceSetting() {
           },
         ]}
       />
-
-      <div className="flex flex-col gap-4 ">
-        <div className="rounded-md p-3 flex flex-col gap-4 bg-card">
-          <h2>ثبت فرودگاه</h2>{" "}
-          <FormMaker
-            form={formik}
-            fields={[
-              {
-                key: "country",
-                component: "Select",
-                placeholder: "کشور",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/4",
-                options: countries,
-              },
-              {
-                key: "city",
-                component: "Select",
-                placeholder: "شهر",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/4",
-                options: cities,
-              },
-              {
-                key: "airport",
-                component: "SuggestionInput",
-                placeholder: "فرودگاه",
-                type: "text",
-                floating: true,
-                className: "w-full md:w-1/4",
-                options: airports,
-              },
-
-              {
-                component: "non-field",
-                key: "actions",
-                children: (
-                  <Button variant="info" onClick={submitHandler}>
-                    ثبت
-                  </Button>
-                ),
-                className: "w-full md:w-1/4",
-              },
-            ]}
-          />
-        </div>
-      </div>
-      <SettingContainer />
+      <SettingCreateForm
+        fields={createSettingFormFields(service, countries, cities, airports)}
+        form={formik}
+        title={service}
+      />
+      <SettingContainer countries={countries} cities={cities} airports={airports} />
     </main>
   );
 }
-// {
-//   "name": "string",
-//   "description": "string",
-//   "address": "string",
-//   "lat": 1,
-//   "long": 1,
-//   "chadcoCustomerId": 1,
-//   "transportationTypeId": 1,
-//   "countryId": 1,
-//   "cityId": 1
-// }

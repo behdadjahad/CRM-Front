@@ -11,8 +11,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronUp } from "react-icons/fa";
 import SettingEditForm from "../setting-edit-form";
+import { createSettingEditFormFields } from "@/constants/setting";
+import { useParams } from "next/navigation";
+import { useSelector } from "react-redux";
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
@@ -21,6 +24,9 @@ export interface StationTableContainerInterface {
   //   value: string;
   // }[];
   list: any[];
+  cities: any[];
+  countries: any[];
+  airports: any[];
 }
 const tableHeaderLabels = [
   "ردیف",
@@ -44,9 +50,15 @@ export default function SettingTableContainer({
   list,
   className,
   tableHeaderLabels,
-}: StationTableContainerInterface) {
-  const [expandedRows, setExpandedRows] = useState<number[]>([]);
 
+  cities,
+  countries,
+  airports,
+}: StationTableContainerInterface) {
+  const { service } = useParams();
+
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  const editData = useSelector((state: any) => state.station.editData);
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
@@ -102,7 +114,10 @@ export default function SettingTableContainer({
                     e.stopPropagation();
                   }}
                 >
-                  <Button className="border-none p-0 text-[##212B36]">
+                  <Button
+                    className="border-none p-0 text-[##212B36]"
+                    onClick={() => {}}
+                  >
                     <Image
                       src="/icons/trash.png"
                       alt=""
@@ -125,14 +140,14 @@ export default function SettingTableContainer({
                     {expandedRows.includes(index) ? (
                       <FaChevronUp />
                     ) : (
-                    <Image
-                      src="/icons/edit-primary.png"
-                      alt=""
-                      width={1024}
-                      height={1024}
-                      className="w-4 h-4"
-                      onClick={() => {}}
-                    />
+                      <Image
+                        src="/icons/edit-primary.png"
+                        alt=""
+                        width={1024}
+                        height={1024}
+                        className="w-4 h-4"
+                        onClick={() => {}}
+                      />
                     )}{" "}
                   </Button>
                 </TableCell>
@@ -144,7 +159,16 @@ export default function SettingTableContainer({
                     className="p-4"
                   >
                     <div className="flex justify-between text-sm text-gray-700">
-                      <SettingEditForm />
+                      <SettingEditForm
+                        fields={createSettingEditFormFields(
+                          service,
+                          countries,
+                          cities,
+                          airports
+                        )}
+                        editData={editData[index]}
+                         countries={countries}  airports={airports}
+                      />
                     </div>
                   </TableCell>
                 </TableRow>

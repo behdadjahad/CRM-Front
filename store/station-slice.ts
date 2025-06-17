@@ -9,6 +9,7 @@ export interface StationState {
   totalPages: number;
   filters: any;
   limit: number;
+  editData: any[];
 }
 
 const initialState: StationState = {
@@ -17,6 +18,7 @@ const initialState: StationState = {
   totalPages: 0,
   filters: {},
   limit: limitForStations,
+  editData: [],
 };
 
 const stationSlice = createSlice({
@@ -41,6 +43,13 @@ const stationSlice = createSlice({
         "ثبت کننده": "",
         countryId: item.countryId,
         cityId: item.cityId,
+      }));
+
+      state.editData = action?.payload?.data?.map((item: any, index: number) => ({
+        id: item.id,
+        airport: item.name,
+        country: item.countryId,
+        city: item.cityId,
       }));
 
       const totalItems = action?.payload?.pagination?.total;
