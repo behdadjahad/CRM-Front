@@ -1,9 +1,11 @@
 import { useFormik } from "formik";
 import FormMaker, { OptionType } from "../shared/form-maker";
 import { Button } from "../ui/button";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCities } from "@/api/location";
 import { useEffect, useState } from "react";
+import { createSettingSubmitData, getSettingEdit } from "@/constants/setting";
+import { useParams } from "next/navigation";
 
 export default function SettingEditForm({
   fields,
@@ -18,6 +20,7 @@ export default function SettingEditForm({
 
   airports: any[];
 }) {
+  const { service } = useParams();
   const [cities, setCities] = useState<OptionType[]>([]);
   const formik = useFormik({
     initialValues: editData,
@@ -49,6 +52,17 @@ export default function SettingEditForm({
       }
     }
   }, [cityData, formik.values.country]);
+
+  const { mutate: editHandler } = useMutation({
+    mutationFn: (item: number) => {
+      return getSettingEdit(
+        service,
+        item,
+        createSettingSubmitData(service, formik)
+      );
+    },
+    onSuccess: () => {},
+  });
   return (
     <div className="w-full">
       <FormMaker
@@ -86,7 +100,12 @@ export default function SettingEditForm({
             component: "non-field",
             key: "actions",
             children: (
-              <Button variant="info" onClick={() => {}}>
+              <Button
+                variant="info"
+                onClick={() => {
+                  editHandler(editData.id);
+                }}
+              >
                 ثبت ویرایش
               </Button>
             ),

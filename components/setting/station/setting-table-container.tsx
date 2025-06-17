@@ -19,41 +19,22 @@ import { useSelector } from "react-redux";
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
-  // list: {
-  //   label: string;
-  //   value: string;
-  // }[];
+
   list: any[];
   cities: any[];
   countries: any[];
   airports: any[];
+  onRemoveHandler: (id: number) => void;
 }
-const tableHeaderLabels = [
-  "ردیف",
-  "کشور",
-  "شهر",
-  "فرودگاه",
-  "تاریخ ثبت",
-  "عملیات",
-];
-const stationData = [
-  {
-    ردیف: 1,
-    کشور: "ایران",
-    شهر: "تهران",
-    فرودگاه: "مهرآباد",
-    "تاریخ ثبت": "1402/01/01",
-    عملیات: "ویرایش",
-  },
-];
+
 export default function SettingTableContainer({
   list,
   className,
   tableHeaderLabels,
-
   cities,
   countries,
   airports,
+  onRemoveHandler
 }: StationTableContainerInterface) {
   const { service } = useParams();
 
@@ -116,7 +97,7 @@ export default function SettingTableContainer({
                 >
                   <Button
                     className="border-none p-0 text-[##212B36]"
-                    onClick={() => {}}
+                    onClick={() => {onRemoveHandler(item.id)}}
                   >
                     <Image
                       src="/icons/trash.png"
@@ -167,7 +148,8 @@ export default function SettingTableContainer({
                           airports
                         )}
                         editData={editData[index]}
-                         countries={countries}  airports={airports}
+                        countries={countries}
+                        airports={airports}
                       />
                     </div>
                   </TableCell>

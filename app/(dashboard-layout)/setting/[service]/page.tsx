@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import {
   createSettingFormFields,
   createSettingFormValues,
+  getSettingSubmit,
 } from "@/constants/setting";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
@@ -79,22 +80,15 @@ export default function ServiceSetting() {
       setAirports(airportOptions);
     }
   }, [airportData]);
-  const { mutate: submitAirportHandler } = useMutation({
+  const { mutate: submitHandler } = useMutation({
     mutationFn: (data: any) => {
-      return submitAirport(data);
+      return getSettingSubmit(service,data);
     },
     onSuccess: () => {},
   });
-  // function submitHandler() {
-  //   const data = {
-  //     name: formik.values.airport,
-  //     transportationTypeId: 301,
-  //     countryId: formik.values.country,
-  //     cityId: formik.values.city,
-  //   };
-  //   submitAirportHandler(data);
-  // }
-
+  function submit(data:any) {
+  submitHandler(data);
+  }
 
   return (
     <main>
@@ -114,8 +108,13 @@ export default function ServiceSetting() {
         fields={createSettingFormFields(service, countries, cities, airports)}
         form={formik}
         title={service}
+        onSubmitHandler={(data) => submit(data)}
       />
-      <SettingContainer countries={countries} cities={cities} airports={airports} />
+      <SettingContainer
+        countries={countries}
+        cities={cities}
+        airports={airports}
+      />
     </main>
   );
 }

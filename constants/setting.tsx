@@ -1,3 +1,6 @@
+import { deleteAirport, editAirport, submitAirport } from "@/api/setting-airport";
+import { getAirports } from "@/api/ticket";
+
 export function createSettingFormFields(
   service: any,
   countries?: any[],
@@ -166,5 +169,49 @@ export function createSettingHeaderLabels(service: any) {
       return ["ردیف", "کشور", "شهر", "هتل", "تاریخ ثبت", "ثبت کننده"];
     default:
       return [];
+  }
+}
+
+export function createSettingSubmitData(service: any, formik: any) {
+  switch (service) {
+    case "airport":
+      return {
+        name: formik.values.airport,
+        transportationTypeId: 301,
+        countryId: formik.values.country,
+        cityId: formik.values.city,
+      };
+
+    case "hotel":
+      return {};
+    default:
+      return {};
+  }
+}
+export function getSettingSubmit(service: any,data:any) {
+  switch (service) {
+    case "airport":
+      return submitAirport(data);
+   default:
+      return submitAirport(data);
+ 
+  }
+}
+export function getSettingDelete(service: any,item:number) {
+  switch (service) {
+    case "airport":
+      return deleteAirport(item);
+   default:
+      return deleteAirport(item);
+ 
+  }
+}
+export function getSettingEdit(service: any,item:number,data:any) {
+  switch (service) {
+    case "airport":
+      return editAirport(item,data);
+   default:
+      return editAirport(item,data);
+ 
   }
 }

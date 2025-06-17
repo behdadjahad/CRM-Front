@@ -3,13 +3,14 @@ import { useFormik } from "formik";
 import ReactPaginate from "react-paginate";
 
 import SettingTableContainer from "./setting-table-container";
-import FormMaker from "@/components/shared/form-maker";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
 import { useEffect } from "react";
 import { fetchStations } from "@/store/station-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { createSettingHeaderLabels } from "@/constants/setting";
+import { createSettingHeaderLabels, getSettingDelete } from "@/constants/setting";
 import { useParams } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 
 export default function SettingContainer({
   cities,
@@ -41,15 +42,15 @@ export default function SettingContainer({
       })
     );
   }, [dispatch]);
-  const tableHeaderLabels = [
-    "ردیف",
-    "کشور",
-    "شهر",
-    "فرودگاه",
-    "تاریخ ثبت",
-    "ثبت کننده",
-  ];
-
+    const { mutate: removeHandler } = useMutation({
+    mutationFn: (item: number) => {
+      return getSettingDelete(service,item);
+    },
+    onSuccess: () => {},
+  });
+  function removeData(id: number) { 
+    removeHandler(id)
+  }
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -76,6 +77,7 @@ export default function SettingContainer({
                   onClick: () => {},
                 },
               ]}
+              
               className="w-full"
             />
           </div>
@@ -83,7 +85,7 @@ export default function SettingContainer({
             tableHeaderLabels={createSettingHeaderLabels(service)}
             list={stations}
             countries={countries} cities={cities} airports={airports}
-      
+           onRemoveHandler={(item)=>removeData(item)}
           />
 
           <div className="w-full mt-4">
