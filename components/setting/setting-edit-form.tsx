@@ -1,33 +1,61 @@
 import { useFormik } from "formik";
-import FormMaker, { OptionType } from "../shared/form-maker";
+import FormMaker, { FieldType, OptionType } from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCities } from "@/api/location";
 import { useEffect, useState } from "react";
-import { createSettingSubmitData, getSettingEdit } from "@/constants/setting";
+import {
+  createSettingEditFormFields,
+  createSettingSubmitData,
+  getSettingEdit,
+  sliceMap,
+} from "@/constants/setting";
 import { useParams } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function SettingEditForm({
-  fields,
-  editData,
   countries,
-
   airports,
+  editData,
+  accommodationTypes,
+  hotels,
 }: {
-  fields: any[];
+  countries: any;
+  airports: any;
   editData: any;
-  countries: any[];
-
-  airports: any[];
+  accommodationTypes: any;
+  hotels: any;
 }) {
-  const { service } = useParams();
+  const dispatch = useDispatch<any>();
+    const { service } = useParams();
+    const config = sliceMap[service as keyof typeof sliceMap];
+
+  const limit = useSelector((state) => config?.selector(state).limit);
+
   const [cities, setCities] = useState<OptionType[]>([]);
+
   const formik = useFormik({
     initialValues: editData,
-    onSubmit: async () => {},
-    enableReinitialize: true,
+    onSubmit: () => {},
   });
-
+  const { mutate: editHandler } = useMutation({
+    mutationFn: (item: number) => {
+      return getSettingEdit(
+        service,
+        item,
+        createSettingSubmitData(service, formik)
+      );
+    },
+    onSuccess: () => {
+      (dispatch as any)(
+        config.fetchAction({
+          page: 1,
+          limit: limit,
+          filters: {},
+        })
+      );
+    },
+  });
   const { data: cityData } = useQuery({
     queryKey: ["cities"],
     queryFn: async () => await getCities(),
@@ -52,50 +80,19 @@ export default function SettingEditForm({
       }
     }
   }, [cityData, formik.values.country]);
-
-  const { mutate: editHandler } = useMutation({
-    mutationFn: (item: number) => {
-      return getSettingEdit(
-        service,
-        item,
-        createSettingSubmitData(service, formik)
-      );
-    },
-    onSuccess: () => {},
-  });
   return (
     <div className="w-full">
       <FormMaker
         form={formik}
         fields={[
-          {
-            key: "country",
-            component: "Select",
-            placeholder: "کشور",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/4",
-            options: countries,
-          },
-          {
-            key: "city",
-            component: "Select",
-            placeholder: "شهر",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/4",
-            options: cities,
-          },
-          {
-            key: "airport",
-            component: "SuggestionInput",
-            placeholder: "فرودگاه",
-            type: "text",
-            floating: true,
-            className: "w-full md:w-1/4",
-            options: airports,
-          },
-
+          ...(createSettingEditFormFields(
+            service,
+            countries,
+            cities,
+            airports,
+            accommodationTypes,
+            hotels
+          ) as FieldType[]),
           {
             component: "non-field",
             key: "actions",

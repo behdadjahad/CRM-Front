@@ -13,18 +13,19 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FaChevronUp } from "react-icons/fa";
 import SettingEditForm from "../setting-edit-form";
-import { createSettingEditFormFields } from "@/constants/setting";
+import { createSettingEditFormFields, sliceMap } from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
-
+  onRemoveHandler: (id: number) => void;
   list: any[];
   cities: any[];
   countries: any[];
   airports: any[];
-  onRemoveHandler: (id: number) => void;
+  accommodationTypes: any[];
+  hotels: any[];
 }
 
 export default function SettingTableContainer({
@@ -34,12 +35,14 @@ export default function SettingTableContainer({
   cities,
   countries,
   airports,
-  onRemoveHandler
+  onRemoveHandler,
+  accommodationTypes,
+  hotels,
 }: StationTableContainerInterface) {
   const { service } = useParams();
-
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
-  const editData = useSelector((state: any) => state.station.editData);
+  const config = sliceMap[service as keyof typeof sliceMap];
+  const editData = useSelector((state) => config?.selector(state).editData);
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
@@ -97,7 +100,9 @@ export default function SettingTableContainer({
                 >
                   <Button
                     className="border-none p-0 text-[##212B36]"
-                    onClick={() => {onRemoveHandler(item.id)}}
+                    onClick={() => {
+                      onRemoveHandler(item.id);
+                    }}
                   >
                     <Image
                       src="/icons/trash.png"
@@ -141,15 +146,11 @@ export default function SettingTableContainer({
                   >
                     <div className="flex justify-between text-sm text-gray-700">
                       <SettingEditForm
-                        fields={createSettingEditFormFields(
-                          service,
-                          countries,
-                          cities,
-                          airports
-                        )}
                         editData={editData[index]}
                         countries={countries}
                         airports={airports}
+                        accommodationTypes={accommodationTypes}
+                        hotels={hotels}
                       />
                     </div>
                   </TableCell>

@@ -8,18 +8,27 @@ import FilterContainer from "@/components/section/filter-container";
 import { useEffect } from "react";
 import { fetchStations } from "@/store/station-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { createSettingHeaderLabels, getSettingDelete } from "@/constants/setting";
+import {
+  createSettingHeaderLabels,
+  getSettingDelete,
+  sliceMap,
+} from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { store } from "@/store";
 
 export default function SettingContainer({
   cities,
   countries,
   airports,
+  accommodationTypes,
+  hotels,
 }: {
   cities: any[];
   countries: any[];
   airports: any[];
+  accommodationTypes: any[];
+  hotels: any[];
 }) {
   const { service } = useParams();
   const settingSearchFormik = useFormik({
@@ -28,29 +37,53 @@ export default function SettingContainer({
     },
     onSubmit: async () => {},
   });
+  const config = sliceMap[service as keyof typeof sliceMap];
 
-  const currentPage = useSelector((state: any) => state.station.currentPage);
-  const limit = useSelector((state: any) => state.station.limit);
-  const stations = useSelector((state: any) => state.station.items);
+  const currentPage = useSelector(
+    (state) => config?.selector(state).currentPage
+  );
+  const limit = useSelector((state) => config?.selector(state).limit);
+  const items = useSelector((state) => config?.selector(state).items);
+  const pages = useSelector((state) => config?.selector(state).totalPages);
   const dispatch = useDispatch<any>();
+
   useEffect(() => {
+    if (!config) return;
     dispatch(
-      fetchStations({
-        page: currentPage,
+      config.fetchAction({
+        page: config?.selector(store.getState()).currentPage,
+        limit: config?.selector(store.getState()).limit,
+        filters: {},
+      })
+    );
+  }, [dispatch, service]);
+  const { mutate: removeHandler } = useMutation({
+    mutationFn: (item: number) => {
+      return getSettingDelete(service, item);
+    },
+    onSuccess: () => {
+      (dispatch as any)(
+        config.fetchAction({
+          page: 1,
+          limit: limit,
+          filters: {},
+        })
+      );
+    },
+  });
+  function removeData(id: number) {
+    removeHandler(id);
+  }
+  const handlePageChange = (selectedItem: any) => {
+    const selectedPage = selectedItem.selected + 1;
+    dispatch(
+      config.fetchAction({
+        page: selectedPage,
         limit: limit,
         filters: {},
       })
     );
-  }, [dispatch]);
-    const { mutate: removeHandler } = useMutation({
-    mutationFn: (item: number) => {
-      return getSettingDelete(service,item);
-    },
-    onSuccess: () => {},
-  });
-  function removeData(id: number) { 
-    removeHandler(id)
-  }
+  };
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -77,38 +110,43 @@ export default function SettingContainer({
                   onClick: () => {},
                 },
               ]}
-              
               className="w-full"
             />
           </div>
           <SettingTableContainer
             tableHeaderLabels={createSettingHeaderLabels(service)}
-            list={stations}
-            countries={countries} cities={cities} airports={airports}
-           onRemoveHandler={(item)=>removeData(item)}
+            list={items}
+            countries={countries}
+            cities={cities}
+            airports={airports}
+            onRemoveHandler={(item) => removeData(item)}
+            accommodationTypes={accommodationTypes}
+            hotels={hotels}
           />
 
           <div className="w-full mt-4">
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="صفحه بعد"
-              previousLabel="صفحه قبل"
-              onPageChange={() => {}}
-              pageRangeDisplayed={2}
-              marginPagesDisplayed={3}
-              forcePage={1}
-              pageCount={10}
-              renderOnZeroPageCount={null}
-              containerClassName="w-full relative flex justify-center items-center ltr"
-              pageClassName="mx-3 rounded-md"
-              pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
-              activeClassName="bg-gray-100 rounded-md"
-              previousClassName="absolute right-8"
-              previousLinkClassName="rounded-md text-sm"
-              nextClassName="absolute left-8"
-              nextLinkClassName="rounded-md text-sm"
-              disabledClassName="opacity-50 cursor-not-allowed"
-            />
+            {pages > 1 && (
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel="صفحه بعد"
+                previousLabel="صفحه قبل"
+                onPageChange={handlePageChange}
+                pageRangeDisplayed={2}
+                marginPagesDisplayed={3}
+                forcePage={currentPage - 1}
+                pageCount={pages}
+                renderOnZeroPageCount={null}
+                containerClassName="w-full relative flex justify-center items-center ltr"
+                pageClassName="mx-3 rounded-md"
+                pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
+                activeClassName="bg-gray-100 rounded-md"
+                previousClassName="absolute right-8"
+                previousLinkClassName="rounded-md text-sm"
+                nextClassName="absolute left-8"
+                nextLinkClassName="rounded-md text-sm"
+                disabledClassName="opacity-50 cursor-not-allowed"
+              />
+            )}
           </div>
         </div>
       </div>

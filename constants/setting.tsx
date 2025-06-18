@@ -1,11 +1,37 @@
-import { deleteAirport, editAirport, submitAirport } from "@/api/setting-airport";
-import { getAirports } from "@/api/ticket";
+import {
+  deleteAirport,
+  editAirport,
+  submitAirport,
+} from "@/api/setting-airport";
+import { deleteHotel, editHotel, submitHotel } from "@/api/setting-hotel";
+import { fetchHotels } from "@/store/hotel-slice";
+import { fetchStations } from "@/store/station-slice";
 
+const titles = {
+  airport: "فرودگاه",
+  hotel: "هتل",
+};
+
+export function getTitleFromSlug(slug: any) {
+  return titles[slug as keyof typeof titles] || "";
+}
+export const sliceMap = {
+  airport: {
+    selector: (state: any) => state.station,
+    fetchAction: fetchStations,
+  },
+  hotel: {
+    selector: (state: any) => state.hotel,
+    fetchAction: fetchHotels,
+  },
+};
 export function createSettingFormFields(
   service: any,
   countries?: any[],
   cities?: any[],
-  airports?: any[]
+  airports?: any[],
+  accommodationTypes?: any[],
+  hotels?: any[]
 ) {
   switch (service) {
     case "airport":
@@ -59,13 +85,22 @@ export function createSettingFormFields(
           options: cities,
         },
         {
+          key: "accommadationType",
+          component: "Select",
+          placeholder: "نوع اقامت گاه",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: accommodationTypes,
+        },
+        {
           key: "hotel",
           component: "SuggestionInput",
           placeholder: "هتل",
           type: "text",
           floating: true,
           className: "w-full md:w-1/4",
-          options: [],
+          options: hotels,
         },
       ];
     default:
@@ -76,7 +111,9 @@ export function createSettingEditFormFields(
   service: any,
   countries?: any[],
   cities?: any[],
-  airports?: any[]
+  airports?: any[],
+  accommodationTypes?: any[],
+  hotels?: any[]
 ) {
   switch (service) {
     case "airport":
@@ -130,13 +167,22 @@ export function createSettingEditFormFields(
           options: cities,
         },
         {
+          key: "accommadationType",
+          component: "Select",
+          placeholder: "نوع اقامت گاه",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: accommodationTypes,
+        },
+        {
           key: "hotel",
           component: "SuggestionInput",
           placeholder: "هتل",
           type: "text",
           floating: true,
           className: "w-full md:w-1/4",
-          options: [],
+          options: hotels,
         },
       ];
     default:
@@ -155,6 +201,7 @@ export function createSettingFormValues(service: any) {
       return {
         country: "",
         city: "",
+        accommadationType: "",
         hotel: "",
       };
     default:
@@ -166,7 +213,15 @@ export function createSettingHeaderLabels(service: any) {
     case "airport":
       return ["ردیف", "کشور", "شهر", "فرودگاه", "تاریخ ثبت", "ثبت کننده"];
     case "hotel":
-      return ["ردیف", "کشور", "شهر", "هتل", "تاریخ ثبت", "ثبت کننده"];
+      return [
+        "ردیف",
+        "کشور",
+        "شهر",
+        "نوع هتل",
+        "هتل",
+         "تاریخ ثبت",
+        "ثبت کننده",
+      ];
     default:
       return [];
   }
@@ -183,35 +238,37 @@ export function createSettingSubmitData(service: any, formik: any) {
       };
 
     case "hotel":
-      return {};
+      return {
+        name: formik.values.hotel,
+        countryId: formik.values.country,
+        cityId: formik.values.city,
+        accommodationTypeId: formik.values.accommadationType,
+      };
     default:
       return {};
   }
 }
-export function getSettingSubmit(service: any,data:any) {
+export function getSettingSubmit(service: any, data: any) {
   switch (service) {
     case "airport":
       return submitAirport(data);
-   default:
-      return submitAirport(data);
- 
+    default:
+      return submitHotel(data);
   }
 }
-export function getSettingDelete(service: any,item:number) {
+export function getSettingDelete(service: any, item: number) {
   switch (service) {
     case "airport":
       return deleteAirport(item);
-   default:
-      return deleteAirport(item);
- 
+    default:
+      return deleteHotel(item);
   }
 }
-export function getSettingEdit(service: any,item:number,data:any) {
+export function getSettingEdit(service: any, item: number, data: any) {
   switch (service) {
     case "airport":
-      return editAirport(item,data);
-   default:
-      return editAirport(item,data);
- 
+      return editAirport(item, data);
+    default:
+      return editHotel(item, data);
   }
 }

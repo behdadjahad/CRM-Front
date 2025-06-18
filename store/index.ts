@@ -5,6 +5,7 @@ import customerReducer from "./customer-slice";
 import customerDetailContractReducer from "./customer-detail-contract-slice";
 import contractReducer from "./contract-slice";
 import stationReducer from "./station-slice";
+import hotelReducer from "./hotel-slice";
 
 
 export const store = configureStore({
@@ -13,7 +14,8 @@ export const store = configureStore({
     customer: customerReducer,
     customerDetailContract:customerDetailContractReducer,
     contract: contractReducer,
-    station:stationReducer
+    station:stationReducer,
+    hotel:hotelReducer
   },
 });
 

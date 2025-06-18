@@ -1,5 +1,6 @@
 "use client";
 
+import { getAccommodationTypes, getHotels } from "@/api/accommodation";
 import { getCities, getCountries } from "@/api/location";
 import { submitAirport } from "@/api/setting-airport";
 import { getAirports } from "@/api/ticket";
@@ -13,16 +14,25 @@ import {
   createSettingFormFields,
   createSettingFormValues,
   getSettingSubmit,
+  sliceMap,
 } from "@/constants/setting";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ServiceSetting() {
+  const dispatch = useDispatch();
   const { service } = useParams();
+  const config = sliceMap[service as keyof typeof sliceMap];
   const [countries, setCountries] = useState<OptionType[]>([]);
+  const [airports, setAirports] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
+  const [accommodationTypes, setAccommodationTypes] = useState<OptionType[]>(
+    []
+  );
+  const [hotels, setHotels] = useState<OptionType[]>([]);
   const formik = useFormik({
     initialValues: createSettingFormValues(service),
     onSubmit: () => {},
@@ -35,6 +45,10 @@ export default function ServiceSetting() {
     queryKey: ["cities"],
     queryFn: async () => await getCities(),
   });
+  const { data: hotelData } = useQuery({
+    queryKey: ["hotels"],
+    queryFn: async () => await getHotels(),
+  });
   useEffect(() => {
     if (countryData && countryData?.data?.length > 0) {
       const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
@@ -44,6 +58,33 @@ export default function ServiceSetting() {
       setCountries(countryOptions);
     }
   }, [countryData]);
+  useEffect(() => {
+    if (hotelData && hotelData?.data?.length > 0) {
+      const hotelOptions: OptionType[] = hotelData?.data?.flatMap((item: any) =>
+        item?.country?.city?.flatMap((city: any) =>
+          city?.hotel?.map((hotel: any) => ({
+            label: hotel?.name,
+            value: hotel?.id?.toString(),
+          }))
+        )
+      );
+
+      setHotels(hotelOptions);
+    }
+  }, [hotelData]);
+  const { data: accommodationType } = useQuery({
+    queryKey: ["accomodationType"],
+    queryFn: () => getAccommodationTypes(),
+  });
+  useEffect(() => {
+    if (accommodationType) {
+      const accommodationOptions = accommodationType.data.map((item: any) => ({
+        value: item.id.toString(),
+        label: item.name,
+      }));
+      setAccommodationTypes(accommodationOptions);
+    }
+  }, [accommodationType]);
   useEffect(() => {
     if (cityData && cityData?.data?.length > 0) {
       if (!formik.values.country) {
@@ -64,7 +105,6 @@ export default function ServiceSetting() {
       }
     }
   }, [cityData, formik.values.country]);
-  const [airports, setAirports] = useState<OptionType[]>([]);
 
   const { data: airportData } = useQuery({
     queryKey: ["airportData"],
@@ -80,14 +120,23 @@ export default function ServiceSetting() {
       setAirports(airportOptions);
     }
   }, [airportData]);
+  const limit = useSelector((state) => config?.selector(state).limit);
   const { mutate: submitHandler } = useMutation({
     mutationFn: (data: any) => {
-      return getSettingSubmit(service,data);
+      return getSettingSubmit(service, data);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      (dispatch as any)(
+        config.fetchAction({
+          page: 1,
+          limit: limit,
+          filters: {},
+        })
+      );
+    },
   });
-  function submit(data:any) {
-  submitHandler(data);
+  function submit(data: any) {
+    submitHandler(data);
   }
 
   return (
@@ -105,7 +154,14 @@ export default function ServiceSetting() {
         ]}
       />
       <SettingCreateForm
-        fields={createSettingFormFields(service, countries, cities, airports)}
+        fields={createSettingFormFields(
+          service,
+          countries,
+          cities,
+          airports,
+          accommodationTypes,
+          hotels
+        )}
         form={formik}
         title={service}
         onSubmitHandler={(data) => submit(data)}
@@ -114,6 +170,8 @@ export default function ServiceSetting() {
         countries={countries}
         cities={cities}
         airports={airports}
+        accommodationTypes={accommodationTypes}
+        hotels={hotels}
       />
     </main>
   );
