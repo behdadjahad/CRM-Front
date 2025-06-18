@@ -2,7 +2,7 @@ import { fetchService } from "@/boot/fetch-service";
 
 export async function submitAirport(data: any) {
   try {
-    const result = await fetchService('station', {
+    const result = await fetchService('station/301', {
       method: "POST",
       body: data,
     });

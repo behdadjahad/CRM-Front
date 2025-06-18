@@ -23,12 +23,14 @@ export default function SettingContainer({
   airports,
   accommodationTypes,
   hotels,
+  airlines,
 }: {
   cities: any[];
   countries: any[];
   airports: any[];
   accommodationTypes: any[];
   hotels: any[];
+  airlines: any[];
 }) {
   const { service } = useParams();
   const settingSearchFormik = useFormik({
@@ -122,6 +124,7 @@ export default function SettingContainer({
             onRemoveHandler={(item) => removeData(item)}
             accommodationTypes={accommodationTypes}
             hotels={hotels}
+            airlines={airlines}
           />
 
           <div className="w-full mt-4">

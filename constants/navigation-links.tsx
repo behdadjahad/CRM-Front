@@ -112,6 +112,10 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
             label: "هتل",
             link: "/setting/hotel",
           },
+          {
+            label: "ایرلاین",
+            link: "/setting/airline",
+          },
         ],
       },
     ],

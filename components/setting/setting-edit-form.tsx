@@ -19,16 +19,18 @@ export default function SettingEditForm({
   editData,
   accommodationTypes,
   hotels,
+  airlines,
 }: {
   countries: any;
   airports: any;
   editData: any;
   accommodationTypes: any;
   hotels: any;
+  airlines: any;
 }) {
   const dispatch = useDispatch<any>();
-    const { service } = useParams();
-    const config = sliceMap[service as keyof typeof sliceMap];
+  const { service } = useParams();
+  const config = sliceMap[service as keyof typeof sliceMap];
 
   const limit = useSelector((state) => config?.selector(state).limit);
 
@@ -91,7 +93,8 @@ export default function SettingEditForm({
             cities,
             airports,
             accommodationTypes,
-            hotels
+            hotels,
+            airlines
           ) as FieldType[]),
           {
             component: "non-field",

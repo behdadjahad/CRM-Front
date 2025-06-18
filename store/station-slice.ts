@@ -69,7 +69,7 @@ export const fetchStations = createAsyncThunk<any, any>(
   "station/fetchStations",
   async ({ page, limit, filters }) => {
     try {
-      const result = await fetchService(`station?page=${page}&limit=${limit}`, {
+      const result = await fetchService(`station/301?page=${page}&limit=${limit}`, {
         method: "GET",
         //   body: filters,
       });

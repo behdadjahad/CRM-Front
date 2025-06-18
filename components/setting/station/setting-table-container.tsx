@@ -26,6 +26,7 @@ export interface StationTableContainerInterface {
   airports: any[];
   accommodationTypes: any[];
   hotels: any[];
+  airlines:any[]
 }
 
 export default function SettingTableContainer({
@@ -38,6 +39,7 @@ export default function SettingTableContainer({
   onRemoveHandler,
   accommodationTypes,
   hotels,
+  airlines
 }: StationTableContainerInterface) {
   const { service } = useParams();
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -48,7 +50,7 @@ export default function SettingTableContainer({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
-
+console.log(list)
   return (
     <div
       className={cn(
@@ -151,6 +153,7 @@ export default function SettingTableContainer({
                         airports={airports}
                         accommodationTypes={accommodationTypes}
                         hotels={hotels}
+                        airlines={airlines}
                       />
                     </div>
                   </TableCell>

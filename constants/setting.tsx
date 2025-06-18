@@ -1,15 +1,22 @@
 import {
+  deleteAirline,
+  editAirline,
+  submitAirline,
+} from "@/api/setting-airline";
+import {
   deleteAirport,
   editAirport,
   submitAirport,
 } from "@/api/setting-airport";
 import { deleteHotel, editHotel, submitHotel } from "@/api/setting-hotel";
+import { fetchAirlines } from "@/store/airline-slice";
 import { fetchHotels } from "@/store/hotel-slice";
 import { fetchStations } from "@/store/station-slice";
 
 const titles = {
   airport: "فرودگاه",
   hotel: "هتل",
+  airline: "ایرلاین",
 };
 
 export function getTitleFromSlug(slug: any) {
@@ -24,6 +31,10 @@ export const sliceMap = {
     selector: (state: any) => state.hotel,
     fetchAction: fetchHotels,
   },
+  airline: {
+    selector: (state: any) => state.airline,
+    fetchAction: fetchAirlines,
+  },
 };
 export function createSettingFormFields(
   service: any,
@@ -31,7 +42,8 @@ export function createSettingFormFields(
   cities?: any[],
   airports?: any[],
   accommodationTypes?: any[],
-  hotels?: any[]
+  hotels?: any[],
+  airlines?: any[]
 ) {
   switch (service) {
     case "airport":
@@ -101,6 +113,37 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: hotels,
+        },
+      ];
+    case "airline":
+      return [
+        {
+          key: "country",
+          component: "Select",
+          placeholder: "کشور",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: countries,
+        },
+        {
+          key: "city",
+          component: "Select",
+          placeholder: "شهر",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: cities,
+        },
+
+        {
+          key: "airline",
+          component: "SuggestionInput",
+          placeholder: "ایرلاین",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: airlines,
         },
       ];
     default:
@@ -113,7 +156,8 @@ export function createSettingEditFormFields(
   cities?: any[],
   airports?: any[],
   accommodationTypes?: any[],
-  hotels?: any[]
+  hotels?: any[],
+  airlines?:any[]
 ) {
   switch (service) {
     case "airport":
@@ -183,6 +227,37 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: hotels,
+        },
+      ];
+    case "airline":
+      return [
+        {
+          key: "country",
+          component: "Select",
+          placeholder: "کشور",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: countries,
+        },
+        {
+          key: "city",
+          component: "Select",
+          placeholder: "شهر",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: cities,
+        },
+
+        {
+          key: "airline",
+          component: "SuggestionInput",
+          placeholder: "ایرلاین",
+          type: "text",
+          floating: true,
+          className: "w-full md:w-1/4",
+          options: airlines,
         },
       ];
     default:
@@ -204,6 +279,12 @@ export function createSettingFormValues(service: any) {
         accommadationType: "",
         hotel: "",
       };
+    case "airline":
+      return {
+        country: "",
+        city: "",
+        airline: "",
+      };
     default:
       return {};
   }
@@ -219,9 +300,11 @@ export function createSettingHeaderLabels(service: any) {
         "شهر",
         "نوع هتل",
         "هتل",
-         "تاریخ ثبت",
+        "تاریخ ثبت",
         "ثبت کننده",
       ];
+    case "airline":
+      return ["ردیف", "کشور", "شهر", "ایرلاین", "تاریخ ثبت", "ثبت کننده"];
     default:
       return [];
   }
@@ -244,6 +327,12 @@ export function createSettingSubmitData(service: any, formik: any) {
         cityId: formik.values.city,
         accommodationTypeId: formik.values.accommadationType,
       };
+    case "airline":
+      return {
+        name: formik.values.airline,
+        countryId: formik.values.country,
+        cityId: formik.values.city,
+      };
     default:
       return {};
   }
@@ -252,6 +341,10 @@ export function getSettingSubmit(service: any, data: any) {
   switch (service) {
     case "airport":
       return submitAirport(data);
+    case "hotel":
+      return submitHotel(data);
+    case "airline":
+      return submitAirline(data);
     default:
       return submitHotel(data);
   }
@@ -260,6 +353,10 @@ export function getSettingDelete(service: any, item: number) {
   switch (service) {
     case "airport":
       return deleteAirport(item);
+    case "hotel":
+      return deleteHotel(item);
+    case "airline":
+      return deleteAirline(item);
     default:
       return deleteHotel(item);
   }
@@ -268,6 +365,10 @@ export function getSettingEdit(service: any, item: number, data: any) {
   switch (service) {
     case "airport":
       return editAirport(item, data);
+    case "hotel":
+      return editHotel(item, data);
+    case "airline":
+      return editAirline(item, data);
     default:
       return editHotel(item, data);
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import { getAccommodationTypes, getHotels } from "@/api/accommodation";
+import { getAirlinesData } from "@/api/flight";
 import { getCities, getCountries } from "@/api/location";
 import { submitAirport } from "@/api/setting-airport";
 import { getAirports } from "@/api/ticket";
@@ -29,9 +30,26 @@ export default function ServiceSetting() {
   const [countries, setCountries] = useState<OptionType[]>([]);
   const [airports, setAirports] = useState<OptionType[]>([]);
   const [cities, setCities] = useState<OptionType[]>([]);
+  const [airlines, setAirlines] = useState<OptionType[]>([]);
   const [accommodationTypes, setAccommodationTypes] = useState<OptionType[]>(
     []
   );
+
+  const { data: airlineData } = useQuery({
+    queryKey: ["airlines"],
+    queryFn: async () => await getAirlinesData(301),
+  });
+
+  useEffect(() => {
+    if (airlineData && airlineData?.data?.length > 0) {
+      const airlinesOptions = airlineData?.data?.map((item: any) => ({
+        value: item?.id.toString(),
+        label: item?.name,
+      }));
+      setAirlines(airlinesOptions);
+    }
+  }, [airlineData]);
+
   const [hotels, setHotels] = useState<OptionType[]>([]);
   const formik = useFormik({
     initialValues: createSettingFormValues(service),
@@ -160,7 +178,8 @@ export default function ServiceSetting() {
           cities,
           airports,
           accommodationTypes,
-          hotels
+          hotels,
+          airlines
         )}
         form={formik}
         title={service}
@@ -172,6 +191,7 @@ export default function ServiceSetting() {
         airports={airports}
         accommodationTypes={accommodationTypes}
         hotels={hotels}
+        airlines={airlines}
       />
     </main>
   );
