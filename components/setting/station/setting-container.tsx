@@ -34,6 +34,7 @@ export default function SettingContainer({
   airlines: any[];
 }) {
   const [hasReset, setHasReset] = useState<boolean>(false);
+  const [checkedItems, setCheckedItems] = useState<any[]>([]);
   const { service } = useParams();
   const settingSearchFormik = useFormik({
     initialValues: {

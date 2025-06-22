@@ -38,9 +38,13 @@ const stationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStations.fulfilled, (state, action) => {
+      state.currentPage = action.meta.arg.page;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
       state.items = action?.payload?.data?.map((item: any, index: number) => ({
         id: item.id,
-        ردیف: index + 1,
+        ردیف: (state.currentPage - 1) * state.limit + index + 1,
+
         کشور: item?.country?.name,
         شهر: item?.city?.name,
         فرودگاه: item?.name,
@@ -65,11 +69,10 @@ const stationSlice = createSlice({
       state.totalPages = Math.ceil(
         totalItems / action?.payload?.pagination?.limit
       );
-      state.currentPage = action.meta.arg.page;
+
       const filters = action.meta.arg.filters;
       state.filters = filters;
-      const limit = action?.payload?.pagination?.limit;
-      state.limit = limit;
+
       state.total = action?.payload?.pagination?.total;
     });
     builder.addCase(fetchAllStations.fulfilled, (state, action) => {

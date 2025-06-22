@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
 
-  },
+    },
+  
   footerText: {
     flex: 1,
     textAlign: "right",

@@ -33,6 +33,9 @@ const airlineSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAirlines.fulfilled, (state, action) => {
+      state.currentPage = action.meta.arg.page;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
       const data = action?.payload?.data;
 
       state.items = data?.map((item: any, index: number) => ({
@@ -54,10 +57,10 @@ const airlineSlice = createSlice({
       state.totalPages = Math.ceil(
         totalItems / action?.payload?.pagination?.limit
       );
-      state.currentPage = action.meta.arg.page;
+
       const filters = action.meta.arg.filters;
       state.filters = filters;
-      const limit = action?.payload?.pagination?.limit;
+
       state.limit = limit;
     });
   },
