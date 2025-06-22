@@ -1,6 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
+import { convertDate } from "@/lib/date";
 
-import { limitForContracts, limitForStations } from "@/lib/utils";
+import { dateType, limitForContracts, limitForStations } from "@/lib/utils";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface StationState {
@@ -10,6 +11,8 @@ export interface StationState {
   filters: any;
   limit: number;
   editData: any[];
+  total: number;
+  totalItems: any[];
 }
 
 const initialState: StationState = {
@@ -19,6 +22,8 @@ const initialState: StationState = {
   filters: {},
   limit: limitForStations,
   editData: [],
+  total: 0,
+  totalItems: [],
 };
 
 const stationSlice = createSlice({
@@ -36,21 +41,25 @@ const stationSlice = createSlice({
       state.items = action?.payload?.data?.map((item: any, index: number) => ({
         id: item.id,
         ردیف: index + 1,
-        کشور: item.country.name,
-        شهر: item.city.name,
-        فرودگاه: item.name,
-        "تاریخ ثبت": "",
+        کشور: item?.country?.name,
+        شهر: item?.city?.name,
+        فرودگاه: item?.name,
+        "تاریخ ثبت": item?.submitDateTime
+          ? convertDate(item?.submitDateTime, dateType)
+          : "",
         "ثبت کننده": "",
         countryId: item.countryId,
         cityId: item.cityId,
       }));
 
-      state.editData = action?.payload?.data?.map((item: any, index: number) => ({
-        id: item.id,
-        airport: item.name,
-        country: item.countryId,
-        city: item.cityId,
-      }));
+      state.editData = action?.payload?.data?.map(
+        (item: any, index: number) => ({
+          id: item.id,
+          airport: item.name,
+          country: item.countryId,
+          city: item.cityId,
+        })
+      );
 
       const totalItems = action?.payload?.pagination?.total;
       state.totalPages = Math.ceil(
@@ -61,18 +70,57 @@ const stationSlice = createSlice({
       state.filters = filters;
       const limit = action?.payload?.pagination?.limit;
       state.limit = limit;
+      state.total = action?.payload?.pagination?.total;
+    });
+    builder.addCase(fetchAllStations.fulfilled, (state, action) => {
+      state.totalItems = action?.payload?.data?.map(
+        (item: any, index: number) => ({
+          id: item.id,
+          ردیف: index + 1,
+          کشور: item?.country?.name,
+          شهر: item?.city?.name,
+          فرودگاه: item?.name,
+          "تاریخ ثبت": item?.submitDateTime
+            ? convertDate(item?.submitDateTime, dateType)
+            : "",
+          "ثبت کننده": "",
+          countryId: item.countryId,
+          cityId: item.cityId,
+        })
+      );
     });
   },
 });
 
 export const fetchStations = createAsyncThunk<any, any>(
   "station/fetchStations",
-  async ({ page, limit, filters }) => {
+  async ({ page, limit, filters, keyword, sort }) => {
     try {
-      const result = await fetchService(`station/301?page=${page}&limit=${limit}`, {
-        method: "GET",
-        //   body: filters,
-      });
+      const result = await fetchService(
+        `station/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        {
+          method: "GET",
+          //   body: filters,
+        }
+      );
+
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
+export const fetchAllStations = createAsyncThunk<any, any>(
+  "station/fetchAllStations",
+  async ({ page, limit, filters, keyword, sort }) => {
+    try {
+      const result = await fetchService(
+        `station/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        {
+          method: "GET",
+          //   body: filters,
+        }
+      );
 
       return result;
     } catch {

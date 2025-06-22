@@ -79,6 +79,8 @@ export interface FieldType {
   onClick?: () => void;
   formatted?: boolean;
   menuPlacement?: "top" | "bottom" | "auto";
+  hasReset?: boolean;
+  resetFunction?:() => void;
 }
 
 export interface FormMakerInterface {

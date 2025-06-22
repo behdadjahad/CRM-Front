@@ -96,7 +96,7 @@ export default function ServiceSetting() {
   });
   useEffect(() => {
     if (accommodationType) {
-      const accommodationOptions = accommodationType.data.map((item: any) => ({
+      const accommodationOptions = accommodationType?.data?.map((item: any) => ({
         value: item.id.toString(),
         label: item.name,
       }));
@@ -149,6 +149,7 @@ export default function ServiceSetting() {
           page: 1,
           limit: limit,
           filters: {},
+          sort:{}
         })
       );
     },

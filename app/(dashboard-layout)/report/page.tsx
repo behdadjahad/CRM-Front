@@ -3,7 +3,7 @@ import { CustomizePiChart } from "@/components/chart/customize-pi-chart";
 import MultipleBarChart from "@/components/chart/multiple-bar-chart";
 import { useReactToPrint } from "react-to-print";
 import ContractReportTable from "@/components/section/contract-report-table";
-import { ProgressBarContainer } from "@/components/section/progress-bar-container";
+
 import AnimatedBarChart from "@/components/shared/animated-bar-chart";
 import Image from "next/image";
 import Breadcrumb from "@/components/shared/breadcrumb";

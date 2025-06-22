@@ -3,6 +3,7 @@ import { FormMakerInterface } from "./form-maker";
 import { cn, formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { FaUndo } from "react-icons/fa";
 
 export default function TextInput({
   form,
@@ -42,7 +43,6 @@ export default function TextInput({
     }
 
     form.setFieldValue(item.key, value);
-    
   };
   return (
     <div
@@ -92,7 +92,10 @@ export default function TextInput({
           alt={item.key}
           width={20}
           height={20}
-          className={cn("absolute right-3 top-3 cursor-pointer",item.iconClassName)}
+          className={cn(
+            "absolute right-3 top-3 cursor-pointer",
+            item.iconClassName
+          )}
           onClick={item.onClick}
         />
       ) : (
@@ -110,6 +113,13 @@ export default function TextInput({
             height={40}
             className="w-full h-full object-cover"
           />
+        </Button>
+      ) : item.hasReset  ? (
+        <Button
+          className="p-0 bg-transparent border-none cursor-pointer absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary-background hover:text-subtitle outline-none w-10 h-7"
+          onClick={item?.resetFunction}
+        >
+         <FaUndo />
         </Button>
       ) : (
         <></>

@@ -77,10 +77,10 @@ const hotelSlice = createSlice({
 
 export const fetchHotels = createAsyncThunk<any, any>(
   "hotel/fetchHotels",
-  async ({ page, limit, filters }) => {
+  async ({ page, limit, filters,keyword }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}`,
+        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}`,
         {
           method: "GET",
           //   body: filters,

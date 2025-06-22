@@ -11,11 +11,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import SettingEditForm from "../setting-edit-form";
-import { createSettingEditFormFields, sliceMap } from "@/constants/setting";
+import { createSettingEditFormFields, getFieldFromLabel, sliceMap } from "@/constants/setting";
 import { useParams } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
@@ -26,7 +26,7 @@ export interface StationTableContainerInterface {
   airports: any[];
   accommodationTypes: any[];
   hotels: any[];
-  airlines:any[]
+  airlines: any[];
 }
 
 export default function SettingTableContainer({
@@ -39,10 +39,12 @@ export default function SettingTableContainer({
   onRemoveHandler,
   accommodationTypes,
   hotels,
-  airlines
+  airlines,
 }: StationTableContainerInterface) {
+  type SortType = "asc" | "desc";
   const { service } = useParams();
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  // const [sortType, setSortType] = useState<"asc" | "desc">("asc");
   const config = sliceMap[service as keyof typeof sliceMap];
   const editData = useSelector((state) => config?.selector(state).editData);
   const toggleRow = (index: number) => {
@@ -50,7 +52,35 @@ export default function SettingTableContainer({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
-console.log(list)
+  const [sortStates, setSortStates] = useState<Record<string, SortType>>({});
+  const dispatch = useDispatch<any>();
+
+
+
+  const limit = useSelector((state) => config?.selector(state).limit);
+  const toggleSort = (label: string) => {
+    setSortStates((prev) => {
+      const newSort = prev[label] === "desc" ? "asc" : "desc";
+      (dispatch as any)(
+        config.fetchAction({
+          page: 1,
+          limit: limit,
+          filters: {},
+          sort: {
+            field: getFieldFromLabel(label),
+            sortType:newSort
+          }
+        })
+      );
+   
+ 
+
+      return {
+        ...prev,
+        [label]: newSort,
+      };
+    });
+  };
   return (
     <div
       className={cn(
@@ -69,12 +99,44 @@ console.log(list)
               />
               {""}
             </TableHead>
+            {/* {tableHeaderLabels.map((label, index) => (
+              <TableHead
+                key={index}
+                className="text-center bg-white border-l border-gray-200 text-xs"
+              >
+                <div className="flex items-center gap-2 w-full  justify-center">
+                  <span>{label}</span>
+                  <Button
+                    variant={"transparent"}
+                    onClick={() => {
+                      toggleSort();
+                      console.log(sortType);
+                    }}
+                  >
+                    {sortType == "desc" ? <FaChevronDown /> : <FaChevronUp />}
+                  </Button>
+                </div>
+              </TableHead>
+            ))}*/}
+
             {tableHeaderLabels.map((label, index) => (
               <TableHead
                 key={index}
                 className="text-center bg-white border-l border-gray-200 text-xs"
               >
-                {label}
+                <div className="flex items-center gap-2 w-full justify-center">
+                  <span>{label}</span>
+                  <Button
+                    variant={"transparent"}
+                    onClick={() => toggleSort(label)}
+                  >
+                    {sortStates[label] === "desc" ? (
+                      <FaChevronDown />
+                    ) : (
+                      <FaChevronUp />
+                    )}
+                  </Button>
+                </div>
               </TableHead>
             ))}
             {/*  */}

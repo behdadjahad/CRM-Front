@@ -3,7 +3,6 @@ import { limitForAirlines } from "@/lib/utils";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-
 export interface AirlineState {
   items: any[];
   currentPage: number;
@@ -66,10 +65,10 @@ const airlineSlice = createSlice({
 
 export const fetchAirlines = createAsyncThunk<any, any>(
   "airline/fetchAirlines",
-  async ({ page, limit, filters }) => {
+  async ({ page, limit, filters, keyword }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}`,
+        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}`,
         {
           method: "GET",
           //   body: filters,

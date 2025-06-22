@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import SettingTableContainer from "./setting-table-container";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchStations } from "@/store/station-slice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,6 +16,7 @@ import {
 import { useParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { store } from "@/store";
+import ExportDataContainer from "@/components/shared/export-data-container";
 
 export default function SettingContainer({
   cities,
@@ -32,6 +33,7 @@ export default function SettingContainer({
   hotels: any[];
   airlines: any[];
 }) {
+  const [hasReset, setHasReset] = useState<boolean>(false);
   const { service } = useParams();
   const settingSearchFormik = useFormik({
     initialValues: {
@@ -45,6 +47,8 @@ export default function SettingContainer({
     (state) => config?.selector(state).currentPage
   );
   const limit = useSelector((state) => config?.selector(state).limit);
+  const total = useSelector((state) => config?.selector(state).total);
+  const totalItems = useSelector((state) => config?.selector(state).totalItems);
   const items = useSelector((state) => config?.selector(state).items);
   const pages = useSelector((state) => config?.selector(state).totalPages);
   const dispatch = useDispatch<any>();
@@ -53,9 +57,10 @@ export default function SettingContainer({
     if (!config) return;
     dispatch(
       config.fetchAction({
-        page: config?.selector(store.getState()).currentPage,
-        limit: config?.selector(store.getState()).limit,
+        page: currentPage,
+        limit: limit,
         filters: {},
+        sort: {},
       })
     );
   }, [dispatch, service]);
@@ -83,33 +88,100 @@ export default function SettingContainer({
         page: selectedPage,
         limit: limit,
         filters: {},
+        sort: {},
       })
     );
+  };
+
+  function searchSubmitHandler() {
+    const searchValue = settingSearchFormik.values.settingKeyWord;
+
+    dispatch(
+      config.fetchAction({
+        page: 1,
+        limit: limit,
+        filters: {},
+        keyword: searchValue,
+        sort: {},
+      })
+    );
+    setHasReset(true);
+  }
+  function resetHandler() {
+    dispatch(
+      config.fetchAction({
+        page: 1,
+        limit: limit,
+        filters: {},
+        sort: {},
+      })
+    );
+    settingSearchFormik.resetForm();
+    setHasReset(false);
+  }
+  // const getDataHandler = async () => {
+  //   return await dispatch(
+  //     config.fetchAllData({
+  //       page: 1,
+  //       limit: total,
+  //       filters: {},
+  //       sort: {},
+  //     })
+  //   );
+  // };
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getDataHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      return await dispatch(
+        config.fetchAllData({
+          page: 1,
+          limit: total,
+          filters: {},
+          sort: {},
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
-        <FilterContainer
-          onFilterHandler={() => {}}
-          rangeItems={[]}
-          filterItems={[]}
-          sortList={[]}
-          onSortHandler={() => {}}
-          onCancleHandler={() => {}}
-        />
+        <div className="flex flex-row items-center justify-between">
+          <FilterContainer
+            onFilterHandler={() => {}}
+            rangeItems={[]}
+            filterItems={[]}
+            sortList={[]}
+            onSortHandler={() => {}}
+            onCancleHandler={() => {}}
+          />
+          <ExportDataContainer
+            onGetData={getDataHandler}
+            list={totalItems}
+            headerLabels={createSettingHeaderLabels(service)}
+            loading={isLoading}
+          />
+        </div>
+
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow">
           <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6">
             <FormMaker
               form={settingSearchFormik}
               fields={[
                 {
-                  key: "clientKeyWord",
+                  key: "settingKeyWord",
                   component: "input",
                   icon: "/icons/search-icon.png",
                   type: "text",
                   placeholder: "جستجوی پیشرفته و...",
                   className: "rounded-md h-12 p-0 w-1/2",
-                  onClick: () => {},
+                  onClick: searchSubmitHandler,
+                  hasReset: hasReset,
+                  resetFunction: resetHandler,
                 },
               ]}
               className="w-full"

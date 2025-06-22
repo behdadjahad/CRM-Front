@@ -11,12 +11,28 @@ import {
 import { deleteHotel, editHotel, submitHotel } from "@/api/setting-hotel";
 import { fetchAirlines } from "@/store/airline-slice";
 import { fetchHotels } from "@/store/hotel-slice";
-import { fetchStations } from "@/store/station-slice";
+import { fetchAllStations, fetchStations } from "@/store/station-slice";
 
 const titles = {
   airport: "فرودگاه",
   hotel: "هتل",
   airline: "ایرلاین",
+};
+export const getFieldFromLabel = (label: string): string | undefined => {
+  const labelToFieldMap: Record<string, string> = {
+    کشور: "country.name",
+    شهر: "city.name",
+    ردیف: "",
+    ایرلاین: "name",
+    "تاریخ ثبت": "",
+    "ثبت کننده": "",
+    هتل: "name",
+    فرودگاه: "name",
+
+    // Add more mappings as needed
+  };
+
+  return labelToFieldMap[label];
 };
 
 export function getTitleFromSlug(slug: any) {
@@ -26,14 +42,17 @@ export const sliceMap = {
   airport: {
     selector: (state: any) => state.station,
     fetchAction: fetchStations,
+    fetchAllData: fetchAllStations,
   },
   hotel: {
     selector: (state: any) => state.hotel,
     fetchAction: fetchHotels,
+    fetchAllData: fetchAllStations,
   },
   airline: {
     selector: (state: any) => state.airline,
     fetchAction: fetchAirlines,
+    fetchAllData: fetchAllStations,
   },
 };
 export function createSettingFormFields(
@@ -157,7 +176,7 @@ export function createSettingEditFormFields(
   airports?: any[],
   accommodationTypes?: any[],
   hotels?: any[],
-  airlines?:any[]
+  airlines?: any[]
 ) {
   switch (service) {
     case "airport":
