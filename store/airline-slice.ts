@@ -1,5 +1,6 @@
 import { fetchService } from "@/boot/fetch-service";
-import { limitForAirlines } from "@/lib/utils";
+import { convertDate } from "@/lib/date";
+import { dateType, limitForAirlines } from "@/lib/utils";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -44,6 +45,10 @@ const airlineSlice = createSlice({
         کشور: item?.country?.name,
         شهر: item?.city?.name,
         ایرلاین: item?.name,
+        "تاریخ ثبت": item?.submitDateTime
+          ? convertDate(item?.submitDateTime, dateType)
+          : "",
+        "ثبت کننده":item?.userSubmitter?.fullName
       }));
       console.log(state.items);
       state.editData = data?.map((item: any) => ({
@@ -68,10 +73,10 @@ const airlineSlice = createSlice({
 
 export const fetchAirlines = createAsyncThunk<any, any>(
   "airline/fetchAirlines",
-  async ({ page, limit, filters, keyword }) => {
+  async ({ page, limit, filters, keyword, sort }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}`,
+        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
         {
           method: "GET",
           //   body: filters,

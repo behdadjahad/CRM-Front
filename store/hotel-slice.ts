@@ -1,5 +1,6 @@
 import { fetchService } from "@/boot/fetch-service";
-import { limitForHotels } from "@/lib/utils";
+import { convertDate } from "@/lib/date";
+import { dateType, limitForHotels } from "@/lib/utils";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -44,8 +45,10 @@ const hotelSlice = createSlice({
             شهر: city?.name,
             هتل: hotel?.name, // fixed! previously you had `city?.name` here
             "نوع هتل": hotel?.AccommodationAcType?.accomodationType?.name,
-            "تاریخ ثبت": "",
-            "ثبت کننده": "",
+            "تاریخ ثبت": hotel?.submitDateTime
+              ? convertDate(hotel?.submitDateTime, dateType)
+              : "",
+            "ثبت کننده": hotel?.userSubmitter?.fullName,
           }))
         )
       );
@@ -57,7 +60,7 @@ const hotelSlice = createSlice({
             country: item?.country?.id,
             city: city?.id,
             accommadationType: hotel?.AccommodationAcType?.accomodationType?.id,
-            hotel:hotel?.name,
+            hotel: hotel?.name,
           }))
         )
       );
@@ -77,10 +80,10 @@ const hotelSlice = createSlice({
 
 export const fetchHotels = createAsyncThunk<any, any>(
   "hotel/fetchHotels",
-  async ({ page, limit, filters,keyword }) => {
+  async ({ page, limit, filters, keyword, sort }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}`,
+        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
         {
           method: "GET",
           //   body: filters,

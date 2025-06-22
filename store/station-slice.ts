@@ -51,7 +51,7 @@ const stationSlice = createSlice({
         "تاریخ ثبت": item?.submitDateTime
           ? convertDate(item?.submitDateTime, dateType)
           : "",
-        "ثبت کننده": "",
+        "ثبت کننده": item?.userSubmitter?.fullName,
         countryId: item.countryId,
         cityId: item.cityId,
       }));
@@ -86,7 +86,7 @@ const stationSlice = createSlice({
           "تاریخ ثبت": item?.submitDateTime
             ? convertDate(item?.submitDateTime, dateType)
             : "",
-          "ثبت کننده": "",
+          "ثبت کننده": item?.userSubmitter?.fullName,
           countryId: item.countryId,
           cityId: item.cityId,
         })

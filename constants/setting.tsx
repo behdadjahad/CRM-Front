@@ -22,10 +22,9 @@ export const getFieldFromLabel = (label: string): string | undefined => {
   const labelToFieldMap: Record<string, string> = {
     کشور: "country.name",
     شهر: "city.name",
-    ردیف: "",
     ایرلاین: "name",
-    "تاریخ ثبت": "",
-    "ثبت کننده": "",
+    "تاریخ ثبت": "submitDateTime",
+    "ثبت کننده": "userSubmitter.lastName",
     هتل: "name",
     فرودگاه: "name",
 
