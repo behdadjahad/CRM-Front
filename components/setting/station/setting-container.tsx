@@ -18,6 +18,7 @@ import { useMutation } from "@tanstack/react-query";
 import { store } from "@/store";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { buildRowOptions } from "@/lib/utils";
+import { convertToGregorian } from "@/lib/date";
 
 export default function SettingContainer({
   cities,
@@ -81,8 +82,6 @@ export default function SettingContainer({
           page: 1,
           limit: limit,
           filters: {},
-          keyword: "",
-          sort: {},
         })
       );
     },
@@ -109,9 +108,7 @@ export default function SettingContainer({
       config.fetchAction({
         page: 1,
         limit: limit,
-        filters: {},
-        keyword: searchValue,
-        sort: {},
+        filters: { keyword: searchValue },
       })
     );
     setHasReset(true);
@@ -158,24 +155,156 @@ export default function SettingContainer({
       })
     );
   }
+  const formik = useFormik({
+    initialValues: {
+      startDate: "",
+      startDateType: "",
+      endDate: "",
+      endDateType: "",
+      name: "",
+      city: "",
+      country: "",
+      submitter: "",
+    },
+    onSubmit: async () => {},
+  });
+  const filterItems = [
+    {
+      title: "اطلاعات",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "name",
+              component: "input",
+              placeholder: "نام",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+
+            {
+              key: "country",
+              component: "input",
+              placeholder: "کشور",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "city",
+              component: "input",
+              placeholder: "شهر",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "submitter",
+              component: "input",
+              placeholder: "نام ثبت کننده",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
+  ];
+  const rangeItems = [
+    {
+      title: "محدوده تاریخ ثبت",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "startDate",
+              dependantKey: "startDateType",
+              component: "date",
+              placeholder: "از تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+            {
+              key: "endDate",
+              dependantKey: "endDateType",
+              component: "date",
+              placeholder: "تا تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full items-start p-0",
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+  ];
+  function submitFilter() {
+    const filterData = {
+      startRangeTime: convertToGregorian(
+        formik.values?.startDate,
+        formik.values?.startDateType
+      ),
+
+      endRangeTime: convertToGregorian(
+        formik.values?.endDate,
+        formik.values?.endDateType
+      ),
+      name: formik.values.name,
+      city: formik.values.city,
+      country: formik.values.country,
+      userSubmitterFullname: formik.values.submitter,
+    };
+    dispatch(
+      config.fetchAction({
+        page: 1,
+        limit: limit,
+        filters: filterData,
+      })
+    );
+  }
+  function cancleFilter() {
+    formik.resetForm();
+
+    dispatch(
+      config.fetchAction({
+        page: 1,
+        limit: limit,
+        filters: {},
+      })
+    );
+  }
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
         <div className="flex flex-row items-center justify-between">
           <FilterContainer
-            onFilterHandler={() => {}}
-            rangeItems={[]}
-            filterItems={[]}
+            onFilterHandler={() => {
+              submitFilter();
+            }}
+            rangeItems={rangeItems}
+            filterItems={filterItems}
             sortList={[]}
             onSortHandler={() => {}}
-            onCancleHandler={() => {}}
+            onCancleHandler={() => {
+              cancleFilter();
+            }}
           />
           <ExportDataContainer
             onGetData={getDataHandler}
             list={totalItems}
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
-
           />
         </div>
 
