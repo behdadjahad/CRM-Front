@@ -13,6 +13,7 @@ export interface StationState {
   editData: any[];
   total: number;
   totalItems: any[];
+  checkedItems: any[];
 }
 
 const initialState: StationState = {
@@ -24,6 +25,7 @@ const initialState: StationState = {
   editData: [],
   total: 0,
   totalItems: [],
+  checkedItems: [],
 };
 
 const stationSlice = createSlice({
@@ -35,6 +37,12 @@ const stationSlice = createSlice({
     //     console.log(action.payload);
     //     state.currentPage = 1;
     //   },
+    setCheckedItems(state, action) {
+      state.checkedItems = action.payload;
+    },
+    clearCheckedItems(state) {
+      state.checkedItems = [];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStations.fulfilled, (state, action) => {
@@ -132,3 +140,4 @@ export const fetchAllStations = createAsyncThunk<any, any>(
   }
 );
 export default stationSlice.reducer;
+export const { setCheckedItems, clearCheckedItems } = stationSlice.actions;

@@ -130,6 +130,6 @@ export const kpiType = {
 };
 export const limitForInfiniteCustomers = 8;
 export const activeFilterTime = 6;
-export const limitForStations = 3;
+export const limitForStations = 6;
 export const limitForHotels = 6; 
 export const limitForAirlines = 6;

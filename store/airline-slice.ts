@@ -11,6 +11,8 @@ export interface AirlineState {
   filters: any;
   limit: number;
   editData: any[];
+  totalItems: any[];
+  total: number;
 }
 
 const initialState: AirlineState = {
@@ -20,6 +22,8 @@ const initialState: AirlineState = {
   filters: {},
   limit: limitForAirlines,
   editData: [],
+  totalItems: [],
+  total:0
 };
 
 const airlineSlice = createSlice({
@@ -48,7 +52,7 @@ const airlineSlice = createSlice({
         "تاریخ ثبت": item?.submitDateTime
           ? convertDate(item?.submitDateTime, dateType)
           : "",
-        "ثبت کننده":item?.userSubmitter?.fullName
+        "ثبت کننده": item?.userSubmitter?.fullName,
       }));
       console.log(state.items);
       state.editData = data?.map((item: any) => ({
@@ -67,12 +71,46 @@ const airlineSlice = createSlice({
       state.filters = filters;
 
       state.limit = limit;
+      state.total = action?.payload?.pagination?.total;
+    });
+    builder.addCase(fetchAllAirlines.fulfilled, (state, action) => {
+      const data = action?.payload?.data;
+      state.totalItems = data?.map((item: any, index: number) => ({
+        id: item.id,
+        ردیف: index + 1,
+        کشور: item?.country?.name,
+        شهر: item?.city?.name,
+        ایرلاین: item?.name,
+        "تاریخ ثبت": item?.submitDateTime
+          ? convertDate(item?.submitDateTime, dateType)
+          : "",
+        "ثبت کننده": item?.userSubmitter?.fullName,
+      }));
     });
   },
 });
 
 export const fetchAirlines = createAsyncThunk<any, any>(
   "airline/fetchAirlines",
+  async ({ page, limit, filters, keyword, sort }) => {
+    try {
+      const result = await fetchService(
+        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        {
+          method: "GET",
+          //   body: filters,
+        }
+      );
+
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
+
+export const fetchAllAirlines = createAsyncThunk<any, any>(
+  "airline/fetchAllAirlines",
   async ({ page, limit, filters, keyword, sort }) => {
     try {
       const result = await fetchService(

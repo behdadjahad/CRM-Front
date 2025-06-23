@@ -34,7 +34,7 @@ export default function SettingContainer({
   airlines: any[];
 }) {
   const [hasReset, setHasReset] = useState<boolean>(false);
-  const [checkedItems, setCheckedItems] = useState<any[]>([]);
+
   const { service } = useParams();
   const settingSearchFormik = useFormik({
     initialValues: {
@@ -120,19 +120,11 @@ export default function SettingContainer({
     settingSearchFormik.resetForm();
     setHasReset(false);
   }
-  // const getDataHandler = async () => {
-  //   return await dispatch(
-  //     config.fetchAllData({
-  //       page: 1,
-  //       limit: total,
-  //       filters: {},
-  //       sort: {},
-  //     })
-  //   );
-  // };
+
   const [isLoading, setIsLoading] = useState(false);
 
   const getDataHandler = async () => {
+
     setIsLoading(true);
 
     try {
@@ -165,6 +157,7 @@ export default function SettingContainer({
             list={totalItems}
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
+         
           />
         </div>
 
@@ -198,6 +191,7 @@ export default function SettingContainer({
             accommodationTypes={accommodationTypes}
             hotels={hotels}
             airlines={airlines}
+       
           />
 
           <div className="w-full mt-4">

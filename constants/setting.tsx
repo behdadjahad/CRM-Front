@@ -9,8 +9,8 @@ import {
   submitAirport,
 } from "@/api/setting-airport";
 import { deleteHotel, editHotel, submitHotel } from "@/api/setting-hotel";
-import { fetchAirlines } from "@/store/airline-slice";
-import { fetchHotels } from "@/store/hotel-slice";
+import { fetchAirlines, fetchAllAirlines } from "@/store/airline-slice";
+import { fetchAllHotels, fetchHotels } from "@/store/hotel-slice";
 import { fetchAllStations, fetchStations } from "@/store/station-slice";
 
 const titles = {
@@ -46,12 +46,12 @@ export const sliceMap = {
   hotel: {
     selector: (state: any) => state.hotel,
     fetchAction: fetchHotels,
-    fetchAllData: fetchAllStations,
+    fetchAllData: fetchAllHotels,
   },
   airline: {
     selector: (state: any) => state.airline,
     fetchAction: fetchAirlines,
-    fetchAllData: fetchAllStations,
+    fetchAllData: fetchAllAirlines,
   },
 };
 export function createSettingFormFields(

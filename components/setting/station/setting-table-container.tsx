@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Table,
@@ -20,6 +20,7 @@ import {
 } from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { clearCheckedItems, setCheckedItems } from "@/store/station-slice";
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
@@ -51,6 +52,7 @@ export default function SettingTableContainer({
 
   const config = sliceMap[service as keyof typeof sliceMap];
   const editData = useSelector((state) => config?.selector(state).editData);
+
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
@@ -60,6 +62,9 @@ export default function SettingTableContainer({
   const dispatch = useDispatch<any>();
 
   const limit = useSelector((state) => config?.selector(state).limit);
+  const checkedItems = useSelector(
+    (state) => config?.selector(state).checkedItems
+  );
   const toggleSort = (label: string) => {
     setSortStates((prev) => {
       const newSort = prev[label] === "desc" ? "asc" : "desc";
@@ -81,6 +86,19 @@ export default function SettingTableContainer({
       };
     });
   };
+
+  const checkItemHandler = (listItem: any, checked: boolean) => {
+    let updatedItems;
+
+    if (checked) {
+      updatedItems = [...checkedItems, listItem];
+    } else {
+      updatedItems = checkedItems.filter((obj: any) => obj.id !== listItem.id);
+    }
+
+    dispatch(setCheckedItems(updatedItems));
+  };
+
   return (
     <div
       className={cn(
@@ -92,32 +110,26 @@ export default function SettingTableContainer({
         <TableHeader>
           <TableRow className="bg-white sticky top-0 z-10  border-b border-gray-200">
             <TableHead className="text-center bg-white">
-              {" "}
               <Checkbox
-                onCheckedChange={() => {}}
-                //checked={}
+                onCheckedChange={(checked: boolean) => {
+                  if (checked) {
+                    const updatedCheckItems = checkedItems.filter(
+                      (item: any) => !list.some((l) => l.id === item.id)
+                    );
+
+                    dispatch(setCheckedItems([...updatedCheckItems, ...list]));
+                  } else {
+                    const updatedItems = checkedItems.filter(
+                      (item: any) => !list.some((l) => l.id === item.id)
+                    );
+                    dispatch(setCheckedItems(updatedItems));
+                  }
+                }}
+                checked={list.every((item) =>
+                  checkedItems.some((obj: any) => obj.id === item.id)
+                )}
               />
-              {""}
             </TableHead>
-            {/* {tableHeaderLabels.map((label, index) => (
-              <TableHead
-                key={index}
-                className="text-center bg-white border-l border-gray-200 text-xs"
-              >
-                <div className="flex items-center gap-2 w-full  justify-center">
-                  <span>{label}</span>
-                  <Button
-                    variant={"transparent"}
-                    onClick={() => {
-                      toggleSort();
-                      console.log(sortType);
-                    }}
-                  >
-                    {sortType == "desc" ? <FaChevronDown /> : <FaChevronUp />}
-                  </Button>
-                </div>
-              </TableHead>
-            ))}*/}
 
             {tableHeaderLabels.map((label, index) => (
               <TableHead
@@ -141,7 +153,6 @@ export default function SettingTableContainer({
                 </div>
               </TableHead>
             ))}
-            {/*  */}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -149,8 +160,14 @@ export default function SettingTableContainer({
             <Fragment key={index}>
               <TableRow className="border-b border-gray-200" key={index}>
                 <TableCell className="flex items-center justify-center">
-                  {" "}
-                  <Checkbox onCheckedChange={() => {}} />
+                  <Checkbox
+                    onCheckedChange={(checked: boolean) => {
+                      checkItemHandler(item, checked);
+                    }}
+                    checked={checkedItems.some(
+                      (obj: any) => obj.id === item.id
+                    )}
+                  />
                 </TableCell>
                 {tableHeaderLabels.map((label, labelIndex) => (
                   <TableCell key={labelIndex} className="text-center text-xs">

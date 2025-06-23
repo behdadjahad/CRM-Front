@@ -96,4 +96,22 @@ export const fetchHotels = createAsyncThunk<any, any>(
     }
   }
 );
+export const fetchAllHotels = createAsyncThunk<any, any>(
+  "hotel/fetchAllHotels",
+  async ({ page, limit, filters, keyword, sort }) => {
+    try {
+      const result = await fetchService(
+        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        {
+          method: "GET",
+          //   body: filters,
+        }
+      );
+
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
 export default hotelSlice.reducer;
