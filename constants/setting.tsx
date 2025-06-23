@@ -9,9 +9,9 @@ import {
   submitAirport,
 } from "@/api/setting-airport";
 import { deleteHotel, editHotel, submitHotel } from "@/api/setting-hotel";
-import { fetchAirlines, fetchAllAirlines } from "@/store/airline-slice";
-import { fetchAllHotels, fetchHotels } from "@/store/hotel-slice";
-import { fetchAllStations, fetchStations } from "@/store/station-slice";
+import { fetchAirlines, fetchAllAirlines, setAirlineCheckedItems } from "@/store/airline-slice";
+import { fetchAllHotels, fetchHotels, setHotelCheckedItems } from "@/store/hotel-slice";
+import { fetchAllStations, fetchStations, setStationCheckedItems } from "@/store/station-slice";
 
 const titles = {
   airport: "فرودگاه",
@@ -42,16 +42,19 @@ export const sliceMap = {
     selector: (state: any) => state.station,
     fetchAction: fetchStations,
     fetchAllData: fetchAllStations,
+    setCheckedItems:setStationCheckedItems
   },
   hotel: {
     selector: (state: any) => state.hotel,
     fetchAction: fetchHotels,
     fetchAllData: fetchAllHotels,
+     setCheckedItems:setHotelCheckedItems
   },
   airline: {
     selector: (state: any) => state.airline,
     fetchAction: fetchAirlines,
     fetchAllData: fetchAllAirlines,
+    setCheckedItems:setAirlineCheckedItems
   },
 };
 export function createSettingFormFields(

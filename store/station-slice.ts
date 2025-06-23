@@ -32,17 +32,11 @@ const stationSlice = createSlice({
   name: "station",
   initialState: initialState,
   reducers: {
-    //  setData(state, action: PayloadAction<any>) {
-    //     state.filters = action.payload;
-    //     console.log(action.payload);
-    //     state.currentPage = 1;
-    //   },
-    setCheckedItems(state, action) {
+
+    setStationCheckedItems(state, action) {
       state.checkedItems = action.payload;
     },
-    clearCheckedItems(state) {
-      state.checkedItems = [];
-    },
+   
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStations.fulfilled, (state, action) => {
@@ -140,4 +134,4 @@ export const fetchAllStations = createAsyncThunk<any, any>(
   }
 );
 export default stationSlice.reducer;
-export const { setCheckedItems, clearCheckedItems } = stationSlice.actions;
+export const { setStationCheckedItems } = stationSlice.actions;

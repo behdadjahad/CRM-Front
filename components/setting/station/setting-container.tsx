@@ -17,6 +17,7 @@ import { useParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { store } from "@/store";
 import ExportDataContainer from "@/components/shared/export-data-container";
+import { buildRowOptions } from "@/lib/utils";
 
 export default function SettingContainer({
   cities,
@@ -53,7 +54,12 @@ export default function SettingContainer({
   const items = useSelector((state) => config?.selector(state).items);
   const pages = useSelector((state) => config?.selector(state).totalPages);
   const dispatch = useDispatch<any>();
-
+  const limitFormik = useFormik({
+    initialValues: {
+      limit: limit,
+    },
+    onSubmit: async () => {},
+  });
   useEffect(() => {
     if (!config) return;
     dispatch(
@@ -124,7 +130,6 @@ export default function SettingContainer({
   const [isLoading, setIsLoading] = useState(false);
 
   const getDataHandler = async () => {
-
     setIsLoading(true);
 
     try {
@@ -140,6 +145,17 @@ export default function SettingContainer({
       setIsLoading(false);
     }
   };
+  function limitHandler(data: any) {
+    dispatch(
+      config.fetchAction({
+        page: 1,
+        limit: Number(data),
+        filters: {},
+        keyword: "",
+        sort:{}
+      })
+    );
+  }
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -157,7 +173,6 @@ export default function SettingContainer({
             list={totalItems}
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
-         
           />
         </div>
 
@@ -191,32 +206,53 @@ export default function SettingContainer({
             accommodationTypes={accommodationTypes}
             hotels={hotels}
             airlines={airlines}
-       
           />
-
-          <div className="w-full mt-4">
-            {pages > 1 && (
-              <ReactPaginate
-                breakLabel="..."
-                nextLabel="صفحه بعد"
-                previousLabel="صفحه قبل"
-                onPageChange={handlePageChange}
-                pageRangeDisplayed={2}
-                marginPagesDisplayed={3}
-                forcePage={currentPage - 1}
-                pageCount={pages}
-                renderOnZeroPageCount={null}
-                containerClassName="w-full relative flex justify-center items-center ltr"
-                pageClassName="mx-3 rounded-md"
-                pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
-                activeClassName="bg-gray-100 rounded-md"
-                previousClassName="absolute right-8"
-                previousLinkClassName="rounded-md text-sm"
-                nextClassName="absolute left-8"
-                nextLinkClassName="rounded-md text-sm"
-                disabledClassName="opacity-50 cursor-not-allowed"
+          <div className="grid grid-cols-3 custom-shadow bg-card p-3 rounded-md">
+            <div className="col-span-2 w-full">
+              {pages > 1 && (
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel="صفحه بعد"
+                  previousLabel="صفحه قبل"
+                  onPageChange={handlePageChange}
+                  pageRangeDisplayed={2}
+                  marginPagesDisplayed={3}
+                  forcePage={currentPage - 1}
+                  pageCount={pages}
+                  renderOnZeroPageCount={null}
+                  containerClassName="w-full relative flex justify-center items-center ltr"
+                  pageClassName="mx-3 rounded-md"
+                  pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
+                  activeClassName="bg-gray-100 rounded-md"
+                  previousClassName="absolute right-8"
+                  previousLinkClassName="rounded-md text-sm"
+                  nextClassName="absolute left-8"
+                  nextLinkClassName="rounded-md text-sm"
+                  disabledClassName="opacity-50 cursor-not-allowed"
+                />
+              )}
+            </div>
+            <div className="col-span-1 flex items-center justify-end pl-3">
+              <FormMaker
+                form={limitFormik}
+                fields={[
+                  {
+                    key: "limit",
+                    component: "Select",
+                    placeholder: "تعدادردیف",
+                    type: "text",
+                    floating: true,
+                    className: "w-auto text-sm placeholder:text-foreground",
+                    options: buildRowOptions(total,Math.round(total/10)),
+                    menuPlacement: "top",
+                    onChange: (data: any) => {
+                      limitHandler(Number(data.value));
+                    },
+                  },
+                ]}
+                className="flex flex-row justify-end items-start"
               />
-            )}
+            </div>
           </div>
         </div>
       </div>

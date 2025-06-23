@@ -11,6 +11,9 @@ export interface StationState {
   filters: any;
   limit: number;
   editData: any[];
+  checkedItems: any[];
+  totalItems: any[];
+  total: number;
 }
 
 const initialState: StationState = {
@@ -20,17 +23,18 @@ const initialState: StationState = {
   filters: {},
   limit: limitForHotels,
   editData: [],
+  checkedItems: [],
+  totalItems: [],
+  total: 0,
 };
 
 const hotelSlice = createSlice({
   name: "hotel",
   initialState: initialState,
   reducers: {
-    //  setData(state, action: PayloadAction<any>) {
-    //     state.filters = action.payload;
-    //     console.log(action.payload);
-    //     state.currentPage = 1;
-    //   },
+    setHotelCheckedItems(state, action) {
+      state.checkedItems = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchHotels.fulfilled, (state, action) => {
@@ -74,6 +78,25 @@ const hotelSlice = createSlice({
       state.filters = filters;
       const limit = action?.payload?.pagination?.limit;
       state.limit = limit;
+      state.total = action?.payload?.pagination?.total;
+    });
+    builder.addCase(fetchAllHotels.fulfilled, (state, action) => {
+      state.totalItems = action?.payload?.data?.flatMap((item: any) =>
+        item?.country?.city?.flatMap((city: any) =>
+          city?.hotel.map((hotel: any, index: number) => ({
+            id: hotel.id,
+            ردیف: index + 1,
+            کشور: item?.country?.name,
+            شهر: city?.name,
+            هتل: hotel?.name, // fixed! previously you had `city?.name` here
+            "نوع هتل": hotel?.AccommodationAcType?.accomodationType?.name,
+            "تاریخ ثبت": hotel?.submitDateTime
+              ? convertDate(hotel?.submitDateTime, dateType)
+              : "",
+            "ثبت کننده": hotel?.userSubmitter?.fullName,
+          }))
+        )
+      );
     });
   },
 });
@@ -115,3 +138,4 @@ export const fetchAllHotels = createAsyncThunk<any, any>(
   }
 );
 export default hotelSlice.reducer;
+export const { setHotelCheckedItems } = hotelSlice.actions;

@@ -24,7 +24,7 @@ import {
 } from "@/constants/customer-filter-fields";
 import ContractOverview from "@/components/sale/contract-overview";
 
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Sale() {
   const dispatch = useDispatch<any>();
@@ -57,7 +57,7 @@ export default function Sale() {
   );
   const scrollY = useSelector((state: any) => state.contract.scrollPosition);
   const mainRef = useRef<HTMLDivElement>(null);
- 
+
   const { data: contractTypeData } = useQuery({
     queryKey: ["contractTypeQuery"],
     queryFn: () => getContractTypes(),
@@ -84,7 +84,6 @@ export default function Sale() {
             "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
-    
     }
   }, [contractTypeData]);
   const formik = useFormik({
@@ -571,7 +570,7 @@ export default function Sale() {
                 placeholder: "تعدادردیف",
                 type: "text",
                 floating: true,
-                className: "w-auto",
+                className: "w-auto text-sm",
                 options: contractRecordList,
                 menuPlacement: "top",
                 onChange: (data: any) => {

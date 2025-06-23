@@ -13,6 +13,7 @@ export interface AirlineState {
   editData: any[];
   totalItems: any[];
   total: number;
+  checkedItems: any[];
 }
 
 const initialState: AirlineState = {
@@ -23,18 +24,17 @@ const initialState: AirlineState = {
   limit: limitForAirlines,
   editData: [],
   totalItems: [],
-  total:0
+  total: 0,
+  checkedItems: [],
 };
 
 const airlineSlice = createSlice({
   name: "airline",
   initialState: initialState,
   reducers: {
-    //  setData(state, action: PayloadAction<any>) {
-    //     state.filters = action.payload;
-    //     console.log(action.payload);
-    //     state.currentPage = 1;
-    //   },
+    setAirlineCheckedItems(state, action) {
+      state.checkedItems = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAirlines.fulfilled, (state, action) => {
@@ -128,3 +128,4 @@ export const fetchAllAirlines = createAsyncThunk<any, any>(
   }
 );
 export default airlineSlice.reducer;
+export const { setAirlineCheckedItems } =airlineSlice.actions;

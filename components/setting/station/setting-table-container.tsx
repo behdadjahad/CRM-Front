@@ -20,7 +20,7 @@ import {
 } from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCheckedItems, setCheckedItems } from "@/store/station-slice";
+
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
   className?: string;
@@ -66,6 +66,7 @@ export default function SettingTableContainer({
     (state) => config?.selector(state).checkedItems
   );
   const toggleSort = (label: string) => {
+    dispatch(config.setCheckedItems([]));
     setSortStates((prev) => {
       const newSort = prev[label] === "desc" ? "asc" : "desc";
       (dispatch as any)(
@@ -93,10 +94,10 @@ export default function SettingTableContainer({
     if (checked) {
       updatedItems = [...checkedItems, listItem];
     } else {
-      updatedItems = checkedItems.filter((obj: any) => obj.id !== listItem.id);
+      updatedItems = checkedItems?.filter((obj: any) => obj.id !== listItem.id);
     }
 
-    dispatch(setCheckedItems(updatedItems));
+    dispatch(config.setCheckedItems(updatedItems));
   };
 
   return (
@@ -113,19 +114,19 @@ export default function SettingTableContainer({
               <Checkbox
                 onCheckedChange={(checked: boolean) => {
                   if (checked) {
-                    const updatedCheckItems = checkedItems.filter(
-                      (item: any) => !list.some((l) => l.id === item.id)
+                    const updatedCheckItems = checkedItems?.filter(
+                      (item: any) => !list?.some((l) => l.id === item.id)
                     );
 
-                    dispatch(setCheckedItems([...updatedCheckItems, ...list]));
+                    dispatch(config.setCheckedItems([...updatedCheckItems, ...list]));
                   } else {
-                    const updatedItems = checkedItems.filter(
-                      (item: any) => !list.some((l) => l.id === item.id)
+                    const updatedItems = checkedItems?.filter(
+                      (item: any) => !list?.some((l) => l.id === item.id)
                     );
-                    dispatch(setCheckedItems(updatedItems));
+                    dispatch(config.setCheckedItems(updatedItems));
                   }
                 }}
-                checked={list.every((item) =>
+                checked={list?.every((item) =>
                   checkedItems.some((obj: any) => obj.id === item.id)
                 )}
               />

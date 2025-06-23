@@ -114,7 +114,7 @@ function shuffle(array: any) {
   return arr;
 }
 
-export function getRandomColor(colors:string[]) {
+export function getRandomColor(colors: string[]) {
   if (index === 0 || index >= shuffled.length) {
     shuffled = shuffle(colors);
     index = 0;
@@ -131,5 +131,16 @@ export const kpiType = {
 export const limitForInfiniteCustomers = 8;
 export const activeFilterTime = 6;
 export const limitForStations = 6;
-export const limitForHotels = 6; 
+export const limitForHotels = 6;
 export const limitForAirlines = 6;
+export function buildRowOptions(total: number, chunkSize: number) {
+  if (!total) return;
+  const result = [];
+  for (let i = chunkSize; i <= total; i += chunkSize) {
+    result.push({
+      value: i.toString(),
+      label: `${i}ردیف`,
+    });
+  }
+  return result;
+}
