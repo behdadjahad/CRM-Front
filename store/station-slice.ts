@@ -96,10 +96,10 @@ export const fetchStations = createAsyncThunk<any, any>(
   async ({ page, limit, filters, keyword, sort }) => {
     try {
       const result = await fetchService(
-        `station/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `station/301?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+          body: filters,
         }
       );
 
@@ -111,13 +111,13 @@ export const fetchStations = createAsyncThunk<any, any>(
 );
 export const fetchAllStations = createAsyncThunk<any, any>(
   "station/fetchAllStations",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `station/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `station/301?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+          body: filters,
         }
       );
 

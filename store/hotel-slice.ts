@@ -103,13 +103,13 @@ const hotelSlice = createSlice({
 
 export const fetchHotels = createAsyncThunk<any, any>(
   "hotel/fetchHotels",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `accommodation?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+          body: filters,
         }
       );
 
@@ -121,13 +121,13 @@ export const fetchHotels = createAsyncThunk<any, any>(
 );
 export const fetchAllHotels = createAsyncThunk<any, any>(
   "hotel/fetchAllHotels",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `accommodation?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+          body: filters,
         }
       );
 

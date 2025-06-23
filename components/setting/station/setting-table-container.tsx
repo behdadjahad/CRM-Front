@@ -20,6 +20,7 @@ import {
 } from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { sortBy } from "lodash";
 
 export interface StationTableContainerInterface {
   tableHeaderLabels: string[];
@@ -38,7 +39,7 @@ export default function SettingTableContainer({
   list,
   className,
   tableHeaderLabels,
-  cities,
+
   countries,
   airports,
   onRemoveHandler,
@@ -73,10 +74,9 @@ export default function SettingTableContainer({
         config.fetchAction({
           page: 1,
           limit: limit,
-          filters: {},
-          sort: {
-            field: getFieldFromLabel(label),
-            sortType: newSort,
+          filters: {
+            sortBy: getFieldFromLabel(label),
+            sortOrder: newSort,
           },
         })
       );
@@ -118,7 +118,9 @@ export default function SettingTableContainer({
                       (item: any) => !list?.some((l) => l.id === item.id)
                     );
 
-                    dispatch(config.setCheckedItems([...updatedCheckItems, ...list]));
+                    dispatch(
+                      config.setCheckedItems([...updatedCheckItems, ...list])
+                    );
                   } else {
                     const updatedItems = checkedItems?.filter(
                       (item: any) => !list?.some((l) => l.id === item.id)

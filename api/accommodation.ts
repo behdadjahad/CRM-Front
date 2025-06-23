@@ -2,7 +2,10 @@ import { fetchService } from "@/boot/fetch-service";
 
 export async function getHotels() {
   try {
-    const result = await fetchService("accommodation");
+    const result = await fetchService("accommodation",{
+      method: "POST",
+      body: {},
+    });
 
     return result;
   } catch {

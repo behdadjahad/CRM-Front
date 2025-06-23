@@ -92,13 +92,13 @@ const airlineSlice = createSlice({
 
 export const fetchAirlines = createAsyncThunk<any, any>(
   "airline/fetchAirlines",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `transportation-co/301?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+            body: filters,
         }
       );
 
@@ -111,13 +111,13 @@ export const fetchAirlines = createAsyncThunk<any, any>(
 
 export const fetchAllAirlines = createAsyncThunk<any, any>(
   "airline/fetchAllAirlines",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}&keyword=${keyword}&sortBy=${sort.field}&sortOrder=${sort.sortType}`,
+        `transportation-co/301?page=${page}&limit=${limit}`,
         {
-          method: "GET",
-          //   body: filters,
+          method: "POST",
+            body: filters,
         }
       );
 

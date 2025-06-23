@@ -20,7 +20,10 @@ export async function getFightTypeData(id: number) {
 }
 export async function getAirlinesData(id: number) {
   try {
-    const result = await fetchService(`transportation-co/${id}`);
+    const result = await fetchService(`transportation-co/${id}`,{
+      method: "POST",
+      body: {},
+    });
 
     return result;
   } catch {
