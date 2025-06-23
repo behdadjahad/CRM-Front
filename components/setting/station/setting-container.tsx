@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import SettingTableContainer from "./setting-table-container";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchStations } from "@/store/station-slice";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -81,6 +81,8 @@ export default function SettingContainer({
           page: 1,
           limit: limit,
           filters: {},
+          keyword: "",
+          sort: {},
         })
       );
     },
@@ -152,7 +154,7 @@ export default function SettingContainer({
         limit: Number(data),
         filters: {},
         keyword: "",
-        sort:{}
+        sort: {},
       })
     );
   }
@@ -173,6 +175,7 @@ export default function SettingContainer({
             list={totalItems}
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
+
           />
         </div>
 
@@ -195,7 +198,7 @@ export default function SettingContainer({
               ]}
               className="w-full"
             />
-          </div>
+          </div>{" "}
           <SettingTableContainer
             tableHeaderLabels={createSettingHeaderLabels(service)}
             list={items}
@@ -243,7 +246,7 @@ export default function SettingContainer({
                     type: "text",
                     floating: true,
                     className: "w-auto text-sm placeholder:text-foreground",
-                    options: buildRowOptions(total,Math.round(total/10)),
+                    options: buildRowOptions(total, Math.ceil(total / 10)),
                     menuPlacement: "top",
                     onChange: (data: any) => {
                       limitHandler(Number(data.value));

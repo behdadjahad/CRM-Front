@@ -32,11 +32,9 @@ const stationSlice = createSlice({
   name: "station",
   initialState: initialState,
   reducers: {
-
     setStationCheckedItems(state, action) {
       state.checkedItems = action.payload;
     },
-   
   },
   extraReducers: (builder) => {
     builder.addCase(fetchStations.fulfilled, (state, action) => {
@@ -54,8 +52,6 @@ const stationSlice = createSlice({
           ? convertDate(item?.submitDateTime, dateType)
           : "",
         "ثبت کننده": item?.userSubmitter?.fullName,
-        countryId: item.countryId,
-        cityId: item.cityId,
       }));
 
       state.editData = action?.payload?.data?.map(
@@ -89,8 +85,6 @@ const stationSlice = createSlice({
             ? convertDate(item?.submitDateTime, dateType)
             : "",
           "ثبت کننده": item?.userSubmitter?.fullName,
-          countryId: item.countryId,
-          cityId: item.cityId,
         })
       );
     });

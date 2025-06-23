@@ -54,6 +54,8 @@ export default function SettingEditForm({
           page: 1,
           limit: limit,
           filters: {},
+          keyword: "",
+          sort: {},
         })
       );
     },

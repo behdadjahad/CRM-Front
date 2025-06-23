@@ -134,7 +134,7 @@ export const limitForStations = 6;
 export const limitForHotels = 6;
 export const limitForAirlines = 6;
 export function buildRowOptions(total: number, chunkSize: number) {
-  if (!total) return;
+  if (!total) return [];
   const result = [];
   for (let i = chunkSize; i <= total; i += chunkSize) {
     result.push({
