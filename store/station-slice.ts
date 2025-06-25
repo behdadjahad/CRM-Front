@@ -14,6 +14,7 @@ export interface StationState {
   total: number;
   totalItems: any[];
   checkedItems: any[];
+
 }
 
 const initialState: StationState = {
@@ -93,7 +94,7 @@ const stationSlice = createSlice({
 
 export const fetchStations = createAsyncThunk<any, any>(
   "station/fetchStations",
-  async ({ page, limit, filters, keyword, sort }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
         `station/301?page=${page}&limit=${limit}`,

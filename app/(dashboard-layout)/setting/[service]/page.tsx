@@ -153,6 +153,7 @@ export default function ServiceSetting() {
           filters: {},
         })
       );
+      formik.resetForm();
     },
   });
   function submit(data: any) {

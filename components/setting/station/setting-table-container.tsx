@@ -63,6 +63,7 @@ export default function SettingTableContainer({
   const dispatch = useDispatch<any>();
 
   const limit = useSelector((state) => config?.selector(state).limit);
+  const filters = useSelector((state) => config?.selector(state).filters);
   const checkedItems = useSelector(
     (state) => config?.selector(state).checkedItems
   );
@@ -75,6 +76,7 @@ export default function SettingTableContainer({
           page: 1,
           limit: limit,
           filters: {
+            ...filters,
             sortBy: getFieldFromLabel(label),
             sortOrder: newSort,
           },
@@ -99,7 +101,9 @@ export default function SettingTableContainer({
 
     dispatch(config.setCheckedItems(updatedItems));
   };
-
+  function closeEditFormHandler(itemId: number) {
+    setExpandedRows((prev) => prev.filter((i) => i !== itemId));
+  }
   return (
     <div
       className={cn(
@@ -203,13 +207,13 @@ export default function SettingTableContainer({
                 <TableCell
                   className="text-center"
                   onClick={(e) => {
-                    toggleRow(index);
+                    toggleRow(item.id);
                     e.preventDefault();
                     e.stopPropagation();
                   }}
                 >
                   <Button className="border-none p-0 text-[##212B36]">
-                    {expandedRows.includes(index) ? (
+                    {expandedRows.includes(item.id) ? (
                       <FaChevronUp />
                     ) : (
                       <Image
@@ -224,7 +228,7 @@ export default function SettingTableContainer({
                   </Button>
                 </TableCell>
               </TableRow>
-              {expandedRows.includes(index) && (
+              {expandedRows.includes(item.id) && (
                 <TableRow className="bg-gray-100">
                   <TableCell
                     colSpan={tableHeaderLabels.length + 1}
@@ -238,6 +242,7 @@ export default function SettingTableContainer({
                         accommodationTypes={accommodationTypes}
                         hotels={hotels}
                         airlines={airlines}
+                        onCloseEditForm={closeEditFormHandler}
                       />
                     </div>
                   </TableCell>

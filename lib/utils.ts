@@ -144,3 +144,24 @@ export function buildRowOptions(total: number, chunkSize: number) {
   }
   return result;
 }
+export const contractHeaderLabels = [
+  "ردیف",
+  "تاریخ قرارداد",
+  "مقصد",
+  "ثبت کننده",
+  "مشتری",
+  "نوع قرارداد",
+  "رضایتمندی",
+];
+export const customerHeaderLabels = [
+  "ردیف",
+  "نام ونام خانوادگی",
+  "کدملی",
+  "ایمیل",
+  "شماره تماس",
+  "شغل",
+  "موضوع قرارداد",
+  "رتبه مشتری",
+  "قرارداد",
+  "مبلغ آخرین قرارداد",
+];

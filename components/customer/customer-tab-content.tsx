@@ -9,8 +9,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { limitForCustomers } from "@/lib/utils";
 import CustomerTableContainer from "./customer-table-container";
 import CustomerContainer from "./customer-container";
+import ExportDataContainer from "../shared/export-data-container";
 
-export default function CustomerTabContent({customerList}:{customerList:any[]}) {
+export default function CustomerTabContent({
+  customerList,
+}: {
+  customerList: any[];
+}) {
   const dispatch = useDispatch<any>();
   const customerSearchFormik = useFormik({
     initialValues: {
@@ -22,7 +27,6 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
   const pages = useSelector((state: any) => state.customer.totalPages);
   const currentPage = useSelector((state: any) => state.customer.currentPage);
   const filters = useSelector((state: any) => state.customer.filters);
-
 
   // const expenses = [
   //   {
@@ -114,7 +118,10 @@ export default function CustomerTabContent({customerList}:{customerList:any[]}) 
       />
       <CustomerContainer
         className="flex items-center justify-center xl:hidden"
-        customers={customerList?.map((item: any) => ({id:item.id,info:item.info }))}
+        customers={customerList?.map((item: any) => ({
+          id: item.id,
+          info: item.info,
+        }))}
         labels={customerCardLabels}
       />
       <div className="w-full mt-4">

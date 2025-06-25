@@ -38,13 +38,16 @@ const hotelSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchHotels.fulfilled, (state, action) => {
+      state.currentPage = action.meta.arg.page;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
       const data = action?.payload?.data;
-
+      let counter = (state.currentPage - 1) * state.limit + 1;
       state.items = data?.flatMap((item: any) =>
         item?.country?.city?.flatMap((city: any) =>
           city?.hotel.map((hotel: any, index: number) => ({
             id: hotel.id,
-            ردیف: index + 1,
+            ردیف: counter++,
             کشور: item?.country?.name,
             شهر: city?.name,
             هتل: hotel?.name, // fixed! previously you had `city?.name` here
@@ -73,11 +76,10 @@ const hotelSlice = createSlice({
       state.totalPages = Math.ceil(
         totalItems / action?.payload?.pagination?.limit
       );
-      state.currentPage = action.meta.arg.page;
+
       const filters = action.meta.arg.filters;
       state.filters = filters;
-      const limit = action?.payload?.pagination?.limit;
-      state.limit = limit;
+
       state.total = action?.payload?.pagination?.total;
     });
     builder.addCase(fetchAllHotels.fulfilled, (state, action) => {
@@ -106,7 +108,7 @@ export const fetchHotels = createAsyncThunk<any, any>(
   async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}`,
+        `accommodation/filter?page=${page}&limit=${limit}`,
         {
           method: "POST",
           body: filters,
@@ -124,7 +126,7 @@ export const fetchAllHotels = createAsyncThunk<any, any>(
   async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `accommodation?page=${page}&limit=${limit}`,
+        `accommodation/filter?page=${page}&limit=${limit}`,
         {
           method: "POST",
           body: filters,

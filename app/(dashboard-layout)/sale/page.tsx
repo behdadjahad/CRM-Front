@@ -13,9 +13,14 @@ import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import FilterContainer from "@/components/section/filter-container";
-import { fetchContracts, setScrollPosition } from "@/store/contract-slice";
+import {
+  fetchAllContracts,
+  fetchContracts,
+  setCheckedItems,
+  setScrollPosition,
+} from "@/store/contract-slice";
 import { useDispatch, useSelector } from "react-redux";
-import { cleanObject, priceOptions } from "@/lib/utils";
+import { cleanObject, contractHeaderLabels, priceOptions } from "@/lib/utils";
 import ReactPaginate from "react-paginate";
 import { convertToGregorian } from "@/lib/date";
 import {
@@ -25,12 +30,15 @@ import {
 import ContractOverview from "@/components/sale/contract-overview";
 
 import { useRouter } from "next/navigation";
+import ExportDataContainer from "@/components/shared/export-data-container";
+import { Button } from "@/components/ui/button";
 
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -50,6 +58,7 @@ export default function Sale() {
 
   const contractLists = useSelector((state: any) => state.contract.items);
   const pages = useSelector((state: any) => state.contract.totalPages);
+  const total = useSelector((state: any) => state.contract.total);
   const filters = useSelector((state: any) => state.contract.filters);
   const currentPage = useSelector((state: any) => state.contract.currentPage);
   const ContractOverviewList = useSelector(
@@ -63,6 +72,7 @@ export default function Sale() {
     queryFn: () => getContractTypes(),
   });
   const limit = useSelector((state: any) => state.contract.limit);
+  const allItems = useSelector((state: any) => state.contract.allItems);
   const handlePageChange = (selectedItem: any) => {
     const selectedPage = selectedItem.selected + 1;
     dispatch(
@@ -73,6 +83,7 @@ export default function Sale() {
       })
     );
   };
+  const checkedItems = useSelector((state: any) => state.contract.checkedItems);
   useEffect(() => {
     if (contractTypeData && contractTypeData?.data?.length > 0) {
       setContractTypes(
@@ -442,21 +453,6 @@ export default function Sale() {
       })
     );
   }, [dispatch]);
-  // const isFirstRender = useRef(true);
-  // useEffect(() => {
-  //   if (isFirstRender.current) {
-  //     isFirstRender.current = false;
-  //     return;
-  //   } else {
-  //     dispatch(
-  //       fetchContracts({
-  //         page: 1,
-  //         limit: Number(limitFormik.values.limit),
-  //         filters: filters,
-  //       })
-  //     );
-  //   }
-  // }, [limitFormik.values.limit]);
 
   const contractRecordList = [
     {
@@ -489,6 +485,41 @@ export default function Sale() {
       })
     );
   }
+  const getDataHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      return await dispatch(
+        fetchAllContracts({
+          page: 1,
+          limit: total,
+          filters: filters,
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const isChecked = contractLists?.every((item: any) =>
+    checkedItems.some((obj: any) => obj.id === item.id)
+  );
+  function checkItemHandler() {
+    if (!isChecked) {
+      const updatedCheckItems = checkedItems?.filter(
+        (item: any) =>
+          !contractLists?.some((l: any) => l.exportData.id === item.id)
+      );
+      const exportDataArray = contractLists.map((item: any) => item.exportData);
+      dispatch(setCheckedItems([...updatedCheckItems, ...exportDataArray]));
+    } else {
+      const updatedItems = checkedItems?.filter(
+        (item: any) =>
+          !contractLists?.some((l: any) => l.exportData.id === item.id)
+      );
+      dispatch(setCheckedItems(updatedItems));
+    }
+  }
+
 
   return (
     <main ref={mainRef}>
@@ -527,8 +558,27 @@ export default function Sale() {
           }}
           onCancleHandler={cancleFilter}
         />
-        <div className="text-base font-bold h-9 flex items-center justify-center">
-          درخواست
+        <div className="text-base font-bold h-9 flex items-center justify-center gap-4">
+          <Button
+            variant={"foreground"}
+            className=""
+            onClick={() => {
+              checkItemHandler();
+            }}
+          >
+            {contractLists?.every((item: any) =>
+              checkedItems.some((obj: any) => obj.id === item.id)
+            )
+              ? "حذف همه"
+              : "انتخاب همه"}
+          </Button>
+          <ExportDataContainer
+            headerLabels={contractHeaderLabels}
+            list={allItems}
+            onGetData={getDataHandler}
+            loading={isLoading}
+            checkedItems={checkedItems}
+          />
         </div>
       </div>
 

@@ -54,6 +54,11 @@ export default function SettingContainer({
   const totalItems = useSelector((state) => config?.selector(state).totalItems);
   const items = useSelector((state) => config?.selector(state).items);
   const pages = useSelector((state) => config?.selector(state).totalPages);
+  const filters = useSelector((state) => config?.selector(state).filters);
+   const checkedItems = useSelector(
+    (state) => config?.selector(state).checkedItems
+  );
+
   const dispatch = useDispatch<any>();
   const limitFormik = useFormik({
     initialValues: {
@@ -68,7 +73,6 @@ export default function SettingContainer({
         page: currentPage,
         limit: limit,
         filters: {},
-        sort: {},
       })
     );
   }, [dispatch, service]);
@@ -77,9 +81,10 @@ export default function SettingContainer({
       return getSettingDelete(service, item);
     },
     onSuccess: () => {
+      const returnPage = (items.length < 2) ? currentPage - 1 : currentPage;
       (dispatch as any)(
         config.fetchAction({
-          page: 1,
+          page: returnPage,
           limit: limit,
           filters: {},
         })
@@ -95,8 +100,7 @@ export default function SettingContainer({
       config.fetchAction({
         page: selectedPage,
         limit: limit,
-        filters: {},
-        sort: {},
+        filters: filters,
       })
     );
   };
@@ -118,8 +122,8 @@ export default function SettingContainer({
       config.fetchAction({
         page: 1,
         limit: limit,
-        filters: {},
-        sort: {},
+        filters: {...filters,keyword:""},
+       
       })
     );
     settingSearchFormik.resetForm();
@@ -136,8 +140,8 @@ export default function SettingContainer({
         config.fetchAllData({
           page: 1,
           limit: total,
-          filters: {},
-          sort: {},
+          filters:filters,
+ 
         })
       );
     } finally {
@@ -149,9 +153,8 @@ export default function SettingContainer({
       config.fetchAction({
         page: 1,
         limit: Number(data),
-        filters: {},
-        keyword: "",
-        sort: {},
+        filters: filters,
+     
       })
     );
   }
@@ -305,6 +308,7 @@ export default function SettingContainer({
             list={totalItems}
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
+            checkedItems={checkedItems}
           />
         </div>
 

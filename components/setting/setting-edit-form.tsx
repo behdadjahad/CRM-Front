@@ -20,20 +20,24 @@ export default function SettingEditForm({
   accommodationTypes,
   hotels,
   airlines,
+  onCloseEditForm
 }: {
   countries: any;
   airports: any;
   editData: any;
   accommodationTypes: any;
   hotels: any;
-  airlines: any;
+    airlines: any;
+    onCloseEditForm: any;
 }) {
   const dispatch = useDispatch<any>();
   const { service } = useParams();
   const config = sliceMap[service as keyof typeof sliceMap];
-
+  const currentPage = useSelector(
+    (state) => config?.selector(state).currentPage
+  );
   const limit = useSelector((state) => config?.selector(state).limit);
-
+  const filters = useSelector((state) => config?.selector(state).filters);
   const [cities, setCities] = useState<OptionType[]>([]);
 
   const formik = useFormik({
@@ -51,13 +55,12 @@ export default function SettingEditForm({
     onSuccess: () => {
       (dispatch as any)(
         config.fetchAction({
-          page: 1,
+          page: currentPage,
           limit: limit,
-          filters: {},
-          keyword: "",
-          sort: {},
+          filters: filters,
         })
       );
+      onCloseEditForm(editData?.id)
     },
   });
   const { data: cityData } = useQuery({

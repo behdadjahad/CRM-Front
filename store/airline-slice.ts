@@ -95,7 +95,7 @@ export const fetchAirlines = createAsyncThunk<any, any>(
   async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}`,
+        `transportation-co/filter/301?page=${page}&limit=${limit}`,
         {
           method: "POST",
             body: filters,
@@ -114,7 +114,7 @@ export const fetchAllAirlines = createAsyncThunk<any, any>(
   async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `transportation-co/301?page=${page}&limit=${limit}`,
+        `transportation-co/filter/301?page=${page}&limit=${limit}`,
         {
           method: "POST",
             body: filters,

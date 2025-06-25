@@ -10,12 +10,22 @@ import {
   followUpOptions,
   serviceOptions,
 } from "@/constants/customer-filter-fields";
-import { cleanObject, limitForCustomers, priceOptions } from "@/lib/utils";
-import { fetchCustomers } from "@/store/customer-slice";
+import {
+  cleanObject,
+
+  customerHeaderLabels,
+  limitForCustomers,
+  priceOptions,
+} from "@/lib/utils";
+import { fetchAllCustomers, fetchCustomers } from "@/store/customer-slice";
 
 import { useDispatch, useSelector } from "react-redux";
 import { convertToGregorian } from "@/lib/date";
+import ExportDataContainer from "@/components/shared/export-data-container";
+
+
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
   /**/
@@ -332,9 +342,13 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
     },
   ];
   const customerList = useSelector((state: any) => state.customer.items);
+  const allItems = useSelector((state: any) => state.customer.allItems);
+  const total = useSelector((state: any) => state.customer.total);
+  const filters = useSelector((state: any) => state.customer.filters);
+  const checkedItems = useSelector((state: any) => state.customer.checkedItems);
 
   function setTabData(tabKey: string) {
-    const filters: any = {};
+    const filter: any = {};
     const today = new Date();
     const start = new Date(
       Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
@@ -343,17 +357,17 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
     end.setUTCDate(end.getUTCDate() + 1);
     switch (tabKey) {
       case "امروز":
-        filters.dateTimeRangeStart = start.toISOString();
-        filters.dateTimeRangeEnd = end.toISOString();
+        filter.dateTimeRangeStart = start.toISOString();
+        filter.dateTimeRangeEnd = end.toISOString();
         break;
       case "5روز آینده":
         const endDate = new Date(start);
         end.setUTCDate(end.getUTCDate() + 5); // 5 days ahead
-        filters.dateTimeRangeStart = start.toISOString();
-        filters.dateTimeRangeEnd = endDate.toISOString();
+        filter.dateTimeRangeStart = start.toISOString();
+        filter.dateTimeRangeEnd = endDate.toISOString();
         break;
       case "گذشته و رسیدگی نشده":
-        filters.dateTimeRangeEnd = start.toISOString();
+        filter.dateTimeRangeEnd = start.toISOString();
         break;
       default:
         break;
@@ -398,21 +412,50 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       })
     );
   }
+
+  const getDataHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      return await dispatch(
+        fetchAllCustomers({
+          page: 1,
+          limit: total,
+          filters: filters,
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
-        <FilterContainer
-          onFilterHandler={() => {
-            submitFilter();
-          }}
-          rangeItems={rangeItems}
-          filterItems={filterItems}
-          sortList={customerSortlist}
-          onSortHandler={(item: string, itemType?: string) => {
-            submitSort(item, itemType);
-          }}
-          onCancleHandler={cancleFilter}
-        />
+        <div className="flex items-center justify-between">
+          {" "}
+          <FilterContainer
+            onFilterHandler={() => {
+              submitFilter();
+            }}
+            rangeItems={rangeItems}
+            filterItems={filterItems}
+            sortList={customerSortlist}
+            onSortHandler={(item: string, itemType?: string) => {
+              submitSort(item, itemType);
+            }}
+            onCancleHandler={cancleFilter}
+          />
+          <div>
+            <ExportDataContainer
+              headerLabels={customerHeaderLabels}
+              list={allItems}
+              onGetData={getDataHandler}
+              loading={isLoading}
+              checkedItems={checkedItems}
+            />
+          </div>
+       
+        </div>
 
         <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">
           {tabList.map((tab: any) => (

@@ -20,6 +20,9 @@ export interface ContractState {
   }[];
   limit: number;
   scrollPosition: number;
+  allItems: any[];
+  total: number;
+  checkedItems: any[];
 }
 
 const initialState: ContractState = {
@@ -34,24 +37,50 @@ const initialState: ContractState = {
   ],
   limit: limitForContracts,
   scrollPosition: 0,
+  allItems: [],
+  total: 0,
+  checkedItems: [],
 };
 
 const contractSlice = createSlice({
   name: "contract",
   initialState: initialState,
   reducers: {
-    //  setData(state, action: PayloadAction<any>) {
-    //     state.filters = action.payload;
-    //     console.log(action.payload);
-    //     state.currentPage = 1;
-    //   },
+    setCheckedItems(state, action) {
+      state.checkedItems = action.payload;
+    },
     setScrollPosition(state, action: PayloadAction<number>) {
       state.scrollPosition = action.payload;
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(fetchAllContracts.fulfilled, (state, action) => {
+      state.allItems = action?.payload?.data?.map(
+        (item: any, index: number) => ({
+          id: item.id,
+          ردیف: index + 1,
+          "تاریخ قرارداد":
+            item?.contractDate && item?.dateType
+              ? convertDate(item?.contractDate, item?.dateType)
+              : "",
+          مقصد: item?.destinationCountry?.name ?? "",
+          "ثبت کننده": item?.userSubmitter?.fullName ?? "",
+          رضایتمندی: item?.contractSatisfaction[0]?.satisfactionScore
+            ? item?.contractSatisfaction[0]?.satisfactionScore
+            : 0,
+          "نوع قرارداد": item?.contractType?.name,
+          مشتری:
+            item?.mainCustomerSoldto?.person?.firstName &&
+            item?.mainCustomerSoldto?.person?.lastName
+              ? item?.mainCustomerSoldto?.person?.firstName +
+                " " +
+                item?.mainCustomerSoldto?.person?.lastName
+              : "",
+        })
+      );
+    });
     builder.addCase(fetchContracts.fulfilled, (state, action) => {
-      state.items = action?.payload?.data?.map((item: any) => ({
+      state.items = action?.payload?.data?.map((item: any, index: number) => ({
         id: item.id,
         contract: {
           date:
@@ -111,7 +140,29 @@ const contractSlice = createSlice({
           image: "/images/expert.png",
           name: item?.userResponsible?.fullName,
         },
+        exportData: {
+          id: item.id,
+          ردیف: index + 1,
+          "تاریخ قرارداد":
+            item?.contractDate && item?.dateType
+              ? convertDate(item?.contractDate, item?.dateType)
+              : "",
+          مقصد: item?.destinationCountry?.name ?? "",
+          "ثبت کننده": item?.userSubmitter?.fullName ?? "",
+          رضایتمندی: item?.contractSatisfaction[0]?.satisfactionScore
+            ? item?.contractSatisfaction[0]?.satisfactionScore
+            : 0,
+          "نوع قرارداد": item?.contractType?.name,
+          مشتری:
+            item?.mainCustomerSoldto?.person?.firstName &&
+            item?.mainCustomerSoldto?.person?.lastName
+              ? item?.mainCustomerSoldto?.person?.firstName +
+                " " +
+                item?.mainCustomerSoldto?.person?.lastName
+              : "",
+        },
       }));
+
       state.ContractOverviewList = [
         {
           label: " قرار داد کل",
@@ -133,6 +184,7 @@ const contractSlice = createSlice({
       state.totalPages = Math.ceil(
         totalItems / action?.payload?.pagination?.limit
       );
+      state.total = action?.payload?.pagination?.total;
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;
@@ -160,5 +212,23 @@ export const fetchContracts = createAsyncThunk<any, any>(
     }
   }
 );
+export const fetchAllContracts = createAsyncThunk<any, any>(
+  "contract/fetchAllContracts",
+  async ({ page, limit, filters }) => {
+    try {
+      const result = await fetchService(
+        `contract-chadco-customer/filter-contracts?page=${page}&limit=${limit}`,
+        {
+          method: "POST",
+          body: filters,
+        }
+      );
+
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
 export default contractSlice.reducer;
-export const { setScrollPosition } = contractSlice.actions;
+export const { setScrollPosition, setCheckedItems } = contractSlice.actions;

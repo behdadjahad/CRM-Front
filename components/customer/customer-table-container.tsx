@@ -9,11 +9,18 @@ import {
 import { Button } from "../ui/button";
 import { Fragment, useState } from "react";
 import React from "react";
-import { FaChevronDown, FaChevronUp, FaCircle, FaDotCircle } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaCircle,
+  FaDotCircle,
+} from "react-icons/fa";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Rating } from "react-simple-star-rating";
+import { useDispatch, useSelector } from "react-redux";
+import { setCheckedItems } from "@/store/customer-slice";
 export default function CustomerTableContainer({
   tableHeaderLabels,
   customers,
@@ -23,6 +30,7 @@ export default function CustomerTableContainer({
   customers: any[];
   className: string;
 }) {
+  const dispatch = useDispatch<any>();
   const customerRank = [
     {
       label: "طلایی",
@@ -52,7 +60,19 @@ export default function CustomerTableContainer({
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
+  const checkedItems = useSelector((state: any) => state.customer.checkedItems);
 
+  const checkItemHandler = (listItem: any, checked: boolean) => {
+    let updatedItems;
+
+    if (checked) {
+      updatedItems = [...checkedItems, listItem];
+    } else {
+      updatedItems = checkedItems?.filter((obj: any) => obj.id !== listItem.id);
+    }
+
+    dispatch(setCheckedItems(updatedItems));
+  };
   return (
     <div
       className={cn(
@@ -66,8 +86,30 @@ export default function CustomerTableContainer({
             <TableHead className="text-center bg-white">
               {" "}
               <Checkbox
-                onCheckedChange={() => {}}
-                //checked={}
+                onCheckedChange={(checked: boolean) => {
+                  if (checked) {
+                    const updatedCheckItems = checkedItems?.filter(
+                      (item: any) => !customers?.some((l) => l.id === item.id)
+                    );
+                    const exportDataArray = customers.map(
+                      (item: any) => item.exportData
+                    );
+                    dispatch(
+                      setCheckedItems([
+                        ...updatedCheckItems,
+                        ...exportDataArray,
+                      ])
+                    );
+                  } else {
+                    const updatedItems = checkedItems?.filter(
+                      (item: any) => !customers?.some((l) => l.id === item.id)
+                    );
+                    dispatch(setCheckedItems(updatedItems));
+                  }
+                }}
+                checked={customers?.every((item) =>
+                  checkedItems.some((obj: any) => obj.id === item.id)
+                )}
               />
               {""}
             </TableHead>
@@ -90,15 +132,21 @@ export default function CustomerTableContainer({
                 style={{ display: "contents" }} // ✅ Preserves layout
               >
                 <TableRow className="border-b border-gray-200">
-                  {/* <Link
-                  href={`/customer/${customer.id}`}
-                  className="absolute inset-0 z-10"
-                ></Link> */}
-                  <TableCell className="flex items-center justify-center">
+                  <TableCell
+                    className="flex items-center justify-center"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
                     {" "}
                     <Checkbox
-                      onCheckedChange={() => {}}
-                      //checked={}
+                      onCheckedChange={(checked: boolean) => {
+                        checkItemHandler(customer.exportData, checked);
+                      }}
+                      checked={checkedItems.some(
+                        (obj: any) => obj.id === customer.id
+                      )}
                     />
                   </TableCell>
 
@@ -119,7 +167,7 @@ export default function CustomerTableContainer({
                               rankMatch?.className
                             )}
                           >
-                            <FaCircle className="w-2 h-2"/>
+                            <FaCircle className="w-2 h-2" />
                             <span>
                               {" "}
                               {rankMatch?.label

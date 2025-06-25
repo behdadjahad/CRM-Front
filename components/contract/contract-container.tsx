@@ -27,6 +27,7 @@ export default function ContractContainer({
           {...item}
           key={item?.header?.submitDate + item?.user?.name + index}
           mainRef={mainRef}
+          
         />
  
       ))}

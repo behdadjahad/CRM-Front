@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { useReactToPrint } from "react-to-print";
+
 import { pdf } from "@react-pdf/renderer";
 // import pdfMake from "@/lib/pdfmake-setup";
 
 import { TablePDF } from "../section/table-pdf";
-import { useSelector } from "react-redux";
-import { sliceMap } from "@/constants/setting";
+
+import { getTitleFromSlug} from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { exportMultipleSheets } from "@/lib/exportToExcel";
 export interface ExportDataContainerInterface {
@@ -17,24 +17,30 @@ export interface ExportDataContainerInterface {
   list: any[];
   onGetData: any;
   loading: boolean;
+  checkedItems:any[]
 }
-export default function ExportDataContainer({
+ export default function ExportDataContainer({
   headerLabels,
   list,
   onGetData,
   loading,
-}: ExportDataContainerInterface) {
+  checkedItems
+ }: ExportDataContainerInterface) {
+
   const { service } = useParams();
   const [showOptions, setShowOptions] = useState(false);
   const [exporttype, setExport] = useState<string>("");
   const [isChoosenExportData, setIsChoosenExportData] = useState(true);
-  const config = sliceMap[service as keyof typeof sliceMap];
-  const checkedItems = useSelector(
-    (state) => config?.selector(state).checkedItems
-  );
 
+ 
   useEffect(() => {
-    if (!loading && list?.length > 0 && !isChoosenExportData) {
+
+    if (
+      !loading &&
+      list?.length > 0 &&
+      !isChoosenExportData &&
+      checkedItems?.length === 0
+    ) {
       switch (exporttype) {
         case "pdf":
           generatePdf(list);
@@ -50,10 +56,11 @@ export default function ExportDataContainer({
           return;
       }
     }
-  }, [list, loading, exporttype]);
+  }, [list, loading, exporttype,checkedItems,isChoosenExportData]);
   const generatePdf = async (listItems: any[]) => {
+  
     const blob = await pdf(
-      <TablePDF headers={headerLabels} list={listItems} />
+      <TablePDF headers={headerLabels} list={listItems} title={getTitleFromSlug(service)??""} />
     ).toBlob();
 
     const url = URL.createObjectURL(blob);
@@ -65,7 +72,7 @@ export default function ExportDataContainer({
   };
   const Print = async (listItems: any[]) => {
     const blob = await pdf(
-      <TablePDF headers={headerLabels} list={listItems} />
+      <TablePDF headers={headerLabels} list={listItems} title={ getTitleFromSlug(service) ?? ""} />
     ).toBlob();
 
     const url = URL.createObjectURL(blob);
@@ -102,32 +109,37 @@ export default function ExportDataContainer({
 
   const exportData = async (exportType: string) => {
     setExport(exportType);
-    console.log("Export type:", exportType);
 
     if (checkedItems?.length > 0) {
+      const orderedCheckedItems = checkedItems.map((item:any, index:number) => ({
+        ...item,
+        "ردیف": index + 1,
+      }));
+      setIsChoosenExportData(true);
       switch (exportType) {
         case "pdf":
-          await generatePdf(checkedItems);
+          await generatePdf(orderedCheckedItems);
           break;
 
         case "excel":
-          const updatedCheckedItems = checkedItems.map(
-            ({ id, ...rest }:any) => rest
+          const updatedCheckedItems = orderedCheckedItems.map(
+            ({ id, ...rest }: any) => rest
           );
+          console.log(updatedCheckedItems);
           await exportMultipleSheets([
             { sheetName: "", data: updatedCheckedItems },
           ]);
           break;
 
         case "print":
-          await Print(checkedItems);
+          await Print(orderedCheckedItems);
           break;
 
         default:
-          
           break;
       }
     } else {
+
       setIsChoosenExportData(false);
       await onGetData();
     }

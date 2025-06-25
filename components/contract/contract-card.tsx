@@ -12,8 +12,9 @@ import { MdClose } from "react-icons/md";
 import dynamic from "next/dynamic";
 import Satisfaction from "../section/satisfaction";
 import Link from "next/link";
-import { setScrollPosition } from "@/store/contract-slice";
-import { useDispatch } from "react-redux";
+import { setCheckedItems, setScrollPosition } from "@/store/contract-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { Checkbox } from "../ui/checkbox";
 // import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
@@ -50,6 +51,7 @@ export interface ContractCardInterface {
   };
   className?: string;
   mainRef: any;
+  exportData: any;
 }
 
 export default function ContractCard({
@@ -62,6 +64,7 @@ export default function ContractCard({
   user,
   className,
   mainRef,
+  exportData,
 }: ContractCardInterface) {
   const contractData = [
     {
@@ -94,8 +97,21 @@ export default function ContractCard({
   const RatingChart = dynamic(() => import("../shared/rating-chart"), {
     ssr: false,
   });
-  
+
   const [openModal, setOpenModal] = useState(false);
+
+  const checkItemHandler = (listItem: any, checked: boolean) => {
+    let updatedItems;
+
+    if (checked) {
+      updatedItems = [...checkedItems, listItem];
+    } else {
+      updatedItems = checkedItems?.filter((obj: any) => obj.id !== listItem.id);
+    }
+
+    dispatch(setCheckedItems(updatedItems));
+  };
+  const checkedItems = useSelector((state: any) => state.contract.checkedItems);
   return (
     <Link
       className={cn(
@@ -133,6 +149,23 @@ export default function ContractCard({
 
       <div className="p-3.5 flex flex-col gap-4">
         <div className="flex items-center gap-4">
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            {" "}
+            <Checkbox
+              onCheckedChange={(checked: boolean) => {
+                checkItemHandler(exportData, checked);
+              }}
+              checked={checkedItems.some(
+                (obj: any) => obj.id === exportData.id
+              )}
+            />
+          </div>
+
           <Image
             src={user?.image}
             alt={user?.name}
