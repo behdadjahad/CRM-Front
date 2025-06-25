@@ -91,7 +91,7 @@ export default function ExportDataContainer({
 
     const url = URL.createObjectURL(blob);
 
-    // Create a hidden iframe
+
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
     iframe.style.right = "0";
