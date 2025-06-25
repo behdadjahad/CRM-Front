@@ -485,6 +485,9 @@ export default function Sale() {
       })
     );
   }
+    const isChecked = contractLists?.every((item: any) =>
+    checkedItems.some((obj: any) => obj.id === item.id)
+  );
   const getDataHandler = async () => {
     setIsLoading(true);
 
@@ -500,9 +503,7 @@ export default function Sale() {
       setIsLoading(false);
     }
   };
-  const isChecked = contractLists?.every((item: any) =>
-    checkedItems.some((obj: any) => obj.id === item.id)
-  );
+
   function checkItemHandler() {
     if (!isChecked) {
       const updatedCheckItems = checkedItems?.filter(

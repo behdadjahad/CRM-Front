@@ -9,7 +9,7 @@ import { pdf } from "@react-pdf/renderer";
 
 import { TablePDF } from "../section/table-pdf";
 
-import { getTitleFromSlug} from "@/constants/setting";
+import { getTitleFromSlug } from "@/constants/setting";
 import { useParams } from "next/navigation";
 import { exportMultipleSheets } from "@/lib/exportToExcel";
 export interface ExportDataContainerInterface {
@@ -17,33 +17,28 @@ export interface ExportDataContainerInterface {
   list: any[];
   onGetData: any;
   loading: boolean;
-  checkedItems:any[]
+  checkedItems: any[];
 }
- export default function ExportDataContainer({
+export default function ExportDataContainer({
   headerLabels,
   list,
   onGetData,
   loading,
-  checkedItems
- }: ExportDataContainerInterface) {
-
+  checkedItems,
+}: ExportDataContainerInterface) {
+  console.log(list);
   const { service } = useParams();
   const [showOptions, setShowOptions] = useState(false);
   const [exporttype, setExport] = useState<string>("");
-  const [isChoosenExportData, setIsChoosenExportData] = useState(true);
+  const [isChoosenExportData, setIsChoosenExportData] = useState(false);
 
- 
   useEffect(() => {
-
-    if (
-      !loading &&
-      list?.length > 0 &&
-      !isChoosenExportData &&
-      checkedItems?.length === 0
-    ) {
+    setIsChoosenExportData(checkedItems.length > 0);
+  }, [checkedItems]);
+   async function Generate(exporttype: string) {
       switch (exporttype) {
         case "pdf":
-          generatePdf(list);
+          await generatePdf(list);
           break;
         case "excel":
           const updatedList = list.map(({ id, ...rest }) => rest);
@@ -56,11 +51,26 @@ export interface ExportDataContainerInterface {
           return;
       }
     }
-  }, [list, loading, exporttype,checkedItems,isChoosenExportData]);
+  useEffect(() => {
+ 
+    if (
+      !loading &&
+      list?.length > 0 &&
+      !isChoosenExportData &&
+      checkedItems?.length === 0
+    ) {
+      Generate(exporttype);
+    }
+  }, [list, loading, exporttype, checkedItems]);
+
   const generatePdf = async (listItems: any[]) => {
-  
+    console.log(listItems);
     const blob = await pdf(
-      <TablePDF headers={headerLabels} list={listItems} title={getTitleFromSlug(service)??""} />
+      <TablePDF
+        headers={headerLabels}
+        list={listItems}
+        title={getTitleFromSlug(service) ?? ""}
+      />
     ).toBlob();
 
     const url = URL.createObjectURL(blob);
@@ -72,7 +82,11 @@ export interface ExportDataContainerInterface {
   };
   const Print = async (listItems: any[]) => {
     const blob = await pdf(
-      <TablePDF headers={headerLabels} list={listItems} title={ getTitleFromSlug(service) ?? ""} />
+      <TablePDF
+        headers={headerLabels}
+        list={listItems}
+        title={getTitleFromSlug(service) ?? ""}
+      />
     ).toBlob();
 
     const url = URL.createObjectURL(blob);
@@ -111,10 +125,12 @@ export interface ExportDataContainerInterface {
     setExport(exportType);
 
     if (checkedItems?.length > 0) {
-      const orderedCheckedItems = checkedItems.map((item:any, index:number) => ({
-        ...item,
-        "ردیف": index + 1,
-      }));
+      const orderedCheckedItems = checkedItems.map(
+        (item: any, index: number) => ({
+          ...item,
+          ردیف: index + 1,
+        })
+      );
       setIsChoosenExportData(true);
       switch (exportType) {
         case "pdf":
@@ -138,8 +154,10 @@ export interface ExportDataContainerInterface {
         default:
           break;
       }
+    } else if (list?.length > 0) {
+      setIsChoosenExportData(false);
+       Generate(exporttype);
     } else {
-
       setIsChoosenExportData(false);
       await onGetData();
     }
