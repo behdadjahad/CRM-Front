@@ -9,9 +9,9 @@ import {
   Font,
   Image,
 } from "@react-pdf/renderer";
-import { useState } from "react";
 
-// Register font
+
+
 Font.register({
   family: "IRANSans",
   src: "/fonts/IRANSans(FaNum).ttf", // adjust path if needed
@@ -129,7 +129,7 @@ export function TablePDF({
   list: Record<string, any>[];
   title: string;
   }) {
-  console.log(list)
+
   const colWidth = `${100 / headers.length}%`;
   const itemsPerPage = 8;
   const totalPagesOrder = Math.ceil(list.length / itemsPerPage);

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 
-import { pdf } from "@react-pdf/renderer";
+import { pdf, Font } from "@react-pdf/renderer";
 // import pdfMake from "@/lib/pdfmake-setup";
 
 import { TablePDF } from "../section/table-pdf";
@@ -29,42 +29,32 @@ export default function ExportDataContainer({
   console.log(list);
   const { service } = useParams();
   const [showOptions, setShowOptions] = useState(false);
-  const [exporttype, setExport] = useState<string>("");
-  const [isChoosenExportData, setIsChoosenExportData] = useState(false);
+  const [exportOutput, setExportOutput] = useState<string>("");
+  const [isFetchedData, setIsFetchedData] = useState(false);
 
-  useEffect(() => {
-    setIsChoosenExportData(checkedItems.length > 0);
-  }, [checkedItems]);
-   async function Generate(exporttype: string) {
-      switch (exporttype) {
-        case "pdf":
-          await generatePdf(list);
-          break;
-        case "excel":
-          const updatedList = list.map(({ id, ...rest }) => rest);
-          exportMultipleSheets([{ sheetName: "", data: updatedList }]);
-          break;
-        case "print":
-          Print(list);
-          break;
-        default:
-          return;
-      }
+  async function Generate(listItems: any[], exporttype: string) {
+    switch (exporttype) {
+      case "pdf":
+        await generatePdf(listItems);
+        break;
+      case "excel":
+        const updatedList = listItems.map(({ id, ...rest }) => rest);
+        exportMultipleSheets([{ sheetName: "", data: updatedList }]);
+        break;
+      case "print":
+        Print(listItems);
+        break;
+      default:
+        return;
     }
+  }
   useEffect(() => {
- 
-    if (
-      !loading &&
-      list?.length > 0 &&
-      !isChoosenExportData &&
-      checkedItems?.length === 0
-    ) {
-      Generate(exporttype);
+    if (list?.length > 0 && isFetchedData) {
+      Generate(list, exportOutput);
     }
-  }, [list, loading, exporttype, checkedItems]);
+  }, [list, exportOutput]);
 
   const generatePdf = async (listItems: any[]) => {
-    console.log(listItems);
     const blob = await pdf(
       <TablePDF
         headers={headerLabels}
@@ -90,7 +80,6 @@ export default function ExportDataContainer({
     ).toBlob();
 
     const url = URL.createObjectURL(blob);
-
 
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
@@ -122,47 +111,31 @@ export default function ExportDataContainer({
   };
 
   const exportData = async (exportType: string) => {
-    setExport(exportType);
-
+    setExportOutput(exportType);
+    await registerFont();
     if (checkedItems?.length > 0) {
+      setIsFetchedData(false);
       const orderedCheckedItems = checkedItems.map(
         (item: any, index: number) => ({
           ...item,
           ردیف: index + 1,
         })
       );
-      setIsChoosenExportData(true);
-      switch (exportType) {
-        case "pdf":
-          await generatePdf(orderedCheckedItems);
-          break;
-
-        case "excel":
-          const updatedCheckedItems = orderedCheckedItems.map(
-            ({ id, ...rest }: any) => rest
-          );
-          console.log(updatedCheckedItems);
-          await exportMultipleSheets([
-            { sheetName: "", data: updatedCheckedItems },
-          ]);
-          break;
-
-        case "print":
-          await Print(orderedCheckedItems);
-          break;
-
-        default:
-          break;
-      }
+      Generate(orderedCheckedItems, exportType);
     } else if (list?.length > 0) {
-      setIsChoosenExportData(false);
-       Generate(exporttype);
+      setIsFetchedData(false);
+      Generate(list, exportType);
     } else {
-      setIsChoosenExportData(false);
+      setIsFetchedData(true);
       await onGetData();
     }
   };
-
+  async function registerFont() {
+    Font.register({
+      family: "IRANSans",
+      src: "/fonts/IRANSans(FaNum).ttf",
+    });
+  }
   return (
     <div
       className="flex flex-row  gap-2"
