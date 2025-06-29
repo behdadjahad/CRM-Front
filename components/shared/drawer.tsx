@@ -47,7 +47,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
               {item.links.map((linkItem) => (
                 <div key={linkItem.label} className="relative group">
                   {!state && (
-                    <span className="absolute right-full top-1/2 -translate-y-1/2 mr-0 hidden group-hover:flex whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 z-100 shadow-lg transition-opacity">
+                    <span className="absolute right-full top-1/2 -translate-y-1/2 mr-0 hidden group-hover:flex whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 z-1000 shadow-lg transition-opacity">
                       {linkItem.label}
                     </span>
                   )}
@@ -57,6 +57,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
                     className="text-primary-foreground text-xs p-3 rounded-xl relative"
                     activeClassName="bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9"
                     labelClass={!state ? "hidden" : ""}
+                    state={state}
                   />
                 </div>
               ))}
