@@ -55,7 +55,10 @@ export default function SettingContainer({
   const items = useSelector((state) => config?.selector(state).items);
   const pages = useSelector((state) => config?.selector(state).totalPages);
   const filters = useSelector((state) => config?.selector(state).filters);
-   const checkedItems = useSelector(
+  const dateTimeRange = useSelector(
+    (state) => config?.selector(state).dateTimeRange
+  );
+  const checkedItems = useSelector(
     (state) => config?.selector(state).checkedItems
   );
 
@@ -81,7 +84,7 @@ export default function SettingContainer({
       return getSettingDelete(service, item);
     },
     onSuccess: () => {
-      const returnPage = (items.length < 2) ? currentPage - 1 : currentPage;
+      const returnPage = items.length < 2 ? currentPage - 1 : currentPage;
       (dispatch as any)(
         config.fetchAction({
           page: returnPage,
@@ -122,8 +125,7 @@ export default function SettingContainer({
       config.fetchAction({
         page: 1,
         limit: limit,
-        filters: {...filters,keyword:""},
-       
+        filters: { ...filters, keyword: "" },
       })
     );
     settingSearchFormik.resetForm();
@@ -140,8 +142,7 @@ export default function SettingContainer({
         config.fetchAllData({
           page: 1,
           limit: total,
-          filters:filters,
- 
+          filters: filters,
         })
       );
     } finally {
@@ -154,7 +155,6 @@ export default function SettingContainer({
         page: 1,
         limit: Number(data),
         filters: filters,
-     
       })
     );
   }
@@ -309,6 +309,7 @@ export default function SettingContainer({
             headerLabels={createSettingHeaderLabels(service)}
             loading={isLoading}
             checkedItems={checkedItems}
+            dateTimeRange={dateTimeRange}
           />
         </div>
 

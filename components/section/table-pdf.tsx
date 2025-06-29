@@ -10,8 +10,6 @@ import {
   Image,
 } from "@react-pdf/renderer";
 
-
-
 Font.register({
   family: "IRANSans",
   src: "/fonts/IRANSans(FaNum).ttf", // adjust path if needed
@@ -81,7 +79,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 1,
     borderColor: "#bfbfbf",
     padding: 5,
-    width:"fit-content"
+    width: "fit-content",
   },
   tableCol: {
     borderRightWidth: 1,
@@ -97,7 +95,19 @@ const styles = StyleSheet.create({
   },
 });
 const reportDate = convertDate(new Date().toISOString(), dateType);
-const Header = ({ title }: { title: string }) => (
+
+export function TablePDF({
+  headers,
+  list,
+  title,
+  dateTimeRange,
+}: {
+  headers: string[];
+  list: Record<string, any>[];
+  title: string;
+  dateTimeRange: any;
+  }) {
+  const Header = ({ title }: { title: string }) => (
   <View style={styles.header}>
     <Image style={styles.logo} src="/images/logo.png" />
 
@@ -114,21 +124,15 @@ const Header = ({ title }: { title: string }) => (
     >
       <Text style={{ fontSize: 10, color: "#555" }}>
         تاریخ گزارش: {reportDate}
-      </Text>
-      {/* <Text style={{ fontSize: 10, color: "#555" }}>دوره زمانی: {}</Text> */}
+        </Text>
+        { (dateTimeRange.start && dateTimeRange.end )&& <Text style={{ fontSize: 10, color: "#555" }}>
+         از {convertDate(dateTimeRange.start,dateType)} تا {convertDate(dateTimeRange.end,dateType)}
+      </Text>}
+      
+
     </View>
   </View>
 );
-
-export function TablePDF({
-  headers,
-  list,
-  title,
-}: {
-  headers: string[];
-  list: Record<string, any>[];
-  title: string;
-  }) {
 
   const colWidth = `${100 / headers.length}%`;
   const itemsPerPage = 8;

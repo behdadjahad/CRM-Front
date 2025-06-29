@@ -3,14 +3,20 @@ import { cn } from "@/lib/utils";
 import { Checkbox } from "../ui/checkbox";
 import { FaCircle } from "react-icons/fa";
 
-export default function CustomerCard({
+export default function InfoCard({
   className,
-  customer,
+  data,
   labels,
+
+  onCheckChange,
+  checked,
 }: {
   className?: string;
-  customer: any;
+  data: any;
   labels: any;
+
+  onCheckChange: any;
+  checked: boolean;
 }) {
   const customerRank = [
     {
@@ -42,15 +48,24 @@ export default function CustomerCard({
         {labels.map((item: any, index: number) => {
           const rankMatch =
             item.label === "رتبه مشتری"
-              ? customerRank.find((rank) => rank.value === customer[item.label])
+              ? customerRank.find((rank) => rank.value === data[item.label])
               : null;
           return (
             <div key={item.label} className="flex gap-2 items-center">
               {index === 0 && (
-                <Checkbox
-                  onCheckedChange={() => {}}
-                  //checked={}
-                />
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <Checkbox
+                    onCheckedChange={(checked) => {
+                      onCheckChange(data, checked);
+                    }}
+                    checked={checked}
+                  />
+                </div>
               )}
               <div className="flex flex-col justify-between gap-2">
                 <div className="text-xs">
@@ -67,13 +82,11 @@ export default function CustomerCard({
                       <FaCircle className="w-2 h-2" />
                       <span>
                         {" "}
-                        {rankMatch?.label
-                          ? rankMatch?.label
-                          : customer[item.label]}
+                        {rankMatch?.label ? rankMatch?.label : data[item.label]}
                       </span>
                     </div>
                   ) : (
-                    customer[item.label]
+                    data[item.label]
                   )}
                 </div>
               </div>

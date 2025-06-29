@@ -4,7 +4,7 @@ import FormMaker from "../shared/form-maker";
 //import CustomerTableContainer from "./customer-table-container";
 import ReactPaginate from "react-paginate";
 
-import { fetchCustomers } from "@/store/customer-slice";
+import { fetchCustomers, setCheckedItems } from "@/store/customer-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { limitForCustomers } from "@/lib/utils";
 import CustomerTableContainer from "./customer-table-container";
@@ -75,6 +75,7 @@ export default function CustomerTabContent({
     );
   };
   function searchSubmitHandler() {
+    dispatch(setCheckedItems([]));
     const searchValue = customerSearchFormik.values.clientKeyWord;
     dispatch(
       fetchCustomers({

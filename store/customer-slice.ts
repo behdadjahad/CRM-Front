@@ -16,6 +16,10 @@ export interface CustomerState {
   checkedItems: any[];
   total: number;
   allItems: any[];
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: CustomerState = {
@@ -26,6 +30,10 @@ const initialState: CustomerState = {
   checkedItems: [],
   total: 0,
   allItems: [],
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 
 const customerSlice = createSlice({
@@ -132,6 +140,8 @@ const customerSlice = createSlice({
       state.currentPage = action.meta.arg.page;
       const filters = action.meta.arg.filters;
       state.filters = filters;
+      state.dateTimeRange.start =action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end =action?.payload?.meta?.endRangeTime;
     });
   },
 });

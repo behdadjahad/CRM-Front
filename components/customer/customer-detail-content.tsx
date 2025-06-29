@@ -138,6 +138,7 @@ export default function CustomerDetailContent({
     (state: any) => state.customerDetailContract.totalPages
   );
   const total = useSelector((state: any) => state.customerDetailContract.total);
+  const dateTimeRange = useSelector((state: any) => state.customerDetailContract.dateTimeRange);
   const filters = useSelector(
     (state: any) => state.customerDetailContract.filters
   );
@@ -186,6 +187,7 @@ export default function CustomerDetailContent({
               onGetData={getDataHandler}
               loading={isLoading}
               checkedItems={checkedItems}
+              dateTimeRange={dateTimeRange}
             />
           </div>
 

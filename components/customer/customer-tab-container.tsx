@@ -12,17 +12,19 @@ import {
 } from "@/constants/customer-filter-fields";
 import {
   cleanObject,
-
   customerHeaderLabels,
   limitForCustomers,
   priceOptions,
 } from "@/lib/utils";
-import { fetchAllCustomers, fetchCustomers } from "@/store/customer-slice";
+import {
+  fetchAllCustomers,
+  fetchCustomers,
+  setCheckedItems,
+} from "@/store/customer-slice";
 
 import { useDispatch, useSelector } from "react-redux";
 import { convertToGregorian } from "@/lib/date";
 import ExportDataContainer from "@/components/shared/export-data-container";
-
 
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -301,6 +303,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: cleanObject(filters),
       })
     );
+    dispatch(setCheckedItems([]));
   }
   const customerSortlist = [
     {
@@ -346,6 +349,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const total = useSelector((state: any) => state.customer.total);
   const filters = useSelector((state: any) => state.customer.filters);
   const checkedItems = useSelector((state: any) => state.customer.checkedItems);
+  const dateTimeRange = useSelector((state: any) => state.customer.dateTimeRange);
 
   function setTabData(tabKey: string) {
     const filter: any = {};
@@ -379,6 +383,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: filters,
       })
     );
+    dispatch(setCheckedItems([]));
   }
   useEffect(() => {
     dispatch(
@@ -401,6 +406,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: sortData,
       })
     );
+    dispatch(setCheckedItems([]));
   }
   function cancleFilter() {
     formik.resetForm();
@@ -411,6 +417,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         filters: {},
       })
     );
+    dispatch(setCheckedItems([]));
   }
 
   const getDataHandler = async () => {
@@ -452,9 +459,9 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
               onGetData={getDataHandler}
               loading={isLoading}
               checkedItems={checkedItems}
+              dateTimeRange={dateTimeRange}
             />
           </div>
-       
         </div>
 
         <div className="flex items-center justify-between  border border-[#DCE0E4] rounded-lg">

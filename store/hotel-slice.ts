@@ -14,6 +14,10 @@ export interface StationState {
   checkedItems: any[];
   totalItems: any[];
   total: number;
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: StationState = {
@@ -26,6 +30,10 @@ const initialState: StationState = {
   checkedItems: [],
   totalItems: [],
   total: 0,
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 
 const hotelSlice = createSlice({
@@ -81,6 +89,8 @@ const hotelSlice = createSlice({
       state.filters = filters;
 
       state.total = action?.payload?.pagination?.total;
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
     });
     builder.addCase(fetchAllHotels.fulfilled, (state, action) => {
       state.totalItems = action?.payload?.data?.flatMap((item: any) =>

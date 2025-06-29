@@ -18,6 +18,10 @@ export interface CustomerDetailContractState {
   checkedItems: any[];
   total: number;
   limit: number;
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: CustomerDetailContractState = {
@@ -29,12 +33,16 @@ const initialState: CustomerDetailContractState = {
   checkedItems: [],
   total: 0,
   limit: limitForCustomerDetailContracts,
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 const customerDetailContractSlice = createSlice({
   name: "customerDetailContract",
   initialState: initialState,
   reducers: {
-     setCheckedItems(state, action) {
+    setCheckedItems(state, action) {
       state.checkedItems = action.payload;
     },
   },
@@ -44,7 +52,7 @@ const customerDetailContractSlice = createSlice({
       (state, action) => {
         state.allItems = action.payload.data.map(
           (item: any, index: number) => ({
-            "ردیف": index + 1,
+            ردیف: index + 1,
             "شماره قرارداد": item?.contractNo,
             "تاریخ قرارداد": (item?.contractDate, item?.dateType)
               ? convertDate(item?.contractDate, item?.dateType)
@@ -102,6 +110,8 @@ const customerDetailContractSlice = createSlice({
         totalItems / limitForCustomerDetailContracts
       );
       state.currentPage = action.meta.arg.page;
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
     });
   },
 });

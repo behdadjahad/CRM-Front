@@ -1,13 +1,12 @@
 "use client";
 
-
 import React from "react";
-
+import Image from "next/image";
 export interface ExpertInfoInterface {
   list: {
     label?: string;
     value?: string;
-    children?: React.ReactNode;
+    image?: string;
   }[];
 }
 
@@ -15,12 +14,18 @@ export default function ExpertInfoContainer({ list }: ExpertInfoInterface) {
   return (
     <div className="w-full bg-city bg-no-repeat bg-cover flex flex-col gap-1 md:gap-8 md:flex-row text-card rounded-tl-xl rounded-tr-xl  p-3 md:p-6">
       {list.map((item, index) =>
-        item.children ? (
+        item.image ? (
           <div
             key={index}
             className="-translate-y-8 md:-translate-y-10 rounded-full overflow-hidden w-16 h-16 md:w-25 md:h-25"
           >
-            {item.children}
+            <Image
+              src={item.image}
+              alt={"تصویر"}
+              width={107}
+              height={107}
+              className="h-full w-full border-4 border-primary-foreground rounded-full"
+            />
           </div>
         ) : (
           <div

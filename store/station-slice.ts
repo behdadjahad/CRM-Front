@@ -14,7 +14,10 @@ export interface StationState {
   total: number;
   totalItems: any[];
   checkedItems: any[];
-
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: StationState = {
@@ -27,6 +30,10 @@ const initialState: StationState = {
   total: 0,
   totalItems: [],
   checkedItems: [],
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 
 const stationSlice = createSlice({
@@ -73,6 +80,8 @@ const stationSlice = createSlice({
       state.filters = filters;
 
       state.total = action?.payload?.pagination?.total;
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
     });
     builder.addCase(fetchAllStations.fulfilled, (state, action) => {
       state.totalItems = action?.payload?.data?.map(

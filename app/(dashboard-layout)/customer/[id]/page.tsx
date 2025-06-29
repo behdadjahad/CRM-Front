@@ -27,15 +27,8 @@ export default function CustomerDetail() {
           {
             label: "",
             value: "",
-            children: (
-              <Image
-                src={"/images/customer.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-full w-full border-4 border-primary-foreground rounded-full object-cover"
-              />
-            ),
+            image: ""
+ 
           },
           {
             label: "نام و نام خانوادگی",

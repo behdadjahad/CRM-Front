@@ -34,7 +34,10 @@ export interface ContractCardInterface {
     submitter: string;
     destination: string;
     unit: string;
-    customer: string;
+    customer: {
+      name: string;
+      image: string;
+    };
   };
   score: {
     totalVotes: number;
@@ -79,8 +82,8 @@ export default function ContractCard({
     },
     {
       icon: "/icons/user-mute.png",
-      label: "مشتری",
-      value: contract?.customer,
+      label: "مسئول قرارداد",
+      value: user?.name,
     },
     {
       icon: "/icons/map.png",
@@ -166,15 +169,20 @@ export default function ContractCard({
             />
           </div>
 
-          <Image
-            src={user?.image}
-            alt={user?.name}
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full"
-          />
+          {contract?.customer?.image && (
+            <Image
+              src={"http://185.126.203.246:3000/public/" + contract?.customer?.image}
+              alt={contract?.customer?.name}
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full"
+            />
+          )}
 
-          <span className="text-sm">{user?.name}</span>
+          <div className="text-sm flex gap-2">
+            <span className="font-bold">مشتری</span>
+            <span>{contract?.customer?.name}</span>
+          </div>
         </div>
 
         <div className="flex items-start justify-between">

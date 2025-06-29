@@ -27,11 +27,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { totalVotes } from "@/lib/utils";
-import { OptionType } from "@/components/shared/form-maker";
+
 export default function Service() {
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
-
+  const [contract, setContract] = useState<any>(null);
   const { id } = useParams();
   const { mutate: submitService, data: updatedServiceData } = useMutation({
     mutationFn: (data: any) => {
@@ -51,22 +51,24 @@ export default function Service() {
       setServiceList(updatedServices);
     }
   }, [updatedServiceData]);
-  const { data: contract } = useQuery({
+  const { data: contractData } = useQuery({
     queryKey: ["contract"],
     queryFn: async () => await getContractById(Number(id)),
   });
   useEffect(() => {
-    if (contract) {
+    if (contractData) {
       const updatedServices = services.map((obj) => ({
         ...obj,
-        isSelected: contract?.data?.avServices?.includes(obj.name)
+        isSelected: contractData?.data?.avServices?.includes(obj.name)
           ? true
           : obj.isSelected,
       }));
 
       setServiceList(updatedServices);
+      setContract(contractData);
     }
-  }, [contract]);
+  }, [contractData]);
+  console.log(contract?.data?.mainCustomerSoldto?.person?.avatar);
   const contractInfo: ContractInfoInterface = {
     list: [
       {
@@ -108,10 +110,8 @@ export default function Service() {
         value: contract?.data?.description ?? "",
       },
       {
-        label: "رضایت مندی",
-        value: contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
-          ? contract?.data?.contractSatisfaction?.[0]?.satisfactionScore
-          : 0,
+        label: "",
+        value: "",
         score: {
           id: contract?.data?.contractSatisfaction?.[0]?.id,
           isSubmitted: contract?.data?.contractSatisfaction?.[0]
@@ -137,30 +137,31 @@ export default function Service() {
       {
         label: "",
         value: "",
-        children: (
-          <Image
-            src={"/images/receptionist.png"}
-            alt={"تصویر"}
-            width={107}
-            height={107}
-            className="h-full w-full border-4 border-primary-foreground rounded-full"
-          />
-        ),
+        image:contract ? "http://185.126.203.246:3000/public/" + contract?.data?.mainCustomerSoldto?.person?.avatar :""
       },
       {
         label: "نام و نام خانوادگی",
 
-        value: contract?.data?.userResponsible?.fullName,
+        value: contract?.data?.mainCustomerSoldto?.person?.fullName ?? "",
       },
       {
-        label: "نام دپارتمان",
-        value: "ثبت سرویس",
+        label: "کدملی",
+        value: contract?.data?.mainCustomerSoldto?.person?.idNumber ?? "",
       },
       {
-        label: "سمت",
-        value: "مسؤول قرارداد",
+        label: "شغل",
+        value:
+          contract?.data?.mainCustomerSoldto?.person?.personJobs?.[0]?.jobs
+            ?.name,
+      },
+      {
+        label: "شماره تماس",
+        value:
+          contract?.data?.mainCustomerSoldto?.Communication?.mobile?.[0]
+            ?.communicationDetails,
       },
     ],
+    
   };
 
   return (

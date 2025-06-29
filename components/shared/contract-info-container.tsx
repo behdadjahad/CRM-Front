@@ -138,53 +138,61 @@ export default function ContractInfoContainer({
               <div>
                 {" "}
                 {item?.score ? (
-                  <div className="flex gap-2">
-                    <span className="font-bold text-sm text-foreground">
-                      {`${item?.score?.totalVotes} / ${item?.score?.final}`}
-                    </span>
-                    <div
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setOpenModal(true);
-                      }}
-                    >
-                      <Image
-                        src={"/icons/edit-pen.png"}
-                        alt="ادیت"
-                        width={16}
-                        height={16}
-                      />
-                    </div>
-                    <CustomModal
-                      minWidth="0"
-                      maxWidth="700px"
-                      isOpen={openModal}
-                      onRequestClose={() => setOpenModal(false)}
-                      contentLabel="رضایت مندی"
-                    >
-                      <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
-                        <span className="text-lg font-bold">
-                          نظر خود را ثبت کنید
-                        </span>
-                        <MdClose
-                          size={20}
-                          onClick={(e) => {
-                            setOpenModal(false);
-                            e.stopPropagation();
-                          }}
-                          className="cursor-pointer"
+                  <div
+                    className="w-24 flex flex-col items-end"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <RatingChart
+                      value={item?.score?.scoreInPercent}
+                      color="#FFA500"
+                    />
+
+                    <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1 text-foreground">
+                      از مجموع {item?.score?.totalVotes} امتیاز
+                      <div
+                        onClick={() => {
+                          setOpenModal(true);
+                        }}
+                      >
+                        <Image
+                          src={"/icons/edit-pen.png"}
+                          alt="ادیت"
+                          width={16}
+                          height={16}
                         />
                       </div>
-                      <Satisfaction
-                        onCloseHandler={() => {
-                          setOpenModal(false);
-                        }}
-                        itemId={id}
-                        score={item?.score}
-                      />
-                    </CustomModal>
-                    {/* </Link> */}
+                      <CustomModal
+                        minWidth="0"
+                        maxWidth="700px"
+                        isOpen={openModal}
+                        onRequestClose={() => setOpenModal(false)}
+                        contentLabel="رضایت مندی"
+                      >
+                        <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                          <span className="text-lg font-bold">
+                            نظر خود را ثبت کنید
+                          </span>
+                          <MdClose
+                            size={20}
+                            onClick={(e) => {
+                              setOpenModal(false);
+                              e.stopPropagation();
+                            }}
+                            className="cursor-pointer"
+                          />
+                        </div>
+                        <Satisfaction
+                          onCloseHandler={() => {
+                            setOpenModal(false);
+                          }}
+                          itemId={id}
+                          score={item?.score}
+                        />
+                      </CustomModal>
+                    </div>
                   </div>
                 ) : (
                   <span className="font-bold text-sm text-foreground">

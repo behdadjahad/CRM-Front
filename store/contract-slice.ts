@@ -8,6 +8,7 @@ import {
   totalVotes,
 } from "@/lib/utils";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { Satellite } from "lucide-react";
 
 export interface ContractState {
   items: any[];
@@ -23,6 +24,10 @@ export interface ContractState {
   allItems: any[];
   total: number;
   checkedItems: any[];
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: ContractState = {
@@ -40,6 +45,10 @@ const initialState: ContractState = {
   allItems: [],
   total: 0,
   checkedItems: [],
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 
 const contractSlice = createSlice({
@@ -90,13 +99,16 @@ const contractSlice = createSlice({
           destination: item?.destinationCountry?.name ?? "",
           submitter: item?.userSubmitter?.fullName ?? "",
           unit: item?.contractCurrency?.name,
-          customer:
-            item?.mainCustomerSoldto?.person?.firstName &&
-            item?.mainCustomerSoldto?.person?.lastName
-              ? item?.mainCustomerSoldto?.person?.firstName +
-                " " +
-                item?.mainCustomerSoldto?.person?.lastName
-              : "",
+          customer: {
+            name:
+              item?.mainCustomerSoldto?.person?.firstName &&
+              item?.mainCustomerSoldto?.person?.lastName
+                ? item?.mainCustomerSoldto?.person?.firstName +
+                  " " +
+                  item?.mainCustomerSoldto?.person?.lastName
+                : "",
+            image: item?.mainCustomerSoldto?.person?.avatar,
+          },
         },
         footer: {
           // cost: item?.buyPrice ? item?.buyPrice : 0,
@@ -169,7 +181,8 @@ const contractSlice = createSlice({
           // value: (action?.payload?.doneCount && action?.payload?.inProgressCount) ? (action?.payload?.doneCount + action?.payload?.inProgressCount) : "",
           value:
             (action?.payload?.meta?.doneCount ?? 0) +
-            (action?.payload?.meta?.inProgressCount ?? 0),
+            (action?.payload?.meta?.inProgressCount ?? 0) +
+            (action?.payload?.meta?.initialCount ?? 0),
         },
         {
           label: "قرار داد تکمیل شده",
@@ -190,6 +203,8 @@ const contractSlice = createSlice({
       state.filters = filters;
       const limit = action?.payload?.pagination?.limit;
       state.limit = limit;
+      state.dateTimeRange.start =action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end =action?.payload?.meta?.endRangeTime;
     });
   },
 });

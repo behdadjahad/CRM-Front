@@ -65,6 +65,7 @@ export default function Sale() {
     (state: any) => state.contract.ContractOverviewList
   );
   const scrollY = useSelector((state: any) => state.contract.scrollPosition);
+  const dateTimeRange=useSelector((state: any) => state.contract.dateTimeRange);
   const mainRef = useRef<HTMLDivElement>(null);
 
   const { data: contractTypeData } = useQuery({
@@ -579,6 +580,7 @@ export default function Sale() {
             onGetData={getDataHandler}
             loading={isLoading}
             checkedItems={checkedItems}
+            dateTimeRange={dateTimeRange}
           />
         </div>
       </div>

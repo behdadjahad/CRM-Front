@@ -18,15 +18,17 @@ export interface ExportDataContainerInterface {
   onGetData: any;
   loading: boolean;
   checkedItems: any[];
+  dateTimeRange?: any;
 }
 export default function ExportDataContainer({
   headerLabels,
   list,
   onGetData,
-  loading,
+dateTimeRange,
+  
   checkedItems,
 }: ExportDataContainerInterface) {
-  console.log(list);
+
   const { service } = useParams();
   const [showOptions, setShowOptions] = useState(false);
   const [exportOutput, setExportOutput] = useState<string>("");
@@ -60,6 +62,7 @@ export default function ExportDataContainer({
         headers={headerLabels}
         list={listItems}
         title={getTitleFromSlug(service) ?? ""}
+        dateTimeRange={dateTimeRange}
       />
     ).toBlob();
 
@@ -76,6 +79,7 @@ export default function ExportDataContainer({
         headers={headerLabels}
         list={listItems}
         title={getTitleFromSlug(service) ?? ""}
+        dateTimeRange={dateTimeRange}
       />
     ).toBlob();
 

@@ -14,6 +14,10 @@ export interface AirlineState {
   totalItems: any[];
   total: number;
   checkedItems: any[];
+  dateTimeRange: {
+    start: string;
+    end: string;
+  };
 }
 
 const initialState: AirlineState = {
@@ -26,6 +30,10 @@ const initialState: AirlineState = {
   totalItems: [],
   total: 0,
   checkedItems: [],
+  dateTimeRange: {
+    start: "",
+    end: "",
+  },
 };
 
 const airlineSlice = createSlice({
@@ -69,7 +77,8 @@ const airlineSlice = createSlice({
 
       const filters = action.meta.arg.filters;
       state.filters = filters;
-
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
       state.limit = limit;
       state.total = action?.payload?.pagination?.total;
     });
@@ -98,7 +107,7 @@ export const fetchAirlines = createAsyncThunk<any, any>(
         `transportation-co/filter/301?page=${page}&limit=${limit}`,
         {
           method: "POST",
-            body: filters,
+          body: filters,
         }
       );
 
@@ -117,7 +126,7 @@ export const fetchAllAirlines = createAsyncThunk<any, any>(
         `transportation-co/filter/301?page=${page}&limit=${limit}`,
         {
           method: "POST",
-            body: filters,
+          body: filters,
         }
       );
 
@@ -128,4 +137,4 @@ export const fetchAllAirlines = createAsyncThunk<any, any>(
   }
 );
 export default airlineSlice.reducer;
-export const { setAirlineCheckedItems } =airlineSlice.actions;
+export const { setAirlineCheckedItems } = airlineSlice.actions;
