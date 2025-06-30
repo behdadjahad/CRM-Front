@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 
 import NotificationDropDown from "./notification-drop-down";
+import Link from "next/link";
 export interface NotificationCardInterface {
   id: number;
   heading: string;
@@ -49,6 +50,7 @@ export default function NotificationCard({
   hasResponse,
 }: NotificationCardInterface) {
   return (
+    <Link href={"/"} >
     <div className="border-b flex flex-row justify-between items-start gap-2 p-3 w-full">
       <div className="flex flex-col justify-start gap-2">
         <div className="text-xs text-foreground-mute min-w-fit">{time}</div>
@@ -80,6 +82,7 @@ export default function NotificationCard({
           <NotificationDropDown list={dropDownList} />
         </div>
       </div>
-    </div>
+      </div>
+      </Link>
   );
 }

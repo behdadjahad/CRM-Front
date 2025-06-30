@@ -86,7 +86,7 @@ export function CustomToast({
                   onConfirm?.();
                 }}
               >
-                Yes
+                بله
               </button>
               <button
                 style={{
@@ -98,7 +98,7 @@ export function CustomToast({
                 }}
                 onClick={() => toast.dismiss(t.id)}
               >
-                No
+                خیر
               </button>
             </div>
           </div>

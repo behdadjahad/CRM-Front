@@ -166,3 +166,8 @@ export const customerHeaderLabels = [
   "قرارداد",
   "مبلغ آخرین قرارداد",
 ];
+export enum notificationStatus {
+  all = "ALL",
+  read = "READ",
+  unread="UNREAD"
+}

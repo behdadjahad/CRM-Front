@@ -7,6 +7,12 @@ import { headerProps } from "../shared/notification-drawer";
 import { NotificationList } from "../shared/notification-list";
 import { NotificationCardInterface } from "./notification-card";
 import NotificationHeader from "./notification-header";
+import { useEffect, useState } from "react";
+
+import { limitForNotifications, notificationStatus } from "@/lib/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllNotifications } from "@/store/notification-slice";
+import NotificationTabList from "./notification-tab-list";
 
 const notificationList: NotificationCardInterface[] = [
   {
@@ -53,12 +59,24 @@ const notificationList: NotificationCardInterface[] = [
 ];
 
 export default function NotificationContainer() {
+  const dispatch = useDispatch<any>();
+  const [activeTab, setActiveTab] = useState(notificationStatus.all);
+  useEffect(() => {
+    const filters =
+      activeTab === notificationStatus.all ? {} : { status: activeTab };
+    dispatch(
+      fetchAllNotifications({ page: 1, limit: limitForNotifications, filters })
+    );
+  }, [activeTab]);
+
+  const notifications = useSelector((state: any) => state.notification.items);
   const notificationSearchFormik = useFormik({
     initialValues: {
       notificationKeyWord: "",
     },
     onSubmit: async () => {},
   });
+  const tabList = useSelector((state: any) => state.notification.tabList);
   return (
     <div className="w-full flex flex-col gap-2 bg-card rounded-md">
       <div className="w-full flex flex-row px-2 py-4 justify-between">
@@ -94,8 +112,8 @@ export default function NotificationContainer() {
       </div>
       <div className="rounded-lg shadow">
         <NotificationHeader {...headerProps} />
-
-        <NotificationList list={notificationList} />
+        <NotificationTabList tabList={tabList} onChangeTab={setActiveTab} activeTab={activeTab} />
+        <NotificationList list={notifications} />
       </div>
     </div>
   );

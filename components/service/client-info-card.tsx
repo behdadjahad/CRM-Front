@@ -77,6 +77,7 @@ export default function ClientInfoCard({
   });
   function deleteHandler(key: number) {
     CustomToast({
+      type:"custom",
       message: "آیا مشتری حذف شود؟",
       onConfirm: () => deleteCustomerHandler(key),
     });

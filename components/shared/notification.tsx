@@ -46,12 +46,6 @@ const notificationList: NotificationCardInterface[] = [
     hasResponse: false,
   },
 ];
-export const tabList = [
-  { label: "همه اعلان ها", value: "all", count: 5 },
-  { label: "خوانده نشده ها", value: "unread", count: 1 },
-  { label: "خوانده شده ها", value: "read", count: 2 },
-  { label: "رد شده", value: "decline", count: 2 },
-];
 
 export interface NotificationInterface {
   unread: boolean;
@@ -88,8 +82,6 @@ export default function Notification({
       <NotificationDrawer
         setState={setOpenNotification}
         state={openNotification}
-   
-        list={notificationList}
       />
     </div>
   );

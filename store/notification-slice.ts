@@ -1,6 +1,6 @@
 import { fetchService } from "@/boot/fetch-service";
 
-import { limitForNotifications } from "@/lib/utils";
+import { limitForNotifications, notificationStatus } from "@/lib/utils";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -10,17 +10,24 @@ export interface NotificationState {
   totalPages: number;
   filters: any;
   limit: number;
-
+  drawerItems: any[];
   total: number;
+  tabList: any[];
 }
 
 const initialState: NotificationState = {
   items: [],
+  drawerItems: [],
   currentPage: 1,
   totalPages: 0,
   filters: {},
   limit: limitForNotifications,
   total: 0,
+  tabList: [
+    { label: "همه اعلان ها", value: notificationStatus.all, count: 0 },
+    { label: "خوانده نشده ها", value: notificationStatus.unread, count: 0 },
+    { label: "خوانده شده ها", value: notificationStatus.read, count: 0 },
+  ],
 };
 
 const notificationSlice = createSlice({
@@ -29,18 +36,57 @@ const notificationSlice = createSlice({
   reducers: {},
 
   extraReducers: (builder) => {
-      builder.addCase(fetchNotifications.fulfilled, (state, action) => {
-        
+    builder.addCase(fetchAllNotifications.fulfilled, (state, action) => {
+      state.items = action?.payload?.data?.map((item: any) => ({
+        id: item?.id,
+        heading: item?.title,
+        content: item?.body,
+      }));
+      state.tabList = [
+        { label: "همه اعلان ها", value: notificationStatus.all, count: 0 },
+        { label: "خوانده نشده ها", value: notificationStatus.unread, count: 0 },
+        { label: "خوانده شده ها", value: notificationStatus.read, count: 0 },
+      ];
+    });
+    builder.addCase(fetchDrawerNotifications.fulfilled, (state, action) => {
+      state.drawerItems = action?.payload?.data?.map((item: any) => ({
+        id: item?.id,
+        heading: item?.title,
+        content: item?.body,
+      }));
+      state.tabList = [
+        { label: "همه اعلان ها", value: notificationStatus.all, count: 0 },
+        { label: "خوانده نشده ها", value: notificationStatus.unread, count: 0 },
+        { label: "خوانده شده ها", value: notificationStatus.read, count: 0 },
+      ];
     });
   },
 });
 
-export const fetchNotifications = createAsyncThunk<any, any>(
-  "notification/fetchNotifications",
+export const fetchAllNotifications = createAsyncThunk<any, any>(
+  "notification/fetchAllNotifications",
   async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        `notification/filter?page=${page}&limit=${limit}`,
+        `notification?page=${page}&limit=${limit}`,
+        {
+          method: "POST",
+          body: filters,
+        }
+      );
+
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
+export const fetchDrawerNotifications = createAsyncThunk<any, any>(
+  "notification/fetchDrawerNotifications",
+  async ({ page, limit, filters }) => {
+    try {
+      const result = await fetchService(
+        `notification?page=${page}&limit=${limit}`,
         {
           method: "POST",
           body: filters,
