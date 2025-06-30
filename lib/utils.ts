@@ -133,6 +133,7 @@ export const activeFilterTime = 6;
 export const limitForStations = 6;
 export const limitForHotels = 6;
 export const limitForAirlines = 6;
+export const limitForNotifications = 6;
 export function buildRowOptions(total: number, chunkSize: number) {
   if (!total) return [];
   const result = [];

@@ -26,7 +26,7 @@ import ExpertInfoContainer, {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { totalVotes } from "@/lib/utils";
+import { ServerImageAddress, totalVotes } from "@/lib/utils";
 
 export default function Service() {
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
@@ -137,7 +137,9 @@ export default function Service() {
       {
         label: "",
         value: "",
-        image:contract ? "http://185.126.203.246:3000/public/" + contract?.data?.mainCustomerSoldto?.person?.avatar :""
+        image:
+          contract?.data?.mainCustomerSoldto?.person?.avatar ? ServerImageAddress + contract?.data?.mainCustomerSoldto?.person?.avatar :
+          ""
       },
       {
         label: "نام و نام خانوادگی",

@@ -20,7 +20,7 @@ export default function PersonInfoContainer({ list }: PersonInfoInterface) {
             className="-translate-y-8 md:-translate-y-10 rounded-full overflow-hidden w-16 h-16 md:w-25 md:h-25"
           >
             <Image
-              src={item?.image ? item?.image : ""}
+              src={item?.image}
               alt={"تصویر"}
               width={107}
               height={107}

@@ -115,6 +115,8 @@ export default function ContractCard({
     dispatch(setCheckedItems(updatedItems));
   };
   const checkedItems = useSelector((state: any) => state.contract.checkedItems);
+  console.log(header?.icon)
+  console.log(contract?.customer?.image)
   return (
     <Link
       className={cn(
@@ -171,7 +173,7 @@ export default function ContractCard({
 
           {contract?.customer?.image && (
             <Image
-              src={"http://185.126.203.246:3000/public/" + contract?.customer?.image}
+              src={contract?.customer?.image}
               alt={contract?.customer?.name}
               width={40}
               height={40}

@@ -7,6 +7,7 @@ import contractReducer from "./contract-slice";
 import stationReducer from "./station-slice";
 import hotelReducer from "./hotel-slice";
 import airlineReducer from "./airline-slice";
+import notificationReducer from "./notification-slice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     station: stationReducer,
     hotel: hotelReducer,
     airline: airlineReducer,
+    notification: notificationReducer,
   },
 });
 

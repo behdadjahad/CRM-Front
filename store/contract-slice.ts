@@ -107,7 +107,7 @@ const contractSlice = createSlice({
                   " " +
                   item?.mainCustomerSoldto?.person?.lastName
                 : "",
-            image: item?.mainCustomerSoldto?.person?.avatar,
+            image:item?.mainCustomerSoldto?.person?.avatar && ServerImageAddress + item?.mainCustomerSoldto?.person?.avatar,
           },
         },
         footer: {

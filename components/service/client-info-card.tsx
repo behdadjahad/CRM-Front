@@ -9,6 +9,7 @@ import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
+import { CustomToast } from "../shared/custome-toast";
 
 export interface ClientInfoCardInterface {
   data: {
@@ -74,7 +75,12 @@ export default function ClientInfoCard({
       });
     },
   });
-
+  function deleteHandler(key: number) {
+    CustomToast({
+      message: "آیا مشتری حذف شود؟",
+      onConfirm: () => deleteCustomerHandler(key),
+    });
+  }
   return (
     <div className="flex flex-col rounded-lg overflow-hidden  items-start border border-border/20  border-r-primary border-r-[6px]">
       <div
@@ -103,7 +109,8 @@ export default function ClientInfoCard({
                 height={1024}
                 className="w-5 h-5"
                 onClick={() => {
-                  deleteCustomerHandler(clientInfo.deleteKey);
+                  deleteHandler(clientInfo.deleteKey);
+                  // deleteCustomerHandler(clientInfo.deleteKey);
                 }}
               />
             </Button>

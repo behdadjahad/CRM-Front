@@ -7,6 +7,7 @@ interface CustomToastProps {
   type?: ToastType;
   duration?: number;
   position?: "top-center" | "top-right" | "bottom-center" | "bottom-right";
+  onConfirm?: () => void;
 }
 
 export function CustomToast({
@@ -14,6 +15,7 @@ export function CustomToast({
   type,
   duration = 2000,
   position = "top-center",
+  onConfirm,
 }: CustomToastProps) {
   switch (type) {
     case "success":
@@ -47,5 +49,64 @@ export function CustomToast({
       });
 
       break;
+    case "custom":
+      toast.custom(
+        (t) => (
+          <div
+            style={{
+              width: "300px",
+              padding: "16px",
+              borderRadius: "16px",
+              backgroundColor: "#FFF",
+              border: "1px solid #888",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              color: "#000",
+            }}
+          >
+            <span>{message}</span>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "8px",
+              }}
+            >
+              <button
+                style={{
+                  backgroundColor: "#D80027",
+                  color: "#FFF",
+                  padding: "6px 12px",
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  onConfirm?.();
+                }}
+              >
+                Yes
+              </button>
+              <button
+                style={{
+                  backgroundColor: "#CCC",
+                  color: "#000",
+                  padding: "6px 12px",
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+                onClick={() => toast.dismiss(t.id)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        ),
+        {
+          position,
+          duration: Infinity, // Stay open until user decides
+        }
+      );
   }
 }
