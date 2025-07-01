@@ -5,67 +5,31 @@ import FilterContainer from "../section/filter-container";
 import FormMaker from "../shared/form-maker";
 import { headerProps } from "../shared/notification-drawer";
 import { NotificationList } from "../shared/notification-list";
-import { NotificationCardInterface } from "./notification-card";
+
 import NotificationHeader from "./notification-header";
 import { useEffect, useState } from "react";
 
-import { limitForNotifications, notificationStatus } from "@/lib/utils";
+import { limitForDrawerNotifications, limitForNotifications, notificationStatus } from "@/lib/utils";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAllNotifications } from "@/store/notification-slice";
+import { fetchAllNotifications, fetchDrawerNotifications } from "@/store/notification-slice";
 import NotificationTabList from "./notification-tab-list";
-
-const notificationList: NotificationCardInterface[] = [
-  {
-    id: 1,
-    heading: "ویژگی جدید اضافه شد",
-    user: {
-      name: "",
-      image: "",
-      isOnline: false,
-    },
-    content:
-      "خوشحالیم که نسخه به‌روزشده و بهتر تجربه ساخت قالب رو به شما معرفی کنیم.",
-    button: {
-      className: "",
-      title: "الان امتحان کن",
-      variant: "info",
-    },
-    icon: "",
-    review: "",
-    time: "2 دقیقه پیش",
-    className: "",
-    hasResponse: true,
-  },
-  {
-    id: 2,
-    heading: "",
-    user: {
-      name: "",
-      image: "",
-      isOnline: true,
-    },
-    content: "قرارداد جدید از شرکت سیمرغ پرواز ثبت شد و در حال بررسی است.",
-    button: {
-      className: "",
-      title: "الان امتحان کن",
-      variant: "info",
-    },
-    icon: "",
-    review: "",
-    time: "9 اردیبهشت",
-    className: "",
-    hasResponse: false,
-  },
-];
+import ReactPaginate from "react-paginate";
+import { readAllNotification } from "@/api/notification";
+import { useMutation } from "@tanstack/react-query";
 
 export default function NotificationContainer() {
   const dispatch = useDispatch<any>();
+  const filters = useSelector((state: any) => state.notification.filters);
   const [activeTab, setActiveTab] = useState(notificationStatus.all);
   useEffect(() => {
-    const filters =
+    const filter =
       activeTab === notificationStatus.all ? {} : { status: activeTab };
     dispatch(
-      fetchAllNotifications({ page: 1, limit: limitForNotifications, filters })
+      fetchAllNotifications({
+        page: 1,
+        limit: limitForNotifications,
+        filters: { ...filters, filter },
+      })
     );
   }, [activeTab]);
 
@@ -77,6 +41,41 @@ export default function NotificationContainer() {
     onSubmit: async () => {},
   });
   const tabList = useSelector((state: any) => state.notification.tabList);
+  const pages = useSelector((state: any) => state.notification.totalPages);
+
+  const limit = useSelector((state: any) => state.notification.limit);
+  const currentPage = useSelector(
+    (state: any) => state.notification.currentPage
+  );
+  const handlePageChange = (selectedItem: any) => {
+    const selectedPage = selectedItem.selected + 1;
+    dispatch(
+      fetchAllNotifications({
+        page: selectedPage,
+        limit: limit,
+        filters: filters,
+      })
+    );
+  };
+  const { mutate: readNotifications } = useMutation({
+    mutationFn: () => {
+      return readAllNotification();
+    },
+    onSuccess: (result) => {
+      dispatch(
+        fetchAllNotifications({
+          page: currentPage,
+          limit: limit,
+          filters: filters,
+        })
+      );
+      fetchDrawerNotifications({
+        page: 1,
+        limit: limitForDrawerNotifications,
+        filters: filters,
+      });
+    },
+  });
   return (
     <div className="w-full flex flex-col gap-2 bg-card rounded-md">
       <div className="w-full flex flex-row px-2 py-4 justify-between">
@@ -111,9 +110,38 @@ export default function NotificationContainer() {
         </div>
       </div>
       <div className="rounded-lg shadow">
-        <NotificationHeader {...headerProps} />
-        <NotificationTabList tabList={tabList} onChangeTab={setActiveTab} activeTab={activeTab} />
+        <NotificationHeader
+          {...headerProps}
+          onReadHandler={readNotifications}
+        />
+        <NotificationTabList
+          tabList={tabList}
+          onChangeTab={setActiveTab}
+          activeTab={activeTab}
+        />
         <NotificationList list={notifications} />
+      </div>
+      <div className="w-full mt-4 py-6">
+        <ReactPaginate
+          breakLabel="..."
+          nextLabel="صفحه بعد"
+          previousLabel="صفحه قبل"
+          onPageChange={handlePageChange}
+          pageRangeDisplayed={2}
+          marginPagesDisplayed={3}
+          forcePage={currentPage - 1}
+          pageCount={pages}
+          renderOnZeroPageCount={null}
+          containerClassName="w-full relative flex justify-center items-center ltr"
+          pageClassName="mx-3 rounded-md"
+          pageLinkClassName="rounded-md text-sm hover:bg-gray-100  w-10 h-10 flex items-center justify-center"
+          activeClassName="bg-gray-100 rounded-md"
+          previousClassName="absolute right-8"
+          previousLinkClassName="rounded-md text-sm"
+          nextClassName="absolute left-8"
+          nextLinkClassName="rounded-md text-sm"
+          disabledClassName="opacity-50 cursor-not-allowed"
+        />
       </div>
     </div>
   );

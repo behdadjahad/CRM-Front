@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { limitForCustomers } from "@/lib/utils";
 import CustomerTableContainer from "./customer-table-container";
 import CustomerContainer from "./customer-container";
-import ExportDataContainer from "../shared/export-data-container";
+
 
 export default function CustomerTabContent({
   customerList,

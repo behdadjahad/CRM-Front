@@ -1,4 +1,9 @@
-import { cn, limitForNotifications, notificationStatus } from "@/lib/utils";
+import {
+  cn,
+  limitForDrawerNotifications,
+  limitForNotifications,
+  notificationStatus,
+} from "@/lib/utils";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -7,8 +12,13 @@ import { NotificationList } from "./notification-list";
 import NotificationHeader from "../notification/notification-header";
 
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDrawerNotifications } from "@/store/notification-slice";
+import {
+  fetchAllNotifications,
+  fetchDrawerNotifications,
+} from "@/store/notification-slice";
 import NotificationTabList from "../notification/notification-tab-list";
+import { useMutation } from "@tanstack/react-query";
+import { readAllNotification } from "@/api/notification";
 
 export interface NotificationDrawerInterface {
   state: boolean;
@@ -28,17 +38,43 @@ export default function NotificationDrawer({
   const dispatch = useDispatch<any>();
   const [activeTab, setActiveTab] = useState(notificationStatus.all);
   useEffect(() => {
-    const filters =
+    const filter =
       activeTab === notificationStatus.all ? {} : { status: activeTab };
     dispatch(
-      fetchDrawerNotifications({ page: 1, limit: limitForNotifications, filters })
+      fetchDrawerNotifications({
+        page: 1,
+        limit: limitForDrawerNotifications,
+        filters: { ...filters, filter },
+      })
     );
   }, [activeTab]);
 
   const notifications = useSelector(
     (state: any) => state.notification.drawerItems
   );
+  const filters = useSelector((state: any) => state.notification.filters);
   const tabList = useSelector((state: any) => state.notification.tabList);
+  const limit = useSelector((state: any) => state.notification.limit);
+  const currentPage = useSelector(
+    (state: any) => state.notification.currentPage
+  );
+  const { mutate: readNotifications } = useMutation({
+    mutationFn: () => {
+      return readAllNotification();
+    },
+    onSuccess: (result) => {
+      fetchDrawerNotifications({
+        page: 1,
+        limit: limitForDrawerNotifications,
+        filters: filters,
+      });
+      fetchAllNotifications({
+        page: currentPage,
+        limit: limit,
+        filters: filters,
+      });
+    },
+  });
   return (
     <div
       className={cn("h-0 w-0 overflow-hidden top-0 left-0 z-50 fixed", {
@@ -59,8 +95,15 @@ export default function NotificationDrawer({
       >
         <div className="flex flex-col h-full justify-between">
           <div className="flex flex-col gap-2 p-3">
-            <NotificationHeader {...headerProps} />
-            <NotificationTabList tabList={tabList} onChangeTab={setActiveTab} activeTab={activeTab} />
+            <NotificationHeader
+              {...headerProps}
+              onReadHandler={readNotifications}
+            />
+            <NotificationTabList
+              tabList={tabList}
+              onChangeTab={setActiveTab}
+              activeTab={activeTab}
+            />
             <NotificationList list={notifications} />
           </div>
 

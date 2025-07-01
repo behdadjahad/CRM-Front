@@ -1,6 +1,10 @@
 import { fetchService } from "@/boot/fetch-service";
 
-import { limitForNotifications, notificationStatus } from "@/lib/utils";
+import {
+  limitForNotifications,
+  notificationEntityName,
+  notificationStatus,
+} from "@/lib/utils";
 
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
@@ -41,11 +45,44 @@ const notificationSlice = createSlice({
         id: item?.id,
         heading: item?.title,
         content: item?.body,
+        status: item?.status,
+        link:
+          item.entityName === notificationEntityName.flight
+            ? `/contract/service/${item?.entityId}`
+            : item.entityName === notificationEntityName.customer
+            ? `/customer/${item?.entityId}`
+            : item.entityName === notificationEntityName.contract
+            ? `/contract/service/${item?.entityId}`
+            : "",
       }));
+
+      const totalItems = action?.payload?.pagination?.total;
+      state.totalPages = Math.ceil(
+        totalItems / action?.payload?.pagination?.limit
+      );
+
+      const filters = action.meta.arg.filters;
+      state.filters = filters;
+      state.currentPage = action.meta.arg.page;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
+      state.total = action?.payload?.pagination?.total;
       state.tabList = [
-        { label: "همه اعلان ها", value: notificationStatus.all, count: 0 },
-        { label: "خوانده نشده ها", value: notificationStatus.unread, count: 0 },
-        { label: "خوانده شده ها", value: notificationStatus.read, count: 0 },
+        {
+          label: "همه اعلان ها",
+          value: notificationStatus.all,
+          count: action?.payload?.meta?.totalNotifications,
+        },
+        {
+          label: "خوانده نشده ها",
+          value: notificationStatus.unread,
+          count: action?.payload?.meta?.totalUnread,
+        },
+        {
+          label: "خوانده شده ها",
+          value: notificationStatus.read,
+          count: action?.payload?.meta?.totalRead,
+        },
       ];
     });
     builder.addCase(fetchDrawerNotifications.fulfilled, (state, action) => {
@@ -53,11 +90,32 @@ const notificationSlice = createSlice({
         id: item?.id,
         heading: item?.title,
         content: item?.body,
+        status: item?.status,
+        link:
+          item.entityName === notificationEntityName.flight
+            ? `/contract/service/${item?.entityId}`
+            : item.entityName === notificationEntityName.customer
+            ? `/customer/${item?.entityId}`
+            : item.entityName === notificationEntityName.contract
+            ? `/contract/service/${item?.entityId}`
+            : "",
       }));
       state.tabList = [
-        { label: "همه اعلان ها", value: notificationStatus.all, count: 0 },
-        { label: "خوانده نشده ها", value: notificationStatus.unread, count: 0 },
-        { label: "خوانده شده ها", value: notificationStatus.read, count: 0 },
+        {
+          label: "همه اعلان ها",
+          value: notificationStatus.all,
+          count: action?.payload?.meta?.totalNotifications,
+        },
+        {
+          label: "خوانده نشده ها",
+          value: notificationStatus.unread,
+          count: action?.payload?.meta?.totalUnread,
+        },
+        {
+          label: "خوانده شده ها",
+          value: notificationStatus.read,
+          count: action?.payload?.meta?.totalRead,
+        },
       ];
     });
   },

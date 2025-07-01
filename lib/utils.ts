@@ -134,6 +134,7 @@ export const limitForStations = 6;
 export const limitForHotels = 6;
 export const limitForAirlines = 6;
 export const limitForNotifications = 6;
+export const limitForDrawerNotifications = 8;
 export function buildRowOptions(total: number, chunkSize: number) {
   if (!total) return [];
   const result = [];
@@ -170,4 +171,9 @@ export enum notificationStatus {
   all = "ALL",
   read = "READ",
   unread="UNREAD"
+}
+export enum notificationEntityName {
+  flight = "FLIGHT",
+  contract = "CONTRACT",
+  customer="CUSTOMER"
 }
