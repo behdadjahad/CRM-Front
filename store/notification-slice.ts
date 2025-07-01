@@ -1,6 +1,8 @@
 import { fetchService } from "@/boot/fetch-service";
+import { convertDate } from "@/lib/date";
 
 import {
+  dateType,
   limitForNotifications,
   notificationEntityName,
   notificationStatus,
@@ -54,6 +56,7 @@ const notificationSlice = createSlice({
             : item.entityName === notificationEntityName.contract
             ? `/contract/service/${item?.entityId}`
             : "",
+        time: item?.createdAt ? convertDate(item?.createdAt, dateType) : "",
       }));
 
       const totalItems = action?.payload?.pagination?.total;
@@ -99,6 +102,7 @@ const notificationSlice = createSlice({
             : item.entityName === notificationEntityName.contract
             ? `/contract/service/${item?.entityId}`
             : "",
+        time: item?.createdAt ? convertDate(item?.createdAt, dateType) : "",
       }));
       state.tabList = [
         {

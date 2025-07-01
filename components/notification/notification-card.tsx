@@ -81,7 +81,7 @@ export default function NotificationCard({
         }}
       >
         <div className="flex flex-col justify-start gap-2">
-          <div className="text-xs text-foreground-mute min-w-fit">{time}</div>
+          {/* <div className="text-xs text-foreground-mute min-w-fit">{time}</div> */}
           <div className="flex flex-row items-start gap-3">
             {/* <div className="h-12 min-w-12">
             <Image

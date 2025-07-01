@@ -1,7 +1,10 @@
+
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../../globals.css";
 import { Toaster } from "react-hot-toast";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -35,8 +38,10 @@ export default function RootLayout({
       <body
         className={`${iranSansBold.variable} ${iranSansMedium.variable} ${iranSans.variable} antialiased`}
       >
+     
         {children}
         <Toaster />
+    
       </body>
     </html>
   );

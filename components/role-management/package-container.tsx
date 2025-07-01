@@ -1,0 +1,83 @@
+"use client";
+import { useFormik } from "formik";
+import FormMaker from "../shared/form-maker";
+
+import PackageCard from "./package-card";
+import { Button } from "../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addPackage } from "@/api/role-management";
+
+export default function PackageContainer({
+  title,
+  data,
+  fields,
+  onSubmit,
+  initialValues,
+  createSubmitionData,
+  onDelete,
+  editFields,
+  onEdit,
+  editData
+}: {
+  data: any[];
+  title: string;
+  fields: any[];
+  onSubmit: any;
+  initialValues: any;
+  createSubmitionData: any;
+  onDelete: any;
+  editFields: any[];
+    onEdit: any;
+  editData:any[]
+}) {
+  const formik = useFormik({
+    initialValues: initialValues,
+    onSubmit: () => {},
+  });
+
+  return (
+    <div className="w-full flex flex-col gap-4">
+      <div className="w-full">
+        <FormMaker
+          form={formik}
+          fields={[
+            ...fields,
+            {
+              component: "non-field",
+              key: "actions",
+              children: (
+                <Button
+                  variant="info"
+                  onClick={() => {
+                    const data = createSubmitionData(formik.values);
+                    const reset = () => formik.resetForm();
+                    onSubmit(data, reset);
+                  }}
+                >
+                  ثبت
+                </Button>
+              ),
+              className: "w-full md:w-1/6 flex items-start",
+            },
+          ]}
+          className="w-full flex flex-row"
+        />
+      </div>
+      <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {data &&
+          data.map((item, index) => (
+            <PackageCard
+              key={index}
+              data={item}
+              title={title}
+              onDelete={onDelete}
+              editFields={editFields}
+              createSubmitionData={createSubmitionData}
+              onEdit={onEdit}
+              editData={editData[index]}
+            />
+          ))}
+      </div>
+    </div>
+  );
+}
