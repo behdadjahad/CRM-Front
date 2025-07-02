@@ -4,8 +4,6 @@ import FormMaker from "../shared/form-maker";
 
 import PackageCard from "./package-card";
 import { Button } from "../ui/button";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addPackage } from "@/api/role-management";
 
 export default function PackageContainer({
   title,
@@ -17,7 +15,12 @@ export default function PackageContainer({
   onDelete,
   editFields,
   onEdit,
-  editData
+  editData,
+  packageKey,
+  onCheckedChange,
+  selectedItems,
+
+ 
 }: {
   data: any[];
   title: string;
@@ -27,8 +30,12 @@ export default function PackageContainer({
   createSubmitionData: any;
   onDelete: any;
   editFields: any[];
-    onEdit: any;
-  editData:any[]
+  onEdit: any;
+  editData: any[];
+  packageKey: string;
+  onCheckedChange: any;
+  selectedItems: number[];
+
 }) {
   const formik = useFormik({
     initialValues: initialValues,
@@ -37,6 +44,7 @@ export default function PackageContainer({
 
   return (
     <div className="w-full flex flex-col gap-4">
+      <h2>{title}</h2>
       <div className="w-full">
         <FormMaker
           form={formik}
@@ -75,6 +83,13 @@ export default function PackageContainer({
               createSubmitionData={createSubmitionData}
               onEdit={onEdit}
               editData={editData[index]}
+              packageKey={packageKey}
+              onCheckedChange={onCheckedChange}
+              selectedItems={selectedItems}
+              onDropCard={() => {
+                alert();
+              }}
+          
             />
           ))}
       </div>

@@ -6,6 +6,9 @@ import Image from "next/image";
 import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
 import { useState } from "react";
+
+
+
 export interface PackageCardInterface {
   data: { list: { label: string; value: string }[]; id: number };
   title: string;
@@ -14,6 +17,11 @@ export interface PackageCardInterface {
   createSubmitionData: any;
   onEdit: any;
   editData: any;
+  packageKey: string;
+  onCheckedChange: any;
+  selectedItems: number[];
+  onDropCard: any;
+
 }
 
 export default function PackageCard({
@@ -23,17 +31,23 @@ export default function PackageCard({
   editFields,
   createSubmitionData,
   onEdit,
-  editData
+  editData,
+  packageKey,
+  onCheckedChange,
+  selectedItems,
+  onDropCard,
+ 
 }: PackageCardInterface) {
-const[openEditForm,setOpenEditForm]=useState<boolean>(false)
+  const [openEditForm, setOpenEditForm] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: editData,
     onSubmit: () => {},
   });
+
   return (
     <div
       className={cn(
-        "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F] border"
+        "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow border p-3 transition-all duration-200"
       )}
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground border">
@@ -90,49 +104,52 @@ const[openEditForm,setOpenEditForm]=useState<boolean>(false)
               width={1024}
               height={1024}
               className="w-4 h-4"
-              onClick={() => {  setOpenEditForm(true)}}
+              onClick={() => {
+                setOpenEditForm(true);
+              }}
             />
           </Button>
         </div>
-        {openEditForm && <div>
-          {" "}
-          <FormMaker
-            form={formik}
-            fields={[
-              ...editFields,
-              {
-                component: "non-field",
-                key: "actions",
-                children: (
-                  <div className="flex gap-2">
-                  <Button
-                    variant="info"
-                    onClick={() => {
-                      const values = createSubmitionData(formik.values);
+        {openEditForm && (
+          <div>
+            {" "}
+            <FormMaker
+              form={formik}
+              fields={[
+                ...editFields,
+                {
+                  component: "non-field",
+                  key: "actions",
+                  children: (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="info"
+                        onClick={() => {
+                          const values = createSubmitionData(formik.values);
 
-                      onEdit(data?.id, values);
-                      setOpenEditForm(false)
-                    }}
-                  >
-                    ویرایش
-                    </Button>
-                     <Button
-                    variant="foreground"
-                    onClick={() => {
-                      setOpenEditForm(false)
-                    }}
-                  >
-                    لغو
-                  </Button>
+                          onEdit(data?.id, values);
+                          setOpenEditForm(false);
+                        }}
+                      >
+                        ویرایش
+                      </Button>
+                      <Button
+                        variant="foreground"
+                        onClick={() => {
+                          setOpenEditForm(false);
+                        }}
+                      >
+                        لغو
+                      </Button>
                     </div>
-                ),
-                className: "w-full flex items-end",
-              },
-          
-            ]}
-            className="w-full flex flex-col"
-          />
-        </div>}
+                  ),
+                  className: "w-full flex items-end",
+                },
+              ]}
+              className="w-full flex flex-col"
+            />
+          </div>
+        )}
        
       </div>
     </div>
