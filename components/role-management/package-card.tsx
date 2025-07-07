@@ -7,10 +7,19 @@ import FormMaker from "../shared/form-maker";
 import { useFormik } from "formik";
 import { useState } from "react";
 
-
-
+import {
+  useDraggable,
+  useDroppable,
+  DndContext,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
+} from "@dnd-kit/core";
 export interface PackageCardInterface {
-  data: { list: { label: string; value: string }[]; id: number };
+  data: {
+    list: { label: string; value: string }[];
+    id: number;
+    packageCategories?: any[];
+  };
   title: string;
   onDelete: any;
   editFields: any[];
@@ -20,8 +29,9 @@ export interface PackageCardInterface {
   packageKey: string;
   onCheckedChange: any;
   selectedItems: number[];
-  onDropCard: any;
 
+  checked: boolean;
+  isDropTarget: boolean;
 }
 
 export default function PackageCard({
@@ -35,8 +45,9 @@ export default function PackageCard({
   packageKey,
   onCheckedChange,
   selectedItems,
-  onDropCard,
- 
+
+  checked,
+  isDropTarget,
 }: PackageCardInterface) {
   const [openEditForm, setOpenEditForm] = useState<boolean>(false);
   const formik = useFormik({
@@ -44,8 +55,46 @@ export default function PackageCard({
     onSubmit: () => {},
   });
 
+  const id = data.id.toString();
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setDragRef,
+    transform,
+    isDragging,
+  } = useDraggable({
+    id,
+    disabled: !checked,
+    data: () => ({
+      ids: selectedItems.length ? selectedItems : [data.id], // fallback if somehow not selected
+      fromPackageKey: packageKey,
+    }),
+  });
+
+  // Use dnd-kit droppable hook
+  const { isOver, setNodeRef: setDropRef } = useDroppable({
+    id: id,
+    data: { acceptFrom: "packageCategory" }, // example
+  });
+
+  const setRefs = (node: HTMLElement | null) => {
+    setDragRef(node);
+    setDropRef(node);
+  };
+
   return (
     <div
+      ref={setRefs}
+      style={{
+        transform: transform
+          ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+          : undefined,
+        opacity: isDragging ? 0.5 : 1,
+        cursor: checked ? "grab" : "default",
+        border: isOver ? "2px solid blue" : undefined,
+      }}
+      {...attributes}
+      {...listeners}
       className={cn(
         "flex flex-col w-full bg-card rounded-lg overflow-hidden shadow border p-3 transition-all duration-200"
       )}
@@ -58,13 +107,19 @@ export default function PackageCard({
 
       <div className="p-3.5 flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <div>
-            {" "}
-            <Checkbox
-            // onCheckedChange={(checked: boolean) => {}}
-            //   checked={}
-            />
-          </div>
+          {packageKey === "packageCategory" && (
+            <div>
+              {" "}
+              <Checkbox
+                checked={checked}
+                onCheckedChange={(value: boolean) => {
+                  onCheckedChange(data.id, value);
+                }}
+                onClick={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
+              />
+            </div>
+          )}
 
           <div className="flex items-start justify-between">
             <div className="flex flex-col gap-1">
@@ -110,6 +165,14 @@ export default function PackageCard({
             />
           </Button>
         </div>
+        {data?.packageCategories &&
+          data?.packageCategories.length > 0 &&
+          data?.packageCategories.map((category) => (
+            <div key={category.id} className="border rounded-lg p-3 flex text-xs gap-2">
+              <div>{category.name}</div>
+              <div>{category.description}</div>
+            </div>
+          ))}
         {openEditForm && (
           <div>
             {" "}
@@ -150,7 +213,6 @@ export default function PackageCard({
             />
           </div>
         )}
-       
       </div>
     </div>
   );

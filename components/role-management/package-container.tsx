@@ -19,8 +19,6 @@ export default function PackageContainer({
   packageKey,
   onCheckedChange,
   selectedItems,
-
- 
 }: {
   data: any[];
   title: string;
@@ -35,12 +33,14 @@ export default function PackageContainer({
   packageKey: string;
   onCheckedChange: any;
   selectedItems: number[];
-
 }) {
   const formik = useFormik({
     initialValues: initialValues,
     onSubmit: () => {},
   });
+  // Track checked items in the container
+
+  const isDropTarget = packageKey === "package";
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -84,12 +84,12 @@ export default function PackageContainer({
               onEdit={onEdit}
               editData={editData[index]}
               packageKey={packageKey}
-              onCheckedChange={onCheckedChange}
               selectedItems={selectedItems}
-              onDropCard={() => {
-                alert();
+              checked={selectedItems.includes(item.id)}
+              isDropTarget={isDropTarget}
+              onCheckedChange={(id: number, checked: boolean) => {
+                onCheckedChange(checked, id);
               }}
-          
             />
           ))}
       </div>

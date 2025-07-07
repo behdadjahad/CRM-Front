@@ -72,6 +72,20 @@ export async function getPackageCategory() {
     return result;
   } catch {}
 }
+export async function addCategorytoPackage(items: any, id: number) {
+  console.log(id)
+  try {
+    const result = await fetchService(
+      `package-category/add-to-package/${id}`,
+      {
+        method: "POST",
+        body: items,
+      }
+    );
+
+    return result;
+  } catch {}
+}
 export async function addPackageUnit(data: any) {
   try {
     const result = await fetchService("package-unit", {

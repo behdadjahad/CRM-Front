@@ -1,4 +1,5 @@
 import {
+  addCategorytoPackage,
   addPackage,
   addPackageCategory,
   addPackageUnit,
@@ -77,6 +78,11 @@ export const roleManagementData = [
           { label: "توضیحات", value: item.description },
           { label: "قیمت", value: item.price },
         ],
+        packageCategories: item?.packageCategories?.map((category:any) => ({
+          id: category.id,
+          name: category.name,
+          description:category.description
+        }))
       })),
     mapEditData: (data: any[]) =>
       data.map((item) => ({
@@ -176,6 +182,7 @@ export const roleManagementData = [
     editData: ({ value, data }: { value: number; data: any }) =>
       editPackageCategory(value, data),
     deleteData: (value: number) => deletePackageCategory(value),
+    assignData: ({items,itemId }: { items: number[], itemId: number })=>addCategorytoPackage(items,itemId),
   },
 ];
 export const packageUnitData = [

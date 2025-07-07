@@ -2,10 +2,16 @@
 
 import PackageContainer from "@/components/role-management/package-container";
 import PackageUnitContainer from "@/components/role-management/package-unit-container";
-import { packageUnitData, roleManagementData } from "@/constants/role-management";
+import {
+  packageUnitData,
+  roleManagementData,
+} from "@/constants/role-management";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { addCategorytoPackage } from "@/api/role-management";
 export default function RoleManagemant() {
   const queryClient = useQueryClient();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -19,8 +25,30 @@ export default function RoleManagemant() {
       setSelectedItems(updatedSelectedItems);
     }
   }
-  return (
+  const { mutate: assignCategoryHandler} = useMutation({
+    mutationFn: ({ items, packageId }: { items: any; packageId: number }) => {
+      console.log(items,packageId)
+      return addCategorytoPackage(items, packageId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["package"],
+      })
+      setSelectedItems([])
+    }
+  });
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
+    if (!over) return;
+    const { ids: draggedIds, fromPackageKey } = active.data.current();
 
+    if (fromPackageKey === "packageCategory") {
+      assignCategoryHandler({ items: { ids:draggedIds }, packageId: over.id });;
+      console.log(over.id);
+    }
+  }
+  return (
+    <DndContext onDragEnd={handleDragEnd}>
       <main className="flex bg-background-active h-screen flex-col lg:flex-row justify-center lg:justify-between">
         {" "}
         <div className="w-full flex flex-col gap-4">
@@ -38,7 +66,7 @@ export default function RoleManagemant() {
               onSuccess: () =>
                 queryClient.invalidateQueries({ queryKey: [item.key] }),
             });
-        
+
             const { mutate: deleteDataHandler } = useMutation({
               mutationFn: item.deleteData,
               onSuccess: () =>
@@ -61,7 +89,6 @@ export default function RoleManagemant() {
                   addDataHandler(data);
                   reset();
                 }}
-               
                 onDelete={(value: number) => {
                   deleteDataHandler(value);
                 }}
@@ -91,7 +118,7 @@ export default function RoleManagemant() {
               onSuccess: () =>
                 queryClient.invalidateQueries({ queryKey: [item.key] }),
             });
-        
+
             const { mutate: deleteDataHandler } = useMutation({
               mutationFn: item.deleteData,
               onSuccess: () =>
@@ -114,7 +141,6 @@ export default function RoleManagemant() {
                   addDataHandler(data);
                   reset();
                 }}
-               
                 onDelete={(value: number) => {
                   deleteDataHandler(value);
                 }}
@@ -128,12 +154,14 @@ export default function RoleManagemant() {
                 onCheckedChange={checkItemsHandler}
                 selectedItems={selectedItems}
                 subFields={item?.subFields ? item?.subFields : []}
-                subInitialValues={item.subInitialValues ? item.subInitialValues: {}}
+                subInitialValues={
+                  item.subInitialValues ? item.subInitialValues : {}
+                }
               />
             );
           })}
         </div>
       </main>
-
+    </DndContext>
   );
 }
