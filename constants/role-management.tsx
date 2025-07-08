@@ -14,6 +14,7 @@ import {
   getPackageUnit,
 } from "@/api/role-management";
 
+export const unitType = [{ label: "", value: "" }];
 export const roleManagementData = [
   {
     key: "package",
@@ -78,11 +79,11 @@ export const roleManagementData = [
           { label: "توضیحات", value: item.description },
           { label: "قیمت", value: item.price },
         ],
-        packageCategories: item?.packageCategories?.map((category:any) => ({
+        packageCategories: item?.packageCategories?.map((category: any) => ({
           id: category.id,
           name: category.name,
-          description:category.description
-        }))
+          description: category.description,
+        })),
       })),
     mapEditData: (data: any[]) =>
       data.map((item) => ({
@@ -182,7 +183,8 @@ export const roleManagementData = [
     editData: ({ value, data }: { value: number; data: any }) =>
       editPackageCategory(value, data),
     deleteData: (value: number) => deletePackageCategory(value),
-    assignData: ({items,itemId }: { items: number[], itemId: number })=>addCategorytoPackage(items,itemId),
+    assignData: ({ items, itemId }: { items: number[]; itemId: number }) =>
+      addCategorytoPackage(items, itemId),
   },
 ];
 export const packageUnitData = [
@@ -232,7 +234,15 @@ export const packageUnitData = [
         placeholder: "نام پلن هزینه",
         type: "text",
         floating: true,
-        className: "w-full",
+        className: "w-full md:w-1/3",
+      },
+      {
+        key: "price",
+        component: "input",
+        placeholder: "هزینه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
       },
       {
         key: "description",
@@ -282,3 +292,100 @@ export const packageUnitData = [
     deleteSubData: (value: number) => deletePackageUnit(value),
   },
 ];
+export const pageData = 
+  {
+    key: "page",
+    title: "صفحه",
+    fields: [
+      {
+        key: "title",
+        component: "input",
+        placeholder: "نام صفحه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/6",
+      },
+      {
+        key: "code",
+        component: "input",
+        placeholder: "کد",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/6",
+      },
+      {
+        key: "url",
+        component: "input",
+        placeholder: "آدرس صفحه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/6",
+      },
+    ],
+    editFields: [
+        {
+        key: "title",
+        component: "input",
+        placeholder: "نام صفحه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
+      },
+      {
+        key: "code",
+        component: "input",
+        placeholder: "کد",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
+      },
+      {
+        key: "url",
+        component: "input",
+        placeholder: "آدرس صفحه",
+        type: "text",
+        floating: true,
+        className: "w-full md:w-1/3",
+      },
+    ],
+    subFields: [
+    ],
+    mapData: (data: any[]) =>
+      data.map((item) => ({
+        id: item?.id,
+        list: [
+          { label: "نام واحد پکیج", value: item.name },
+          { label: "توضیحات", value: item.description },
+        ],
+      })),
+    mapEditData: (data: any[]) =>
+      data.map((item) => ({
+        id: item?.id,
+        name: item.name,
+        description: item.description,
+      })),
+    initialValues: {
+      title: "",
+      code: "",
+      url:""
+    },
+    subInitialValues: {
+      title: "",
+      description: "",
+    },
+    createSubmitionData: (values: any) => {
+      return {
+        name: values.name,
+        description: values.description,
+      };
+    },
+    getData: () => getPackageUnit(),
+    addData: (data: any) => addPackageUnit(data),
+    addSubData: (data: any) => addPackageUnit(data),
+    editData: ({ value, data }: { value: number; data: any }) =>
+      editPackageUnit(value, data),
+    editSubData: ({ value, data }: { value: number; data: any }) =>
+      editPackageUnit(value, data),
+    deleteData: (value: number) => deletePackageUnit(value),
+    deleteSubData: (value: number) => deletePackageUnit(value),
+  }

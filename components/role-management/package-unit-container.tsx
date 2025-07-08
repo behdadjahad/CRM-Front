@@ -73,7 +73,7 @@ export default function PackageUnitContainer({
           className="w-full flex flex-row"
         />
       </div>
-      <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex flex-col w-full md:grid md:grid-cols-2  gap-4">
         {data &&
           data.map((item, index) => (
             <PackageUnitCard
@@ -91,6 +91,7 @@ export default function PackageUnitContainer({
               onDropCard={() => {
                 alert();
               }}
+              subFields={subFields}
             />
           ))}
       </div>

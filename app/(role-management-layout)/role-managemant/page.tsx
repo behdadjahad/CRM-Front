@@ -4,6 +4,7 @@ import PackageContainer from "@/components/role-management/package-container";
 import PackageUnitContainer from "@/components/role-management/package-unit-container";
 import {
   packageUnitData,
+  pageData,
   roleManagementData,
 } from "@/constants/role-management";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -12,6 +13,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { addCategorytoPackage } from "@/api/role-management";
+import PageContainer from "@/components/role-management/page-container";
 export default function RoleManagemant() {
   const queryClient = useQueryClient();
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -25,17 +27,17 @@ export default function RoleManagemant() {
       setSelectedItems(updatedSelectedItems);
     }
   }
-  const { mutate: assignCategoryHandler} = useMutation({
+  const { mutate: assignCategoryHandler } = useMutation({
     mutationFn: ({ items, packageId }: { items: any; packageId: number }) => {
-      console.log(items,packageId)
+      console.log(items, packageId);
       return addCategorytoPackage(items, packageId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["package"],
-      })
-      setSelectedItems([])
-    }
+      });
+      setSelectedItems([]);
+    },
   });
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -43,13 +45,13 @@ export default function RoleManagemant() {
     const { ids: draggedIds, fromPackageKey } = active.data.current();
 
     if (fromPackageKey === "packageCategory") {
-      assignCategoryHandler({ items: { ids:draggedIds }, packageId: over.id });;
+      assignCategoryHandler({ items: { ids: draggedIds }, packageId: over.id });
       console.log(over.id);
     }
   }
   return (
     <DndContext onDragEnd={handleDragEnd}>
-      <main className="flex bg-background-active h-screen flex-col lg:flex-row justify-center lg:justify-between">
+      <main className="flex bg-background-active h-screen flex-col  justify-center lg:justify-between">
         {" "}
         <div className="w-full flex flex-col gap-4">
           {roleManagementData.map((item) => {
@@ -161,6 +163,7 @@ export default function RoleManagemant() {
             );
           })}
         </div>
+        <PageContainer {...pageData} key={pageData.key} />
       </main>
     </DndContext>
   );

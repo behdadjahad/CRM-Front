@@ -2,10 +2,20 @@ import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 
-export default function UnitCostForm({ subFields,subInitialValues }: { subFields: any[],subInitialValues:any[] }) {
+export default function UnitCostForm({
+  subFields,
+  subInitialValues,
+  data,
+  onRemove,
+}: {
+  subFields: any[];
+  subInitialValues: any[];
+  data: any;
+  onRemove: any;
+}) {
   const formik = useFormik({
     initialValues: subInitialValues,
-  
+
     onSubmit: async () => {},
   });
   return (
@@ -22,7 +32,12 @@ export default function UnitCostForm({ subFields,subInitialValues }: { subFields
                 <Button variant="info" onClick={() => {}}>
                   ثبت
                 </Button>
-                <Button variant="foreground" onClick={() => {}}>
+                <Button
+                  variant="foreground"
+                  onClick={() => {
+                    onRemove(data?.id);
+                  }}
+                >
                   حذف
                 </Button>
               </div>
@@ -30,7 +45,7 @@ export default function UnitCostForm({ subFields,subInitialValues }: { subFields
             className: "w-full flex items-end",
           },
         ]}
-        className="w-full flex flex-col"
+        className="w-full flex"
       />
     </div>
   );

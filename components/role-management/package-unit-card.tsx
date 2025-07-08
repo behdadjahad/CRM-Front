@@ -10,7 +10,6 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import UnitCostForm from "./unit-cost-form";
 
-
 export interface PackageCardInterface {
   data: { list: { label: string; value: string }[]; id: number };
   title: string;
@@ -23,9 +22,10 @@ export interface PackageCardInterface {
   onCheckedChange: any;
   selectedItems: number[];
   onDropCard: any;
+  subFields: any[];
 }
 
-export default function PackageCard({
+export default function PackageUnitCard({
   data,
   title,
   onDelete,
@@ -37,6 +37,7 @@ export default function PackageCard({
   onCheckedChange,
   selectedItems,
   onDropCard,
+  subFields,
 }: PackageCardInterface) {
   const [addedFroms, setAddedForms] = useState<any[]>([]);
   const [openEditForm, setOpenEditForm] = useState<boolean>(false);
@@ -53,7 +54,9 @@ export default function PackageCard({
       },
     ]);
   }
-
+  function removeHandler(id: number) {
+    console.log()
+  }
   return (
     <div
       className={cn(
@@ -173,7 +176,13 @@ export default function PackageCard({
       </Button>
       <div className="flex flex-col gap-4">
         {addedFroms.map((item) => (
-          <UnitCostForm subFields={[]} subInitialValues={[]} key={item.id} />
+          <UnitCostForm
+            subFields={subFields}
+            subInitialValues={[]}
+            key={item.id}
+            data={item}
+            onRemove={removeHandler}
+          />
         ))}
       </div>
     </div>

@@ -72,16 +72,14 @@ export async function getPackageCategory() {
     return result;
   } catch {}
 }
+
 export async function addCategorytoPackage(items: any, id: number) {
-  console.log(id)
+  console.log(id);
   try {
-    const result = await fetchService(
-      `package-category/add-to-package/${id}`,
-      {
-        method: "POST",
-        body: items,
-      }
-    );
+    const result = await fetchService(`package-category/add-to-package/${id}`, {
+      method: "POST",
+      body: items,
+    });
 
     return result;
   } catch {}
@@ -118,6 +116,78 @@ export async function deletePackageUnit(id: number) {
 export async function getPackageUnit() {
   try {
     const result = await fetchService("package-unit");
+
+    return result;
+  } catch {}
+}
+export async function addPackageUnitCost(data: any) {
+  try {
+    const result = await fetchService("package-unit-cost", {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function editPackageUnitCost(id: number, data: any) {
+  try {
+    const result = await fetchService(`package-unit-cost/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deletePackageUnitCost(id: number) {
+  try {
+    const result = await fetchService(`package-unit-cost/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}
+export async function getPackageUnitCost() {
+  try {
+    const result = await fetchService("package-unit-cost");
+
+    return result;
+  } catch {}
+}
+export async function addPage(data: any) {
+  try {
+    const result = await fetchService("page", {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deletePage(id: number) {
+  try {
+    const result = await fetchService(`page/${id}`, {
+         method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}
+export async function editPage(id: number, data: any) {
+  try {
+    const result = await fetchService(`page/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function getPage() {
+  try {
+    const result = await fetchService("page");
 
     return result;
   } catch {}
