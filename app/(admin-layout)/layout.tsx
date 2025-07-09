@@ -1,10 +1,16 @@
-'use client'
+"use client";
 
-
+import "../../globals.css";
+import Layout from "@/components/shared/layout";
 import localFont from "next/font/local";
 import "../../globals.css";
-import { Toaster } from "react-hot-toast";
+import { store } from "../../store";
+import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
+import "leaflet/dist/leaflet.css";
+import AdminLayout from "@/components/admin/admin-layout";
+
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -23,8 +29,8 @@ const iranSans = localFont({
   weight: "400",
 });
 
-
 const queryClient = new QueryClient();
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,11 +41,14 @@ export default function RootLayout({
       <body
         className={`${iranSansBold.variable} ${iranSansMedium.variable} ${iranSans.variable} antialiased`}
       >
-         <QueryClientProvider client={queryClient}>
-        {children}
+        <QueryClientProvider client={queryClient}>
+          <Provider store={store}>
+            <AdminLayout>{children}</AdminLayout>
+          </Provider>
+        </QueryClientProvider>
         <Toaster />
-         </QueryClientProvider>
       </body>
     </html>
   );
 }
+
