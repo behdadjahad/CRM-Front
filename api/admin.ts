@@ -73,7 +73,7 @@ export async function getPackageCategory() {
   } catch {}
 }
 
-export async function addCategorytoPackage(items: any, id: number) {
+export async function addCategorytoPackage( id: number,items: any) {
   console.log(id);
   try {
     const result = await fetchService(`package-category/add-to-package/${id}`, {

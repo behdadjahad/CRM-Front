@@ -17,6 +17,7 @@ import ListPreview from "./list-preview";
 import DateTimeInput from "./date-time-input";
 import TimeInput from "./time-input";
 import SuggestionInput from "./suggestion-input";
+import MultiSelectInput from "./multi-select-input";
 
 export interface OptionType {
   label: string;
@@ -28,6 +29,7 @@ export interface FieldType {
   component:
     | "input"
     | "Select"
+    | "multi-select"
     | "SuggestionInput"
     | "date"
     | "date-time"
@@ -99,6 +101,8 @@ export default function FormMaker({
       switch (item.component) {
         case "Select":
           return <SelectInput form={form} item={item} />;
+        case "multi-select":
+          return <MultiSelectInput form={form} item={item} />;
         case "SuggestionInput":
           return <SuggestionInput form={form} item={item} />;
         case "input":

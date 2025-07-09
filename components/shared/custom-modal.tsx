@@ -9,6 +9,7 @@ type CustomModalProps = {
   minWidth?: string;
   maxWidth?: string;
   overflow?: string;
+  minHeight?: string;
 };
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -19,6 +20,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   minWidth = "0",
   maxWidth = "600px",
   overflow = "auto",
+  minHeight
 }) => {
   return (
     <Modal
@@ -37,6 +39,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           maxHeight: "auto",
           overflow,
           margin: "auto",
+          minHeight
         },
       }}
     >
