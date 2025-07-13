@@ -11,7 +11,7 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         icon: (
           <Image
             src={"/icons/report-menu-icon.png"}
-            alt="مشتری"
+            alt="پکیج"
             width={1024}
             height={1024}
             className="w-6 h-6"
@@ -24,7 +24,20 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         icon: (
           <Image
             src={"/icons/report-menu-icon.png"}
-            alt="گزارش ها"
+            alt="دسته بندی پکیج"
+            width={1024}
+            height={1024}
+            className="w-5.5 h-5.5"
+          />
+        ),
+      },
+      {
+        label: " واحد پکیج",
+        link: "/admin/unit-package",
+        icon: (
+          <Image
+            src={"/icons/report-menu-icon.png"}
+            alt="واحدپکیج"
             width={1024}
             height={1024}
             className="w-5.5 h-5.5"

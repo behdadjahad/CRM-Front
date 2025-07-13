@@ -25,7 +25,7 @@ export default function Package() {
     queryFn: async () => await getPackage(),
   });
   const { packageList } = getData(packageData);
-  console.log(packageData);
+ 
   return (
     <main>
       <Title label="پکیج" />

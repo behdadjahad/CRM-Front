@@ -12,15 +12,8 @@ import { Fragment, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-export interface CategoryDataInterface {
-  id: number;
-  list: {
-    label: string;
-    value: string;
-  }[];
-  // You can add unitList here later for next nested level
-  unitList?: any[];
-}
+import { CategoryDataInterface } from "@/app/(admin-layout)/admin/category/page";
+
 
 export interface CategoryTableProps {
   categoryList: CategoryDataInterface[];
