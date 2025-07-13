@@ -11,25 +11,66 @@ import {
 import { useState, Fragment } from "react";
 import Image from "next/image";
 import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa";
-import { PackageDataInterface } from "@/app/(admin-layout)/admin/package/page";
+import {
+  PackageDataInterface,
+  PackageInterface,
+} from "@/app/(admin-layout)/admin/package/page";
 import { Button } from "@/components/ui/button";
 import CategoryTable from "./category-table";
-import { cn } from "@/lib/utils";
-import AddCategoryToPackage from "../category/add-category-to-package";
 
-export interface PackageTableProps {
-  packageList: PackageDataInterface[];
+import AddCategoryToPackage from "../category/add-category-to-package";
+import { deletePackage, editPackage } from "@/api/admin";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import EditableForm from "../forms/editable-form";
+import {
+  createFormFields,
+  formDataInterface,
+} from "@/constants/admin-creation-form-fields";
+
+export interface PackageTableInterface {
+  packageList: PackageInterface[];
 }
 
-export default function PackageTable({ packageList }: PackageTableProps) {
+export default function PackageTable({ packageList }: PackageTableInterface) {
+  const { packageEditFormData } = getData("package");
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
-
+  const queryClient = useQueryClient();
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
-  console.log(packageList);
+  const { mutate: deletePackageHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return deletePackage(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageData"],
+      });
+    },
+  });
+  const { mutate: editPackageHandler } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return editPackage(id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageData"],
+      });
+    },
+  });
+  function editHandler(values: PackageDataInterface) {
+    const data = {
+      title: values.title,
+      description: values.description,
+      price: values.price,
+    };
+    editPackageHandler({
+      id: values.id,
+      data: data,
+    });
+  }
   return (
     <Table>
       <TableHeader>
@@ -65,7 +106,9 @@ export default function PackageTable({ packageList }: PackageTableProps) {
                 <div className="flex items-center gap-4 w-full justify-center">
                   <Button
                     className="border-none p-0 text-[##212B36]"
-                    onClick={() => {}}
+                    onClick={() => {
+                      deletePackageHandler(pkg.id);
+                    }}
                   >
                     <Image
                       src="/icons/trash.png"
@@ -73,19 +116,13 @@ export default function PackageTable({ packageList }: PackageTableProps) {
                       width={1024}
                       height={1024}
                       className="w-5 h-5"
-                      onClick={() => {}}
                     />
                   </Button>
-                  <Button className="border-none p-0 text-[##212B36]">
-                    <Image
-                      src="/icons/edit-primary.png"
-                      alt=""
-                      width={1024}
-                      height={1024}
-                      className="w-4 h-4"
-                      onClick={() => {}}
-                    />
-                  </Button>
+                  <EditableForm
+                    fields={packageEditFormData.fields}
+                    initialValues={pkg.data}
+                    onEditForm={editHandler}
+                  />
                 </div>
               </TableCell>
               <TableCell className="text-center border">
@@ -115,7 +152,11 @@ export default function PackageTable({ packageList }: PackageTableProps) {
                       <AddCategoryToPackage packageId={pkg?.id} />
                     </div>
 
-                    <CategoryTable categoryList={pkg?.categoryList} />
+                    <CategoryTable
+                      categoryList={pkg?.categoryList}
+                      isPackageSubTable={true}
+                      packageId={pkg?.id}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -125,4 +166,13 @@ export default function PackageTable({ packageList }: PackageTableProps) {
       </TableBody>
     </Table>
   );
+}
+
+function getData(formType: string) {
+  const editFormData: formDataInterface = createFormFields(formType);
+  const packageEditFormData = {
+    fields: editFormData.fields,
+  };
+
+  return { packageEditFormData };
 }

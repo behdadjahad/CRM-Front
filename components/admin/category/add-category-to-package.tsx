@@ -35,7 +35,7 @@ export default function AddCategoryToPackage({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["package"],
+        queryKey: ["packageData"],
       });
 
       setOpenModal(false);
@@ -60,7 +60,7 @@ export default function AddCategoryToPackage({
         className={cn("text-aqua-foreground text-xs")}
       >
         <FaPlus />
-        افزودن دسته بندی
+        افزودن دسته بندی به پکیج
       </Button>
 
       <CustomModal

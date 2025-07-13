@@ -73,13 +73,27 @@ export async function getPackageCategory() {
   } catch {}
 }
 
-export async function addCategorytoPackage( id: number,items: any) {
+export async function addCategorytoPackage(id: number, items: any) {
   console.log(id);
   try {
     const result = await fetchService(`package-category/add-to-package/${id}`, {
       method: "POST",
       body: items,
     });
+
+    return result;
+  } catch {}
+}
+export async function deleteCategoryFromPackage(id: number, items: number[]) {
+  const data = { ids: items };
+  try {
+    const result = await fetchService(
+      `package-category/remove-from-package/${id}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     return result;
   } catch {}
@@ -169,7 +183,7 @@ export async function addPage(data: any) {
 export async function deletePage(id: number) {
   try {
     const result = await fetchService(`page/${id}`, {
-         method: "DELETE",
+      method: "DELETE",
     });
 
     return result;

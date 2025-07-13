@@ -33,7 +33,7 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
       },
       {
         label: " واحد پکیج",
-        link: "/admin/unit-package",
+        link: "/admin/package-unit",
         icon: (
           <Image
             src={"/icons/report-menu-icon.png"}
