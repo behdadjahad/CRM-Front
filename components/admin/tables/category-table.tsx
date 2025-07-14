@@ -28,6 +28,7 @@ import {
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
 import PackageUnitTable from "./package-unit-table";
+import AddPackageUnitToCategory from "../package-unit/add-package-unit-to-category";
 
 export interface CategoryTableInterface {
   categoryList: CategoryInterface[];
@@ -101,7 +102,7 @@ export default function CategoryTable({
       deleteCategoryHandler(id);
     }
   }
- 
+
   return (
     <Table className="mt-2 border">
       <TableHeader>
@@ -178,8 +179,13 @@ export default function CategoryTable({
                   colSpan={category.list.length + 2}
                   className="text-sm text-gray-700 p-4"
                 >
+              
                   <div className="flex flex-col gap-2">
-                    <div className="font-semibold mb-2">لیست واحدها</div>
+                    <div className="flex items-center justify-between">
+                      <div>لیست واحدها</div>
+
+                      <AddPackageUnitToCategory  />
+                    </div>
 
                     <PackageUnitTable
                       packageUnitList={category.packageUnitList}

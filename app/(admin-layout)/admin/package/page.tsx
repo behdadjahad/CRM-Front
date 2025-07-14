@@ -6,7 +6,7 @@ import PackageContainer from "@/components/admin/package-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
-import { CategoryDataInterface } from "../category/page";
+import { CategoryDataInterface, CategoryInterface } from "../category/page";
 export interface PackageDataInterface {
   id: number;
   title: string;
@@ -20,14 +20,7 @@ export interface PackageInterface {
     value: string;
   }[];
   data: PackageDataInterface;
-  categoryList: {
-    id: number;
-    list: {
-      label: string;
-      value: string;
-    }[];
-    data: CategoryDataInterface;
-  }[];
+  categoryList: CategoryInterface[];
 }
 
 export default function Package() {

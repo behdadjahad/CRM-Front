@@ -26,6 +26,7 @@ import {
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
 import AddUnitCostToPackageUnit from "../unit-cost/add-unit-cost-to-package-unit";
+import UnitCostTable from "./unit-cost-table";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -155,8 +156,15 @@ export default function PackageUnitTable({
                   colSpan={unit.list.length + 2}
                   className="text-sm text-gray-700 p-4"
                 >
-                  <AddUnitCostToPackageUnit 
-                    packageUnitId={unit.id}/>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <div>لیست هزینه ها</div>
+
+                      <AddUnitCostToPackageUnit packageUnitId={unit.id} />
+                    </div>
+
+                    <UnitCostTable unitCosts={unit?.unitCosts} />
+                  </div>
                 </TableCell>
               </TableRow>
             )}
