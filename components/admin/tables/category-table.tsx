@@ -184,11 +184,12 @@ export default function CategoryTable({
                     <div className="flex items-center justify-between">
                       <div>لیست واحدها</div>
 
-                      <AddPackageUnitToCategory  />
+                      <AddPackageUnitToCategory  categoryId={category.id}/>
                     </div>
 
                     <PackageUnitTable
                       packageUnitList={category.packageUnitList}
+                      isCategorySubTable={true}
                     />
                   </div>
                 </TableCell>

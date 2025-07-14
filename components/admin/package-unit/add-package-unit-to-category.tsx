@@ -7,11 +7,16 @@ import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import AddPackageUnitToCategoryForm from "./add-package-unit-to-category-form";
-export interface AddCategoryToPackageInterface {
-  packageId: number;
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {  addPackageUnitToCategory } from "@/api/admin";
+export interface AddPackageUnitToCategoryInterface {
+ categoryId: number;
 }
-export default function AddPackageUnitToCategory() {
+export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToCategoryInterface) {
+  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
+
+  const [formValues, setFormValues] = useState<any[]>([]);
   const [addedPackageUnitForms, setAddedPackageUnitForms] = useState<any[]>([
     {
       id: `package-unit-form-1`,
@@ -28,8 +33,42 @@ export default function AddPackageUnitToCategory() {
   function deletePackageUnitForm(formId: string) {
     const updatedAddedPackageUnitForm = addedPackageUnitForms.filter(
       (item) => item.id !== formId
-      );
-      setAddedPackageUnitForms(updatedAddedPackageUnitForm)
+    );
+    setAddedPackageUnitForms(updatedAddedPackageUnitForm);
+  }
+  const { mutate: addPackageUnit } = useMutation({
+    mutationFn: ({id,data}:{ id: number; data: any }) => {
+      return addPackageUnitToCategory(id,data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageData"],
+      });
+
+      setOpenModal(false);
+      setFormValues([]);
+      setAddedPackageUnitForms([
+        {
+          id: `package-unit-form-1`,
+        },
+      ]);
+    },
+  });
+  function addPackageUnitToCategoryHandler() {
+    const packageUnits = formValues.map((item) => ({
+      packageUnitId: item.packageUnit,
+      packageUnitCostId: item.unitCost,
+    }));
+    const data = {
+      packageUnits: packageUnits,
+    };
+    addPackageUnit({id: categoryId, data: data});
+  }
+  function handleFormChange(formId: string, values: any) {
+    setFormValues((prev) => [
+      ...prev.filter((item) => item.id !== formId),
+      values,
+    ]);
   }
   return (
     <div className="flex items-center justify-between flex-col gap-4">
@@ -68,11 +107,17 @@ export default function AddPackageUnitToCategory() {
             onAddForm={addPackageUnitForm}
             onDeleteForm={deletePackageUnitForm}
             isFirstItem={index === 0}
+            onFormChange={handleFormChange}
           />
         ))}
 
         <div className="flex flex-row gap-4 items-center justify-end">
-          <Button variant={"info"} onClick={() => {}}>
+          <Button
+            variant={"info"}
+            onClick={() => {
+              addPackageUnitToCategoryHandler();
+            }}
+          >
             ثبت
           </Button>
           <Button

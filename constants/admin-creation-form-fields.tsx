@@ -236,6 +236,44 @@ export function createFormFields(
           description: "",
         },
       };
+    case "page":
+      return {
+        title: "صفحه",
+        fields: [
+          {
+            key: "title",
+            component: "input",
+            placeholder: "عنوان",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
+            key: "code",
+            component: "input",
+            placeholder: "کد",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
+            key: "url",
+            component: "input",
+            placeholder: "آدرس",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full ltr",
+            className: "w-full md:w-1/2 ltr",
+          },
+        ],
+        initialValues: {
+          title: "",
+          code: "",
+          url: "",
+        },
+      };
     default:
       return {
         title: "",

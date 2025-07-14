@@ -16,7 +16,7 @@ const currencySlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchCurrencies.fulfilled, (state, action) => {
       const data = action?.payload?.data;
-        state.items = data.map((item: any) => ({
+        state.items = data?.map((item: any) => ({
             label: item?.name,
             value:item?.id
       }));

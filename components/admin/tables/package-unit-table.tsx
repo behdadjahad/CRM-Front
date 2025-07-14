@@ -30,10 +30,12 @@ import UnitCostTable from "./unit-cost-table";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
+  isCategorySubTable: boolean;
 }
 
 export default function PackageUnitTable({
   packageUnitList,
+  isCategorySubTable
 }: PackageUnitTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();

@@ -44,7 +44,7 @@ export default function AddCategoryToPackage({
   });
   function addCatogoryToPackagehandler(values: any) {
     const id = values.packageId;
-      const data = { ids:values.categories };
+    const data = { ids: values.categories };
     addCategoryhandler({
       id: id,
       data: data,
@@ -66,7 +66,6 @@ export default function AddCategoryToPackage({
       <CustomModal
         minWidth="0"
         maxWidth="700px"
-        minHeight="400px"
         isOpen={openModal}
         onRequestClose={() => setOpenModal(false)}
         contentLabel="افزودن دسته بندی به پکیج"

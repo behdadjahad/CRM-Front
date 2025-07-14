@@ -1,7 +1,10 @@
-import FormMaker from "@/components/shared/form-maker";
+import { getPackageUnit } from "@/api/admin";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
+import { useEffect } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 
 export interface AddPackageUnitToCategoryFormInterface {
@@ -9,6 +12,7 @@ export interface AddPackageUnitToCategoryFormInterface {
   isFirstItem?: boolean;
   onDeleteForm: (formId: string) => void;
   formId: string;
+  onFormChange: (formId: string, values: any) => void;
 }
 
 export default function AddPackageUnitToCategoryForm({
@@ -16,14 +20,24 @@ export default function AddPackageUnitToCategoryForm({
   isFirstItem,
   onDeleteForm,
   formId,
+  onFormChange,
 }: AddPackageUnitToCategoryFormInterface) {
+  const { data: packageUnitData } = useQuery({
+    queryKey: ["packageUnitData"],
+    queryFn: async () => await getPackageUnit(),
+  });
+  const { packageUnitOptions } = getData(packageUnitData);
   const formik = useFormik({
     initialValues: {
       packageUnit: "",
+      unitCost: "",
     },
 
     onSubmit: () => {},
   });
+  useEffect(() => {
+    onFormChange(formId, formik.values);
+  }, [formik.values]);
   return (
     <div>
       <FormMaker
@@ -70,7 +84,7 @@ export default function AddPackageUnitToCategoryForm({
             placeholder: "واحد پکیج",
             type: "text",
             className: "w-full md:w-1/3",
-            options: [],
+            options: packageUnitOptions,
           },
           {
             key: "unitCost",
@@ -85,4 +99,13 @@ export default function AddPackageUnitToCategoryForm({
       />
     </div>
   );
+}
+function getData(packageUnitData: any) {
+  const packageUnitOptions: OptionType[] = packageUnitData?.data?.map(
+    (item: any) => ({
+      label: item.name,
+      value: item.id,
+    })
+  );
+  return { packageUnitOptions };
 }

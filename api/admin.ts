@@ -108,6 +108,16 @@ export async function addPackageUnit(data: any) {
     return result;
   } catch {}
 }
+export async function addPackageUnitToCategory(categoryId:number,data: any) {
+    try {
+    const result = await fetchService(`package-unit/add-to-category/${categoryId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
 export async function editPackageUnit(id: number, data: any) {
   try {
     const result = await fetchService(`package-unit/${id}`, {
@@ -202,6 +212,16 @@ export async function editPage(id: number, data: any) {
 export async function getPage() {
   try {
     const result = await fetchService("page");
+
+    return result;
+  } catch {}
+}
+export async function addPageFeature(data: any) {
+  try {
+    const result = await fetchService("page-feature", {
+      method: "POST",
+      body: data,
+    });
 
     return result;
   } catch {}

@@ -23,11 +23,11 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/category",
         icon: (
           <Image
-            src={"/icons/report-menu-icon.png"}
+            src={"/icons/package-category-icon.png"}
             alt="دسته بندی پکیج"
             width={1024}
             height={1024}
-            className="w-5.5 h-5.5"
+            className="w-8 h-8"
           />
         ),
       },
@@ -36,11 +36,50 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/package-unit",
         icon: (
           <Image
-            src={"/icons/report-menu-icon.png"}
+            src={"/icons/package-unit-icon.png"}
             alt="واحدپکیج"
             width={1024}
             height={1024}
-            className="w-5.5 h-5.5"
+             className="w-8 h-8"
+          />
+        ),
+      },
+      {
+        label: "صفحه",
+        link: "/admin/page",
+        icon: (
+          <Image
+            src={"/icons/package-unit-icon.png"}
+            alt="صفحه"
+            width={1024}
+            height={1024}
+             className="w-8 h-8"
+          />
+        ),
+      },
+      {
+        label: "نقش",
+        link: "/admin/role",
+        icon: (
+          <Image
+            src={"/icons/package-unit-icon.png"}
+            alt="نقش"
+            width={1024}
+            height={1024}
+             className="w-8 h-8"
+          />
+        ),
+      },
+      {
+        label: "دسترسی",
+        link: "/admin/permission",
+        icon: (
+          <Image
+            src={"/icons/package-unit-icon.png"}
+            alt="دسترسی"
+            width={1024}
+            height={1024}
+             className="w-8 h-8"
           />
         ),
       },
