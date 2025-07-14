@@ -101,6 +101,7 @@ export default function CategoryTable({
       deleteCategoryHandler(id);
     }
   }
+ 
   return (
     <Table className="mt-2 border">
       <TableHeader>

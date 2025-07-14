@@ -3,7 +3,10 @@ import { getPackageUnit } from "@/api/admin";
 import PackageUnitContainer from "@/components/admin/package-unit/package-unit-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
+import { fetchCurrencies } from "@/store/currency-slice";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 export interface PackageUnitDataInterface {
   id: number;
   name: string;
@@ -17,7 +20,13 @@ export interface PackageUnitInterface {
   }[];
   data: PackageUnitDataInterface;
 }
+
 export default function PackageUnit() {
+  const dispatch = useDispatch<any>();
+  useEffect(() => {
+    dispatch(fetchCurrencies());
+  }, [dispatch]);
+  
   const { data: packageUnitData } = useQuery({
     queryKey: ["packageUnitData"],
     queryFn: async () => await getPackageUnit(),

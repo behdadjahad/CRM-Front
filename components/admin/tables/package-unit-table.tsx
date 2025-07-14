@@ -25,6 +25,7 @@ import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
+import AddUnitCostToPackageUnit from "../unit-cost/add-unit-cost-to-package-unit";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -153,7 +154,10 @@ export default function PackageUnitTable({
                 <TableCell
                   colSpan={unit.list.length + 2}
                   className="text-sm text-gray-700 p-4"
-                ></TableCell>
+                >
+                  <AddUnitCostToPackageUnit 
+                    packageUnitId={unit.id}/>
+                </TableCell>
               </TableRow>
             )}
           </Fragment>
