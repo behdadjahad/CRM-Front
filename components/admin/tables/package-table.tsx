@@ -26,12 +26,15 @@ import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
+import { useSelector } from "react-redux";
+import { cleanFormatPrice } from "@/lib/utils";
 
 export interface PackageTableInterface {
   packageList: PackageInterface[];
 }
 
 export default function PackageTable({ packageList }: PackageTableInterface) {
+  const currencyOptions = useSelector((state: any) => state.currency.items);
   const { packageEditFormData } = getData("package");
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();
@@ -64,7 +67,8 @@ export default function PackageTable({ packageList }: PackageTableInterface) {
     const data = {
       title: values.title,
       description: values.description,
-      price: values.price,
+      price: Number(cleanFormatPrice(values.price)),
+      currencyId: values.currency,
     };
     editPackageHandler({
       id: values.id,
@@ -166,13 +170,15 @@ export default function PackageTable({ packageList }: PackageTableInterface) {
       </TableBody>
     </Table>
   );
-}
+  function getData(formType: string) {
+    const editFormData: formDataInterface = createFormFields(
+      formType,
+      currencyOptions
+    );
+    const packageEditFormData = {
+      fields: editFormData.fields,
+    };
 
-function getData(formType: string) {
-  const editFormData: formDataInterface = createFormFields(formType);
-  const packageEditFormData = {
-    fields: editFormData.fields,
-  };
-
-  return { packageEditFormData };
+    return { packageEditFormData };
+  }
 }

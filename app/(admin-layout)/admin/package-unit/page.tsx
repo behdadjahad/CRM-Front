@@ -3,6 +3,7 @@ import { getPackageUnit } from "@/api/admin";
 import PackageUnitContainer from "@/components/admin/package-unit/package-unit-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
+import { formatPrice } from "@/lib/utils";
 import { fetchCurrencies } from "@/store/currency-slice";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -32,6 +33,7 @@ export interface PackageUnitDataInterface {
   name: string;
   description: string;
   price: string;
+  currency: number;
 }
 export interface PackageUnitInterface {
   id: number;
@@ -79,14 +81,15 @@ function getData(packageUnitData: any) {
       id: item.id,
       list: [
         { label: "نام", value: item.name },
-        { label: "قیمت", value: item.price },
+        { label: "قیمت", value: formatPrice(item.price) },
         { label: "توضیحات", value: item.description },
       ],
       data: {
         id: item.id,
         name: item.name,
-        price: item.price,
+        price: formatPrice(item.price),
         description: item.description,
+        currency:item.currencyId
       },
       unitCosts: item?.unitCosts?.map((cost: any) => ({
         id: cost.id,

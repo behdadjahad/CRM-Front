@@ -27,6 +27,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
+            formatted:true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -76,6 +77,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
+            formatted:true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -125,10 +127,22 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
+            formatted:true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/2",
+          },
+          {
+            key: "currency",
+            component: "Select",
+            placeholder: "ارز",
+            formatted:true,
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+            options:currencyOptions
           },
           {
             key: "description",
@@ -144,6 +158,7 @@ export function createFormFields(
           name: "",
           price: "",
           description: "",
+          currency:""
         },
       };
     case "unit-cost":

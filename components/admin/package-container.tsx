@@ -10,6 +10,8 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import { addPackage } from "@/api/admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { cleanFormatPrice } from "@/lib/utils";
 export interface PackageContainerInterface {
   packageList: PackageInterface[];
 }
@@ -17,6 +19,7 @@ export default function PackageContainer({
   packageList,
 }: PackageContainerInterface) {
   const queryClient = useQueryClient();
+  const currencyOptions=  useSelector((state: any) => state.currency.items);
   const { packageFormData } = getData("package");
   const { mutate: addPackageHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -32,9 +35,8 @@ export default function PackageContainer({
     const data = {
       title: values.title,
       description: values.description,
-      // price: Number(values.price),
-      price: +values.price,
-      currencyId: values.currencyId,
+      price: Number(cleanFormatPrice(values.price)),
+      currencyId: values.currency,
     };
     addPackageHandler(data);
   }
@@ -48,9 +50,8 @@ export default function PackageContainer({
       <PackageTable packageList={packageList} />
     </div>
   );
-}
-function getData(formType: string) {
-  const formData: formDataInterface = createFormFields(formType);
+  function getData(formType: string) {
+  const formData: formDataInterface = createFormFields(formType,currencyOptions);
   const packageFormData = {
     title: formData.title,
     fields: formData.fields,
@@ -58,4 +59,6 @@ function getData(formType: string) {
   };
 
   return { packageFormData };
+}
+
 }

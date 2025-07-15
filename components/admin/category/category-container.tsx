@@ -7,12 +7,15 @@ import { CategoryInterface } from "@/app/(admin-layout)/admin/category/page";
 import CategoryTable from "../tables/category-table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPackageCategory } from "@/api/admin";
+import { cleanFormatPrice } from "@/lib/utils";
+import { useSelector } from "react-redux";
 export interface CategoryContainerInterface {
   categoryList: CategoryInterface[];
 }
 export default function CategoryContainer({
   categoryList,
 }: CategoryContainerInterface) {
+    const currencyOptions=  useSelector((state: any) => state.currency.items);
   const { categoryFormData } = getData("category");
   const queryClient = useQueryClient();
   const { mutate: addCategoryHandler } = useMutation({
@@ -29,8 +32,8 @@ export default function CategoryContainer({
     const data = {
       name: values.name,
       description: values.description,
-      price: Number(values.price),
-      currencyId: values.currencyId,
+      price: Number(cleanFormatPrice(values.price)),
+      currencyId: values.currency,
     };
     addCategoryHandler(data);
   }
@@ -44,9 +47,8 @@ export default function CategoryContainer({
           <CategoryTable categoryList={categoryList} isPackageSubTable={false} />
     </div>
   );
-}
-function getData(formType: string) {
-  const formData: formDataInterface = createFormFields(formType);
+  function getData(formType: string) {
+  const formData: formDataInterface = createFormFields(formType,currencyOptions);
   const categoryFormData = {
     title: formData.title,
     fields: formData.fields,
@@ -55,3 +57,5 @@ function getData(formType: string) {
 
   return { categoryFormData };
 }
+}
+

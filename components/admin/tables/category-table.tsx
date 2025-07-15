@@ -30,6 +30,8 @@ import {
 import PackageUnitTable from "./package-unit-table";
 import AddPackageUnitToCategory from "../package-unit/add-package-unit-to-category";
 import PackageUnitSubTable from "./package-unit-sub-table";
+import { cleanFormatPrice } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 export interface CategoryTableInterface {
   categoryList: CategoryInterface[];
@@ -42,9 +44,9 @@ export default function CategoryTable({
   isPackageSubTable,
   packageId,
 }: CategoryTableInterface) {
-  
   const queryClient = useQueryClient();
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  const currencyOptions = useSelector((state: any) => state.currency.items);
   const { categoryEditFormData } = getData("category");
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
@@ -68,7 +70,7 @@ export default function CategoryTable({
     const data = {
       name: values.name,
       description: values.description,
-      price: +values.price,
+      price: Number(cleanFormatPrice(values.price)),
     };
     editCategoryHandler({
       id: values.id,
@@ -104,7 +106,7 @@ export default function CategoryTable({
       deleteCategoryHandler(id);
     }
   }
-console.log(categoryList)
+  
   return (
     <Table className="mt-2 border">
       <TableHeader>
@@ -201,12 +203,15 @@ console.log(categoryList)
       </TableBody>
     </Table>
   );
-}
-function getData(formType: string) {
-  const editFormData: formDataInterface = createFormFields(formType);
-  const categoryEditFormData = {
-    fields: editFormData.fields,
-  };
+  function getData(formType: string) {
+    const editFormData: formDataInterface = createFormFields(
+      formType,
+      currencyOptions
+    );
+    const categoryEditFormData = {
+      fields: editFormData.fields,
+    };
 
-  return { categoryEditFormData };
+    return { categoryEditFormData };
+  }
 }

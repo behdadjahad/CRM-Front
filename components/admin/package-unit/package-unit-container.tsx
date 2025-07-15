@@ -7,6 +7,8 @@ import { PackageUnitInterface } from "@/app/(admin-layout)/admin/package-unit/pa
 import PackageUnitTable from "../tables/package-unit-table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addPackageUnit } from "@/api/admin";
+import { useSelector } from "react-redux";
+import { cleanFormatPrice } from "@/lib/utils";
 
 export interface PackageUnitContainerInterface {
   packageUnitList: PackageUnitInterface[];
@@ -16,6 +18,7 @@ export default function PackageUnitContainer({
   packageUnitList,
 }: PackageUnitContainerInterface) {
   const queryClient = useQueryClient();
+  const currencyOptions = useSelector((state: any) => state.currency.items);
   const { packageUnitFormData } = getData("package-unit");
   const { mutate: addPackageUnitHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -31,7 +34,8 @@ export default function PackageUnitContainer({
     const data = {
       name: values.name,
       description: values.description,
-      price:values.price
+      price: Number(cleanFormatPrice(values.price)),
+      currencyId: values.currency,
     };
     addPackageUnitHandler(data);
   }
@@ -41,20 +45,20 @@ export default function PackageUnitContainer({
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-card">
         واحد پکیج
       </div>
-      <PackageUnitTable
-        packageUnitList={packageUnitList}
-
-      />
+      <PackageUnitTable packageUnitList={packageUnitList} />
     </div>
   );
-}
-function getData(formType: string) {
-  const formData: formDataInterface = createFormFields(formType);
-  const packageUnitFormData = {
-    title: formData.title,
-    fields: formData.fields,
-    initialValues: formData.initialValues,
-  };
+  function getData(formType: string) {
+    const formData: formDataInterface = createFormFields(
+      formType,
+      currencyOptions
+    );
+    const packageUnitFormData = {
+      title: formData.title,
+      fields: formData.fields,
+      initialValues: formData.initialValues,
+    };
 
-  return { packageUnitFormData };
+    return { packageUnitFormData };
+  }
 }

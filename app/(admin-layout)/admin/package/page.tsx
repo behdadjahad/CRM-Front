@@ -7,11 +7,16 @@ import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
 import { CategoryDataInterface, CategoryInterface } from "../category/page";
+import { formatPrice } from "@/lib/utils";
+import { fetchCurrencies } from "@/store/currency-slice";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 export interface PackageDataInterface {
   id: number;
   title: string;
   description: string;
   price: string;
+  currency: number;
 }
 export interface PackageInterface {
   id: number;
@@ -29,7 +34,10 @@ export default function Package() {
     queryFn: async () => await getPackage(),
   });
   const { packageList } = getData(packageData);
-
+  const dispatch = useDispatch<any>();
+  useEffect(() => {
+    dispatch(fetchCurrencies());
+  }, [dispatch]);
   return (
     <main>
       <Title label="پکیج" />
@@ -58,13 +66,14 @@ function getData(packageData: any) {
       list: [
         { label: "نام", value: item.title },
         { label: "توضیحات", value: item.description },
-        { label: "قیمت", value: item.price },
+        { label: "قیمت", value: formatPrice(item.price) },
       ],
       data: {
         id: item.id,
         title: item.title,
         description: item.description,
-        price: item.price,
+        price: formatPrice(item.price),
+        currency:item?.currencyId
       },
       categoryList: item?.packageCategories?.map((category: any) => ({
         id: category.id,

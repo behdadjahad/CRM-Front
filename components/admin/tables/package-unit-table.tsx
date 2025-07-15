@@ -27,6 +27,8 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import AddUnitCostToPackageUnit from "../unit-cost/add-unit-cost-to-package-unit";
 import UnitCostTable from "./unit-cost-table";
+import { cleanFormatPrice } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -39,6 +41,7 @@ export default function PackageUnitTable({
 }: PackageUnitTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();
+   const currencyOptions = useSelector((state: any) => state.currency.items);
   const { packageUnitEditFormData } = getData("package-unit");
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
@@ -64,8 +67,9 @@ export default function PackageUnitTable({
   function editHandler(values: PackageUnitDataInterface) {
     const data = {
       name: values.name,
-      price: values.price,
+      price: Number(cleanFormatPrice(values.price)),
       description: values.description,
+      currencyId:values.currency
     };
     editPackageUnitHandler({
       id: values.id,
@@ -176,12 +180,13 @@ export default function PackageUnitTable({
       </TableBody>
     </Table>
   );
-}
-function getData(formType: string) {
-  const editFormData: formDataInterface = createFormFields(formType);
+  function getData(formType: string) {
+  const editFormData: formDataInterface = createFormFields(formType,currencyOptions);
   const packageUnitEditFormData = {
     fields: editFormData.fields,
   };
 
   return { packageUnitEditFormData };
 }
+}
+
