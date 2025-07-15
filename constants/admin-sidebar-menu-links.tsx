@@ -10,11 +10,11 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/package",
         icon: (
           <Image
-            src={"/icons/report-menu-icon.png"}
+            src={"/icons/package-icon.png"}
             alt="پکیج"
             width={1024}
             height={1024}
-            className="w-6 h-6"
+            className="w-8 h-8"
           />
         ),
       },
@@ -49,7 +49,7 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/page",
         icon: (
           <Image
-            src={"/icons/package-unit-icon.png"}
+            src={"/icons/page-icon.png"}
             alt="صفحه"
             width={1024}
             height={1024}
@@ -62,7 +62,7 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/role",
         icon: (
           <Image
-            src={"/icons/package-unit-icon.png"}
+            src={"/icons/role-icon.png"}
             alt="نقش"
             width={1024}
             height={1024}
@@ -75,7 +75,7 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/permission",
         icon: (
           <Image
-            src={"/icons/package-unit-icon.png"}
+            src={"/icons/permission-icon.png"}
             alt="دسترسی"
             width={1024}
             height={1024}

@@ -35,6 +35,7 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
       (item) => item.id !== formId
     );
     setAddedPackageUnitForms(updatedAddedPackageUnitForm);
+    setFormValues((prev) => prev.filter((item) => item.id !== formId));
   }
   const { mutate: addPackageUnit } = useMutation({
     mutationFn: ({id,data}:{ id: number; data: any }) => {
@@ -65,12 +66,13 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
     };
     addPackageUnit({id: categoryId, data: data});
   }
+
   function handleFormChange(formId: string, values: any) {
-    setFormValues((prev) => [
-      ...prev.filter((item) => item.id !== formId),
-      values,
-    ]);
-  }
+  setFormValues((prev) => [
+    ...prev.filter((item) => item.id !== formId),
+    { ...values, id: formId }, 
+  ]);
+}
   return (
     <div className="flex items-center justify-between flex-col gap-4">
       <Button

@@ -13,9 +13,9 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 
-import { PackageUnitInterface } from "@/app/(admin-layout)/admin/package-unit/page";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { removePackageUnitToCategory } from "@/api/admin";
+import { removePackageUnitFromCategory } from "@/api/admin";
 
 export interface PackageUnitSubTableInterface {
   categoryId: number;
@@ -42,7 +42,7 @@ export default function PackageUnitSubTable({
   const queryClient = useQueryClient();
   const { mutate: deletePackageUnitHandler } = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
-      return removePackageUnitToCategory(id, data);
+      return removePackageUnitFromCategory(id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

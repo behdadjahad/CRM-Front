@@ -52,7 +52,7 @@ export default function AddPackageUnitToCategoryForm({
   });
   useEffect(() => {
     onFormChange(formId, formik.values);
-    console.log("formik.values", formik.values);
+
   }, [formik.values]);
 
   useEffect(() => {

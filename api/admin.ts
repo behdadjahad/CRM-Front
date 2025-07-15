@@ -121,12 +121,15 @@ export async function addPackageUnitToCategory(categoryId: number, data: any) {
     return result;
   } catch {}
 }
-export async function removePackageUnitToCategory(categoryId: number, data: any) {
+export async function removePackageUnitFromCategory(
+  categoryId: number,
+  data: any
+) {
   try {
     const result = await fetchService(
       `package-unit/remove-from-category/${categoryId}`,
       {
-        method: "DELETE",
+        method: "POST",
         body: data,
       }
     );
@@ -196,7 +199,7 @@ export async function getPackageUnitCost() {
     return result;
   } catch {}
 }
-export async function getPackageUnitCostsOfPackageUnit(packageunitId:number) {
+export async function getPackageUnitCostsOfPackageUnit(packageunitId: number) {
   try {
     const result = await fetchService(`package-unit-cost/${packageunitId}`);
 
@@ -265,6 +268,43 @@ export async function deletePageFeature(id: number) {
     const result = await fetchService(`page-feature/${id}`, {
       method: "DELETE",
     });
+
+    return result;
+  } catch {}
+}
+export async function addRole(data: any) {
+  try {
+    const result = await fetchService("role", {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function editRole(id:number,data: any) {
+  try {
+    const result = await fetchService(`role/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deleteRole(id: number) {
+  try {
+    const result = await fetchService(`role/${id}`, {
+      method: "DELETE",
+   
+    });
+
+    return result;
+  } catch {}
+}
+export async function getRole() {
+  try {
+    const result = await fetchService("role");
 
     return result;
   } catch {}
