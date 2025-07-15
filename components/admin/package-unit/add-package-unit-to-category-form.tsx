@@ -1,10 +1,10 @@
-import { getPackageUnit } from "@/api/admin";
+import { getPackageUnit, getPackageUnitCostsOfPackageUnit } from "@/api/admin";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 
 export interface AddPackageUnitToCategoryFormInterface {
@@ -22,6 +22,7 @@ export default function AddPackageUnitToCategoryForm({
   formId,
   onFormChange,
 }: AddPackageUnitToCategoryFormInterface) {
+  const [unitCostOptions, setUnitCostOptions] = useState<OptionType[]>([]);
   const { data: packageUnitData } = useQuery({
     queryKey: ["packageUnitData"],
     queryFn: async () => await getPackageUnit(),
@@ -29,15 +30,36 @@ export default function AddPackageUnitToCategoryForm({
   const { packageUnitOptions } = getData(packageUnitData);
   const formik = useFormik({
     initialValues: {
-      packageUnit: "",
-      unitCost: "",
+      packageUnit:null,
+      unitCost:null,
     },
 
     onSubmit: () => {},
   });
+  const { mutate: getUnitCostHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getPackageUnitCostsOfPackageUnit(id);
+    },
+    onSuccess: (result) => {
+      if (result.data && result.data.length > 0) {
+        const options: OptionType[] = result.data.map((item: any) => ({
+          label: item.title,
+          value: item.id,
+        }));
+       setUnitCostOptions(options);
+       }
+    },
+  });
   useEffect(() => {
     onFormChange(formId, formik.values);
+    console.log("formik.values", formik.values);
   }, [formik.values]);
+
+  useEffect(() => {
+    if (formik.values.packageUnit) {
+      getUnitCostHandler(Number(formik.values.packageUnit));
+    }
+  }, [formik.values.packageUnit]);
   return (
     <div>
       <FormMaker
@@ -92,7 +114,7 @@ export default function AddPackageUnitToCategoryForm({
             placeholder: "واحد هزینه",
             type: "text",
             className: "w-full md:w-1/3",
-            options: [],
+            options: unitCostOptions,
           },
         ]}
         className="flex flex-row items-center"

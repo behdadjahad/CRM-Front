@@ -74,16 +74,37 @@ function getData(packageData: any) {
           { label: "توضیحات", value: category.description },
         ],
         data: {
-          id: item.id,
-          name: item.name,
-          price: item.price,
+          id: category.id,
+          name: category.name,
+          price: category.price,
+          description: category.description,
         },
-        packageUnitList: item?.packageCategories?.units?.map((unit: any) => ({
-          id: unit.id,
+        packageUnitList: category?.units?.map((unit: any) => ({
+          id: unit.unit.id,
           list: [
-            { label: "نام", value: unit.name },
-            { label: "توضیحات", value: unit.description },
+            { label: "نام", value: unit.unit.name },
+            { label: "قیمت", value: unit.unit.price },
+            { label: "توضیحات", value: unit.unit.description },
           ],
+          unitCostData: {
+            id: unit.unitCost.id,
+            list: [
+              { label: "عنوان", value: unit.unitCost.title },
+              { label: "نوع فروش واحد", value: unit.unitCost.unitType },
+              { label: "مدل فروش واحد", value: unit.unitCost.unitModel },
+              { label: "تعداد", value: unit.unitCost.countUnit },
+              { label: "قیمت", value: unit.unitCost.price },
+              {
+                label: "مدت زمان امکان تعامل (روز)",
+                value: unit.unitCost.enabledDurationInDays,
+              },
+              {
+                label: "مدت زمان امکان نمایش (روز)",
+                value: unit.unitCost.showDurationInDays,
+              },
+              { label: "توضیحات", value: unit.unitCost.description },
+            ],
+          },
         })),
       })),
     })

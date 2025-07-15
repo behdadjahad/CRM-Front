@@ -21,6 +21,8 @@ import {
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
 import EditableForm from "../forms/editable-form";
+import AddPageFeatureToPage from "../page/add-page-feature-to-page";
+import PageFeatureTable from "./page-feature-table";
 export interface PageTableInterface {
   pageList: PageInterface[];
 }
@@ -145,7 +147,10 @@ export default function PageTable({ pageList }: PageTableInterface) {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <div>لیست ویژگی ها</div>
+                      <AddPageFeatureToPage pageId={page.id} />
+                       
                     </div>
+                    <PageFeatureTable pageFeatureList={page.features} />
                   </div>
                 </TableCell>
               </TableRow>

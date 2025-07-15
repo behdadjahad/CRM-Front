@@ -31,6 +31,7 @@ export interface PackageUnitDataInterface {
   id: number;
   name: string;
   description: string;
+  price: string;
 }
 export interface PackageUnitInterface {
   id: number;
@@ -78,11 +79,13 @@ function getData(packageUnitData: any) {
       id: item.id,
       list: [
         { label: "نام", value: item.name },
+        { label: "قیمت", value: item.price },
         { label: "توضیحات", value: item.description },
       ],
       data: {
         id: item.id,
         name: item.name,
+        price: item.price,
         description: item.description,
       },
       unitCosts: item?.unitCosts?.map((cost: any) => ({
@@ -113,7 +116,7 @@ function getData(packageUnitData: any) {
           showDurationInDays: cost.showDurationInDays,
           countUnit: cost.countUnit,
           price: cost.price,
-          currency:cost.currencyId
+          currency: cost.currencyId,
         },
       })),
     })

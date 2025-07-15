@@ -42,7 +42,7 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["packageData"],
+        queryKey: ["categoryData"],
       });
 
       setOpenModal(false);
@@ -55,10 +55,11 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
     },
   });
   function addPackageUnitToCategoryHandler() {
+    console.log(formValues)
     const packageUnits = formValues.map((item) => ({
       packageUnitId: item.packageUnit,
       packageUnitCostId: item.unitCost,
-    }));
+    })).filter((item)=>(item.packageUnitId && item.packageUnitCostId));
     const data = {
       packageUnits: packageUnits,
     };

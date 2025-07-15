@@ -22,6 +22,7 @@ export function createFormFields(
             labelClassName: "w-full",
             className: "w-full md:w-1/2",
           },
+
           {
             key: "price",
             component: "input",
@@ -121,6 +122,15 @@ export function createFormFields(
             className: "w-full md:w-1/2",
           },
           {
+            key: "price",
+            component: "input",
+            placeholder: "قیمت",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
             key: "description",
             component: "input",
             placeholder: "توضیحات",
@@ -132,6 +142,7 @@ export function createFormFields(
         ],
         initialValues: {
           name: "",
+          price: "",
           description: "",
         },
       };
@@ -272,6 +283,54 @@ export function createFormFields(
           title: "",
           code: "",
           url: "",
+        },
+      };
+    case "page-feature":
+      return {
+        title: "ویژگی",
+        fields: [
+          {
+            key: "name",
+            component: "input",
+            placeholder: "نام",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
+            key: "code",
+            component: "input",
+            placeholder: "کد",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
+            key: "description",
+            component: "input",
+            placeholder: "توضیحات",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+          {
+            key: "urlPattern",
+            component: "multi-added-input",
+            placeholder: "آدرس ها",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+        ],
+        initialValues: {
+          name: "",
+          code: "",
+          description: "",
+          urlPattern: [],
         },
       };
     default:

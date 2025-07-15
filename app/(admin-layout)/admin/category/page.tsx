@@ -21,8 +21,21 @@ export interface CategoryInterface {
     value: string;
   }[];
   data: CategoryDataInterface;
-  // You can add unitList here later for next nested level
-  packageUnitList: PackageUnitInterface[];
+
+  packageUnitList: {
+    id: number;
+    list: {
+      label: string;
+      value: string;
+    }[];
+    unitCostData: {
+      id: number,
+      list: {
+      label: string;
+      value: string;
+    }[]
+    } 
+  }[];
 }
 
 export default function PackageCategory() {
@@ -63,13 +76,35 @@ function getData(categoryData: any) {
         id: item.id,
         name: item.name,
         price: item.price,
+        description: item.description,
       },
-      packageUnitList: item?.packageCategories?.units?.map((unit: any) => ({
-        id: unit.id,
+
+      packageUnitList: item?.units?.map((unit: any) => ({
+        id: unit.unit.id,
         list: [
-          { label: "نام", value: unit.name },
-          { label: "توضیحات", value: unit.description },
+          { label: "نام", value: unit.unit.name },
+          { label: "قیمت", value: unit.unit.price },
+          { label: "توضیحات", value: unit.unit.description },
         ],
+        unitCostData: {
+          id: unit.unitCost.id,
+          list: [
+            { label: "عنوان", value: unit.unitCost.title },
+            { label: "نوع فروش واحد", value: unit.unitCost.unitType },
+            { label: "مدل فروش واحد", value: unit.unitCost.unitModel },
+            { label: "تعداد", value: unit.unitCost.countUnit },
+            { label: "قیمت", value: unit.unitCost.price },
+            {
+              label: "مدت زمان امکان تعامل (روز)",
+              value: unit.unitCost.enabledDurationInDays,
+            },
+            {
+              label: "مدت زمان امکان نمایش (روز)",
+              value: unit.unitCost.showDurationInDays,
+            },
+            { label: "توضیحات", value: unit.unitCost.description },
+          ],
+        },
       })),
     })
   );

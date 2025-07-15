@@ -31,6 +31,7 @@ export default function PackageUnitContainer({
     const data = {
       name: values.name,
       description: values.description,
+      price:values.price
     };
     addPackageUnitHandler(data);
   }
@@ -42,7 +43,7 @@ export default function PackageUnitContainer({
       </div>
       <PackageUnitTable
         packageUnitList={packageUnitList}
-        isCategorySubTable={false}
+
       />
     </div>
   );

@@ -24,7 +24,7 @@ export default function AddPageFeatureToPage({
       name: "",
       code: "",
       description: "",
-      urlPattern: "",
+      urlPattern: [],
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -48,7 +48,7 @@ export default function AddPageFeatureToPage({
       name: values.name,
       code: values.code,
       description: values.description,
-      urlPattern: [values.urlPattern],
+      urlPattern: values.urlPattern,
     };
     addPageFeatureHandler(data);
   }
@@ -116,8 +116,8 @@ export default function AddPageFeatureToPage({
               },
               {
                 key: "urlPattern",
-                component: "input",
-                placeholder: "توضیحات",
+                component: "multi-added-input",
+                placeholder: "آدرس ها",
                 type: "text",
                 floating: true,
                 labelClassName: "w-full",

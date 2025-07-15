@@ -29,6 +29,7 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import PackageUnitTable from "./package-unit-table";
 import AddPackageUnitToCategory from "../package-unit/add-package-unit-to-category";
+import PackageUnitSubTable from "./package-unit-sub-table";
 
 export interface CategoryTableInterface {
   categoryList: CategoryInterface[];
@@ -41,6 +42,7 @@ export default function CategoryTable({
   isPackageSubTable,
   packageId,
 }: CategoryTableInterface) {
+  
   const queryClient = useQueryClient();
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const { categoryEditFormData } = getData("category");
@@ -64,7 +66,7 @@ export default function CategoryTable({
   });
   function editHandler(values: CategoryDataInterface) {
     const data = {
-      title: values.name,
+      name: values.name,
       description: values.description,
       price: +values.price,
     };
@@ -102,7 +104,7 @@ export default function CategoryTable({
       deleteCategoryHandler(id);
     }
   }
-
+console.log(categoryList)
   return (
     <Table className="mt-2 border">
       <TableHeader>
@@ -179,17 +181,16 @@ export default function CategoryTable({
                   colSpan={category.list.length + 2}
                   className="text-sm text-gray-700 p-4"
                 >
-              
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center justify-between">
                       <div>لیست واحدها</div>
 
-                      <AddPackageUnitToCategory  categoryId={category.id}/>
+                      <AddPackageUnitToCategory categoryId={category.id} />
                     </div>
 
-                    <PackageUnitTable
-                      packageUnitList={category.packageUnitList}
-                      isCategorySubTable={true}
+                    <PackageUnitSubTable
+                      packageUnitList={category?.packageUnitList}
+                      categoryId={category.id}
                     />
                   </div>
                 </TableCell>

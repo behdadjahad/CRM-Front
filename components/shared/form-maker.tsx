@@ -18,6 +18,7 @@ import DateTimeInput from "./date-time-input";
 import TimeInput from "./time-input";
 import SuggestionInput from "./suggestion-input";
 import MultiSelectInput from "./multi-select-input";
+import MultiAddedTextInput from "./multi-added-text-input";
 
 export interface OptionType {
   label: string;
@@ -28,6 +29,7 @@ export interface OptionType {
 export interface FieldType {
   component:
     | "input"
+    | "multi-added-input"
     | "Select"
     | "multi-select"
     | "SuggestionInput"
@@ -107,6 +109,8 @@ export default function FormMaker({
           return <SuggestionInput form={form} item={item} />;
         case "input":
           return <TextInput item={item} form={form} />;
+        case "multi-added-input":
+          return <MultiAddedTextInput item={item} form={form} />;
         case "phone":
           return <PhoneNumberInput item={item} form={form} />;
         case "date":

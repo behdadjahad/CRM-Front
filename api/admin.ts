@@ -108,12 +108,28 @@ export async function addPackageUnit(data: any) {
     return result;
   } catch {}
 }
-export async function addPackageUnitToCategory(categoryId:number,data: any) {
-    try {
-    const result = await fetchService(`package-unit/add-to-category/${categoryId}`, {
-      method: "POST",
-      body: data,
-    });
+export async function addPackageUnitToCategory(categoryId: number, data: any) {
+  try {
+    const result = await fetchService(
+      `package-unit/add-to-category/${categoryId}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    return result;
+  } catch {}
+}
+export async function removePackageUnitToCategory(categoryId: number, data: any) {
+  try {
+    const result = await fetchService(
+      `package-unit/remove-from-category/${categoryId}`,
+      {
+        method: "DELETE",
+        body: data,
+      }
+    );
 
     return result;
   } catch {}
@@ -180,6 +196,14 @@ export async function getPackageUnitCost() {
     return result;
   } catch {}
 }
+export async function getPackageUnitCostsOfPackageUnit(packageunitId:number) {
+  try {
+    const result = await fetchService(`package-unit-cost/${packageunitId}`);
+
+    return result;
+  } catch {}
+}
+
 export async function addPage(data: any) {
   try {
     const result = await fetchService("page", {
@@ -221,6 +245,25 @@ export async function addPageFeature(data: any) {
     const result = await fetchService("page-feature", {
       method: "POST",
       body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function editPageFeature(id: number, data: any) {
+  try {
+    const result = await fetchService(`page-feature/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deletePageFeature(id: number) {
+  try {
+    const result = await fetchService(`page-feature/${id}`, {
+      method: "DELETE",
     });
 
     return result;
