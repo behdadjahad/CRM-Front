@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -21,11 +21,21 @@ import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import PermissionTable from "./permission-table";
+import AddPermissionToRole from "../permission/add-permission-to-role";
 
 export interface RoleTableInterface {
   roleList: RoleInterface[];
 }
 export default function RoleTable({ roleList }: RoleTableInterface) {
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
+  const toggleRow = (index: number) => {
+    setExpandedRows((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
   const { roleEditFormData } = getData("role");
   const queryClient = useQueryClient();
   const { mutate: editPackageHandler } = useMutation({
@@ -61,6 +71,7 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
   function removeHandler(id: number) {
     removeRoleHandler(id);
   }
+
   return (
     <Table>
       <TableHeader>
@@ -76,6 +87,7 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
           <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold" />
         </TableRow>
       </TableHeader>
 
@@ -114,7 +126,40 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
                   />
                 </div>
               </TableCell>
+              <TableCell className="text-center border">
+                <Button
+                  className="border-none p-0"
+                  onClick={() => toggleRow(rowIndex)}
+                >
+                  {expandedRows.includes(rowIndex) ? (
+                    <FaChevronUp />
+                  ) : (
+                    <FaChevronDown />
+                  )}
+                </Button>
+              </TableCell>
             </TableRow>
+            {expandedRows.includes(rowIndex) && (
+              <TableRow className="bg-gray-100">
+                <TableCell
+                  colSpan={role.list.length + 2}
+                  className="text-sm text-gray-700 p-4"
+                >
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <div>لیست دسترسی ها </div>
+
+                      <AddPermissionToRole roleId={role?.id} />
+                    </div>
+
+                    <PermissionTable
+                      permissionList={role?.permissionList}
+                      permissionTableType="roleSubTable"
+                    />
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
           </Fragment>
         ))}
       </TableBody>

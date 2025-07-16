@@ -16,6 +16,7 @@ export interface CategoryDataInterface {
   name: string;
   price: string;
   description: string;
+  currency: number;
 }
 
 export interface CategoryInterface {

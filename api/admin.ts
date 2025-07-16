@@ -282,7 +282,7 @@ export async function addRole(data: any) {
     return result;
   } catch {}
 }
-export async function editRole(id:number,data: any) {
+export async function editRole(id: number, data: any) {
   try {
     const result = await fetchService(`role/${id}`, {
       method: "PUT",
@@ -296,7 +296,6 @@ export async function deleteRole(id: number) {
   try {
     const result = await fetchService(`role/${id}`, {
       method: "DELETE",
-   
     });
 
     return result;
@@ -305,6 +304,62 @@ export async function deleteRole(id: number) {
 export async function getRole() {
   try {
     const result = await fetchService("role");
+
+    return result;
+  } catch {}
+}
+export async function addPermission(data: any) {
+  try {
+    const result = await fetchService("permission", {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function addPermissionToRole(roleId: number, data: any) {
+  try {
+    const result = await fetchService(`permission/add-to-role/${roleId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function addPermissionToPackageUnit(packageUnitId: number, data: any) {
+  try {
+    const result = await fetchService(`permission/add-to-unit/${packageUnitId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function editPermission(id: number, data: any) {
+  try {
+    const result = await fetchService(`permission/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deletePermission(id: number) {
+  try {
+    const result = await fetchService(`permission/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}
+export async function getPermission() {
+  try {
+    const result = await fetchService("permission");
 
     return result;
   } catch {}

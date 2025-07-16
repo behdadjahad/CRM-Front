@@ -4,6 +4,7 @@ import RoleContainer from "@/components/admin/role/role-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
+import { PermissionInterface } from "../permission/page";
 export interface RoleInterface {
   id: number;
   list: {
@@ -11,6 +12,7 @@ export interface RoleInterface {
     value: string;
   }[];
   data: RoleDataInterface;
+  permissionList: PermissionInterface[];
 }
 export interface RoleDataInterface {
   id: number;
@@ -54,6 +56,18 @@ function getData(roleData: any) {
       name: item.name,
       description: item.description,
     },
+    permissionList: item?.permissions?.map((permission: any) => ({
+      id: permission.id,
+      list: [
+        { label: "نام", value: permission.name },
+        { label: "توضیحات", value: permission.description },
+      ],
+      data: {
+        id: permission.id,
+        name: permission.name,
+        description: permission.description,
+      },
+    })),
   }));
   return { roleList };
 }

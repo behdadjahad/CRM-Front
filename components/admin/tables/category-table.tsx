@@ -71,6 +71,7 @@ export default function CategoryTable({
       name: values.name,
       description: values.description,
       price: Number(cleanFormatPrice(values.price)),
+      currencyId:values.currency
     };
     editCategoryHandler({
       id: values.id,

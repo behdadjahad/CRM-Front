@@ -29,19 +29,18 @@ import AddUnitCostToPackageUnit from "../unit-cost/add-unit-cost-to-package-unit
 import UnitCostTable from "./unit-cost-table";
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
+import AddPermissionToPackageUnit from "../permission/add-permission-to-package-unit";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
-
 }
 
 export default function PackageUnitTable({
   packageUnitList,
-
 }: PackageUnitTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();
-   const currencyOptions = useSelector((state: any) => state.currency.items);
+  const currencyOptions = useSelector((state: any) => state.currency.items);
   const { packageUnitEditFormData } = getData("package-unit");
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
@@ -69,7 +68,7 @@ export default function PackageUnitTable({
       name: values.name,
       price: Number(cleanFormatPrice(values.price)),
       description: values.description,
-      currencyId:values.currency
+      currencyId: values.currency,
     };
     editPackageUnitHandler({
       id: values.id,
@@ -163,14 +162,25 @@ export default function PackageUnitTable({
                   colSpan={unit.list.length + 2}
                   className="text-sm text-gray-700 p-4"
                 >
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <div>لیست هزینه ها</div>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <div>لیست هزینه ها</div>
 
-                      <AddUnitCostToPackageUnit packageUnitId={unit.id} />
+                        <AddUnitCostToPackageUnit packageUnitId={unit.id} />
+                      </div>
+
+                      <UnitCostTable unitCosts={unit?.unitCosts} />
                     </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between">
+                        <div>لیست دسترسی ها </div>
 
-                    <UnitCostTable unitCosts={unit?.unitCosts} />
+                        <AddPermissionToPackageUnit packageUnitId={unit.id} />
+                      </div>
+
+                      {/* <PermissionTable permissionList={unit?.permissionList} permissionTableType="packageUnitSubTable"/> */}
+                    </div>
                   </div>
                 </TableCell>
               </TableRow>
@@ -181,12 +191,14 @@ export default function PackageUnitTable({
     </Table>
   );
   function getData(formType: string) {
-  const editFormData: formDataInterface = createFormFields(formType,currencyOptions);
-  const packageUnitEditFormData = {
-    fields: editFormData.fields,
-  };
+    const editFormData: formDataInterface = createFormFields(
+      formType,
+      currencyOptions
+    );
+    const packageUnitEditFormData = {
+      fields: editFormData.fields,
+    };
 
-  return { packageUnitEditFormData };
+    return { packageUnitEditFormData };
+  }
 }
-}
-
