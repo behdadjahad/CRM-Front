@@ -2,7 +2,7 @@ import { addPackageUnitCost } from "@/api/admin";
 import CustomModal from "@/components/shared/custom-modal";
 import FormMaker from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cleanFormatPrice, cn } from "@/lib/utils";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
@@ -63,7 +63,7 @@ export default function AddUnitCostToPackageUnit({
       enabledDurationInDays: Number(values.enabledDurationInDays),
       showDurationInDays: Number(values.showDurationInDays),
       countUnit: Number(values.countUnit),
-      price: Number(values.price),
+      price: Number(cleanFormatPrice(values.price)),
       currencyId: Number(values.currency),
     };
     addUnitCostHandler(data);
@@ -171,6 +171,7 @@ export default function AddUnitCostToPackageUnit({
                 key: "price",
                 component: "input",
                 placeholder: "قیمت",
+                formatted:true,
                 type: "text",
                 floating: true,
                 labelClassName: "w-full",

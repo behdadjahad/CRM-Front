@@ -26,6 +26,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePackageUnitCost, editPackageUnitCost } from "@/api/admin";
 import EditableForm from "../forms/editable-form";
 import { useSelector } from "react-redux";
+import { cleanFormatPrice } from "@/lib/utils";
 
 export interface UnitCostTableInterface {
   unitCosts: UnitCostInterface[];
@@ -68,7 +69,7 @@ export default function UnitCostTable({ unitCosts }: UnitCostTableInterface) {
       enabledDurationInDays: Number(values.enabledDurationInDays),
       showDurationInDays: Number(values.showDurationInDays),
       countUnit: Number(values.countUnit),
-      price: Number(values.price),
+      price: Number(cleanFormatPrice(values.price)),
       currencyId: Number(values.currency),
     };
     editUnitCostHandler({

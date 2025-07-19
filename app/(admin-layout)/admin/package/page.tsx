@@ -66,20 +66,20 @@ function getData(packageData: any) {
       list: [
         { label: "نام", value: item.title },
         { label: "توضیحات", value: item.description },
-        { label: "قیمت", value: formatPrice(item.price) },
+        { label: "قیمت", value: formatPrice(item.price) + " " + item?.currency?.name },
       ],
       data: {
         id: item.id,
         title: item.title,
         description: item.description,
         price: formatPrice(item.price),
-        currency:item?.currencyId
+        currency:item?.currency?.id
       },
       categoryList: item?.packageCategories?.map((category: any) => ({
         id: category.id,
         list: [
           { label: "نام", value: category.name },
-          { label: "قیمت", value: category.price },
+          { label: "قیمت", value: formatPrice(category.price) + " " + category?.currency?.name },
           { label: "توضیحات", value: category.description },
         ],
         data: {
@@ -87,6 +87,7 @@ function getData(packageData: any) {
           name: category.name,
           price: category.price,
           description: category.description,
+          currency: category?.currency?.id,
         },
         packageUnitList: category?.units?.map((unit: any) => ({
           id: unit.unit.id,

@@ -232,6 +232,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
+            formatted:true,
             type: "text",
             floating: true,
             labelClassName: "w-full",

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import PageContainer from "@/components/admin/page/page-container";
 import { features } from "process";
-export interface pageFeatureInterface {
+export interface PageFeatureInterface {
   id: number;
   list: {
     label: string;
@@ -34,7 +34,7 @@ export interface PageInterface {
     label: string;
     value: string;
   }[];
-  features: pageFeatureInterface[];
+  features: PageFeatureInterface[];
   data: PageDataInterface;
 }
 

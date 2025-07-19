@@ -23,6 +23,7 @@ import {
 import EditableForm from "../forms/editable-form";
 import AddPageFeatureToPage from "../page/add-page-feature-to-page";
 import PageFeatureTable from "./page-feature-table";
+import { NoData } from "../no-data";
 export interface PageTableInterface {
   pageList: PageInterface[];
 }
@@ -148,9 +149,12 @@ export default function PageTable({ pageList }: PageTableInterface) {
                     <div className="flex items-center justify-between">
                       <div>لیست ویژگی ها</div>
                       <AddPageFeatureToPage pageId={page.id} />
-                       
                     </div>
-                    <PageFeatureTable pageFeatureList={page.features} />
+                    {page.features.length > 0 ? (
+                      <PageFeatureTable pageFeatureList={page.features} />
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

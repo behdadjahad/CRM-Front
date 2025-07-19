@@ -21,9 +21,11 @@ import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaPlus } from "react-icons/fa";
 import PermissionTable from "./permission-table";
 import AddPermissionToRole from "../permission/add-permission-to-role";
+import { NoData } from "../no-data";
+import { cn } from "@/lib/utils";
 
 export interface RoleTableInterface {
   roleList: RoleInterface[];
@@ -87,6 +89,7 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
           <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
+      
           <TableHead className="text-center text-xs bg-card border font-bold" />
         </TableRow>
       </TableHeader>
@@ -126,6 +129,7 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
                   />
                 </div>
               </TableCell>
+            
               <TableCell className="text-center border">
                 <Button
                   className="border-none p-0"
@@ -151,11 +155,14 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
 
                       <AddPermissionToRole roleId={role?.id} />
                     </div>
-
-                    <PermissionTable
-                      permissionList={role?.permissionList}
-                      permissionTableType="roleSubTable"
-                    />
+                    {role?.permissionList?.length > 0 ? (
+                      <PermissionTable
+                        permissionList={role?.permissionList}
+                        permissionTableType="roleSubTable"
+                      />
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

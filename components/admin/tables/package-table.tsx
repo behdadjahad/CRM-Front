@@ -28,6 +28,7 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import { useSelector } from "react-redux";
 import { cleanFormatPrice } from "@/lib/utils";
+import { NoData } from "../no-data";
 
 export interface PackageTableInterface {
   packageList: PackageInterface[];
@@ -156,11 +157,15 @@ export default function PackageTable({ packageList }: PackageTableInterface) {
                       <AddCategoryToPackage packageId={pkg?.id} />
                     </div>
 
-                    <CategoryTable
-                      categoryList={pkg?.categoryList}
-                      isPackageSubTable={true}
-                      packageId={pkg?.id}
-                    />
+                    {pkg.categoryList.length > 0 ? (
+                      <CategoryTable
+                        categoryList={pkg?.categoryList}
+                        isPackageSubTable={true}
+                        packageId={pkg?.id}
+                      />
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

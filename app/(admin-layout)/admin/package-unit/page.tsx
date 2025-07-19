@@ -81,7 +81,7 @@ function getData(packageUnitData: any) {
       id: item.id,
       list: [
         { label: "نام", value: item.name },
-        { label: "قیمت", value: formatPrice(item.price) },
+        { label: "قیمت", value: formatPrice(item.price) + " " + item?.currency?.name },
         { label: "توضیحات", value: item.description },
       ],
       data: {
@@ -89,14 +89,14 @@ function getData(packageUnitData: any) {
         name: item.name,
         price: formatPrice(item.price),
         description: item.description,
-        currency:item.currencyId
+        currency:item?.currency?.id
       },
       unitCosts: item?.unitCosts?.map((cost: any) => ({
         id: cost.id,
         list: [
           { label: "عنوان", value: cost.title },
           { label: "توضیحات", value: cost.description },
-          { label: "هزینه", value: cost.price },
+          { label: "هزینه", value: formatPrice(cost.price) + " " + cost?.currency?.name },
           { label: "نوع فروش واحد", value: cost.unitType },
           { label: "مدل فروش واحد", value: cost.unitModel },
           {
@@ -119,7 +119,7 @@ function getData(packageUnitData: any) {
           showDurationInDays: cost.showDurationInDays,
           countUnit: cost.countUnit,
           price: cost.price,
-          currency: cost.currencyId,
+          currency: cost.currency.id,
         },
       })),
     })

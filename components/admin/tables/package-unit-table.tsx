@@ -30,6 +30,7 @@ import UnitCostTable from "./unit-cost-table";
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import AddPermissionToPackageUnit from "../permission/add-permission-to-package-unit";
+import { NoData } from "../no-data";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -169,8 +170,11 @@ export default function PackageUnitTable({
 
                         <AddUnitCostToPackageUnit packageUnitId={unit.id} />
                       </div>
-
-                      <UnitCostTable unitCosts={unit?.unitCosts} />
+                      {unit.unitCosts.length > 0 ? (
+                        <UnitCostTable unitCosts={unit?.unitCosts} />
+                      ) : (
+                        <NoData />
+                      )}
                     </div>
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">

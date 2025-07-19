@@ -32,6 +32,7 @@ import AddPackageUnitToCategory from "../package-unit/add-package-unit-to-catego
 import PackageUnitSubTable from "./package-unit-sub-table";
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
+import { NoData } from "../no-data";
 
 export interface CategoryTableInterface {
   categoryList: CategoryInterface[];
@@ -71,7 +72,7 @@ export default function CategoryTable({
       name: values.name,
       description: values.description,
       price: Number(cleanFormatPrice(values.price)),
-      currencyId:values.currency
+      currencyId: values.currency,
     };
     editCategoryHandler({
       id: values.id,
@@ -107,7 +108,7 @@ export default function CategoryTable({
       deleteCategoryHandler(id);
     }
   }
-  
+
   return (
     <Table className="mt-2 border">
       <TableHeader>
@@ -191,10 +192,14 @@ export default function CategoryTable({
                       <AddPackageUnitToCategory categoryId={category.id} />
                     </div>
 
-                    <PackageUnitSubTable
-                      packageUnitList={category?.packageUnitList}
-                      categoryId={category.id}
-                    />
+                    {category?.packageUnitList.length > 0 ? (
+                      <PackageUnitSubTable
+                        packageUnitList={category?.packageUnitList}
+                        categoryId={category.id}
+                      />
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

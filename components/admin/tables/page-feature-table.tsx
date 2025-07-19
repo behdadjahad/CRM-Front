@@ -53,7 +53,7 @@ export default function PageFeatureTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["packageData"],
+        queryKey: ["pageData"],
       });
     },
   });
@@ -68,6 +68,7 @@ export default function PageFeatureTable({
     },
   });
   function editHandler(values: PageFeatureDataInterface) {
+ 
     const data = {
       name: values.name,
       code: values.code,
