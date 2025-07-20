@@ -38,7 +38,7 @@ export default function AddPermissionForm() {
     const data = {
       name: values.name,
       description: values.description,
-      pages:values.pages
+      accessesJson: values.pages ,
     };
     addPermissionHandler(data);
   }

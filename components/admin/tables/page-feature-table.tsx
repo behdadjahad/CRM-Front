@@ -33,11 +33,12 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import {
   PageFeatureDataInterface,
-  pageFeatureInterface,
+  PageFeatureInterface,
+
 } from "@/app/(admin-layout)/admin/page/page";
 
 export interface PageFeatureTableInterface {
-  pageFeatureList: pageFeatureInterface[];
+  pageFeatureList: PageFeatureInterface[];
 }
 
 export default function PageFeatureTable({

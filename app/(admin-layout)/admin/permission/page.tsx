@@ -1,28 +1,39 @@
-'use client';
-
+"use client";
 
 import { getPermission } from "@/api/admin";
 import PermissionContainer from "@/components/admin/permission/permission-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
-  export interface PermissionInterface {
-    id: number;
+import { features } from "process";
+export interface PermissionInterface {
+  id: number;
+  list: {
+    label: string;
+    value: string;
+  }[];
+  data: PermissionDataInterface;
+  pageList: {
     list: {
       label: string;
       value: string;
     }[];
-    data: PermissionDataInterface;
-
-  }
-  export interface PermissionDataInterface {
-    id: number;
-    name: string;
-    description: string;
-
-  }
+    data: {
+      id: number;
+      title: string;
+      code: string;
+      url: string;
+      enabled?: boolean;
+      show?: boolean;
+    };
+  }[];
+}
+export interface PermissionDataInterface {
+  id: number;
+  name: string;
+  description: string;
+}
 export default function Permission() {
-
   const { data: permissionData } = useQuery({
     queryKey: ["permissionData"],
     queryFn: async () => await getPermission(),
@@ -55,14 +66,48 @@ function getData(permissionData: any) {
       list: [
         { label: "نام", value: item.name },
         { label: "توضیحات", value: item.description },
-    
       ],
       data: {
         id: item.id,
         name: item.name,
         description: item.description,
-       
-      }
-    }))
-  return{permissionList}
+      },
+      pageList: item?.accessesJson?.pages?.map((page: any) => ({
+        id: page.pageId,
+        list: [
+          { label: "عنوان", value: page?.title },
+          { label: "کد", value: page?.code },
+          { label: "آدرس", value: page?.url },
+        ],
+        data: {
+          id: page?.pageId,
+          title: page?.title,
+          code: page?.code,
+          url: page?.url,
+          enabled: page?.enabled,
+          show: page?.show,
+        },
+        featureList: page?.features?.map((feature: any) => ({
+          id: feature.featureId,
+          list: [
+            { label: "نام", value: feature.name },
+            { label: "کد", value: feature.code },
+            { label: "الگو آدرس", value: feature.urlPattern.join(", ") },
+            { label: "توضیحات", value: feature.description },
+          ],
+          data: {
+            id: feature.featureId,
+            name: feature.name,
+            code: feature.code,
+            urlPattern: feature.urlPattern,
+            description: feature.description,
+            show: feature.show,
+            enabled: feature.enabled,
+          },
+        })),
+      })),
+    })
+  );
+
+  return { permissionList };
 }

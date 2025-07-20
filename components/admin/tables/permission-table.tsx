@@ -38,6 +38,8 @@ import {
   PermissionInterface,
 } from "@/app/(admin-layout)/admin/permission/page";
 
+import PermissionPageFeatureContainer from "../permission/permission-page-feature-container";
+
 export interface PermissionTableInterface {
   permissionList: PermissionInterface[];
   permissionTableType: "roleSubTable" | "packageUnitSubTable" | "mainTable";
@@ -47,7 +49,12 @@ export default function PermissionTable({
   permissionList,
 }: PermissionTableInterface) {
   const { permissionEditFormData } = getData("permission");
-
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  const toggleRow = (index: number) => {
+    setExpandedRows((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
+  };
   const queryClient = useQueryClient();
 
   const { mutate: deletePermissionHandler } = useMutation({
@@ -98,6 +105,9 @@ export default function PermissionTable({
           <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
+            لیست صفحات
+          </TableHead>
         </TableRow>
       </TableHeader>
 
@@ -136,7 +146,32 @@ export default function PermissionTable({
                   />
                 </div>
               </TableCell>
+
+              <TableCell className="text-center border">
+                <Button
+                  className="border-none p-0"
+                  onClick={() => toggleRow(rowIndex)}
+                >
+                  {expandedRows.includes(rowIndex) ? (
+                    <FaChevronUp />
+                  ) : (
+                    <FaChevronDown />
+                  )}
+                </Button>
+              </TableCell>
             </TableRow>
+            {expandedRows.includes(rowIndex) && (
+              <TableRow className="bg-gray-100">
+                <TableCell
+                  colSpan={permission.list.length + 2}
+                  className="text-sm text-gray-700 p-4"
+                >
+                  <PermissionPageFeatureContainer
+                    pageList={permission?.pageList}
+                  />
+                </TableCell>
+              </TableRow>
+            )}
           </Fragment>
         ))}
       </TableBody>

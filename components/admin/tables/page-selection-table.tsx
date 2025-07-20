@@ -199,6 +199,8 @@ const handleToggleFeature = (
 };
 
   return (
+    <div className="flex flex-col gap-4">
+      <h2>تعیین وضعیت صفحه ها</h2>
     <Table>
       <TableHeader>
         <TableRow>
@@ -239,7 +241,7 @@ const handleToggleFeature = (
                       "cursor-pointer text-sm font-semibold border h-9 rounded-md flex items-center justify-center text-subtitle/80 py-4 px-8 bg-gray-50",
                       {
                         "border-aqua-mute text-aqua-active":
-                          pageStatus[page.id]?.show,
+                          pageStatus?.[page?.id]?.show,
                       }
                     )}
                     onClick={() => toggleShow(page.data.id)}
@@ -302,6 +304,7 @@ const handleToggleFeature = (
           </Fragment>
         ))}
       </TableBody>
-    </Table>
+      </Table>
+      </div>
   );
 }
