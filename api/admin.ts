@@ -243,6 +243,14 @@ export async function getPage() {
     return result;
   } catch {}
 }
+export async function getSinglePageFeature(pageId:number) {
+  try {
+    const result = await fetchService(`page-feature/page/${pageId}`);
+
+    return result;
+  } catch {}
+}
+
 export async function addPageFeature(data: any) {
   try {
     const result = await fetchService("page-feature", {

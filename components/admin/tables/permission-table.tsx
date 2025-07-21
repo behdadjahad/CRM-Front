@@ -48,6 +48,7 @@ export interface PermissionTableInterface {
 export default function PermissionTable({
   permissionList,
 }: PermissionTableInterface) {
+  console.log(permissionList);
   const { permissionEditFormData } = getData("permission");
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const toggleRow = (index: number) => {
@@ -90,6 +91,8 @@ export default function PermissionTable({
   function deleteHandler(permissionId: number) {
     deletePermissionHandler(permissionId);
   }
+  // const permissions: PermissionInterface[] = useSelector((state: any) => state.permissionPageFeature.allPermissions);
+  
   return (
     <Table>
       <TableHeader>
@@ -168,6 +171,7 @@ export default function PermissionTable({
                 >
                   <PermissionPageFeatureContainer
                     pageList={permission?.pageList}
+                    permissionId={permission.id}
                   />
                 </TableCell>
               </TableRow>

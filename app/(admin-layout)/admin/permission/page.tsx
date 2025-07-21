@@ -4,8 +4,11 @@ import { getPermission } from "@/api/admin";
 import PermissionContainer from "@/components/admin/permission/permission-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
+
 import { useQuery } from "@tanstack/react-query";
 import { features } from "process";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 export interface PermissionInterface {
   id: number;
   list: {
@@ -34,11 +37,14 @@ export interface PermissionDataInterface {
   description: string;
 }
 export default function Permission() {
+ 
+  
   const { data: permissionData } = useQuery({
     queryKey: ["permissionData"],
     queryFn: async () => await getPermission(),
   });
   const { permissionList } = getData(permissionData);
+
 
   return (
     <main>
@@ -92,7 +98,7 @@ function getData(permissionData: any) {
           list: [
             { label: "نام", value: feature.name },
             { label: "کد", value: feature.code },
-            { label: "الگو آدرس", value: feature.urlPattern.join(", ") },
+            // { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
             { label: "توضیحات", value: feature.description },
           ],
           data: {

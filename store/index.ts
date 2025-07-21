@@ -10,6 +10,7 @@ import airlineReducer from "./airline-slice";
 import notificationReducer from "./notification-slice";
 import currencyReducer from "./currency-slice";
 
+
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -21,6 +22,7 @@ export const store = configureStore({
     hotel: hotelReducer,
     airline: airlineReducer,
     notification: notificationReducer,
+ 
   },
 });
 
