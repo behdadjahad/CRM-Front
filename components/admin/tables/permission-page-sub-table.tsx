@@ -90,6 +90,7 @@ useEffect(() => {
 
   setSelectedFeatures(initialFeatures);
 }, [pageList]);
+  
   useEffect(() => {
     if (!pageList) return;
 
@@ -195,8 +196,8 @@ useEffect(() => {
           url: data?.url,
           show: actionType === "show",
           enabled: actionType === "enabled",
-          showIsSubmitted: actionType === "show" ? false : true,
-          enabledIsSubmitted: actionType === "enabled" ? false : true,
+          showIsSubmitted:  false ,
+          enabledIsSubmitted:  false ,
         },
       ];
     }
@@ -287,7 +288,7 @@ useEffect(() => {
                         "border-green-400 text-green-400":
                           selectedPages?.find(
                             (item) => item.pageId === page.data.id
-                          )?.show &&
+                          )?.enabled &&
                           selectedPages?.find(
                             (item) => item.pageId === page.data.id
                           )?.enabledIsSubmitted === false,

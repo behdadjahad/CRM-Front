@@ -32,7 +32,7 @@ export default function PermissionPageFeatureContainer({
     };
     editPermissionData({ id: permissionId, data: data });
   }
-  console.log(pageList);
+
 
 
   return (

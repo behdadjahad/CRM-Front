@@ -54,7 +54,7 @@ useEffect(() => {
     show: feature.data.show ?? false,
     enabled: feature.data.enabled ?? false,
     showIsSubmitted: true,
-    enabledisSubmitted: true,
+    enabledIsSubmitted: true,
   }));
 
   setSelectedFeatures(initialFeatures);
@@ -101,8 +101,8 @@ useEffect(() => {
               [actionType]: !item[actionType],
               showIsSubmitted:
                 actionType === "show" ? false : item.showIsSubmitted,
-              enabledisSubmitted:
-                actionType === "enabled" ? false : item.enabledisSubmitted,
+              enabledIsSubmitted:
+                actionType === "enabled" ? false : item.enabledIsSubmitted,
             }
           : item
       );
@@ -119,7 +119,7 @@ useEffect(() => {
           show: actionType === "show",
           enabled: actionType === "enabled",
           showIsSubmitted: false,
-          enabledisSubmitted: false,
+          enabledIsSubmitted: false,
         },
       ];
     }
@@ -173,7 +173,19 @@ useEffect(() => {
                         "border-aqua-mute text-aqua-active":
                           selectedFeatures?.find(
                             (item) => item.featureId === feature.data.id
-                          )?.show,
+                          )?.show &&
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.showIsSubmitted,
+                      },
+                      {
+                        "border-green-400 text-green-400":
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.show &&
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.showIsSubmitted === false,
                       }
                     )}
                     onClick={() => {
@@ -184,13 +196,25 @@ useEffect(() => {
                   </Button>
                   <Button
                     variant={"transparent"}
-                    className={cn(
+                   className={cn(
                       "text-sm font-semibold border h-9 rounded-md flex items-center justify-center text-subtitle/80 py-4 px-8 bg-gray-50",
                       {
                         "border-aqua-mute text-aqua-active":
                           selectedFeatures?.find(
                             (item) => item.featureId === feature.data.id
-                          )?.enabled,
+                          )?.enabled &&
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.enabledIsSubmitted,
+                      },
+                      {
+                        "border-green-400 text-green-400":
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.enabled &&
+                          selectedFeatures?.find(
+                            (item) => item.featureId === feature.data.id
+                          )?.enabledIsSubmitted === false,
                       }
                     )}
                     onClick={() => {
