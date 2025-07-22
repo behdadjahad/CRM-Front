@@ -10,11 +10,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(priceString: any) {
-  const price = priceString.toString();
-  return price.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const price = priceString?.toString();
+  return price?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 export function cleanFormatPrice(priceString: any) {
-  const price = priceString.toString();
+  const price = priceString?.toString();
   return Number(price.replace(/,/g, ""));
 }
 export const totalVotes = 10;
@@ -170,10 +170,10 @@ export const customerHeaderLabels = [
 export enum notificationStatus {
   all = "ALL",
   read = "READ",
-  unread="UNREAD"
+  unread = "UNREAD",
 }
 export enum notificationEntityName {
   flight = "FLIGHT",
   contract = "CONTRACT",
-  customer="CUSTOMER"
+  customer = "CUSTOMER",
 }

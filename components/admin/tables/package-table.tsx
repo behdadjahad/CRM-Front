@@ -29,6 +29,8 @@ import {
 import { useSelector } from "react-redux";
 import { cleanFormatPrice } from "@/lib/utils";
 import { NoData } from "../no-data";
+import { CustomToast } from "@/components/shared/custome-toast";
+import DeleteConfirmation from "../delete-confirmation";
 
 export interface PackageTableInterface {
   packageList: PackageInterface[];
@@ -109,7 +111,7 @@ export default function PackageTable({ packageList }: PackageTableInterface) {
               ))}
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
-                  <Button
+                  {/* <Button
                     className="border-none p-0 text-[##212B36]"
                     onClick={() => {
                       deletePackageHandler(pkg.id);
@@ -122,7 +124,8 @@ export default function PackageTable({ packageList }: PackageTableInterface) {
                       height={1024}
                       className="w-5 h-5"
                     />
-                  </Button>
+                  </Button> */}
+                  <DeleteConfirmation onDelete={() => { deletePackageHandler(pkg.id) }} />
                   <EditableForm
                     fields={packageEditFormData.fields}
                     initialValues={pkg.data}

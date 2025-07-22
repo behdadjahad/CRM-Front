@@ -1,4 +1,7 @@
 import { toast } from "react-hot-toast";
+import { Button } from "../ui/button";
+import CustomModal from "./custom-modal";
+import { createPortal } from "react-dom";
 
 export type ToastType = "success" | "error" | "custom";
 
@@ -13,14 +16,14 @@ interface CustomToastProps {
 export function CustomToast({
   message,
   type,
-  duration = 2000,
+
   position = "top-center",
   onConfirm,
 }: CustomToastProps) {
   switch (type) {
     case "success":
       toast.success(message, {
-        duration,
+
         position,
         style: {
           width: "300px",
@@ -34,7 +37,7 @@ export function CustomToast({
       break;
     case "error":
       toast.error(message, {
-        duration,
+
         position,
         style: {
           width: "300px",
@@ -50,63 +53,43 @@ export function CustomToast({
 
       break;
     case "custom":
-      toast.custom(
-        (t) => (
-          <div
-            style={{
-              width: "300px",
-              padding: "16px",
-              borderRadius: "16px",
-              backgroundColor: "#FFF",
-              border: "1px solid #888",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              color: "#000",
-            }}
-          >
-            <span>{message}</span>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "8px",
-              }}
-            >
-              <button
-                style={{
-                  backgroundColor: "#D80027",
-                  color: "#FFF",
-                  padding: "6px 12px",
-                  borderRadius: "8px",
-                  border: "none",
-                }}
+      toast.custom((t) => (
+        <CustomModal
+          isOpen={true}
+          onRequestClose={() => toast.remove(t.id)}
+          maxWidth="400px"
+          minWidth="0"
+          contentLabel="تایید عملیات"
+        >
+          <div className="flex flex-col justify-between p-4 gap-4">
+            <div className="text-sm text-right text-gray-700 font-bold">
+              {message}
+            </div>
+            <div className="flex justify-end gap-3 mt-4">
+              <Button
+                variant="transparent"
+                className="w-16 h-8 bg-danger text-card"
                 onClick={() => {
-                  toast.dismiss(t.id);
-                  onConfirm?.();
+                  toast.remove(t.id);
+
+         
+                    onConfirm?.(); // This should trigger toast.success
+                  // This triggers fetchService, which triggers toast.success
+                  // Immediately dismiss modal // Start delete (fire-and-forget)
                 }}
               >
                 بله
-              </button>
-              <button
-                style={{
-                  backgroundColor: "#CCC",
-                  color: "#000",
-                  padding: "6px 12px",
-                  borderRadius: "8px",
-                  border: "none",
-                }}
-                onClick={() => toast.dismiss(t.id)}
+              </Button>
+              <Button
+                variant="foreground"
+                className="w-16 h-8"
+                onClick={() => toast.remove(t.id)}
               >
                 خیر
-              </button>
+              </Button>
             </div>
           </div>
-        ),
-        {
-          position,
-          duration: Infinity, // Stay open until user decides
-        }
-      );
+        </CustomModal>
+      ));
   }
 }

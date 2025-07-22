@@ -3,6 +3,7 @@ import { config } from "@/config/config";
 import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
 export interface FetchServiceType {

@@ -1,4 +1,4 @@
-import { fetchService } from "@/boot/fetch-service";
+import {  fetchService } from "@/boot/fetch-service";
 
 export async function addPackage(data: any) {
   try {
