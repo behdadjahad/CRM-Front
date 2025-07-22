@@ -32,7 +32,8 @@ const handleRemove = (index: number) => {
   const updatedItems = items.filter((_, i) => i !== index);
   setItems(updatedItems);
   form.setFieldValue(item.key, updatedItems);
-};
+  };
+  console.log(items)
   return (
     <div className="w-full">
       <div

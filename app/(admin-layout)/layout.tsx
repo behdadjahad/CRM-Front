@@ -1,7 +1,7 @@
 "use client";
 
 import "../../globals.css";
-import Layout from "@/components/shared/layout";
+
 import localFont from "next/font/local";
 import "../../globals.css";
 import { store } from "../../store";

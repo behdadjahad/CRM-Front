@@ -27,7 +27,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
-            formatted:true,
+            formatted: true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -77,7 +77,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
-            formatted:true,
+            formatted: true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -116,57 +116,6 @@ export function createFormFields(
         fields: [
           {
             key: "name",
-            component: "input",
-            placeholder: "عنوان",
-            type: "text",
-            floating: true,
-            labelClassName: "w-full",
-            className: "w-full md:w-1/2",
-          },
-          {
-            key: "price",
-            component: "input",
-            placeholder: "قیمت",
-            formatted:true,
-            type: "text",
-            floating: true,
-            labelClassName: "w-full",
-            className: "w-full md:w-1/2",
-          },
-          {
-            key: "currency",
-            component: "Select",
-            placeholder: "ارز",
-            formatted:true,
-            type: "text",
-            floating: true,
-            labelClassName: "w-full",
-            className: "w-full md:w-1/2",
-            options:currencyOptions
-          },
-          {
-            key: "description",
-            component: "input",
-            placeholder: "توضیحات",
-            type: "text",
-            floating: true,
-            labelClassName: "w-full",
-            className: "w-full md:w-1/2",
-          },
-        ],
-        initialValues: {
-          name: "",
-          price: "",
-          description: "",
-          currency:""
-        },
-      };
-    case "unit-cost":
-      return {
-        title: "هزینه",
-        fields: [
-          {
-            key: "title",
             component: "input",
             placeholder: "عنوان",
             type: "text",
@@ -232,7 +181,7 @@ export function createFormFields(
             key: "price",
             component: "input",
             placeholder: "قیمت",
-            formatted:true,
+            formatted: true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -242,6 +191,7 @@ export function createFormFields(
             key: "currency",
             component: "Select",
             placeholder: "ارز",
+            formatted: true,
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -260,9 +210,118 @@ export function createFormFields(
         ],
         initialValues: {
           name: "",
+          price: "",
+          unitType: "",
+          unitModel: "",
+          countUnit: "",
+          enabledDurationInDays: "",
+          showDurationInDays: "",
           description: "",
+          currency: "",
         },
       };
+    // case "unit-cost":
+    //   return {
+    //     title: "هزینه",
+    //     fields: [
+    //       {
+    //         key: "title",
+    //         component: "input",
+    //         placeholder: "عنوان",
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //       {
+    //         key: "unitType",
+    //         component: "Select",
+    //         placeholder: "نوع فروش واحد",
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //         options: [
+    //           { label: "اجاره", value: "rent" },
+    //           { label: "فروش", value: "sale" },
+    //         ],
+    //       },
+    //       {
+    //         key: "unitModel",
+    //         component: "Select",
+    //         placeholder: "مدل فروش واحد",
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //         options: [
+    //           { label: "مدت زمانی", value: "perDuration" },
+    //           { label: "تعدادی", value: "perCount" },
+    //           { label: "کامل", value: "flat" },
+    //         ],
+    //       },
+    //       {
+    //         key: "countUnit",
+    //         component: "input",
+    //         placeholder: "تعداد",
+    //         type: "number",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //       {
+    //         key: "enabledDurationInDays",
+    //         component: "input",
+    //         placeholder: "مدت زمان امکان تعامل (روز)",
+    //         type: "number",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //       {
+    //         key: "showDurationInDays",
+    //         component: "input",
+    //         placeholder: "مدت زمان امکان نمایش (روز)",
+    //         type: "number",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //       {
+    //         key: "price",
+    //         component: "input",
+    //         placeholder: "قیمت",
+    //         formatted:true,
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //       {
+    //         key: "currency",
+    //         component: "Select",
+    //         placeholder: "ارز",
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //         options: currencyOptions,
+    //       },
+    //       {
+    //         key: "description",
+    //         component: "input",
+    //         placeholder: "توضیحات",
+    //         type: "text",
+    //         floating: true,
+    //         labelClassName: "w-full",
+    //         className: "w-full md:w-1/2",
+    //       },
+    //     ],
+    //     initialValues: {
+    //       name: "",
+    //       description: "",
+    //     },
+    //   };
     case "page":
       return {
         title: "صفحه",
@@ -375,7 +434,7 @@ export function createFormFields(
         ],
         initialValues: {
           name: "",
-         description: "",
+          description: "",
         },
       };
     case "permission":
@@ -404,7 +463,7 @@ export function createFormFields(
         ],
         initialValues: {
           name: "",
-         description: "",
+          description: "",
         },
       };
     default:

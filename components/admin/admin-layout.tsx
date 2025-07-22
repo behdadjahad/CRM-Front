@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 
 import { cn } from "@/lib/utils";
-
+import Drawer from "../shared/drawer";
+import Header from "../shared/header";
 import { adminSideBarMenuLinks } from "@/constants/admin-sidebar-menu-links";
-import SideBarMenu from "../menu/sidebar-menu";
 
-export default function Layout({
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -14,7 +14,7 @@ export default function Layout({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   return (
     <div className="relative flex flex-row w-full overflow-hidden">
-      <SideBarMenu state={isDrawerOpen} setState={setIsDrawerOpen} sideBarLinks={adminSideBarMenuLinks}/>
+      <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} sideBarLinks={adminSideBarMenuLinks} />
       <div
         className={cn(
           "w-full h-full opacity-100 z-30 absolute bg-black/75 lg:hidden duration-200 transition-all",
@@ -32,7 +32,7 @@ export default function Layout({
           }
         )}
       >
-      
+        {/* <Header state={isDrawerOpen} setState={setIsDrawerOpen} /> */}
         {children}
       </div>
     </div>

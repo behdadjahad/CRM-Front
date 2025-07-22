@@ -34,6 +34,11 @@ export interface PackageUnitDataInterface {
   description: string;
   price: string;
   currency: number;
+  unitType: string;
+  unitModel: string;
+  enabledDurationInDays: number;
+  showDurationInDays: number;
+  countUnit: number;
 }
 export interface PackageUnitInterface {
   id: number;
@@ -42,7 +47,7 @@ export interface PackageUnitInterface {
     value: string;
   }[];
   data: PackageUnitDataInterface;
-  unitCosts: UnitCostInterface[];
+
 }
 
 export default function PackageUnit() {
@@ -81,47 +86,31 @@ function getData(packageUnitData: any) {
       id: item.id,
       list: [
         { label: "نام", value: item.name },
-        { label: "قیمت", value: formatPrice(item.price) + " " + item?.currency?.name },
-        { label: "توضیحات", value: item.description },
+        {
+          label: "قیمت",
+          value: formatPrice(item.price) + " " + item?.currency?.name,
+        },
+        { label: "توضیحات", value: item?.description },
+
+        { label: "نوع فروش واحد", value: item?.unitType },
+        { label: "مدل فروش واحد", value: item?.unitModel },
+        {
+          label: "مدت زمان امکان تعامل (روز)",
+          value: item?.enabledDurationInDays,
+        },
+        {
+          label: "مدت زمان امکان نمایش (روز)",
+          value: item?.showDurationInDays,
+        },
+        { label: "تعداد", value: item?.countUnit },
       ],
       data: {
         id: item.id,
         name: item.name,
         price: formatPrice(item.price),
         description: item.description,
-        currency:item?.currency?.id
+        currency: item?.currency?.id,
       },
-      unitCosts: item?.unitCosts?.map((cost: any) => ({
-        id: cost.id,
-        list: [
-          { label: "عنوان", value: cost.title },
-          { label: "توضیحات", value: cost.description },
-          { label: "هزینه", value: formatPrice(cost.price) + " " + cost?.currency?.name },
-          { label: "نوع فروش واحد", value: cost.unitType },
-          { label: "مدل فروش واحد", value: cost.unitModel },
-          {
-            label: "مدت زمان امکان تعامل (روز)",
-            value: cost.enabledDurationInDays,
-          },
-          {
-            label: "مدت زمان امکان نمایش (روز)",
-            value: cost.showDurationInDays,
-          },
-          { label: "تعداد", value: cost.countUnit },
-        ],
-        data: {
-          id: cost.id,
-          title: cost.title,
-          description: cost.description,
-          unitType: cost.unitType,
-          unitModel: cost.unitModel,
-          enabledDurationInDays: cost.enabledDurationInDays,
-          showDurationInDays: cost.showDurationInDays,
-          countUnit: cost.countUnit,
-          price: cost.price,
-          currency: cost.currency.id,
-        },
-      })),
     })
   );
 

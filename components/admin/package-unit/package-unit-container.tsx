@@ -36,6 +36,11 @@ export default function PackageUnitContainer({
       description: values.description,
       price: Number(cleanFormatPrice(values.price)),
       currencyId: values.currency,
+      unitType: values.unitType,
+      unitModel: values.unitModel,
+      enabledDurationInDays: Number(values.enabledDurationInDays),
+      showDurationInDays: Number(values.showDurationInDays),
+      countUnit: Number(values.countUnit),
     };
     addPackageUnitHandler(data);
   }

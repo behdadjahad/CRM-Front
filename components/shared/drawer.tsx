@@ -1,23 +1,28 @@
 import React from "react";
 import Logo from "./logo";
 import { drawerLinks } from "@/constants/navigation-links";
-import { NavLink } from "./nav-link";
+import { NavLink, NavLinkInterface } from "./nav-link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface DrawerInterface {
   state: boolean;
   setState: (prev: any) => any;
+  sideBarLinks: { category: string; links: NavLinkInterface[] }[];
 }
 
-export default function Drawer({ state, setState }: DrawerInterface) {
+export default function Drawer({
+  state,
+  setState,
+  sideBarLinks,
+}: DrawerInterface) {
   return (
     <div
       className={cn(
-        "hidden lg:block w-0 absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden",
+        "hidden lg:block w-0 absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden z-[100]",
         {
           // "lg:w-20.5": !state,
-          "lg:w-20.5 overflow-visible": !state,
+          "lg:w-25 overflow-visible": !state,
         },
         {
           // "z-50 block w-4/5 max-w-96": state,
@@ -32,7 +37,7 @@ export default function Drawer({ state, setState }: DrawerInterface) {
         />
 
         <div className="flex flex-col">
-          {drawerLinks.map((item) => (
+          {sideBarLinks.map((item) => (
             <div key={item.category} className="flex flex-col">
               <div className="h-10 flex flex-col justify-center transition-all duration-200">
                 {state ? (

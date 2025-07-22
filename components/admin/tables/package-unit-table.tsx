@@ -70,6 +70,12 @@ export default function PackageUnitTable({
       price: Number(cleanFormatPrice(values.price)),
       description: values.description,
       currencyId: values.currency,
+      unitType: values.unitType,
+      unitModel: values.unitModel,
+      enabledDurationInDays: Number(values.enabledDurationInDays),
+      showDurationInDays: Number(values.showDurationInDays),
+      countUnit: Number(values.countUnit),
+  
     };
     editPackageUnitHandler({
       id: values.id,
@@ -164,7 +170,7 @@ export default function PackageUnitTable({
                   className="text-sm text-gray-700 p-4"
                 >
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
+                    {/* <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>لیست هزینه ها</div>
 
@@ -175,7 +181,7 @@ export default function PackageUnitTable({
                       ) : (
                         <NoData />
                       )}
-                    </div>
+                    </div> */}
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>لیست دسترسی ها </div>

@@ -1,11 +1,11 @@
 "use client";
 import { getPackageCategory } from "@/api/admin";
 import CategoryContainer from "@/components/admin/category/category-container";
-import CategoryTable from "@/components/admin/tables/category-table";
+
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
-import { PackageUnitInterface } from "../package-unit/page";
+import { PackageUnitDataInterface} from "../package-unit/page";
 import { fetchCurrencies } from "@/store/currency-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -33,13 +33,7 @@ export interface CategoryInterface {
       label: string;
       value: string;
     }[];
-    unitCostData: {
-      id: number;
-      list: {
-        label: string;
-        value: string;
-      }[];
-    };
+    data: PackageUnitDataInterface;
   }[];
 }
 
@@ -86,7 +80,7 @@ function getData(categoryData: any) {
         name: item.name,
         price: formatPrice(item.price),
         description: item.description,
-        currency:item.currencyId
+        currency: item.currencyId,
       },
 
       packageUnitList: item?.units?.map((unit: any) => ({
@@ -95,25 +89,29 @@ function getData(categoryData: any) {
           { label: "نام", value: unit.unit.name },
           { label: "قیمت", value: unit.unit.price },
           { label: "توضیحات", value: unit.unit.description },
+          { label: "نوع فروش واحد", value: unit.unit.unitType },
+          { label: "مدل فروش واحد", value: unit.unit.unitModel },
+          {
+            label: "مدت زمان امکان تعامل (روز)",
+            value: unit.unit.enabledDurationInDays,
+          },
+          {
+            label: "مدت زمان امکان نمایش (روز)",
+            value: unit.unit.showDurationInDays,
+          },
+          { label: "تعداد", value: unit.unit.countUnit },
         ],
-        unitCostData: {
-          id: unit.unitCost.id,
-          list: [
-            { label: "عنوان", value: unit.unitCost.title },
-            { label: "نوع فروش واحد", value: unit.unitCost.unitType },
-            { label: "مدل فروش واحد", value: unit.unitCost.unitModel },
-            { label: "تعداد", value: unit.unitCost.countUnit },
-            { label: "قیمت", value: unit.unitCost.price },
-            {
-              label: "مدت زمان امکان تعامل (روز)",
-              value: unit.unitCost.enabledDurationInDays,
-            },
-            {
-              label: "مدت زمان امکان نمایش (روز)",
-              value: unit.unitCost.showDurationInDays,
-            },
-            { label: "توضیحات", value: unit.unitCost.description },
-          ],
+        data: {
+          id: item.id,
+          name: item.name,
+          price: formatPrice(item.price),
+          unitType:unit.unit.unitType,
+          unitModel:unit.unit.unitModel,
+          enabledDurationInDays:unit.unit.enabledDurationInDays,
+          showDurationInDays:unit.unit.showDurationInDays,
+          countUnit:unit.unit.countUnit,
+          description: item.description,
+          currency: item?.currency?.id,
         },
       })),
     })

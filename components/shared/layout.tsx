@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Header from "./header";
 import Drawer from "./drawer";
 import { cn } from "@/lib/utils";
+import { drawerLinks } from "@/constants/navigation-links";
 
 export default function Layout({
   children,
@@ -12,7 +13,7 @@ export default function Layout({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   return (
     <div className="relative flex flex-row w-full overflow-hidden">
-      <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} />
+      <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} sideBarLinks={drawerLinks}/>
       <div
         className={cn(
           "w-full h-full opacity-100 z-30 absolute bg-black/75 lg:hidden duration-200 transition-all",

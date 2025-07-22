@@ -12,6 +12,7 @@ import { addPackage } from "@/api/admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { cleanFormatPrice } from "@/lib/utils";
+import TagContainer from "./tag-container";
 export interface PackageContainerInterface {
   packageList: PackageInterface[];
 }
@@ -19,7 +20,7 @@ export default function PackageContainer({
   packageList,
 }: PackageContainerInterface) {
   const queryClient = useQueryClient();
-  const currencyOptions=  useSelector((state: any) => state.currency.items);
+  const currencyOptions = useSelector((state: any) => state.currency.items);
   const { packageFormData } = getData("package");
   const { mutate: addPackageHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -47,18 +48,21 @@ export default function PackageContainer({
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-card">
         پکیج
       </div>
+
       <PackageTable packageList={packageList} />
     </div>
   );
   function getData(formType: string) {
-  const formData: formDataInterface = createFormFields(formType,currencyOptions);
-  const packageFormData = {
-    title: formData.title,
-    fields: formData.fields,
-    initialValues: formData.initialValues,
-  };
+    const formData: formDataInterface = createFormFields(
+      formType,
+      currencyOptions
+    );
+    const packageFormData = {
+      title: formData.title,
+      fields: formData.fields,
+      initialValues: formData.initialValues,
+    };
 
-  return { packageFormData };
-}
-
+    return { packageFormData };
+  }
 }

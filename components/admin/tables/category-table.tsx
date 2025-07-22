@@ -33,6 +33,7 @@ import PackageUnitSubTable from "./package-unit-sub-table";
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { NoData } from "../no-data";
+import TagContainer from "../tag-container";
 
 export interface CategoryTableInterface {
   categoryList: CategoryInterface[];
@@ -122,6 +123,9 @@ export default function CategoryTable({
             </TableHead>
           ))}
           <TableHead className="text-center text-xs bg-card border font-bold">
+            لیست پکیج ها
+          </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
           <TableHead className="text-center text-xs bg-card border font-bold" />
@@ -140,6 +144,14 @@ export default function CategoryTable({
                   {item.value}
                 </TableCell>
               ))}
+              <TableCell className="text-center text-xs border">
+                <TagContainer
+                  list={[{ label: "نقره ای", value: 2 },{label:"طلایی",value:3}]}
+                  onDeleteHandler={(itemId) => {
+                    console.log(itemId);
+                  }}
+                />
+              </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
                   <Button
@@ -182,7 +194,7 @@ export default function CategoryTable({
             {expandedRows.includes(index) && (
               <TableRow className="bg-gray-100">
                 <TableCell
-                  colSpan={category.list.length + 2}
+                  colSpan={category.list.length + 3}
                   className="text-sm text-gray-700 p-4"
                 >
                   <div className="flex flex-col gap-2">
@@ -193,9 +205,9 @@ export default function CategoryTable({
                     </div>
 
                     {category?.packageUnitList.length > 0 ? (
-                      <PackageUnitSubTable
+                      <PackageUnitTable
                         packageUnitList={category?.packageUnitList}
-                        categoryId={category.id}
+                     
                       />
                     ) : (
                       <NoData />

@@ -39,7 +39,7 @@ export default function Package() {
     dispatch(fetchCurrencies());
   }, [dispatch]);
   return (
-    <main>
+  <main className="flex flex-col">
       <Title label="پکیج" />
 
       <Breadcrumb
