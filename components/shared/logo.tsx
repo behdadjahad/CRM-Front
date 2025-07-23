@@ -18,7 +18,7 @@ export default function Logo({ labelClassName, className }: LogoInterface) {
         alt={credentialData.name}
         loading="eager"
         //className="w-9.5 h-9.5 object-contain"
-        className={cn("w-9.5 h-9.5 object-contain", className)}
+        className={cn("w-24 h-9.5 object-contain", className)}
       />
       <span
         className={cn(

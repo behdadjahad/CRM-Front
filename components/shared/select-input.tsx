@@ -68,11 +68,11 @@ const SelectInput = React.memo(function SelectInput({
       }}
       classNames={{
         container: () => {
-          return cn("w-full", item.containerClassName);
+          return cn("w-full rounded-lg", item.containerClassName);
         },
         control: () => {
           return cn(
-            "outline-none  w-full bg-background text-subtitle/80 placeholder:text-subtitle/80 text-right bg-primary-foreground border-none overflow-hidden focus:outline-none",
+            "outline-none  !rounded-lg w-full bg-background text-subtitle/80 placeholder:text-subtitle/80 text-right bg-primary-foreground border-none overflow-hidden focus:outline-none h-11 !border !border-1 !border-gray-200",
             item.controlClassName
           );
         },
@@ -80,7 +80,7 @@ const SelectInput = React.memo(function SelectInput({
         //   "w-full h-full outline-none text-right placeholder:text-foreground-mute focus:outline-none !text-xs !text-foreground-mute",
         input: () => {
           return cn(
-            "w-full h-full outline-none text-right placeholder:text-foreground-mute focus:outline-none",
+            "w-full h-full outline-none text-right placeholder:text-foreground-mute focus:outline-none rounded-lg",
             item.inputClassName
           );
         },
