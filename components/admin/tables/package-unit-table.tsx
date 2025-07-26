@@ -20,24 +20,33 @@ import {
 } from "@/app/(admin-layout)/admin/package-unit/page";
 import EditableForm from "../forms/editable-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deletePackageUnit, editPackageUnit } from "@/api/admin";
+import {
+  deletePackageUnit,
+  editPackageUnit,
+  removePackageUnitFromCategory,
+} from "@/api/admin";
 import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
-import AddUnitCostToPackageUnit from "../unit-cost/add-unit-cost-to-package-unit";
-import UnitCostTable from "./unit-cost-table";
+
+
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import AddPermissionToPackageUnit from "../permission/add-permission-to-package-unit";
 import { NoData } from "../no-data";
+import TagContainer from "../tag-container";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
+  isCategorySubTable: boolean;
+  categoryId?: number;
 }
 
 export default function PackageUnitTable({
   packageUnitList,
+  isCategorySubTable,
+  categoryId,
 }: PackageUnitTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();
@@ -75,13 +84,25 @@ export default function PackageUnitTable({
       enabledDurationInDays: Number(values.enabledDurationInDays),
       showDurationInDays: Number(values.showDurationInDays),
       countUnit: Number(values.countUnit),
-  
     };
     editPackageUnitHandler({
       id: values.id,
       data: data,
     });
   }
+  const { mutate: deleteUnitFromCategoryHandler } = useMutation({
+    mutationFn: ({ categoryId, data }: { categoryId: number; data: any }) => {
+      return removePackageUnitFromCategory(categoryId, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageUnitData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["categoryData"],
+      });
+    },
+  });
   const { mutate: deletePackageUnitHandler } = useMutation({
     mutationFn: (id: number) => {
       return deletePackageUnit(id);
@@ -93,8 +114,22 @@ export default function PackageUnitTable({
     },
   });
   function deleteHandler(id: number) {
-    deletePackageUnitHandler(id);
+    if (isCategorySubTable && categoryId) {
+      deleteUnitFromCategoryHandler({
+        categoryId: categoryId,
+        data: {
+          packageUnits: [
+            {
+              packageUnitId: id,
+            },
+          ],
+        },
+      });
+    } else {
+      deletePackageUnitHandler(id);
+    }
   }
+
   return (
     <Table>
       <TableHeader>
@@ -108,8 +143,12 @@ export default function PackageUnitTable({
             </TableHead>
           ))}
           <TableHead className="text-center text-xs bg-card border font-bold">
+            لیست دسته بندی ها
+          </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
+
           <TableHead className="text-center text-xs bg-card border font-bold" />
         </TableRow>
       </TableHeader>
@@ -126,6 +165,23 @@ export default function PackageUnitTable({
                   {cell.value}
                 </TableCell>
               ))}
+              <TableCell className="text-center text-xs border">
+                <TagContainer
+                  list={unit?.data?.categories}
+                  onDeleteHandler={(itemId) => {
+                    deleteUnitFromCategoryHandler({
+                      categoryId: itemId,
+                      data: {
+                        packageUnits: [
+                          {
+                            packageUnitId: unit.id,
+                          },
+                        ],
+                      },
+                    });
+                  }}
+                />
+              </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
                   <Button
@@ -166,22 +222,11 @@ export default function PackageUnitTable({
             {expandedRows.includes(rowIndex) && (
               <TableRow className="bg-gray-100">
                 <TableCell
-                  colSpan={unit.list.length + 2}
+                  colSpan={unit.list.length + 3}
                   className="text-sm text-gray-700 p-4"
                 >
                   <div className="flex flex-col gap-4">
-                    {/* <div className="flex flex-col gap-2">
-                      <div className="flex items-center justify-between">
-                        <div>لیست هزینه ها</div>
-
-                        <AddUnitCostToPackageUnit packageUnitId={unit.id} />
-                      </div>
-                      {unit.unitCosts.length > 0 ? (
-                        <UnitCostTable unitCosts={unit?.unitCosts} />
-                      ) : (
-                        <NoData />
-                      )}
-                    </div> */}
+                 
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>لیست دسترسی ها </div>

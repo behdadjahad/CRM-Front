@@ -1,7 +1,7 @@
 "use client";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+
 import Link from "next/link";
 
 import { useFormik } from "formik";
@@ -10,10 +10,11 @@ import { REQUIRED_TEXT } from "@/lib/utils";
 import { useState } from "react";
 import { SignUp, SignUpInput } from "@/api/signup";
 import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 export default function SignUpForm() {
   const [isLoading, setIsLoading] = useState(false);
-
+  const cityOptions = useSelector((state: any) => state.city.items);
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -38,9 +39,7 @@ export default function SignUpForm() {
     mutationFn: (data: SignUpInput) => {
       return SignUp(data);
     },
-    onSuccess: () => {
-   
-    },
+    onSuccess: () => {},
   });
 
   function submitSignUp() {
@@ -95,6 +94,7 @@ export default function SignUpForm() {
             type: "text",
             floating: true,
             className: "m-0 w-full lg:w-1/2",
+            options: cityOptions,
           },
           {
             key: "companyName",

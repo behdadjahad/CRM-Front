@@ -1,8 +1,11 @@
-"use client"
+"use client";
 import localFont from "next/font/local";
 import "../../globals.css";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
+import { store } from "@/store";
+
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -37,10 +40,8 @@ export default function RootLayout({
         className={`${iranSansBold.variable} ${iranSansMedium.variable} ${iranSans.variable} antialiased`}
       >
         <QueryClientProvider client={queryClient}>
-          {" "}
-          {children}
+          <Provider store={store}>{children}</Provider>
         </QueryClientProvider>
-
         <Toaster />
       </body>
     </html>

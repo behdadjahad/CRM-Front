@@ -29,7 +29,7 @@ import {
 } from "@/constants/admin-creation-form-fields";
 import PackageUnitTable from "./package-unit-table";
 import AddPackageUnitToCategory from "../package-unit/add-package-unit-to-category";
-import PackageUnitSubTable from "./package-unit-sub-table";
+
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import { NoData } from "../no-data";
@@ -88,6 +88,9 @@ export default function CategoryTable({
       queryClient.invalidateQueries({
         queryKey: ["packageData"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["categoryData"],
+      });
     },
   });
 
@@ -145,12 +148,19 @@ export default function CategoryTable({
                 </TableCell>
               ))}
               <TableCell className="text-center text-xs border">
-                <TagContainer
-                  list={[{ label: "نقره ای", value: 2 },{label:"طلایی",value:3}]}
-                  onDeleteHandler={(itemId) => {
-                    console.log(itemId);
-                  }}
-                />
+                {category?.data?.packages?.length > 0 ? (
+                  <TagContainer
+                    list={category.data.packages}
+                    onDeleteHandler={(itemId) => {
+                      deleteCategoryFromPackageHandler({
+                        packageId: itemId,
+                        ids: [category.id],
+                      });
+                    }}
+                  />
+                ) : (
+                  <>به پکیجی اختصاص ندارد</>
+                )}
               </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
@@ -207,7 +217,8 @@ export default function CategoryTable({
                     {category?.packageUnitList.length > 0 ? (
                       <PackageUnitTable
                         packageUnitList={category?.packageUnitList}
-                     
+                        isCategorySubTable={true}
+                        categoryId={category.id}
                       />
                     ) : (
                       <NoData />

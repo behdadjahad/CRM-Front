@@ -9,7 +9,7 @@ export default function TagContainer({
 }: TagContainerInterface) {
   return (
     <div className="flex flex-wrap gap-2">
-      {list.map((item, index) => (
+      {list && list?.map((item, index) => (
         <TagCard
           {...item}
           key={index}

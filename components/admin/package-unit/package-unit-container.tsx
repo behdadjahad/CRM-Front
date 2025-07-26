@@ -50,7 +50,7 @@ export default function PackageUnitContainer({
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-card">
         واحد پکیج
       </div>
-      <PackageUnitTable packageUnitList={packageUnitList} />
+      <PackageUnitTable packageUnitList={packageUnitList} isCategorySubTable={ false} />
     </div>
   );
   function getData(formType: string) {

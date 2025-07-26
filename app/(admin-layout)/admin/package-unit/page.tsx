@@ -39,6 +39,7 @@ export interface PackageUnitDataInterface {
   enabledDurationInDays: number;
   showDurationInDays: number;
   countUnit: number;
+  categories: { label: string; value: number }[];
 }
 export interface PackageUnitInterface {
   id: number;
@@ -47,7 +48,6 @@ export interface PackageUnitInterface {
     value: string;
   }[];
   data: PackageUnitDataInterface;
-
 }
 
 export default function PackageUnit() {
@@ -108,8 +108,17 @@ function getData(packageUnitData: any) {
         id: item.id,
         name: item.name,
         price: formatPrice(item.price),
-        description: item.description,
+        description: item?.description,
+        countUnit: item?.countUnit,
         currency: item?.currency?.id,
+        showDurationInDays: item?.showDurationInDays,
+        enabledDurationInDays: item?.enabledDurationInDays,
+        unitModel: item?.unitModel,
+        unitType: item?.unitType,
+        categories: item?.packageCategories.map((pkg: any) => ({
+          label: pkg?.name,
+          value: pkg?.id,
+        })),
       },
     })
   );

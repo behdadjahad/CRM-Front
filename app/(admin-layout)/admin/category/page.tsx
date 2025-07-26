@@ -5,7 +5,7 @@ import CategoryContainer from "@/components/admin/category/category-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
-import { PackageUnitDataInterface} from "../package-unit/page";
+import { PackageUnitDataInterface } from "../package-unit/page";
 import { fetchCurrencies } from "@/store/currency-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,10 @@ export interface CategoryDataInterface {
   price: string;
   description: string;
   currency: number;
+  packages: {
+    label: string;
+    value: number;
+  }[];
 }
 
 export interface CategoryInterface {
@@ -81,37 +85,45 @@ function getData(categoryData: any) {
         price: formatPrice(item.price),
         description: item.description,
         currency: item.currencyId,
+        packages: item.packages.map((pkg: any) => ({
+          label: pkg.title,
+          value: pkg.id,
+        })),
       },
 
       packageUnitList: item?.units?.map((unit: any) => ({
-        id: unit.unit.id,
+        id: unit.id,
         list: [
-          { label: "نام", value: unit.unit.name },
-          { label: "قیمت", value: unit.unit.price },
-          { label: "توضیحات", value: unit.unit.description },
-          { label: "نوع فروش واحد", value: unit.unit.unitType },
-          { label: "مدل فروش واحد", value: unit.unit.unitModel },
+          { label: "نام", value: unit.name },
+          { label: "قیمت", value: formatPrice(unit.price) },
+          { label: "توضیحات", value: unit.description },
+          { label: "نوع فروش واحد", value: unit.unitType },
+          { label: "مدل فروش واحد", value: unit.unitModel },
           {
             label: "مدت زمان امکان تعامل (روز)",
-            value: unit.unit.enabledDurationInDays,
+            value: unit.enabledDurationInDays,
           },
           {
             label: "مدت زمان امکان نمایش (روز)",
-            value: unit.unit.showDurationInDays,
+            value: unit.showDurationInDays,
           },
-          { label: "تعداد", value: unit.unit.countUnit },
+          { label: "تعداد", value: unit.countUnit },
         ],
         data: {
           id: item.id,
           name: item.name,
           price: formatPrice(item.price),
-          unitType:unit.unit.unitType,
-          unitModel:unit.unit.unitModel,
-          enabledDurationInDays:unit.unit.enabledDurationInDays,
-          showDurationInDays:unit.unit.showDurationInDays,
-          countUnit:unit.unit.countUnit,
-          description: item.description,
-          currency: item?.currency?.id,
+          unitType: unit.unitType,
+          unitModel: unit.unitModel,
+          enabledDurationInDays: unit.enabledDurationInDays,
+          showDurationInDays: unit.showDurationInDays,
+          countUnit: unit.countUnit,
+          description: unit.description,
+          currency: unit?.currency?.id,
+          categories: unit?.packageCategories.map((item: any) => ({
+            label: item?.name,
+            value: item?.id,
+          })),
         },
       })),
     })

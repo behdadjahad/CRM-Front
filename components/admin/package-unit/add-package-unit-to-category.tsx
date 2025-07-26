@@ -6,73 +6,62 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import AddPackageUnitToCategoryForm from "./add-package-unit-to-category-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {  addPackageUnitToCategory } from "@/api/admin";
-export interface AddPackageUnitToCategoryInterface {
- categoryId: number;
-}
-export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToCategoryInterface) {
-  const queryClient = useQueryClient();
-  const [openModal, setOpenModal] = useState(false);
 
-  const [formValues, setFormValues] = useState<any[]>([]);
-  const [addedPackageUnitForms, setAddedPackageUnitForms] = useState<any[]>([
-    {
-      id: `package-unit-form-1`,
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addPackageUnitToCategory, getPackageUnit } from "@/api/admin";
+import FormMaker, { OptionType } from "@/components/shared/form-maker";
+import { useFormik } from "formik";
+export interface AddPackageUnitToCategoryInterface {
+  categoryId: number;
+}
+export default function AddPackageUnitToCategory({
+  categoryId,
+}: AddPackageUnitToCategoryInterface) {
+  const [openModal, setOpenModal] = useState(false);
+   const queryClient = useQueryClient();
+  const { data: packageUnitData } = useQuery({
+    queryKey: ["packageUnitData"],
+    queryFn: async () => await getPackageUnit(),
+  });
+  const { packageUnitOptions } = getData(packageUnitData);
+  const formik = useFormik({
+    initialValues: {
+      categoryId: categoryId,
+      packageUnit: null,
     },
-  ]);
-  function addPackageUnitForm() {
-    setAddedPackageUnitForms([
-      ...addedPackageUnitForms,
-      {
-        id: `package-unit-form-${addedPackageUnitForms.length + 1}`,
-      },
-    ]);
-  }
-  function deletePackageUnitForm(formId: string) {
-    const updatedAddedPackageUnitForm = addedPackageUnitForms.filter(
-      (item) => item.id !== formId
-    );
-    setAddedPackageUnitForms(updatedAddedPackageUnitForm);
-    setFormValues((prev) => prev.filter((item) => item.id !== formId));
-  }
-  const { mutate: addPackageUnit } = useMutation({
-    mutationFn: ({id,data}:{ id: number; data: any }) => {
-      return addPackageUnitToCategory(id,data);
+
+    onSubmit: () => {},
+  });
+  const { mutate: addCategoryhandler } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return addPackageUnitToCategory(id, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["categoryData"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["packageData"],
+      });
 
       setOpenModal(false);
-      setFormValues([]);
-      setAddedPackageUnitForms([
-        {
-          id: `package-unit-form-1`,
-        },
-      ]);
+      formik.resetForm();
     },
   });
-  function addPackageUnitToCategoryHandler() {
-    console.log(formValues)
-    const packageUnits = formValues.map((item) => ({
-      packageUnitId: item.packageUnit,
-      packageUnitCostId: item.unitCost,
-    })).filter((item)=>(item.packageUnitId && item.packageUnitCostId));
-    const data = {
-      packageUnits: packageUnits,
-    };
-    addPackageUnit({id: categoryId, data: data});
+  function addPackageUnitToCategoryHandler(values: any) {
+    const id = values.categoryId;
+    const data ={
+  packageUnits: [
+    {
+      packageUnitId: values.packageUnit
+    }
+  ]
+};
+    addCategoryhandler({
+      id: id,
+      data: data,
+    });
   }
-
-  function handleFormChange(formId: string, values: any) {
-  setFormValues((prev) => [
-    ...prev.filter((item) => item.id !== formId),
-    { ...values, id: formId }, 
-  ]);
-}
   return (
     <div className="flex items-center justify-between flex-col gap-4">
       <Button
@@ -103,22 +92,26 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
             className="cursor-pointer"
           />
         </div>
-        {addedPackageUnitForms.map((item, index) => (
-          <AddPackageUnitToCategoryForm
-            key={item.id}
-            formId={item.id}
-            onAddForm={addPackageUnitForm}
-            onDeleteForm={deletePackageUnitForm}
-            isFirstItem={index === 0}
-            onFormChange={handleFormChange}
-          />
-        ))}
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "packageUnit",
+              component: "Select",
+              placeholder: "واحد پکیج",
+              type: "text",
+              className: "w-full md:w-1/3",
+              options: packageUnitOptions,
+            },
+          ]}
+          className="flex flex-row items-center"
+        />
 
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
             onClick={() => {
-              addPackageUnitToCategoryHandler();
+              addPackageUnitToCategoryHandler(formik.values);
             }}
           >
             ثبت
@@ -135,4 +128,13 @@ export default function AddPackageUnitToCategory({categoryId}: AddPackageUnitToC
       </CustomModal>
     </div>
   );
+}
+function getData(packageUnitData: any) {
+  const packageUnitOptions: OptionType[] = packageUnitData?.data?.map(
+    (item: any) => ({
+      label: item.name,
+      value: item.id,
+    })
+  );
+  return { packageUnitOptions };
 }

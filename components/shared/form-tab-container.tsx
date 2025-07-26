@@ -62,21 +62,24 @@ export default function FormTabContainer({
               item.forms.map(({ formInfo, submitForm, title }) => (
                 <div
                   key={title}
-                  className="flex flex-col  mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
+                  className="flex flex-col mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
                 >
-                  <h2 className="px-2">{item.title}</h2>
+                  <h2 className="px-2">{title}</h2>
                   <FormMaker
                     form={formInfo.form}
                     fields={formInfo.fields}
                     className={formInfo.className}
                   />
-                  <Button
-                    variant={"info"}
-                    className="w-24 mx-2"
-                    onClick={submitForm}
-                  >
-                    ثبت
-                  </Button>
+
+                  <div className="w-full flex items-end">
+                    <Button
+                      variant={"info"}
+                      className="w-24 mx-2"
+                      onClick={submitForm}
+                    >
+                      ثبت
+                    </Button>
+                  </div>
                 </div>
               ))
             ) : (
@@ -118,24 +121,24 @@ export default function FormTabContainer({
             </AccordionTrigger>
             <AccordionContent className="w-full gap-4 p-0 flex flex-col">
               {item.forms ? (
-               item.forms.map(({ formInfo, submitForm, title }) => (
-                <div
-                  key={title}
-                  className="flex flex-col  mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
-                >
-                  <h2 className="px-2">{item.title}</h2>
-                  <FormMaker
-                    form={formInfo.form}
-                    fields={formInfo.fields}
-                    className={formInfo.className}
-                  />
-                  <Button
-                    variant={"info"}
-                    className="w-24 mx-2"
-                    onClick={submitForm}
+                item.forms.map(({ formInfo, submitForm, title }) => (
+                  <div
+                    key={title}
+                    className="flex flex-col  mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
                   >
-                    ثبت
-                  </Button>
+                    <h2 className="px-2">{title}</h2>
+                    <FormMaker
+                      form={formInfo.form}
+                      fields={formInfo.fields}
+                      className={formInfo.className}
+                    />
+                    <Button
+                      variant={"info"}
+                      className="w-24 mx-2"
+                      onClick={submitForm}
+                    >
+                      ثبت
+                    </Button>
                   </div>
                 ))
               ) : (

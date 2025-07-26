@@ -39,7 +39,7 @@ export default function Package() {
     dispatch(fetchCurrencies());
   }, [dispatch]);
   return (
-  <main className="flex flex-col">
+    <main className="flex flex-col">
       <Title label="پکیج" />
 
       <Breadcrumb
@@ -66,20 +66,26 @@ function getData(packageData: any) {
       list: [
         { label: "نام", value: item.title },
         { label: "توضیحات", value: item.description },
-        { label: "قیمت", value: formatPrice(item.price) + " " + item?.currency?.name },
+        {
+          label: "قیمت",
+          value: formatPrice(item.price) + " " + item?.currency?.name,
+        },
       ],
       data: {
         id: item.id,
         title: item.title,
         description: item.description,
         price: formatPrice(item.price),
-        currency:item?.currency?.id
+        currency: item?.currency?.id,
       },
       categoryList: item?.packageCategories?.map((category: any) => ({
         id: category.id,
         list: [
           { label: "نام", value: category.name },
-          { label: "قیمت", value: formatPrice(category.price) + " " + category?.currency?.name },
+          {
+            label: "قیمت",
+            value: formatPrice(category.price) + " " + category?.currency?.name,
+          },
           { label: "توضیحات", value: category.description },
         ],
         data: {
@@ -88,32 +94,45 @@ function getData(packageData: any) {
           price: category.price,
           description: category.description,
           currency: category?.currency?.id,
+          packages: category?.packages?.map((pkg: any) => ({
+            label: pkg.title,
+            value: pkg.id,
+          })),
         },
         packageUnitList: category?.units?.map((unit: any) => ({
-          id: unit.unit.id,
+          id: unit.id,
           list: [
-            { label: "نام", value: unit.unit.name },
-            { label: "قیمت", value: unit.unit.price },
-            { label: "توضیحات", value: unit.unit.description },
+            { label: "نام", value: unit.name },
+            { label: "قیمت", value: unit.price },
+            { label: "توضیحات", value: unit.description },
+            { label: "نوع فروش واحد", value: unit?.unitType },
+            { label: "مدل فروش واحد", value: unit?.unitModel },
+            {
+              label: "مدت زمان امکان تعامل (روز)",
+              value: unit?.enabledDurationInDays,
+            },
+            {
+              label: "مدت زمان امکان نمایش (روز)",
+              value: unit?.showDurationInDays,
+            },
+            { label: "تعداد", value: unit?.countUnit },
+            ,
           ],
-          unitCostData: {
-            id: unit.unitCost.id,
-            list: [
-              { label: "عنوان", value: unit.unitCost.title },
-              { label: "نوع فروش واحد", value: unit.unitCost.unitType },
-              { label: "مدل فروش واحد", value: unit.unitCost.unitModel },
-              { label: "تعداد", value: unit.unitCost.countUnit },
-              { label: "قیمت", value: unit.unitCost.price },
-              {
-                label: "مدت زمان امکان تعامل (روز)",
-                value: unit.unitCost.enabledDurationInDays,
-              },
-              {
-                label: "مدت زمان امکان نمایش (روز)",
-                value: unit.unitCost.showDurationInDays,
-              },
-              { label: "توضیحات", value: unit.unitCost.description },
-            ],
+          data: {
+            id: unit.id,
+            name: unit.name,
+            price: formatPrice(unit.price),
+            description: unit?.description,
+            countUnit: unit?.countUnit,
+            currency: unit?.currency?.id,
+            showDurationInDays: unit?.showDurationInDays,
+            enabledDurationInDays: unit?.enabledDurationInDays,
+            unitModel: unit?.unitModel,
+            unitType: unit?.unitType,
+           categories: unit?.packageCategories.map((pkg: any) => ({
+            label: pkg?.name,
+            value: pkg?.id,
+          })),
           },
         })),
       })),
