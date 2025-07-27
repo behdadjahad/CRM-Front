@@ -35,16 +35,15 @@ export interface PermissionDataInterface {
   id: number;
   name: string;
   description: string;
+  packageUnits: { label: string; value:number}[];
+  roles: { label: string; value:number}[]
 }
 export default function Permission() {
- 
-  
   const { data: permissionData } = useQuery({
     queryKey: ["permissionData"],
     queryFn: async () => await getPermission(),
   });
   const { permissionList } = getData(permissionData);
-
 
   return (
     <main>
@@ -77,6 +76,14 @@ function getData(permissionData: any) {
         id: item.id,
         name: item.name,
         description: item.description,
+        packageUnits: item?.packageUnits?.map((pkg: any) => ({
+          label: pkg?.name,
+          value: pkg?.id,
+        })),
+        roles: item?.roles?.map((role: any) => ({
+          label: role?.name,
+          value: role?.id,
+        })),
       },
       pageList: item?.accessesJson?.pages?.map((page: any) => ({
         id: page.pageId,

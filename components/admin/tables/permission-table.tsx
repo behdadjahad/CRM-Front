@@ -41,6 +41,7 @@ import {
 } from "@/app/(admin-layout)/admin/permission/page";
 
 import PermissionPageFeatureContainer from "../permission/permission-page-feature-container";
+import TagContainer from "../tag-container";
 
 export interface PermissionTableInterface {
   permissionList: PermissionInterface[];
@@ -83,6 +84,9 @@ export default function PermissionTable({
       queryClient.invalidateQueries({
         queryKey: ["roleData"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["permissionData"],
+      });
     },
   });
   const { mutate: deletePermissionFromUnitHandler } = useMutation({
@@ -98,6 +102,9 @@ export default function PermissionTable({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["packageUnitData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["permissionData"],
       });
     },
   });
@@ -124,20 +131,22 @@ export default function PermissionTable({
   function deleteHandler(permissionId: number) {
     switch (permissionTableType) {
       case "roleSubTable":
-       if(roleId) deletePermissionFromRoleHandler({
-          roleId: roleId,
-          data: {
-            ids: [permissionId],
-          },
-        });
+        if (roleId)
+          deletePermissionFromRoleHandler({
+            roleId: roleId,
+            data: {
+              ids: [permissionId],
+            },
+          });
         break;
       case "packageUnitSubTable":
-       if(packageUnitId) deletePermissionFromUnitHandler({
-          packageUnitId: packageUnitId,
-          data: {
-            ids: [permissionId],
-          },
-        });
+        if (packageUnitId)
+          deletePermissionFromUnitHandler({
+            packageUnitId: packageUnitId,
+            data: {
+              ids: [permissionId],
+            },
+          });
         break;
       case "mainTable":
         deletePermissionHandler(permissionId);
@@ -160,6 +169,12 @@ export default function PermissionTable({
             </TableHead>
           ))}
           <TableHead className="text-center text-xs bg-card border font-bold">
+            واحد پکیج ها
+          </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
+            نقش ها
+          </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
           </TableHead>
           <TableHead className="text-center text-xs bg-card border font-bold">
@@ -180,6 +195,40 @@ export default function PermissionTable({
                   {cell.value}
                 </TableCell>
               ))}
+              <TableCell className="text-center text-xs border">
+                {permission?.data?.packageUnits?.length > 0 ? (
+                  <TagContainer
+                    list={permission?.data?.packageUnits}
+                    onDeleteHandler={(itemId: number) => {
+                      deletePermissionFromUnitHandler({
+                        packageUnitId: itemId,
+                        data: {
+                          ids: [permission.id],
+                        },
+                      });
+                    }}
+                  />
+                ) : (
+                  <p>به واحد پکیجی اختصاص داده نشده است</p>
+                )}
+              </TableCell>
+              <TableCell className="text-center text-xs border">
+                {permission?.data?.roles?.length > 0 ? (
+                  <TagContainer
+                    list={permission?.data?.roles}
+                    onDeleteHandler={(itemId: number) => {
+                      deletePermissionFromRoleHandler({
+                        roleId: itemId,
+                        data: {
+                          ids: [permission.id],
+                        },
+                      });
+                    }}
+                  />
+                ) : (
+                  <p>به نقشی اختصاص داده نشده است</p>
+                )}
+              </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
                   <Button
@@ -220,7 +269,7 @@ export default function PermissionTable({
             {expandedRows.includes(rowIndex) && (
               <TableRow className="bg-gray-100">
                 <TableCell
-                  colSpan={permission.list.length + 2}
+                  colSpan={permission.list.length + 4}
                   className="text-sm text-gray-700 p-4"
                 >
                   <PermissionPageFeatureContainer

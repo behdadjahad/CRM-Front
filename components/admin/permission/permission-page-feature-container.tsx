@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-
-import {  useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editPermission } from "@/api/admin";
 
@@ -24,6 +23,12 @@ export default function PermissionPageFeatureContainer({
       queryClient.invalidateQueries({
         queryKey: ["permissionData"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["roleData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["packageUnitData"],
+      });
     },
   });
   function editPermissionDataHandler(permissionData: any) {
@@ -32,8 +37,6 @@ export default function PermissionPageFeatureContainer({
     };
     editPermissionData({ id: permissionId, data: data });
   }
-
-
 
   return (
     <div className="flex flex-col gap-4">

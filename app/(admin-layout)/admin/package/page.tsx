@@ -144,6 +144,14 @@ function getData(packageData: any) {
               id: permission.id,
               name: permission.name,
               description: permission.description,
+              packageUnits: permission?.packageUnits?.map((pkg: any) => ({
+                label: pkg?.name,
+                value: pkg?.id,
+              })),
+              roles: permission?.roles?.map((role: any) => ({
+                label: role?.name,
+                value: role?.id,
+              })),
             },
             pageList: permission?.accessesJson?.pages?.map((page: any) => ({
               id: page.pageId,

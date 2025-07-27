@@ -42,7 +42,7 @@ export default function AddPermissionToPackageUnit({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["roleData"],
+        queryKey: ["packageUnitData"],
       });
 
       setOpenModal(false);

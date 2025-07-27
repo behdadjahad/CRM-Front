@@ -167,7 +167,7 @@ export default function PackageUnitTable({
                 </TableCell>
               ))}
               <TableCell className="text-center text-xs border">
-                <TagContainer
+                {unit?.data?.categories?.length > 0 ?   <TagContainer
                   list={unit?.data?.categories}
                   onDeleteHandler={(itemId) => {
                     deleteUnitFromCategoryHandler({
@@ -181,7 +181,8 @@ export default function PackageUnitTable({
                       },
                     });
                   }}
-                />
+                />:<p>به دسته بندی اختصاص داده نشده است</p> } 
+             
               </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">

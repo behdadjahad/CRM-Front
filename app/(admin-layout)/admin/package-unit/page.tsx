@@ -9,26 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { PermissionInterface } from "../permission/page";
-export interface UnitCostInterface {
-  id: number;
-  list: {
-    label: string;
-    value: string;
-  }[];
-  data: UnitCostDataInterface;
-}
-export interface UnitCostDataInterface {
-  id: number;
-  title: string;
-  description: string;
-  unitType: string;
-  unitModel: string;
-  enabledDurationInDays: number;
-  showDurationInDays: number;
-  countUnit: number;
-  currency: number;
-  price: number;
-}
+
 export interface PackageUnitDataInterface {
   id: number;
   name: string;
@@ -132,6 +113,14 @@ function getData(packageUnitData: any) {
           id: permission.id,
           name: permission.name,
           description: permission.description,
+          packageUnits: permission?.packageUnits?.map((pkg: any) => ({
+            label: pkg?.name,
+            value: pkg?.id,
+          })),
+          roles: permission?.roles?.map((role: any) => ({
+            label: role?.name,
+            value: role?.id,
+          })),
         },
         pageList: permission?.accessesJson?.pages?.map((page: any) => ({
           id: page.pageId,
