@@ -8,6 +8,7 @@ import { fetchCurrencies } from "@/store/currency-slice";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { PermissionInterface } from "../permission/page";
 export interface UnitCostInterface {
   id: number;
   list: {
@@ -48,6 +49,7 @@ export interface PackageUnitInterface {
     value: string;
   }[];
   data: PackageUnitDataInterface;
+  permissionList: PermissionInterface[];
 }
 
 export default function PackageUnit() {
@@ -120,6 +122,52 @@ function getData(packageUnitData: any) {
           value: pkg?.id,
         })),
       },
+      permissionList: item?.permissions?.map((permission: any) => ({
+        id: permission.id,
+        list: [
+          { label: "نام", value: permission.name },
+          { label: "توضیحات", value: permission.description },
+        ],
+        data: {
+          id: permission.id,
+          name: permission.name,
+          description: permission.description,
+        },
+        pageList: permission?.accessesJson?.pages?.map((page: any) => ({
+          id: page.pageId,
+          list: [
+            { label: "عنوان", value: page?.title },
+            { label: "کد", value: page?.code },
+            { label: "آدرس", value: page?.url },
+          ],
+          data: {
+            id: page?.pageId,
+            title: page?.title,
+            code: page?.code,
+            url: page?.url,
+            enabled: page?.enabled,
+            show: page?.show,
+          },
+          featureList: page?.features?.map((feature: any) => ({
+            id: feature.featureId,
+            list: [
+              { label: "نام", value: feature.name },
+              { label: "کد", value: feature.code },
+              { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
+              { label: "توضیحات", value: feature.description },
+            ],
+            data: {
+              id: feature.featureId,
+              name: feature.name,
+              code: feature.code,
+              urlPattern: feature.urlPattern,
+              description: feature.description,
+              show: feature.show,
+              enabled: feature.enabled,
+            },
+          })),
+        })),
+      })),
     })
   );
 

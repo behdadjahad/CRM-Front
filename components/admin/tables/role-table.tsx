@@ -159,6 +159,7 @@ export default function RoleTable({ roleList }: RoleTableInterface) {
                       <PermissionTable
                         permissionList={role?.permissionList}
                         permissionTableType="roleSubTable"
+                        roleId={role?.id}
                       />
                     ) : (
                       <NoData />

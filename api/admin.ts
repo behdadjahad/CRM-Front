@@ -336,9 +336,29 @@ export async function addPermissionToRole(roleId: number, data: any) {
     return result;
   } catch {}
 }
+export async function deletePermissionFromRole(roleId: number, data: any) {
+  try {
+    const result = await fetchService(`permission/remove-from-role/${roleId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
 export async function addPermissionToPackageUnit(packageUnitId: number, data: any) {
   try {
     const result = await fetchService(`permission/add-to-unit/${packageUnitId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deletePermissionFromPackageUnit(packageUnitId: number, data: any) {
+  try {
+    const result = await fetchService(`permission/remove-from-unit/${packageUnitId}`, {
       method: "POST",
       body: data,
     });

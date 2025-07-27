@@ -36,6 +36,7 @@ import { useSelector } from "react-redux";
 import AddPermissionToPackageUnit from "../permission/add-permission-to-package-unit";
 import { NoData } from "../no-data";
 import TagContainer from "../tag-container";
+import PermissionTable from "./permission-table";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -234,7 +235,7 @@ export default function PackageUnitTable({
                         <AddPermissionToPackageUnit packageUnitId={unit.id} />
                       </div>
 
-                      {/* <PermissionTable permissionList={unit?.permissionList} permissionTableType="packageUnitSubTable"/> */}
+                      <PermissionTable permissionList={unit?.permissionList} permissionTableType="packageUnitSubTable" packageUnitId={unit.id}/>
                     </div>
                   </div>
                 </TableCell>

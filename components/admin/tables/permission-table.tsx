@@ -22,6 +22,8 @@ import AddCategoryToPackage from "../category/add-category-to-package";
 import {
   deletePackage,
   deletePermission,
+  deletePermissionFromPackageUnit,
+  deletePermissionFromRole,
   editPackage,
   editPermission,
 } from "@/api/admin";
@@ -43,10 +45,15 @@ import PermissionPageFeatureContainer from "../permission/permission-page-featur
 export interface PermissionTableInterface {
   permissionList: PermissionInterface[];
   permissionTableType: "roleSubTable" | "packageUnitSubTable" | "mainTable";
+  packageUnitId?: number;
+  roleId?: number;
 }
 
 export default function PermissionTable({
   permissionList,
+  permissionTableType,
+  packageUnitId,
+  roleId,
 }: PermissionTableInterface) {
   console.log(permissionList);
   const { permissionEditFormData } = getData("permission");
@@ -65,6 +72,32 @@ export default function PermissionTable({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["permissionData"],
+      });
+    },
+  });
+  const { mutate: deletePermissionFromRoleHandler } = useMutation({
+    mutationFn: ({ roleId, data }: { roleId: number; data: any }) => {
+      return deletePermissionFromRole(roleId, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["roleData"],
+      });
+    },
+  });
+  const { mutate: deletePermissionFromUnitHandler } = useMutation({
+    mutationFn: ({
+      packageUnitId,
+      data,
+    }: {
+      packageUnitId: number;
+      data: any;
+    }) => {
+      return deletePermissionFromPackageUnit(packageUnitId, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageUnitData"],
       });
     },
   });
@@ -89,10 +122,31 @@ export default function PermissionTable({
     });
   }
   function deleteHandler(permissionId: number) {
-    deletePermissionHandler(permissionId);
+    switch (permissionTableType) {
+      case "roleSubTable":
+       if(roleId) deletePermissionFromRoleHandler({
+          roleId: roleId,
+          data: {
+            ids: [permissionId],
+          },
+        });
+        break;
+      case "packageUnitSubTable":
+       if(packageUnitId) deletePermissionFromUnitHandler({
+          packageUnitId: packageUnitId,
+          data: {
+            ids: [permissionId],
+          },
+        });
+        break;
+      case "mainTable":
+        deletePermissionHandler(permissionId);
+        break;
+      default:
+        return;
+    }
   }
-  // const permissions: PermissionInterface[] = useSelector((state: any) => state.permissionPageFeature.allPermissions);
-  
+
   return (
     <Table>
       <TableHeader>
