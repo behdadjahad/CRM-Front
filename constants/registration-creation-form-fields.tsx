@@ -46,7 +46,11 @@ export function createFormFields(formType: string): formDataInterface {
           },
         ],
         initialValues: {
+          firstName: "",
+          lastName: "",
+          idNumber: "",
           managerBirthDate: "",
+          managerBirthDateType: "",
         },
       };
     case "managerContact":
@@ -88,7 +92,6 @@ export function createFormFields(formType: string): formDataInterface {
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
           },
-     
         ],
         initialValues: {
           mobilePhone: "",
@@ -144,7 +147,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options:[]
+            options: [],
           },
           {
             key: "country",
@@ -154,7 +157,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options:[]
+            options: [],
           },
           {
             key: "province",
@@ -164,7 +167,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options:[]
+            options: [],
           },
           {
             key: "city",
@@ -174,7 +177,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options:[]
+            options: [],
           },
           {
             key: "address",
@@ -184,7 +187,6 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/2",
-         
           },
           {
             key: "description",
@@ -194,17 +196,80 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full",
-         },
-     
+          },
+          {
+            key: "documentFile",
+            component: "file",
+            placeholder: "",
+            type: "file",
+            floating: true,
+            icon: "/icons/vector.png",
+            className: "w-full",
+          },
+          {
+            component: "file-preview",
+            key: "filePreview",
+            dependantKey: "documentFile",
+            className: "w-full",
+          },
         ],
         initialValues: {
           companyName: "",
           brandName: "",
           registrationNumber: "",
           idNumber: "",
-          address:"",
-          description:"",
+          address: "",
+          description: "",
+          documentFile: "",
         },
+      };
+    case "companyContact":
+      return {
+        fields: [
+          {
+            key: "companyPhoneNumber",
+            component: "input",
+            placeholder: "شماره تلفن",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+          {
+            key: "companyEmail",
+            component: "input",
+            placeholder: "ایمیل",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+          {
+            key: "companyWebsite",
+            component: "input",
+            placeholder: "وب سایت",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+        ],
+        initialValues: {},
+      };
+    case "companyDocument":
+      return {
+        fields: [
+          {
+            key: "companyPhoneNumber",
+            component: "input",
+            placeholder: "شماره تلفن",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+        ],
+        initialValues: {},
       };
     default:
       return {

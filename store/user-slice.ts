@@ -10,6 +10,7 @@ export interface UserData {
       name: string;
     };
   }[];
+  registerationRequestId: null | number;
 }
 
 const initialState: UserData = {
@@ -23,6 +24,7 @@ const initialState: UserData = {
       },
     },
   ],
+  registerationRequestId:null
 };
 
 export const fetchUserData = createAsyncThunk<UserData>(
@@ -44,6 +46,7 @@ const userSlice = createSlice({
       state.fullName = action.payload.fullName;
       state.id = action.payload.id;
       state.chadcoCustomerId = action.payload.chadcoCustomerId;
+      state.registerationRequestId=action.payload.registerationRequestId
     },
   },
 });

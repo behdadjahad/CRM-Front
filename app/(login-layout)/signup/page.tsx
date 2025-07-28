@@ -1,5 +1,4 @@
-
-'use client'
+"use client";
 
 import OrganizationInformation from "@/components/login/organization-information";
 import SignUpForm from "@/components/signup/sign-up-form";

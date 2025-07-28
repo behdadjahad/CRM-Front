@@ -11,8 +11,10 @@ import { useState } from "react";
 import { SignUp, SignUpInput } from "@/api/signup";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function SignUpForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const cityOptions = useSelector((state: any) => state.city.items);
   const formik = useFormik({
@@ -39,7 +41,14 @@ export default function SignUpForm() {
     mutationFn: (data: SignUpInput) => {
       return SignUp(data);
     },
-    onSuccess: () => {},
+    onSuccess: (result) => {
+      if (result) {
+       console.log(result)
+        router.push("/register");
+        localStorage.setItem("token", result.data.tokens.accessToken);
+        localStorage.setItem("refreshToken", result.data.tokens.refreshToken);
+      }
+    },
   });
 
   function submitSignUp() {

@@ -19,6 +19,8 @@ import TimeInput from "./time-input";
 import SuggestionInput from "./suggestion-input";
 import MultiSelectInput from "./multi-select-input";
 import MultiAddedTextInput from "./multi-added-text-input";
+import SingleFileInput from "./single-file-input";
+import SingleFilePreview from "./single-file-preview";
 
 export interface OptionType {
   label: string;
@@ -42,8 +44,10 @@ export interface FieldType {
     | "textarea"
     | "verification"
     | "file"
+    | "single-file"
     | "toggle"
     | "file-preview"
+    | "single-file-preview"
     | "list-preview"
     | "range-input"
     | "time"
@@ -84,7 +88,7 @@ export interface FieldType {
   formatted?: boolean;
   menuPlacement?: "top" | "bottom" | "auto";
   hasReset?: boolean;
-  resetFunction?:() => void;
+  resetFunction?: () => void;
 }
 
 export interface FormMakerInterface {
@@ -132,10 +136,14 @@ export default function FormMaker({
           return <VerificationInput item={item} form={form} />;
         case "file":
           return <FileInput item={item} form={form} />;
+        case "single-file":
+          return <SingleFileInput item={item} form={form} />;
         case "toggle":
           return <ToggleInput item={item} form={form} />;
         case "file-preview":
           return <FilePreview item={item} form={form} />;
+        case "single-file-preview":
+          return <SingleFilePreview item={item} form={form} />;
         case "list-preview":
           return <ListPreview item={item} form={form} />;
         default:
