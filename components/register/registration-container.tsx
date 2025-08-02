@@ -63,9 +63,10 @@ export default function RegistrationContainer() {
       await getRegistrationData(userData.registerationRequestId),
     enabled: !!userData.registerationRequestId, // will only run if requestId is not undefined or falsy
   });
+
   useEffect(() => {
     if (registrationData) {
-      const ceo = registrationData?.CEO?.id;
+      const ceo = registrationData?.data?.CEO?.id;
       setCeoId(ceo);
     }
   }, [registrationData]);
@@ -129,9 +130,9 @@ export default function RegistrationContainer() {
   });
   function submitCompanyDocuments(documents: any[]) {
     submitUploadedDocumnets({
-      id:userData.registerationRequestId,
-      data:documents
-    })
+      id: userData.registerationRequestId,
+      data: documents,
+    });
   }
   function submitManager() {
     const data = {
@@ -154,25 +155,25 @@ export default function RegistrationContainer() {
         communicationDetails: formik.values.mobilePhone,
         communicationType: CommunicationType.mobile,
         communicater: Communicater.business,
-        ceoId,
+        ceoId: ceoId,
       },
       {
         communicationDetails: formik.values.homePhone,
         communicationType: CommunicationType.home,
         communicater: Communicater.business,
-        ceoId,
+        ceoId: ceoId,
       },
       {
         communicationDetails: formik.values.workPhone,
         communicationType: CommunicationType.business,
         communicater: Communicater.business,
-        ceoId,
+        ceoId: ceoId,
       },
       {
         communicationDetails: formik.values.email,
         communicationType: CommunicationType.email,
         communicater: Communicater.business,
-        ceoId,
+        ceoId: ceoId,
       },
     ];
 
@@ -180,25 +181,24 @@ export default function RegistrationContainer() {
   }
   function submitCompany() {
     const data = {
-      registerationRequest: {
-        companyName: formik.values.companyName,
-        brandName: formik.values.brandName,
-        registerationNumber: formik.values.registrationNumber,
-        nationalId: formik.values.companyIdNumber,
-        economicCode: formik.values.economicCode,
-        companyType: formik.values.companyType,
-        address: formik.values.address,
-        description: formik.values.description,
-        logoFile: formik.values.logoFile,
-        establishedDate: convertToGregorian(
-          formik.values.establishedDate,
-          formik.values.establishedDateType
-        ),
-        cityId: formik.values.city,
-        provinceId: formik.values.province,
-        countryId: formik.values.country,
-      },
-      user: {},
+      ...(formik.values.companyName
+        ? { companyName: formik.values.companyName }
+        : {}),
+      brandName: formik.values.brandName,
+      registerationNumber: formik.values.registrationNumber,
+      nationalId: formik.values.companyIdNumber,
+      economicCode: formik.values.economicCode,
+      companyType: formik.values.companyType,
+      address: formik.values.address,
+      description: formik.values.description,
+      logoFile: formik.values.logoFile,
+      establishedDate: convertToGregorian(
+        formik.values.establishedDate,
+        formik.values.establishedDateType
+      ),
+      ...(formik.values.city ? { cityId: formik.values.city } : {}),
+      ...(formik.values.province ? { provinceId: formik.values.province } : {}),
+      ...(formik.values.country ? { countryId: formik.values.country } : {}),
     };
     submitCompanyInfoHandler({
       id: userData.registerationRequestId,
@@ -280,13 +280,15 @@ export default function RegistrationContainer() {
           },
           {
             title: "آپلود مدارک",
-            forms: [
-            ],
+            forms: [],
             children: (
-              <RegistrationUploadDocumentContainer list={documentTypes} onSubmitDocumnets={(documnets) => {
-                //submitCompanyDocuments(documnets)
-                console.log(documnets)
-              }}/>
+              <RegistrationUploadDocumentContainer
+                list={documentTypes}
+                onSubmitDocumnets={(documnets) => {
+                  //submitCompanyDocuments(documnets)
+                  console.log(documnets);
+                }}
+              />
             ),
           },
         ]}

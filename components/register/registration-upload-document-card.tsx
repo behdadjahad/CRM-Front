@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 
 import FormMaker from "../shared/form-maker";
 import { useEffect } from "react";
+import { Button } from "../ui/button";
 
 export interface RegistrationUploadDocumentCardInterface {
   id: number;
@@ -66,8 +67,16 @@ export default function RegistrationUploadDocumentCard({
           dependantKey: "licensefile",
           className: "w-fit",
         },
+        {
+          key: "submit",
+          component: "non-field",
+          children: (
+          <Button variant={"foreground"} >ارسال فایل</Button>
+          ),
+         className: "flex-1 flex items-start"
+        },
       ]}
-      className="flex  flex-row-reverse w-full "
+      className="flex  flex-row-reverse w-full"
     />
   );
 }

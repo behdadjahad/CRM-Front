@@ -32,7 +32,7 @@ export default function RegistrationUploadDocumentContainer({
   return (
     <div className="p-4 flex flex-col gap-4">
       <h2 className="p-2">مدارک شرکت</h2>
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-4">
+      <div className="flex flex-col gap-4">
         {list.map((item) => (
           <div key={item.id}>
             <RegistrationUploadDocumentCard {...item} onChange={(doc) => {handleDocumentChange(doc)}} />
