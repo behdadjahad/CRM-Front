@@ -1,9 +1,15 @@
-import { FieldType } from "@/components/shared/form-maker";
+import { FieldType, OptionType } from "@/components/shared/form-maker";
+import { CompanyType } from "@/types/globals";
 export interface formDataInterface {
   fields: FieldType[];
   initialValues: any;
 }
-export function createFormFields(formType: string): formDataInterface {
+export function createFormFields(
+  formType: string,
+  countryOptions?: OptionType[],
+  provinceOptions?: OptionType[],
+  cityOptions?: OptionType[]
+): formDataInterface {
   switch (formType) {
     case "managerPersonal":
       return {
@@ -131,9 +137,28 @@ export function createFormFields(formType: string): formDataInterface {
             className: "w-full md:w-1/4",
           },
           {
-            key: "idNumber",
+            key: "companyIdNumber",
             component: "input",
-            placeholder: "کدملی",
+            placeholder: "شناسه ملی",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+          {
+            key: "economicCode",
+            component: "input",
+            placeholder: "کداقتصادی",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/4",
+          },
+          {
+            key: "establishedDate",
+            dependantKey: "establishedDateType",
+            component: "date",
+            placeholder: "تاریخ تاسیس",
             type: "text",
             floating: true,
             labelClassName: "w-full",
@@ -147,7 +172,13 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options: [],
+            options: [
+              { label: "شرکت نسبی", value: CompanyType.soleProprietorship },
+              { label: "شرکت سهامی عام", value: CompanyType.publicLimited },
+              { label: "شرکت سهامی خاص", value: CompanyType.privateLimited },
+              { label: "شرکت تضامنی", value: CompanyType.partnership },
+              { label: "شرکت با مسئولیت محدود", value: CompanyType.llc },
+            ],
           },
           {
             key: "country",
@@ -157,7 +188,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options: [],
+            options: countryOptions,
           },
           {
             key: "province",
@@ -167,7 +198,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options: [],
+            options: provinceOptions,
           },
           {
             key: "city",
@@ -177,7 +208,7 @@ export function createFormFields(formType: string): formDataInterface {
             floating: true,
             labelClassName: "w-full",
             className: "w-full md:w-1/4",
-            options: [],
+            options: cityOptions,
           },
           {
             key: "address",
@@ -198,7 +229,7 @@ export function createFormFields(formType: string): formDataInterface {
             className: "w-full",
           },
           {
-            key: "documentFile",
+            key: "logoFile",
             component: "file",
             placeholder: "",
             type: "file",
@@ -208,8 +239,8 @@ export function createFormFields(formType: string): formDataInterface {
           },
           {
             component: "file-preview",
-            key: "filePreview",
-            dependantKey: "documentFile",
+            key: "logoFilePreview",
+            dependantKey: "logoFile",
             className: "w-full",
           },
         ],
@@ -217,10 +248,13 @@ export function createFormFields(formType: string): formDataInterface {
           companyName: "",
           brandName: "",
           registrationNumber: "",
-          idNumber: "",
+          economicCode: "",
+          companyIdNumber: "",
           address: "",
           description: "",
-          documentFile: "",
+          logoFile: "",
+          establishedDate: "",
+          establishedDateType: "",
         },
       };
     case "companyContact":

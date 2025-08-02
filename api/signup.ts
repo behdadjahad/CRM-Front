@@ -23,7 +23,7 @@ export interface SignUpInput {
   user: {
     phoneNumber: string;
     email: string;
-    firstName:string;
+    firstName: string;
     lastName: string;
     // middleName: string;
     cityId: number;
@@ -41,6 +41,44 @@ export async function SignUp(data: SignUpInput): Promise<any> {
       method: "POST",
       body: data,
     });
+
+    return result;
+  } catch {
+    return;
+  }
+}
+export async function updateRegistrationData(id: number, data: any) {
+  try {
+    const formData = new FormData();
+
+    for (const key in data) {
+      if (key !== "files") {
+        formData.append(key, data[key]);
+      }
+    }
+
+    if (Array.isArray(data.files)) {
+      data.files.forEach((fileObj: any) => {
+        if (fileObj?.file instanceof File) {
+          formData.append("files", fileObj.file);
+        }
+      });
+    }
+    const result: any = await fetchService(`registeration-request/${id}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    return result;
+  } catch {
+    return;
+  }
+}
+export async function getRegistrationData(registerationRequestId: number) {
+  try {
+    const result = await fetchService(
+      `registeration-request/${registerationRequestId}`
+    );
 
     return result;
   } catch {

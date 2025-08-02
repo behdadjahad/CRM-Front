@@ -10,6 +10,8 @@ import airlineReducer from "./airline-slice";
 import notificationReducer from "./notification-slice";
 import currencyReducer from "./currency-slice";
 import cityReducer from "./city-slice";
+import countryReducer from "./country-slice";
+import provinceReducer from "./province-slice";
 
 
 export const store = configureStore({
@@ -17,6 +19,8 @@ export const store = configureStore({
     user: userReducer,
     currency: currencyReducer,
     city: cityReducer,
+    province: provinceReducer,
+    country: countryReducer,
     customer: customerReducer,
     customerDetailContract: customerDetailContractReducer,
     contract: contractReducer,

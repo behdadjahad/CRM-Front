@@ -7,22 +7,68 @@ import {
   formDataInterface,
 } from "@/constants/registration-creation-form-fields";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getLegalDocumentTypes } from "@/api/legal-document";
+import { getLegalDocumentTypes, uploadDocumnets } from "@/api/legal-document";
 
 import { useEffect, useState } from "react";
 import RegistrationUploadDocumentContainer from "./registration-upload-document-container";
-import { addCeoCommunication, addCeoDetail, addCompanyInfo } from "@/api/ceo";
+import { addCeoCommunication, addCeoDetail } from "@/api/ceo";
 import { RootState } from "@/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { convertToGregorian } from "@/lib/date";
+import { getRegistrationData, updateRegistrationData } from "@/api/signup";
+import { Communicater, CommunicationType } from "@/types/globals";
+import { fetchCountries } from "@/store/country-slice";
+import { fetchCities } from "@/store/city-slice";
+import { fetchProvinces } from "@/store/province-slice";
+import { OptionType } from "../shared/form-maker";
 
 export default function RegistrationContainer() {
+  const dispatch = useDispatch<any>();
+  useEffect(() => {
+    dispatch(fetchCountries());
+    dispatch(fetchCities());
+    dispatch(fetchProvinces());
+  }, [dispatch]);
+  const countryOptions = useSelector((state: any) => state?.country?.items);
+  const cityOptions = useSelector((state: any) => state?.city?.items);
+  const provinceOptions = useSelector((state: any) => state?.province?.items);
+  const [provinces, setProvinces] = useState<OptionType[]>(provinceOptions);
+  const [cities, setCities] = useState<OptionType[]>(cityOptions);
+  const {
+    managerPersonalFormikData,
+    managerContactFormikData,
+    companyInfoFormikData,
+    companyContactFormikData,
+  } = getData();
+  const formik = useFormik({
+    initialValues: {
+      ...managerPersonalFormikData.initialValues,
+      establishedDateType: "",
+    },
+
+    onSubmit: async () => {},
+  });
+
   const [documentTypes, setDocumentTypes] = useState([]);
+  const [ceoId, setCeoId] = useState<number | null>(null);
+
   const { data: legalDocumentTypeData } = useQuery({
     queryKey: ["legalDocumentTypeData"],
     queryFn: async () => await getLegalDocumentTypes(),
   });
   const userData = useSelector((state: RootState) => state.user);
+  const { data: registrationData } = useQuery({
+    queryKey: ["registrationData", userData.registerationRequestId],
+    queryFn: async () =>
+      await getRegistrationData(userData.registerationRequestId),
+    enabled: !!userData.registerationRequestId, // will only run if requestId is not undefined or falsy
+  });
+  useEffect(() => {
+    if (registrationData) {
+      const ceo = registrationData?.CEO?.id;
+      setCeoId(ceo);
+    }
+  }, [registrationData]);
 
   useEffect(() => {
     if (legalDocumentTypeData && legalDocumentTypeData?.data?.length > 0) {
@@ -35,17 +81,28 @@ export default function RegistrationContainer() {
       setDocumentTypes(documentTypeOptions);
     }
   }, [legalDocumentTypeData]);
-  const {
-    managerPersonalFormikData,
-    managerContactFormikData,
-    companyInfoFormikData,
-    companyContactFormikData,
-  } = getData();
-  const formik = useFormik({
-    initialValues: managerPersonalFormikData.initialValues,
 
-    onSubmit: async () => {},
-  });
+  useEffect(() => {
+    if (formik.values.country) {
+      const provinceList = provinceOptions?.filter(
+        (item: any) => item.countryId === formik.values.country
+      );
+      setProvinces(provinceList);
+    } else {
+      setProvinces(provinceOptions);
+    }
+  }, [countryOptions, formik.values.country]);
+  useEffect(() => {
+    if (formik.values.province) {
+      const cityList = cityOptions?.filter(
+        (item: any) => item?.provinceId === formik.values.province
+      );
+      setCities(cityList);
+    } else {
+      setCities(cityOptions);
+    }
+  }, [provinceOptions, formik.values.province]);
+
   const { mutate: submitManagerInfoHandler } = useMutation({
     mutationFn: (data: any) => {
       return addCeoDetail(data);
@@ -59,11 +116,23 @@ export default function RegistrationContainer() {
     onSuccess: () => {},
   });
   const { mutate: submitCompanyInfoHandler } = useMutation({
-    mutationFn: (data: any) => {
-      return addCompanyInfo(data);
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return updateRegistrationData(id, data);
     },
     onSuccess: () => {},
   });
+  const { mutate: submitUploadedDocumnets } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return uploadDocumnets(id, data);
+    },
+    onSuccess: () => {},
+  });
+  function submitCompanyDocuments(documents: any[]) {
+    submitUploadedDocumnets({
+      id:userData.registerationRequestId,
+      data:documents
+    })
+  }
   function submitManager() {
     const data = {
       // chadcoCustomerId: "",
@@ -82,41 +151,74 @@ export default function RegistrationContainer() {
   function submitCommunication() {
     const data = [
       {
-        communicationDetails: "string",
-        communicationType: "MOBILE",
-        communicater: "ORGANIZATION",
-        customerId: 1,
-        organizationId: 1,
+        communicationDetails: formik.values.mobilePhone,
+        communicationType: CommunicationType.mobile,
+        communicater: Communicater.business,
+        ceoId,
       },
       {
-        communicationDetails: "string",
-        communicationType: "MOBILE",
-        communicater: "ORGANIZATION",
-        customerId: 1,
-        organizationId: 1,
+        communicationDetails: formik.values.homePhone,
+        communicationType: CommunicationType.home,
+        communicater: Communicater.business,
+        ceoId,
       },
       {
-        communicationDetails: "string",
-        communicationType: "MOBILE",
-        communicater: "ORGANIZATION",
-        customerId: 1,
-        organizationId: 1,
+        communicationDetails: formik.values.workPhone,
+        communicationType: CommunicationType.business,
+        communicater: Communicater.business,
+        ceoId,
       },
       {
-        communicationDetails: "string",
-        communicationType: "MOBILE",
-        communicater: "ORGANIZATION",
-        customerId: 1,
-        organizationId: 1,
+        communicationDetails: formik.values.email,
+        communicationType: CommunicationType.email,
+        communicater: Communicater.business,
+        ceoId,
       },
     ];
 
     submitManagerCommunicationHandler(data);
   }
   function submitCompany() {
-    const data = {};
-    submitCompanyInfoHandler(data);
+    const data = {
+      registerationRequest: {
+        companyName: formik.values.companyName,
+        brandName: formik.values.brandName,
+        registerationNumber: formik.values.registrationNumber,
+        nationalId: formik.values.companyIdNumber,
+        economicCode: formik.values.economicCode,
+        companyType: formik.values.companyType,
+        address: formik.values.address,
+        description: formik.values.description,
+        logoFile: formik.values.logoFile,
+        establishedDate: convertToGregorian(
+          formik.values.establishedDate,
+          formik.values.establishedDateType
+        ),
+        cityId: formik.values.city,
+        provinceId: formik.values.province,
+        countryId: formik.values.country,
+      },
+      user: {},
+    };
+    submitCompanyInfoHandler({
+      id: userData.registerationRequestId,
+      data: data,
+    });
   }
+  function submitCompanyContact() {
+    const data = {
+      registerationRequest: {
+        phoneNumber: formik.values.companyPhoneNumber,
+        email: formik.values.companyEmail,
+        website: formik.values.companyWebsite,
+      },
+    };
+    submitCompanyInfoHandler({
+      id: userData.registerationRequestId,
+      data: data,
+    });
+  }
+
   return (
     <div>
       <FormTabContainer
@@ -170,50 +272,50 @@ export default function RegistrationContainer() {
                   fields: companyContactFormikData.fields,
                   className: "flex flex-row-reverse",
                 },
-                submitForm: () => {},
+                submitForm: () => {
+                  submitCompanyContact();
+                },
               },
             ],
           },
           {
             title: "آپلود مدارک",
             forms: [
-              // {
-              //   title: "مدارک شرکت",
-              //   formInfo: {
-              //     form: managerFormik,
-              //     fields: companyDocumentFormikData.fields,
-              //     className: "flex flex-row-reverse",
-              //   },
-              //   submitForm: () => {},
-              // },
             ],
             children: (
-              <RegistrationUploadDocumentContainer list={documentTypes} />
+              <RegistrationUploadDocumentContainer list={documentTypes} onSubmitDocumnets={(documnets) => {
+                //submitCompanyDocuments(documnets)
+                console.log(documnets)
+              }}/>
             ),
           },
         ]}
       />
     </div>
   );
-}
-export function getData() {
-  const managerPersonalFormikData: formDataInterface =
-    createFormFields("managerPersonal");
-  const managerContactFormikData: formDataInterface =
-    createFormFields("managerContact");
-  const companyInfoFormikData: formDataInterface =
-    createFormFields("companyInfo");
-  const companyContactFormikData: formDataInterface =
-    createFormFields("companyContact");
-  const companyDocumentFormikData: formDataInterface = {
-    fields: [],
-    initialValues: {},
-  };
+  function getData() {
+    const managerPersonalFormikData: formDataInterface =
+      createFormFields("managerPersonal");
+    const managerContactFormikData: formDataInterface =
+      createFormFields("managerContact");
+    const companyInfoFormikData: formDataInterface = createFormFields(
+      "companyInfo",
+      countryOptions,
+      provinces,
+      cities
+    );
+    const companyContactFormikData: formDataInterface =
+      createFormFields("companyContact");
+    const companyDocumentFormikData: formDataInterface = {
+      fields: [],
+      initialValues: {},
+    };
 
-  return {
-    managerPersonalFormikData,
-    managerContactFormikData,
-    companyInfoFormikData,
-    companyContactFormikData,
-  };
+    return {
+      managerPersonalFormikData,
+      managerContactFormikData,
+      companyInfoFormikData,
+      companyContactFormikData,
+    };
+  }
 }

@@ -25,3 +25,10 @@ export enum Communicater {
   business = "BUSINESS",
  
 }
+export enum CompanyType {
+  soleProprietorship ="soleProprietorship",
+  partnership="partnership",
+  privateLimited="privateLimited",
+  publicLimited="publicLimited",
+  llc="llc"
+}

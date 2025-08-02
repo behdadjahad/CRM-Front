@@ -10,7 +10,7 @@ export interface UserData {
       name: string;
     };
   }[];
-  registerationRequestId: null | number;
+  registerationRequestId: number;
 }
 
 const initialState: UserData = {
@@ -24,7 +24,7 @@ const initialState: UserData = {
       },
     },
   ],
-  registerationRequestId:null
+  registerationRequestId:0
 };
 
 export const fetchUserData = createAsyncThunk<UserData>(
