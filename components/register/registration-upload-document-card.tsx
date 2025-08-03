@@ -1,44 +1,60 @@
 import { useFormik } from "formik";
 
 import FormMaker from "../shared/form-maker";
-import { useEffect } from "react";
+
 import { Button } from "../ui/button";
+import { uploadDocumnets } from "@/api/legal-document";
+import { useMutation } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { ServerImageAddress } from "@/lib/utils";
 
 export interface RegistrationUploadDocumentCardInterface {
   id: number;
   title: string;
-  onChange: ({
-    id,
-    licenseNumber,
-    licensefile,
-  }: {
+  data?: {
     id: number;
-    licenseNumber: string;
-    licensefile: any;
-  }) => void;
+    documentTypeId: number;
+    licenceNumber: string;
+    licenseFile: string;
+    title: string;
+  };
 }
 
 export default function RegistrationUploadDocumentCard({
   id,
   title,
-  onChange,
+  data,
 }: RegistrationUploadDocumentCardInterface) {
+  const userData = useSelector((state: RootState) => state.user);
   const formik = useFormik({
     initialValues: {
-      id: id,
-      licensefile: "",
-      licenseNumber: "",
+      id: data?.documentTypeId ? data?.documentTypeId : id,
+      // licenseFile: data?.licenseFile ? data?.licenseFile : "",
+      licenseFile: data?.licenseFile
+        ? { url:  ServerImageAddress + data.licenseFile, file: null }
+        : null,
+      licenseNumber: data?.licenceNumber ? data?.licenceNumber : "",
+      title: data?.title ? data?.title : title,
     },
-    validate: (values) => {
-      // notify parent whenever any field changes
-      onChange(values);
-      return {};
-    },
+
     onSubmit: async () => {},
   });
-  // useEffect(() => {
-  //   onChange(formik.values);
-  // }, [formik.values, onChange]);
+  const { mutate: submitUploadedDocumnet } = useMutation({
+    mutationFn: (data: any) => {
+      return uploadDocumnets(data);
+    },
+    onSuccess: () => {},
+  });
+  function submitCompanyDocument(values: any) {
+    const data = {
+      licenceNumber: values.licenseNumber,
+      legalDocumentTypeId: values.id,
+      licenseFile: values.licenseFile,
+      registerationRequestId: userData.registerationRequestId,
+    };
+    submitUploadedDocumnet(data);
+  }
   return (
     <FormMaker
       form={formik}
@@ -53,7 +69,7 @@ export default function RegistrationUploadDocumentCard({
           className: "w-full md:w-1/2",
         },
         {
-          key: "licensefile",
+          key: "licenseFile",
           component: "single-file",
           placeholder: "",
           type: "file",
@@ -64,16 +80,23 @@ export default function RegistrationUploadDocumentCard({
         {
           component: "single-file-preview",
           key: "filePreview",
-          dependantKey: "licensefile",
+          dependantKey: "licenseFile",
           className: "w-fit",
         },
         {
           key: "submit",
           component: "non-field",
           children: (
-          <Button variant={"foreground"} >ارسال فایل</Button>
+            <Button
+              variant={"foreground"}
+              onClick={() => {
+                submitCompanyDocument(formik.values);
+              }}
+            >
+              ارسال فایل
+            </Button>
           ),
-         className: "flex-1 flex items-start"
+          className: "flex-1 flex items-start",
         },
       ]}
       className="flex  flex-row-reverse w-full"

@@ -43,8 +43,7 @@ export default function SignUpForm() {
     },
     onSuccess: (result) => {
       if (result) {
-       console.log(result)
-        router.push("/register");
+        router.push("/pending-register");
         localStorage.setItem("token", result.data.tokens.accessToken);
         localStorage.setItem("refreshToken", result.data.tokens.refreshToken);
       }

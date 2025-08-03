@@ -50,6 +50,19 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
       },
       {
+        label: "درخواست ها",
+        link: "/lead",
+        icon: (
+          <Image
+            src={"/icons/lead-icon.png"}
+            alt="درخواست"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
+      {
         label: "گزارش ها",
         link: "/report",
         icon: (

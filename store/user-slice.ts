@@ -11,6 +11,7 @@ export interface UserData {
     };
   }[];
   registerationRequestId: number;
+  status: string;
 }
 
 const initialState: UserData = {
@@ -24,32 +25,47 @@ const initialState: UserData = {
       },
     },
   ],
-  registerationRequestId:0
+  registerationRequestId: 0,
+  status: "initial",
 };
 
-export const fetchUserData = createAsyncThunk<UserData>(
-  "user/fetchUserData",
-  async (inputData, { dispatch }) => {
-    try {
-      const result = await fetchService("user");
-  
-      dispatch(setUser(result?.data))
-      return result;
-    } catch { }
-  }
-);
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {
-    setUser(state, action: PayloadAction<UserData>) {
-      state.fullName = action.payload.fullName;
-      state.id = action.payload.id;
-      state.chadcoCustomerId = action.payload.chadcoCustomerId;
-      state.registerationRequestId=action.payload.registerationRequestId
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserData.fulfilled, (state, action) => {
+      const data = action?.payload?.data;
+      state.fullName = data?.fullName;
+      state.id = data?.id;
+      state.chadcoCustomerId = data?.chadcoCustomerId;
+      state.registerationRequestId = data?.registerationRequestId;
+      state.status = data?.registerationRequest?.status;
+    });
   },
 });
+export const fetchUserData = createAsyncThunk(
+  "user/fetchUserData",
+  async () => {
+    try {
+      const result = await fetchService("user");
 
-export const { setUser } = userSlice.actions;
+      return result;
+    } catch {
+      return {};
+    }
+  }
+);
+// export const fetchUserData = createAsyncThunk<any, any>(
+//   "user/fetchUserData",
+//   async (inputData, { dispatch }) => {
+//     try {
+//       const result = await fetchService("user");
+
+//       // dispatch(setUser(result?.data))
+//       return result;
+//     } catch { }
+//   }
+// );
+
 export default userSlice.reducer;

@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+
 export interface ProfileDropDownInterface {
   className?: string;
 }
@@ -24,13 +24,12 @@ export interface ProfileDropDownInterface {
 export default function ProfileDropDown({
   className,
 }: ProfileDropDownInterface) {
-  const userData = useSelector((state: RootState) => state.user);
+  const userData = useSelector((state: any) => state.user);
   const router = useRouter();
-  const dispatch = useDispatch();
-
+  const dispatch = useDispatch<any>();
   useEffect(() => {
-    dispatch(fetchUserData() as any);
-  }, [userData, dispatch]);
+    dispatch(fetchUserData());
+  }, [dispatch]);
 
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,
@@ -67,7 +66,7 @@ export default function ProfileDropDown({
   useEffect(() => {
     fetchMe();
   }, []);
-
+  console.log(userData);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger

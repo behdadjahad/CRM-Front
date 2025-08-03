@@ -1,4 +1,5 @@
 import { fetchService } from "@/boot/fetch-service";
+import { buildFormData } from "./legal-document";
 export interface SignUpInput {
   registerationRequest: {
     companyName: string;
@@ -49,21 +50,22 @@ export async function SignUp(data: SignUpInput): Promise<any> {
 }
 export async function updateRegistrationData(id: number, data: any) {
   try {
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    for (const key in data) {
-      if (key !== "files") {
-        formData.append(key, data[key]);
-      }
-    }
+    // for (const key in data) {
+    //   if (key !== "files") {
+    //     formData.append(key, data[key]);
+    //   }
+    // }
 
-    if (Array.isArray(data.files)) {
-      data.files.forEach((fileObj: any) => {
-        if (fileObj?.file instanceof File) {
-          formData.append("files", fileObj.file);
-        }
-      });
-    }
+    // if (Array.isArray(data.files)) {
+    //   data.files.forEach((fileObj: any) => {
+    //     if (fileObj?.file instanceof File) {
+    //       formData.append("files", fileObj.file);
+    //     }
+    //   });
+    // }
+    const formData = buildFormData(data, "logoFile");
     const result: any = await fetchService(`registeration-request/${id}`, {
       method: "PUT",
       body: formData,
@@ -78,6 +80,19 @@ export async function getRegistrationData(registerationRequestId: number) {
   try {
     const result = await fetchService(
       `registeration-request/${registerationRequestId}`
+    );
+
+    return result;
+  } catch {
+    return;
+  }
+}
+export async function submitRegistration(registerationRequestId: number) {
+  try {
+    const result = await fetchService(
+      `registeration-request/pending/${registerationRequestId}`, {
+        method:"PATCH"
+      }
     );
 
     return result;
