@@ -8,10 +8,8 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function PendingRegister() {
-  const [currentStep, setCurrentStep] = useState<number>(2);
-
-  const router = useRouter();
-  const steps = [
+  const [doneStep, setDoneStep] = useState<number>(0);
+  const [steps, setSteps] = useState([
     {
       label: "ثبت نام اولیه",
       value: 1,
@@ -24,15 +22,80 @@ export default function PendingRegister() {
       label: "تایید مدارک",
       value: 3,
     },
-  ];
+  ]);
+  const router = useRouter();
+
   const userData = useSelector((state: RootState) => state.user);
   useEffect(() => {
     switch (userData?.status) {
       case "initial":
-        setCurrentStep(2);
+        setSteps([
+          {
+            label: "ثبت نام اولیه",
+            value: 1,
+          },
+          {
+            label: "تکمیل مشخصات و ارسال مدارک",
+            value: 2,
+          },
+          {
+            label: "تایید مدارک",
+            value: 3,
+          },
+        ]);
+        setDoneStep(1);
         break;
       case "pending":
-        setCurrentStep(3);
+        setSteps([
+          {
+            label: "ثبت نام اولیه",
+            value: 1,
+          },
+          {
+            label: "تکمیل مشخصات و ارسال مدارک",
+            value: 2,
+          },
+          {
+            label: "تایید مدارک",
+            value: 3,
+          },
+        ]);
+        setDoneStep(2);
+        break;
+      case "approved":
+        setSteps([
+          {
+            label: "ثبت نام اولیه",
+            value: 1,
+          },
+          {
+            label: "تکمیل مشخصات و ارسال مدارک",
+            value: 2,
+          },
+          {
+            label: "تایید مدارک",
+            value: 3,
+          },
+        ]);
+        setDoneStep(3);
+        router.push("/sale");
+        break;
+      case "rejected":
+        setSteps([
+          {
+            label: "ثبت نام اولیه",
+            value: 1,
+          },
+          {
+            label: "تکمیل مشخصات و ارسال مدارک",
+            value: 2,
+          },
+          {
+            label: "رد مدارک",
+            value: 3,
+          },
+        ]);
+        setDoneStep(1);
         break;
 
       default:
@@ -42,24 +105,25 @@ export default function PendingRegister() {
   return (
     <main>
       <div className="bg-card rounded-lg w-full flex justify-between items-center p-6 flex-col gap-4 h-64">
-        <RegistrationProgress currentStep={currentStep} steps={steps} />
+        <RegistrationProgress doneStep={doneStep} steps={steps} />
         <div className="flex flex-col gap-4 items-center">
-          {currentStep === 2 ? (
+          {doneStep === 1 ? (
             <p className="text-center text-base text-tertiary-background">
               {" "}
               کاربر گرامی لطفا جهت استفاده از امکانات پنل مدیریت مشتریان چادکو
               نسبت به تکمیل فرم ثبت نام خود اقدام نمایید.
             </p>
-          ) : currentStep === 3 ? (
+          ) : doneStep === 2 ? (
             <p className="text-center text-base text-tertiary-background">
               {" "}
-              کاربر گرامی لطفا تا زمان تایید مدارک شما توسط کارشناسان منتظر بمانید.
+              کاربر گرامی لطفا تا زمان تایید مدارک شما توسط کارشناسان منتظر
+              بمانید.
             </p>
           ) : (
             <></>
           )}
 
-          {currentStep === 2 && (
+          {doneStep === 1 && (
             <Button variant={"info"} onClick={() => router.push("/register")}>
               تکمیل فرم ثبت نام
             </Button>

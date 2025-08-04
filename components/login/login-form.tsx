@@ -38,27 +38,31 @@ export default function LoginForm() {
       password: formik.values["password"],
     });
 
-    if (result) {
- 
-      // Cookies.set("accessToken", result.data.accessToken, {
-      //   path: "/",
-      //   secure: true,
-      //   sameSite: "Strict",
-      //   expires: 1, // 1 hour
-      // });
+    // Cookies.set("accessToken", result.data.accessToken, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "Strict",
+    //   expires: 1, // 1 hour
+    // });
 
-      // //Set refreshToken (still client-side!)
-      // Cookies.set("refreshToken", result.data.refreshToken, {
-      //   path: "/",
-      //   secure: true,
-      //   sameSite: "Strict",
-      //   expires: 7, // 7 days
-      // });
-      if (result.status === "success") {
+    // //Set refreshToken (still client-side!)
+    // Cookies.set("refreshToken", result.data.refreshToken, {
+    //   path: "/",
+    //   secure: true,
+    //   sameSite: "Strict",
+    //   expires: 7, // 7 days
+    // });
+    if (result?.status === "success") {
+      const status = result.data.registerationStatus;
+      if (status) {
+        router.push("/pending-register");
+      } else {
         router.push("/sale");
-        localStorage.setItem("token", result.data.accessToken);
-        localStorage.setItem("refreshToken", result.data.refreshToken);
       }
+
+      
+      localStorage.setItem("token", result?.data?.accessToken);
+      localStorage.setItem("refreshToken", result?.data?.refreshToken);
     } else {
       // toast
       // router.push("/login");

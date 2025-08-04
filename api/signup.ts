@@ -65,7 +65,7 @@ export async function updateRegistrationData(id: number, data: any) {
     //     }
     //   });
     // }
-    const formData = buildFormData(data, "logoFile");
+    const formData = buildFormData(data, "logo");
     const result: any = await fetchService(`registeration-request/${id}`, {
       method: "PUT",
       body: formData,

@@ -12,7 +12,7 @@ import {
   getLegalDocumentTypes,
   uploadDocumnets,
 } from "@/api/legal-document";
-
+import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import RegistrationUploadDocumentContainer from "./registration-upload-document-container";
 import { addCeoCommunication, addCeoDetail } from "@/api/ceo";
@@ -25,11 +25,10 @@ import { fetchCountries } from "@/store/country-slice";
 import { fetchCities } from "@/store/city-slice";
 import { fetchProvinces } from "@/store/province-slice";
 import { OptionType } from "../shared/form-maker";
-import { dateType } from "@/lib/utils";
+import { dateType, REQUIRED_TEXT } from "@/lib/utils";
 import { useRouter } from "next/router";
 
 export default function RegistrationContainer() {
- 
   const dispatch = useDispatch<any>();
   useEffect(() => {
     dispatch(fetchCountries());
@@ -81,6 +80,15 @@ export default function RegistrationContainer() {
       companyEmail: companyDetail?.email,
       companyWebsite: companyDetail?.website,
     },
+    validationSchema: Yup.object().shape({
+      firstName: Yup.string().required(REQUIRED_TEXT),
+      lastName: Yup.string().required(REQUIRED_TEXT),
+      managerBirthDate: Yup.string().required(REQUIRED_TEXT),
+      idNumber: Yup.string()
+        .required(REQUIRED_TEXT)
+        .matches(/^\d{10}$/, "کدملی باید یک  عدد ده رقمی باشد"),
+      // career: Yup.string().required(REQUIRED_TEXT),
+    }),
     enableReinitialize: true,
     onSubmit: async () => {},
   });
@@ -201,9 +209,7 @@ export default function RegistrationContainer() {
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return updateRegistrationData(id, data);
     },
-    onSuccess: () => {
-        
-    },
+    onSuccess: () => {},
   });
 
   function submitManager() {
@@ -270,7 +276,7 @@ export default function RegistrationContainer() {
       companyType: formik.values.companyType,
       address: formik.values.address,
       description: formik.values.description,
-      logoFile: formik.values.logoFile,
+      logo: formik.values.logoFile,
       establishedDate: convertToGregorian(
         formik.values.establishedDate,
         formik.values.establishedDateType
