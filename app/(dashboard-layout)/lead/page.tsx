@@ -1,10 +1,26 @@
-'use client'
+"use client";
 
 import LeadContainer from "@/components/lead/lead-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
+import { fetchLeads } from "@/store/lead-slice";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Lead() {
+  const dispatch = useDispatch<any>();
+  const limit = useSelector((state: any) => state.lead.limit);
+  const filters = useSelector((state: any) => state.lead.limit);
+  
+  useEffect(() => {
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: limit,
+        filters: filters,
+      })
+    );
+  }, [dispatch]);
   const leadList = [
     {
       id: 1,

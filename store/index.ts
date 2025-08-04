@@ -12,6 +12,7 @@ import currencyReducer from "./currency-slice";
 import cityReducer from "./city-slice";
 import countryReducer from "./country-slice";
 import provinceReducer from "./province-slice";
+import leadReducer from "./lead-slice";
 
 
 export const store = configureStore({
@@ -28,6 +29,7 @@ export const store = configureStore({
     hotel: hotelReducer,
     airline: airlineReducer,
     notification: notificationReducer,
+    lead: leadReducer,
  
   },
 });

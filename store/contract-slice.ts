@@ -8,7 +8,7 @@ import {
   totalVotes,
 } from "@/lib/utils";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { Satellite } from "lucide-react";
+
 
 export interface ContractState {
   items: any[];

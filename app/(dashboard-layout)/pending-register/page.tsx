@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function PendingRegister() {
   const [doneStep, setDoneStep] = useState<number>(0);
-  const [steps, setSteps] = useState([
+  const steps=[
     {
       label: "ثبت نام اولیه",
       value: 1,
@@ -22,79 +22,27 @@ export default function PendingRegister() {
       label: "تایید مدارک",
       value: 3,
     },
-  ]);
+  ];
   const router = useRouter();
 
   const userData = useSelector((state: RootState) => state.user);
   useEffect(() => {
     switch (userData?.status) {
       case "initial":
-        setSteps([
-          {
-            label: "ثبت نام اولیه",
-            value: 1,
-          },
-          {
-            label: "تکمیل مشخصات و ارسال مدارک",
-            value: 2,
-          },
-          {
-            label: "تایید مدارک",
-            value: 3,
-          },
-        ]);
+  
         setDoneStep(1);
         break;
       case "pending":
-        setSteps([
-          {
-            label: "ثبت نام اولیه",
-            value: 1,
-          },
-          {
-            label: "تکمیل مشخصات و ارسال مدارک",
-            value: 2,
-          },
-          {
-            label: "تایید مدارک",
-            value: 3,
-          },
-        ]);
+  
         setDoneStep(2);
         break;
       case "approved":
-        setSteps([
-          {
-            label: "ثبت نام اولیه",
-            value: 1,
-          },
-          {
-            label: "تکمیل مشخصات و ارسال مدارک",
-            value: 2,
-          },
-          {
-            label: "تایید مدارک",
-            value: 3,
-          },
-        ]);
+    
         setDoneStep(3);
         router.push("/sale");
         break;
       case "rejected":
-        setSteps([
-          {
-            label: "ثبت نام اولیه",
-            value: 1,
-          },
-          {
-            label: "تکمیل مشخصات و ارسال مدارک",
-            value: 2,
-          },
-          {
-            label: "رد مدارک",
-            value: 3,
-          },
-        ]);
+      
         setDoneStep(1);
         break;
 

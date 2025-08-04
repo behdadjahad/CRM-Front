@@ -6,6 +6,7 @@ import FormMaker from "../shared/form-maker";
 import LeadTable from "./lead-table";
 import { useFormik } from "formik";
 import ExportDataContainer from "../shared/export-data-container";
+import { useSelector } from "react-redux";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -24,7 +25,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     },
     onSubmit: async () => {},
   });
-  const pages = 10;
+  const pages = useSelector((state: any) => state.lead.totalPages);
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -63,7 +64,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
                   pageRangeDisplayed={2}
                   marginPagesDisplayed={3}
                   forcePage={1}
-                  pageCount={10}
+                  pageCount={pages}
                   renderOnZeroPageCount={null}
                   containerClassName="w-full relative flex justify-center items-center ltr"
                   pageClassName="mx-3 rounded-md"
