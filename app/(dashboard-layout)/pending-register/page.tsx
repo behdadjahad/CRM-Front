@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 export default function PendingRegister() {
   const [doneStep, setDoneStep] = useState<number>(0);
-  const steps=[
+  const steps = [
     {
       label: "ثبت نام اولیه",
       value: 1,
@@ -29,20 +29,16 @@ export default function PendingRegister() {
   useEffect(() => {
     switch (userData?.status) {
       case "initial":
-  
         setDoneStep(1);
         break;
       case "pending":
-  
         setDoneStep(2);
         break;
       case "approved":
-    
         setDoneStep(3);
         router.push("/sale");
         break;
       case "rejected":
-      
         setDoneStep(1);
         break;
 

@@ -7,6 +7,7 @@ import LeadTable from "./lead-table";
 import { useFormik } from "formik";
 import ExportDataContainer from "../shared/export-data-container";
 import { useSelector } from "react-redux";
+import LeadCreationContainer from "./lead-creation-container";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -38,14 +39,17 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
             onSortHandler={() => {}}
             onCancleHandler={() => {}}
           />
-          <ExportDataContainer
-            onGetData={()=>{}}
-            list={[]}
-            headerLabels={[]}
-            loading={false}
-            checkedItems={[]}
-            dateTimeRange={{}}
-          />
+          <div className="flex gap-4">
+            <LeadCreationContainer />
+            <ExportDataContainer
+              onGetData={() => {}}
+              list={[]}
+              headerLabels={[]}
+              loading={false}
+              checkedItems={[]}
+              dateTimeRange={{}}
+            />
+          </div>
         </div>
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow ">
           <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-card">

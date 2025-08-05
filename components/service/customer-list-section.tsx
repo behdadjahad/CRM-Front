@@ -8,7 +8,7 @@ import { debounce } from "lodash";
 export default function CustomerListSection({
   onCheckCustomerhandler,
 }: {
-  onCheckCustomerhandler: any;
+  onCheckCustomerhandler?: any;
 }) {
   const [searchKeyWord, setSearchKeyWord] = useState<string>("");
   const customerSearchFormik = useFormik({

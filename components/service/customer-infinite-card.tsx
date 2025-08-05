@@ -12,9 +12,8 @@ type CustomerInfiniteCardProps = {
     phone: string;
     email: string;
   };
-  onCheckCustomerhandler: any;
+  onCheckCustomerhandler?: any;
   searchKeyWord: string;
-
 };
 // const highlightMatch = (text: string, keyword: string) => {
 //   if (!keyword) return text;
@@ -54,21 +53,28 @@ const highlightMatch = (text: string, keyword: string) => {
 };
 
 const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
-  ({ customer, onCheckCustomerhandler, searchKeyWord}, ref) => {
-  
+  ({ customer, onCheckCustomerhandler, searchKeyWord }, ref) => {
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
         className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
-     
+        onClick={() => {
+          if (!onCheckCustomerhandler) {
+            alert()
+          } else {
+            return;
+          }
+        }}
       >
         <div className="flex items-center gap-2">
-      <Checkbox
-            onCheckedChange={(checked) =>
-              onCheckCustomerhandler(customer.id, Boolean(checked))
-            }
-            // checked={isChecked}
-          />
+          {onCheckCustomerhandler && (
+            <Checkbox
+              onCheckedChange={(checked) =>
+                onCheckCustomerhandler(customer.id, Boolean(checked))
+              }
+              // checked={isChecked}
+            />
+          )}
           <div className="flex items-center gap-2">
             {" "}
             <div className="rounded-full flex items-center justify-center bg-[#F5F5F5] border border-gray-200 w-10 h-10">

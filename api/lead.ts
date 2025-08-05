@@ -1,4 +1,11 @@
 import { fetchService } from "@/boot/fetch-service";
+export async function getLeadTypes() {
+  try {
+    const result = await fetchService("lead-type");
+
+    return result;
+  } catch {}
+}
 
 export async function addLead(data: any) {
   try {
