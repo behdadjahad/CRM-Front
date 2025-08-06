@@ -21,6 +21,7 @@ import MultiSelectInput from "./multi-select-input";
 import MultiAddedTextInput from "./multi-added-text-input";
 import SingleFileInput from "./single-file-input";
 import SingleFilePreview from "./single-file-preview";
+import TagPreview from "./tag-preview";
 
 export interface OptionType {
   label: string;
@@ -34,6 +35,7 @@ export interface FieldType {
     | "multi-added-input"
     | "Select"
     | "multi-select"
+    | "tag-preview"
     | "SuggestionInput"
     | "date"
     | "date-time"
@@ -89,6 +91,8 @@ export interface FieldType {
   menuPlacement?: "top" | "bottom" | "auto";
   hasReset?: boolean;
   resetFunction?: () => void;
+  isValidNewOption?: boolean;
+  sendValue?:(value:string) =>void
 }
 
 export interface FormMakerInterface {
@@ -109,6 +113,8 @@ export default function FormMaker({
           return <SelectInput form={form} item={item} />;
         case "multi-select":
           return <MultiSelectInput form={form} item={item} />;
+        case "tag-preview":
+          return <TagPreview form={form} item={item} />;
         case "SuggestionInput":
           return <SuggestionInput form={form} item={item} />;
         case "input":

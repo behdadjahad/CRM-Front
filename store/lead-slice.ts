@@ -39,7 +39,21 @@ const leadSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchLeads.fulfilled, (state, action) => {});
+    builder.addCase(fetchLeads.fulfilled, (state, action) => {
+      const data = action?.payload?.data;
+      state.items = data?.map((item: any) => ({
+        list: [
+          {
+            label: "نام و نام خانوادگی ",
+            value: item.customer?.person?.fullName,
+          },
+          {
+            label: "نوع درخواست",
+            value: item.leadType?.title,
+          },
+        ],
+      }));
+    });
     builder.addCase(fetchAllLeads.fulfilled, (state, action) => {});
   },
 });

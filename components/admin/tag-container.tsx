@@ -13,7 +13,7 @@ export default function TagContainer({
         <TagCard
           {...item}
           key={index}
-          onDeleteHandler={(itemId:number) => {
+          onDeleteHandler={(itemId:number ) => {
             onDeleteHandler(itemId);
           }}
         />

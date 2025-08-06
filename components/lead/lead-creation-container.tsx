@@ -5,16 +5,40 @@ import { MdClose } from "react-icons/md";
 import FormMaker, { OptionType } from "../shared/form-maker";
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { addLead, getLeadTypes } from "@/api/lead";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addLead, addLeadTag, getLeadTags, getLeadTypes } from "@/api/lead";
 import SingleCustomerSelection from "../customer/single-customer-selection";
+import { fetchLeads } from "@/store/lead-slice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+import TagContainer from "../admin/tag-container";
 
 export default function LeadCreationContainer() {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch<any>();
+  const userData = useSelector((state: RootState) => state.user);
+  const limit = useSelector((state: any) => state.lead.limit);
+  const filters = useSelector((state: any) => state.lead.limit);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [leadTypeOptions, setLeadTypeOptions] = useState<OptionType[]>([]);
+  const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
   const { data: leadTypeData } = useQuery({
     queryKey: ["leadTypeData"],
     queryFn: async () => await getLeadTypes(),
+  });
+  const { mutate: addLeadTagHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return addLeadTag(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["leadTagData"],
+      });
+    },
+  });
+  const { data: leadTagData } = useQuery({
+    queryKey: ["leadTagData"],
+    queryFn: async () => await getLeadTags(),
   });
   useEffect(() => {
     if (leadTypeData && leadTypeData?.data?.length > 0) {
@@ -25,14 +49,26 @@ export default function LeadCreationContainer() {
       setLeadTypeOptions(leadTypes);
     }
   }, [leadTypeData]);
+  useEffect(() => {
+    if (leadTagData && leadTagData?.data?.length > 0) {
+      const leadTags = leadTagData.data.map((leadTag: any) => ({
+        label: leadTag.title,
+        value: leadTag.title,
+      }));
+      setLeadTagOptions(leadTags);
+    }
+  }, [leadTagData]);
   const formik = useFormik({
     initialValues: {
       leadType: "",
       leadFullName: "",
+      leadTag: [],
     },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
+
+  console.log(formik.values.leadTag);
   const { mutate: addLeadHandler } = useMutation({
     mutationFn: (data: any) => {
       return addLead(data);
@@ -40,6 +76,13 @@ export default function LeadCreationContainer() {
     onSuccess: () => {
       setOpenModal(false);
       formik.resetForm();
+      dispatch(
+        fetchLeads({
+          page: 1,
+          limit: limit,
+          filters: filters,
+        })
+      );
     },
   });
   function submitForm() {
@@ -61,6 +104,7 @@ export default function LeadCreationContainer() {
     };
     addLeadHandler(data);
   }
+console.log(formik.values.leadTag)
   return (
     <>
       <Button
@@ -93,51 +137,52 @@ export default function LeadCreationContainer() {
           form={formik}
           fields={[
             {
-              key: "leadFullName",
-              component: "input",
-              placeholder: "نام و نام خانوادگی",
-              type: "text",
-              floating: true,
-              labelClassName: "w-full",
-              className: "w-full md:w-1/2",
-            },
-
-            {
-              key: "leadEmail",
-              component: "input",
-              placeholder: "ایمیل",
-              type: "text",
-              floating: true,
-              labelClassName: "w-full",
-              className: "w-full md:w-1/2",
-            },
-            {
-              key: "leadPhone",
-              component: "input",
-              placeholder: "شماره تماس",
-              type: "text",
-              floating: true,
-              labelClassName: "w-full",
-              className: "w-full md:w-1/2",
-            },
-            {
               key: "leadType",
               component: "Select",
               placeholder: "نوع درخواست",
               type: "text",
               floating: true,
               labelClassName: "w-full",
-              className: "w-full md:w-1/2",
+              className: "w-full",
               options: leadTypeOptions,
             },
             {
               key: "leadResponsible",
               component: "input",
-              placeholder: "مسعول پیگیری",
+              placeholder: "مسئول پیگیری",
               type: "text",
               floating: true,
               labelClassName: "w-full",
-              className: "w-full md:w-1/2",
+              className: "w-full",
+              readonly: true,
+              disabled: true,
+              defaultValue: userData.fullName,
+            },
+            {
+              key: "leadTag",
+              component: "multi-select",
+              placeholder: "برچسب",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full",
+              options: leadTagOptions,
+              isValidNewOption: true,
+              sendValue: (value: string) => addLeadTagHandler({ title: value }),
+            },
+            {
+              key: "leadTagPreview",
+              component: "tag-preview",
+              dependantKey: "leadTag",
+              className: "w-full",
+            },
+            {
+              key: "description",
+              component: "textarea",
+              placeholder: "توضیحات",
+              type: "text",
+              floating: true,
+              className: "w-full",
             },
           ]}
           className="flex flex-row w-full"
