@@ -22,6 +22,7 @@ import MultiAddedTextInput from "./multi-added-text-input";
 import SingleFileInput from "./single-file-input";
 import SingleFilePreview from "./single-file-preview";
 import TagPreview from "./tag-preview";
+import SelectableTagInput from "../form/inputs/SelectableTagInput";
 
 export interface OptionType {
   label: string;
@@ -53,6 +54,7 @@ export interface FieldType {
     | "list-preview"
     | "range-input"
     | "time"
+    | "selectable-tag-input"
     | "non-field";
   floating?: boolean;
   placeholder?: string;
@@ -92,7 +94,7 @@ export interface FieldType {
   hasReset?: boolean;
   resetFunction?: () => void;
   isValidNewOption?: boolean;
-  sendValue?:(value:string) =>void
+  sendValue?: (value: string) => void;
 }
 
 export interface FormMakerInterface {
@@ -129,6 +131,8 @@ export default function FormMaker({
           return <DateTimeInput item={item} form={form} />;
         case "time":
           return <TimeInput item={item} form={form} />;
+        case "selectable-tag-input":
+          return <SelectableTagInput item={item} form={form} />;
 
         case "checkbox":
           return <CheckboxInput item={item} form={form} />;

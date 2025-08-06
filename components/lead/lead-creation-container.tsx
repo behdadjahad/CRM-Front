@@ -63,6 +63,7 @@ export default function LeadCreationContainer() {
       leadType: "",
       leadFullName: "",
       leadTag: [],
+      leadTemperature:""
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -104,7 +105,7 @@ export default function LeadCreationContainer() {
     };
     addLeadHandler(data);
   }
-console.log(formik.values.leadTag)
+  console.log(formik.values.leadTag);
   return (
     <>
       <Button
@@ -174,6 +175,32 @@ console.log(formik.values.leadTag)
               key: "leadTagPreview",
               component: "tag-preview",
               dependantKey: "leadTag",
+              className: "w-full",
+            },
+            {
+              key: "leadTemperature",
+              component: "selectable-tag-input",
+              options: [
+                {
+                  label: "سرد",
+                  value: "COLD",
+                  className: "bg-[#F2F7FE] text-[#1C68DA]",
+                  activeClassName: "border border-[#1C68DA]",
+                },
+                {
+                  label: "گرم",
+                  value: "WARM",
+                  className: "bg-[#FFFAEB] text-[#F79009]",
+                  activeClassName: "border border-[#DC6803]",
+                },
+                {
+                  label: "داغ",
+                  value: "HOT",
+                  className: "bg-[#FEF3F2] text-[#F04438]",
+                  activeClassName: "border border-[#F04438]",
+                },
+              ],
+
               className: "w-full",
             },
             {
