@@ -7,11 +7,12 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addLead, addLeadTag, getLeadTags, getLeadTypes } from "@/api/lead";
-import SingleCustomerSelection from "../customer/single-customer-selection";
+
 import { fetchLeads } from "@/store/lead-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import TagContainer from "../admin/tag-container";
+
+import AddCustomerToLeadContainer from "./AddCustomerToLeadContainer";
 
 export default function LeadCreationContainer() {
   const queryClient = useQueryClient();
@@ -63,7 +64,7 @@ export default function LeadCreationContainer() {
       leadType: "",
       leadFullName: "",
       leadTag: [],
-      leadTemperature:""
+      leadTemperature: "",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -130,6 +131,7 @@ export default function LeadCreationContainer() {
             size={20}
             onClick={() => {
               setOpenModal(false);
+              formik.resetForm();
             }}
             className="cursor-pointer"
           />
@@ -214,7 +216,14 @@ export default function LeadCreationContainer() {
           ]}
           className="flex flex-row w-full"
         />
-        <SingleCustomerSelection />
+        <AddCustomerToLeadContainer
+          onSendCustomerData={(values) => {
+            console.log(values);
+          }}
+          onSendCustomer={(customer: any) => {
+            console.log(customer);
+          }}
+        />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}

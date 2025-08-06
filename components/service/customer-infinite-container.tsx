@@ -10,11 +10,11 @@ import CustomerInfiniteCard from "./customer-infinite-card";
 export default function CustomerInfiniteContainer({
   onCheckCustomerhandler,
   searchKeyWord,
-
+onSendCustomer
 }: {
   onCheckCustomerhandler?: any;
   searchKeyWord?: string;
-
+    onSendCustomer?: any;
 }) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
@@ -79,7 +79,7 @@ export default function CustomerInfiniteContainer({
             customer={customer}
             onCheckCustomerhandler={onCheckCustomerhandler}
             searchKeyWord={searchKeyWord ? searchKeyWord : ""}
-         
+         onSendCustomer={onSendCustomer}
           />
         );
       })

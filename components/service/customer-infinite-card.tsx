@@ -14,6 +14,7 @@ type CustomerInfiniteCardProps = {
   };
   onCheckCustomerhandler?: any;
   searchKeyWord: string;
+  onSendCustomer?: any;
 };
 // const highlightMatch = (text: string, keyword: string) => {
 //   if (!keyword) return text;
@@ -53,14 +54,14 @@ const highlightMatch = (text: string, keyword: string) => {
 };
 
 const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
-  ({ customer, onCheckCustomerhandler, searchKeyWord }, ref) => {
+  ({ customer, onCheckCustomerhandler, searchKeyWord,onSendCustomer }, ref) => {
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
         className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
         onClick={() => {
           if (!onCheckCustomerhandler) {
-            alert()
+            onSendCustomer(customer)
           } else {
             return;
           }
