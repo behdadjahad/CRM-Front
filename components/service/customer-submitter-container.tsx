@@ -3,25 +3,38 @@ import { useCallback, useEffect, useState } from "react";
 import { debounce } from "lodash";
 
 import CustomerSuggestionInfiniteContainer from "./customer-suggestion-infinite-container";
-
+import { useFormik } from "formik";
+import { CustomerDataInterface } from "./customer-infinite-card";
+export interface CustomerSubmitterContainerInterface {
+  onSendCustomerData: (data: CustomerDataInterface) => void;
+}
 export default function CustomerSubmitterContainer({
-  formik,
-}: {
-  formik?: any;
-}) {
+  onSendCustomerData,
+}: CustomerSubmitterContainerInterface) {
   const [customerValues, setCustomerValues] = useState({});
   const [state, setState] = useState(false);
-
+  const formik = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      idNumber: "",
+      phone: "",
+      email: "",
+    },
+    onSubmit: async () => {},
+    enableReinitialize: true,
+  });
   const debouncedSuggestion = useCallback(
-    debounce((values: any) => {
+    debounce((values: CustomerDataInterface) => {
       const data = {
-        firstName: values.clientName,
-        lastName: values.clientFamily,
-        idNumber: values.clientSSD,
-        phone: values.clientPhoneNumber,
-        email: values.clientEmail,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        idNumber: values.idNumber,
+        phone: values.phone,
+        email: values.email,
       };
       setCustomerValues(data);
+      onSendCustomerData(data);
     }, 1000),
     []
   );
@@ -44,13 +57,13 @@ export default function CustomerSubmitterContainer({
     }
   }, [formik.values]);
 
-  function fillCustomerHandler(data: any) {
+  function fillCustomerHandler(data: CustomerDataInterface) {
     const values = {
-      clientName: data.firstName || "",
-      clientFamily: data.lastName || "",
-      clientSSD: data.idNumber || "",
-      clientPhoneNumber: data.phone || "",
-      clientEmail: data.email || "",
+      firstName: data.firstName || "",
+      lastName: data.lastName || "",
+      idNumber: data.idNumber || "",
+      phone: data.phone || "",
+      email: data.email || "",
     };
     formik.setValues(values);
   }
@@ -61,7 +74,7 @@ export default function CustomerSubmitterContainer({
         form={formik}
         fields={[
           {
-            key: "clientName",
+            key: "firstName",
             component: "input",
             placeholder: "نام",
             type: "text",
@@ -69,7 +82,7 @@ export default function CustomerSubmitterContainer({
             className: "w-full md:w-1/2",
           },
           {
-            key: "clientFamily",
+            key: "lastName",
             component: "input",
             placeholder: "نام خانوادگی",
             type: "text",
@@ -77,7 +90,7 @@ export default function CustomerSubmitterContainer({
             className: "w-full md:w-1/2",
           },
           {
-            key: "clientSSD",
+            key: "idNumber",
             component: "input",
             placeholder: "کدملی",
             type: "text",
@@ -85,7 +98,7 @@ export default function CustomerSubmitterContainer({
             className: "w-full md:w-1/2",
           },
           {
-            key: "clientPhoneNumber",
+            key: "phone",
             component: "input",
             placeholder: "شماره تماس",
             type: "text",
@@ -93,7 +106,7 @@ export default function CustomerSubmitterContainer({
             className: "w-full md:w-1/2",
           },
           {
-            key: "clientEmail",
+            key: "email",
             component: "input",
             placeholder: "ایمیل",
             type: "text",

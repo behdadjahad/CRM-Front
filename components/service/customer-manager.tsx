@@ -11,13 +11,14 @@ import { MdClose } from "react-icons/md";
 import CustomerListSection from "./customer-list-section";
 
 import CustomerSubmitterContainer from "./customer-submitter-container";
+import { CustomerDataInterface } from "./customer-infinite-card";
 export default function CustomerManager() {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
   const [openThirdModal, setOpenThirdModal] = useState(false);
-
+  const [customerData, setCustomerData] = useState<CustomerDataInterface>();
   const [selectedCustomersId, setSelectedCustomersId] = useState<number[]>([]);
 
   const formik = useFormik({
@@ -47,11 +48,11 @@ export default function CustomerManager() {
 
   function submitHandler() {
     submitCustomerHandler({
-      firstName: formik.values.clientName,
-      lastName: formik.values.clientFamily,
-      idNumber: formik.values.clientSSD,
-      phoneNumber: formik.values.clientPhoneNumber,
-      email: formik.values.clientEmail,
+      firstName: customerData?.firstName,
+      lastName: customerData?.lastName,
+      idNumber: customerData?.idNumber,
+      phoneNumber: customerData?.phone,
+      email: customerData?.email,
     });
   }
 
@@ -229,7 +230,11 @@ export default function CustomerManager() {
           {/*Second Modal*/}
         </div>
 
-        <CustomerSubmitterContainer formik={formik} />
+        <CustomerSubmitterContainer
+          onSendCustomerData={(data: CustomerDataInterface) => {
+            setCustomerData(data);
+          }}
+        />
 
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button variant={"info"} onClick={submitHandler}>

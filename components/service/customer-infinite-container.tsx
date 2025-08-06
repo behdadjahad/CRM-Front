@@ -1,24 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useInView } from "react-intersection-observer";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { limitForInfiniteCustomers } from "@/lib/utils";
 import { getAllCustomers } from "@/api/customer";
-import CustomerInfiniteCard from "./customer-infinite-card";
+import CustomerInfiniteCard, {
+  CustomerDataInterface,
+} from "./customer-infinite-card";
 
 export default function CustomerInfiniteContainer({
   onCheckCustomerhandler,
   searchKeyWord,
-onSendCustomer
+  onSendSelectedCustomer,
 }: {
   onCheckCustomerhandler?: any;
   searchKeyWord?: string;
-    onSendCustomer?: any;
+  onSendSelectedCustomer?: any;
 }) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
-
+  const [activeCustomer, setActiveCustomer] = useState<number | null>(null);
   const {
     data: customersData,
     isSuccess,
@@ -32,7 +34,6 @@ onSendCustomer
         page: pageParam,
         limit: limitForInfiniteCustomers,
         keyword: searchKeyWord,
-    
       }),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
@@ -69,7 +70,11 @@ onSendCustomer
               customer={customer}
               onCheckCustomerhandler={onCheckCustomerhandler}
               searchKeyWord={searchKeyWord ? searchKeyWord : ""}
-      
+              onSendSelectedCustomer={(customer: CustomerDataInterface) => {
+                onSendSelectedCustomer(customer);
+                if (customer?.id) setActiveCustomer(customer?.id);
+              }}
+              isActive={activeCustomer == customer?.id}
             />
           );
         }
@@ -79,7 +84,11 @@ onSendCustomer
             customer={customer}
             onCheckCustomerhandler={onCheckCustomerhandler}
             searchKeyWord={searchKeyWord ? searchKeyWord : ""}
-         onSendCustomer={onSendCustomer}
+            onSendSelectedCustomer={(customer: CustomerDataInterface) => {
+              onSendSelectedCustomer(customer);
+              if (customer?.id) setActiveCustomer(customer?.id);
+            }}
+            isActive={activeCustomer == customer?.id}
           />
         );
       })

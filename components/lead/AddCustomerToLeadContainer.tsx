@@ -6,27 +6,18 @@ import { MdClose } from "react-icons/md";
 import CustomerListSection from "../service/customer-list-section";
 import CustomerSubmitterContainer from "../service/customer-submitter-container";
 import { useFormik } from "formik";
+import { CustomerDataInterface } from "../service/customer-infinite-card";
 interface AddCustomerToLeadContainerInterface {
   onSendCustomerData: (values: any) => void;
-  onSendCustomer?:any;
+  onSendSelectedCustomer: (customer: CustomerDataInterface) => void;
 }
 export default function AddCustomerToLeadContainer({
+  onSendSelectedCustomer,
   onSendCustomerData,
-  onSendCustomer,
 }: AddCustomerToLeadContainerInterface) {
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
-  const formik = useFormik({
-    initialValues: {
-      clientName: "",
-      clientFamily: "",
-      clientSSD: "",
-      clientPhoneNumber: "",
-      clientEmail: "",
-    },
-    onSubmit: async () => {},
-    enableReinitialize: true,
-  });
+  const [customerData, setCustomerData] = useState<CustomerDataInterface>();
   return (
     <>
       <Button
@@ -70,9 +61,19 @@ export default function AddCustomerToLeadContainer({
           />
         </div>
 
-        <CustomerListSection onSendCustomer={onSendCustomer} />
+        <CustomerListSection
+          onSendSelectedCustomer={(customer: CustomerDataInterface) => {
+            setCustomerData(customer);
+          }}
+        />
         <div className="flex flex-row gap-4 items-center justify-end">
-          <Button variant={"info"} onClick={() => {}}>
+          <Button
+            variant={"info"}
+            onClick={() => {
+              setOpenSecondModal(false);
+              if (customerData) onSendSelectedCustomer(customerData);
+            }}
+          >
             ثبت
           </Button>
           <Button
@@ -103,13 +104,17 @@ export default function AddCustomerToLeadContainer({
           />
         </div>
 
-        <CustomerSubmitterContainer formik={formik} />
+        <CustomerSubmitterContainer
+          onSendCustomerData={(data: CustomerDataInterface) => {
+            setCustomerData(data);
+          }}
+        />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
             onClick={() => {
               setOpenModal(false);
-              onSendCustomerData(formik.values);
+              onSendCustomerData(customerData);
             }}
           >
             ثبت

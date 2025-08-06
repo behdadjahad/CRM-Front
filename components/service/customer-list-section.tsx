@@ -7,10 +7,10 @@ import { debounce } from "lodash";
 
 export default function CustomerListSection({
   onCheckCustomerhandler,
-  onSendCustomer
+  onSendSelectedCustomer,
 }: {
-    onCheckCustomerhandler?: any;
-    onSendCustomer?: any;
+  onCheckCustomerhandler?: any;
+  onSendSelectedCustomer?: any;
 }) {
   const [searchKeyWord, setSearchKeyWord] = useState<string>("");
   const customerSearchFormik = useFormik({
@@ -48,7 +48,7 @@ export default function CustomerListSection({
       <CustomerInfiniteContainer
         onCheckCustomerhandler={onCheckCustomerhandler}
         searchKeyWord={searchKeyWord}
-    onSendCustomer={onSendCustomer}
+        onSendSelectedCustomer={onSendSelectedCustomer}
         key="notSuggested"
       />
     </div>

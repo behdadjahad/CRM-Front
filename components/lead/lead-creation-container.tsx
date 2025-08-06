@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
@@ -13,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 
 import AddCustomerToLeadContainer from "./AddCustomerToLeadContainer";
+import { CustomerDataInterface } from "../service/customer-infinite-card";
 
 export default function LeadCreationContainer() {
   const queryClient = useQueryClient();
@@ -23,6 +23,7 @@ export default function LeadCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [leadTypeOptions, setLeadTypeOptions] = useState<OptionType[]>([]);
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
+  const [customer, setCustomer] = useState<CustomerDataInterface>();
   const { data: leadTypeData } = useQuery({
     queryKey: ["leadTypeData"],
     queryFn: async () => await getLeadTypes(),
@@ -62,15 +63,15 @@ export default function LeadCreationContainer() {
   const formik = useFormik({
     initialValues: {
       leadType: "",
-      leadFullName: "",
       leadTag: [],
       leadTemperature: "",
+      description:"",
+      leadResponsible: userData?.fullName,
     },
     onSubmit: async () => {},
-    enableReinitialize: true,
+ 
   });
 
-  console.log(formik.values.leadTag);
   const { mutate: addLeadHandler } = useMutation({
     mutationFn: (data: any) => {
       return addLead(data);
@@ -88,25 +89,37 @@ export default function LeadCreationContainer() {
     },
   });
   function submitForm() {
-    const data = {
-      lead: {
-        leadTypeId: Number(formik.values.leadType),
-        body: "",
-        temperature: "COLD",
-        tags: [],
-        // customerId: 1,
-      },
-      person: {
-        isMainCustomer: false,
-        fullName: formik.values.leadFullName,
-        firstName: formik.values.leadFullName,
-        lastName: formik.values.leadFullName,
-        idNumber: "123456789",
-      },
-    };
+    let data;
+    if (customer?.id) {
+      data = {
+        lead: {
+          leadTypeId: Number(formik.values.leadType),
+          body: formik.values.description,
+          temperature: formik.values.leadTemperature,
+          tags: formik.values.leadTag,
+          customerId: customer?.id,
+        },
+      };
+    } else {
+      data = {
+        lead: {
+          leadTypeId: Number(formik.values.leadType),
+          body: formik.values.description,
+          temperature: formik.values.leadTemperature,
+          tags: formik.values.leadTag,
+        },
+        person: {
+          isMainCustomer: false,
+          firstName: customer?.firstName,
+          lastName: customer?.lastName,
+          idNumber:customer?.idNumber,
+        },
+      };
+    }
+
     addLeadHandler(data);
   }
-  console.log(formik.values.leadTag);
+
   return (
     <>
       <Button
@@ -217,11 +230,13 @@ export default function LeadCreationContainer() {
           className="flex flex-row w-full"
         />
         <AddCustomerToLeadContainer
-          onSendCustomerData={(values) => {
-            console.log(values);
+          onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
+            console.log(selectedCustomer);
+            setCustomer(selectedCustomer);
           }}
-          onSendCustomer={(customer: any) => {
-            console.log(customer);
+          onSendCustomerData={(customerData: CustomerDataInterface) => {
+            console.log(customerData);
+            setCustomer(customerData);
           }}
         />
         <div className="flex flex-row gap-4 items-center justify-end">

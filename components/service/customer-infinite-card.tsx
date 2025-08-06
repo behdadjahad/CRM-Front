@@ -1,37 +1,23 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import Image from "next/image";
 import { Checkbox } from "../ui/checkbox";
-
-type CustomerInfiniteCardProps = {
-  customer: {
-    id: number;
-    firstName: string;
-    idNumber: string;
-    job: string;
-    lastName: string;
-    phone: string;
-    email: string;
-  };
+export interface CustomerDataInterface {
+  id?: number;
+  firstName: string;
+  idNumber: string;
+  job?: string;
+  lastName: string;
+  phone: string;
+  email: string;
+}
+export interface CustomerInfiniteCardInterface {
+  customer: CustomerDataInterface;
   onCheckCustomerhandler?: any;
   searchKeyWord: string;
-  onSendCustomer?: any;
-};
-// const highlightMatch = (text: string, keyword: string) => {
-//   if (!keyword) return text;
-//   if (!text) return;
-//   const regex = new RegExp(`(${keyword})`, "gi"); // Case-insensitive match
-//   const parts = text.split(regex);
+  onSendSelectedCustomer?: (customer: CustomerDataInterface) => void;
+  isActive?: boolean;
+}
 
-//   return parts.map((part, index) =>
-//     part.toLowerCase() === keyword.toLowerCase() ? (
-//       <span key={index} className="text-yellow-600 font-bold">
-//         {part}
-//       </span>
-//     ) : (
-//       part
-//     )
-//   );
-// };
 const highlightMatch = (text: string, keyword: string) => {
   if (!text || !keyword) return text;
 
@@ -53,15 +39,33 @@ const highlightMatch = (text: string, keyword: string) => {
   }, []);
 };
 
-const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
-  ({ customer, onCheckCustomerhandler, searchKeyWord,onSendCustomer }, ref) => {
+const CustomerInfiniteCard = forwardRef<
+  HTMLElement,
+  CustomerInfiniteCardInterface
+>(
+  (
+    {
+      customer,
+      onCheckCustomerhandler,
+      searchKeyWord,
+      onSendSelectedCustomer,
+      isActive,
+    },
+    ref
+  ) => {
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
-        className="border border-gray-200 p-3 rounded-md cursor-pointer flex items-center justify-between"
+        className={`border p-3 rounded-md cursor-pointer flex items-center justify-between ${
+          isActive ? " border-[#F8AC3F]" : " border-gray-200"
+        }`}
         onClick={() => {
-          if (!onCheckCustomerhandler) {
-            onSendCustomer(customer)
+          if (onSendSelectedCustomer) {
+            if (isActive) {
+              return;
+            } else {
+              if (customer.id) onSendSelectedCustomer(customer);
+            }
           } else {
             return;
           }
@@ -130,7 +134,7 @@ const CustomerInfiniteCard = forwardRef<HTMLElement, CustomerInfiniteCardProps>(
     );
 
     const content = ref ? (
-      <article ref={ref}>{customerInfiniteCardContent}</article>
+      <article ref={ref} >{customerInfiniteCardContent}</article>
     ) : (
       <article>{customerInfiniteCardContent}</article>
     );
