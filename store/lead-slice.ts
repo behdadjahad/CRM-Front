@@ -1,5 +1,10 @@
 import { fetchService } from "@/boot/fetch-service";
-import { buildQueryString, limitForLeads } from "@/lib/utils";
+import {
+  buildQueryString,
+  getLeadStatusLabel,
+  getTemperatureLabel,
+  limitForLeads,
+} from "@/lib/utils";
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface LeadState {
@@ -40,6 +45,7 @@ const leadSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchLeads.fulfilled, (state, action) => {
+      state.filters = action.meta.arg.filters || {};
       const data = action?.payload?.data;
       state.items = data?.map((item: any, index: number) => ({
         id: item.id,
@@ -49,12 +55,25 @@ const leadSlice = createSlice({
             value: item.customer?.person?.fullName,
           },
           {
+            label: "ایمیل",
+            value: item?.customer?.Communication?.find(
+              (c: any) => c.communicationType === "EMAIL"
+            )?.communicationDetails,
+          },
+          {
+            label: "شماره تماس",
+            value: item?.customer?.Communication?.find(
+              (c: any) => c?.communicationType === "MOBILE"
+            )?.communicationDetails,
+          },
+          {
             label: "نوع درخواست",
             value: item.leadType?.title,
           },
           {
             label: "علاقه مندی",
             value: item?.temperature,
+            className: "",
           },
           {
             label: "وضعیت",
@@ -66,8 +85,32 @@ const leadSlice = createSlice({
           ردیف: index + 1,
           "نام و نام خانوادگی": item.customer?.person?.fullName,
           "نوع درخواست": item.leadType?.title,
-          "علاقه مندی": item?.temperature,
-          وضعیت: item?.status,
+          "علاقه مندی": getTemperatureLabel(item?.temperature),
+          وضعیت: getLeadStatusLabel(item?.status),
+          ایمیل: item?.customer?.Communication?.find(
+            (c: any) => c.communicationType === "EMAIL"
+          )?.communicationDetails,
+          "شماره تماس": item?.customer?.Communication?.find(
+            (c: any) => c?.communicationType === "MOBILE"
+          )?.communicationDetails,
+        },
+        editData: {
+          id: item?.id,
+          leadType: item.leadType?.id,
+          leadTag: item?.tags,
+          customer: {
+            id: item?.customer?.person?.id,
+            firstName: item?.customer?.person?.firstName,
+            lastName: item?.customer?.person?.lastName,
+            phone: item?.customer?.Communication?.find(
+              (c: any) => c?.communicationType === "MOBILE"
+            )?.communicationDetails,
+            email: item?.customer?.Communication?.find(
+              (c: any) => c?.communicationType === "EMAIL"
+            )?.communicationDetails,
+          },
+          body: item?.body,
+          leadTemperature: item?.temperature,
         },
       }));
       const totalItems = action?.payload?.pagination?.total;
@@ -76,8 +119,8 @@ const leadSlice = createSlice({
       state.total = action?.payload?.pagination?.total;
       state.currentPage = action.meta.arg.page;
 
-      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
-      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
+      state.dateTimeRange.start = action?.payload?.meta?.startDate;
+      state.dateTimeRange.end = action?.payload?.meta?.endDate;
     });
     builder.addCase(fetchAllLeads.fulfilled, (state, action) => {
       const data = action?.payload?.data;
@@ -85,8 +128,14 @@ const leadSlice = createSlice({
         ردیف: index + 1,
         "نام و نام خانوادگی": item.customer?.person?.fullName,
         "نوع درخواست": item.leadType?.title,
-        "علاقه مندی": item?.temperature,
-        وضعیت: item?.status,
+        "علاقه مندی": getTemperatureLabel(item?.temperature),
+        وضعیت: getLeadStatusLabel(item?.status),
+        ایمیل: item?.customer?.Communication?.find(
+          (c: any) => c.communicationType === "EMAIL"
+        )?.communicationDetails,
+        "شماره تماس": item?.customer?.Communication?.find(
+          (c: any) => c?.communicationType === "MOBILE"
+        )?.communicationDetails,
       }));
     });
   },

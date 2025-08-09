@@ -8,11 +8,12 @@ import { useFormik } from "formik";
 import ExportDataContainer from "../shared/export-data-container";
 import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
-import { fetchAllLeads, fetchLeads } from "@/store/lead-slice";
+import { fetchAllLeads, fetchLeads, setCheckedItems } from "@/store/lead-slice";
 import { useEffect, useState } from "react";
 import { getLeadTags } from "@/api/lead";
 import { useQuery } from "@tanstack/react-query";
-import { leadHeaderLabels } from "@/lib/utils";
+import { buildRowOptions, leadHeaderLabels } from "@/lib/utils";
+import { CustomerDataInterface } from "../service/customer-infinite-card";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -22,12 +23,21 @@ export interface LeadContainerInterface {
       value: string;
     }[];
     exportData: any;
+    editData: {
+      id: number;
+      leadType: string;
+      leadTag: OptionType[];
+      customer: CustomerDataInterface;
+      body: string;
+      leadTemperature: string;
+    };
   }[];
 }
 
 export default function LeadContainer({ leadList }: LeadContainerInterface) {
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasReset, setHasReset] = useState<boolean>(false);
   const { data: leadTagData } = useQuery({
     queryKey: ["leadTagData"],
     queryFn: async () => await getLeadTags(),
@@ -42,12 +52,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     }
   }, [leadTagData]);
   const dispatch = useDispatch<any>();
-  const limitFormik = useFormik({
-    initialValues: {
-      limit: 5,
-    },
-    onSubmit: async () => {},
-  });
+
   const leadSearchFormik = useFormik({
     initialValues: {
       leadKeyWord: "",
@@ -55,7 +60,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     onSubmit: async () => {},
   });
   function searchSubmitHandler() {
-    // dispatch(setCheckedItems([]));
+    dispatch(setCheckedItems([]));
     const searchValue = leadSearchFormik.values.leadKeyWord;
     dispatch(
       fetchLeads({
@@ -66,6 +71,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
         },
       })
     );
+    setHasReset(true);
   }
   const pages = useSelector((state: any) => state.lead.totalPages);
   const limit = useSelector((state: any) => state.lead.limit);
@@ -90,6 +96,12 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
       leadTemperature: "",
       leadStatus: "",
       leadTag: [],
+    },
+    onSubmit: async () => {},
+  });
+  const limitFormik = useFormik({
+    initialValues: {
+      limit: limit,
     },
     onSubmit: async () => {},
   });
@@ -272,7 +284,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
       fetchLeads({
         page: 1,
         limit: limit,
-        filters: filterData,
+        filters: { ...filters, ...filterData },
       })
     );
   }
@@ -291,6 +303,36 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
       setIsLoading(false);
     }
   };
+  function cancleFilter() {
+    formik.resetForm();
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: limit,
+        filters: {},
+      })
+    );
+  }
+  function limitHandler(data: any) {
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: data ? Number(data) : limit,
+        filters: filters,
+      })
+    );
+  }
+  function resetHandler() {
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: limit,
+        filters: { ...filters, keyword: "" },
+      })
+    );
+    leadSearchFormik.resetForm();
+    setHasReset(false);
+  }
 
   return (
     <div className="bg-card rounded-lg p-6">
@@ -304,7 +346,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
             filterItems={filterItems}
             sortList={[]}
             onSortHandler={() => {}}
-            onCancleHandler={() => {}}
+            onCancleHandler={cancleFilter}
           />
           <div className="flex gap-4">
             <LeadCreationContainer />
@@ -329,9 +371,10 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
                   icon: "/icons/search-icon.png",
                   type: "text",
                   placeholder: "جستجوی درخواست ها",
-
-                  className: "rounded-md h-12 p-0 w-1/2",
                   onClick: searchSubmitHandler,
+                  hasReset: hasReset,
+                  resetFunction: resetHandler,
+                  className: "rounded-md h-12 p-0 w-1/2",
                 },
               ]}
               className="w-full"
@@ -375,11 +418,11 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
                     type: "text",
                     floating: true,
                     className: "w-auto text-sm placeholder:text-foreground",
-                    // options: buildRowOptions(total, Math.ceil(total / 10)),
-                    options: [],
+                    options: buildRowOptions(total, Math.ceil(total / 10)),
+
                     menuPlacement: "top",
                     onChange: (data: any) => {
-                      // limitHandler(Number(data.value));
+                      limitHandler(Number(data?.value));
                     },
                   },
                 ]}

@@ -13,7 +13,7 @@ import { fetchLeads, setCheckedItems } from "@/store/lead-slice";
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import LeadEditionContainer from "./LeadEditionContainer";
-import { getSortFieldFromLabel } from "@/lib/utils";
+import { cn, getSortFieldFromLabel } from "@/lib/utils";
 
 export interface LeadTableInterface {
   leadList: {
@@ -21,29 +21,71 @@ export interface LeadTableInterface {
     list: {
       label: string;
       value: string;
+      className?: string;
     }[];
     exportData: any;
+    editData: any;
   }[];
 }
 
 export default function LeadTable({ leadList }: LeadTableInterface) {
+  const leadStatus = [
+    {
+      label: "ایجاد شده",
+      value: "INITIAL",
+      className: "text-[#1C68DA] bg-[#F2F7FE]",
+    },
+    {
+      label: "درجریان",
+      value: "INPROGRESS",
+      className: "text-[#F79009] bg-[#FFFAEB]",
+    },
+    {
+      label: "تبدیل به قرارداد",
+      value: "CONTRACTED",
+      className: "text-[#039855] bg-[#ECFDF3]",
+    },
+    {
+      label: "ازدست رفته",
+      value: "FAILED",
+      className: "text-[#F04438] bg-[#FEF3F2]",
+    },
+  ];
+  const leadTemp = [
+    {
+      label: "گرم",
+      value: "WARM",
+      className: "text-[#F79009] bg-[#FFFAEB]",
+    },
+    {
+      label: "سرد",
+      value: "COLD",
+      className: "text-[#1C68DA] bg-[#F2F7FE]",
+    },
+    {
+      label: "داغ",
+      value: "HOT",
+      className: "text-[#F04438] bg-[#FEF3F2]",
+    },
+  ];
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   type SortType = "asc" | "desc";
   const [sortStates, setSortStates] = useState<Record<string, SortType>>({});
 
   const limit = useSelector((state: any) => state.lead.limit);
+  const currentPage = useSelector((state: any) => state.lead.currentPage);
 
   const filters = useSelector((state: any) => state.lead.filters);
   const toggleSort = (label: string) => {
-    console.log(label)
+    console.log(label);
     console.log(getSortFieldFromLabel(label));
     // dispatch(config.setCheckedItems([]));
     setSortStates((prev) => {
       const newSort = prev[label] === "desc" ? "asc" : "desc";
-     
+
       dispatch(
         fetchLeads({
-          page: 1,
+          page: currentPage,
           limit: limit,
           filters: {
             ...filters,
@@ -90,7 +132,9 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   const updatedCheckItems = checkedItems?.filter(
                     (item: any) => !leadList?.some((l) => l.id === item.id)
                   );
-                  const dataArray = leadList.map((item: any) => item.exportData);
+                  const dataArray = leadList.map(
+                    (item: any) => item.exportData
+                  );
                   dispatch(
                     setCheckedItems([...updatedCheckItems, ...dataArray])
                   );
@@ -143,15 +187,46 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   checked={checkedItems.some((obj: any) => obj.id === lead.id)}
                 />
               </TableCell>
-              {lead.list.map((cell, cellIndex) => (
-                <TableCell key={cellIndex} className="text-center text-xs">
-                  {cell.value}
-                </TableCell>
-              ))}
+              {lead.list.map((cell, cellIndex) => {
+                const statusMatch =
+                  cell.label === "وضعیت"
+                    ? leadStatus.find((status) => status.value === cell.value)
+                    : null;
+                const tempMatch =
+                  cell.label === "علاقه مندی"
+                    ? leadTemp.find((temp) => temp.value === cell.value)
+                    : null;
+                console.log();
+                return (
+                  <TableCell key={cellIndex} className="text-center text-xs">
+                    {cell.label == "وضعیت" ? (
+                      <span
+                        className={cn(
+                          "rounded-full  px-3 py-1",
+                          statusMatch?.className ?? ""
+                        )}
+                      >
+                        {statusMatch?.label}
+                      </span>
+                    ) : cell.label == "علاقه مندی" ? (
+                      <span
+                        className={cn(
+                          "rounded-full  px-3 py-1",
+                          tempMatch?.className ?? ""
+                        )}
+                      >
+                        {tempMatch?.label}
+                      </span>
+                    ) : (
+                      <span>{cell.value}</span>
+                    )}
+                  </TableCell>
+                );
+              })}
               <TableCell className="text-center text-xs">
                 <div className="flex items-center gap-4 w-full justify-center">
                   {" "}
-                  <LeadEditionContainer />
+                  <LeadEditionContainer editData={lead.editData} />
                   <Button
                     className="border-none p-0"
                     onClick={() => toggleRow(rowIndex)}

@@ -205,4 +205,24 @@ export const leadHeaderLabels = [
   "نوع درخواست",
   "علاقه مندی",
   "وضعیت",
+  "ایمیل",
+  "شماره تماس"
 ];
+export enum Temperature {
+  WARM = "گرم",
+  COLD = "سرد",
+  HOT = "داغ",
+}
+export function getTemperatureLabel(value: string): string {
+  return Temperature[value as keyof typeof Temperature] ?? value;
+}
+enum LeadStatus {
+  INITIAL = "ایجاد شده",
+  INPROGRESS = "درجریان",
+
+  CONTRACTED = "تبدیل شد به قرارداد",
+  FAILED = "ازدست رفته",
+}
+export function getLeadStatusLabel(value: string): string {
+  return LeadStatus[value as keyof typeof LeadStatus] ?? value;
+}

@@ -35,6 +35,16 @@ export async function addLead(data: any) {
     return result;
   } catch {}
 }
+export async function editLead(id:number,data: any) {
+  try {
+    const result = await fetchService(`lead/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
 export async function deleteLead(leadId: any) {
   try {
     const result = await fetchService(`lead/${leadId}`, {
