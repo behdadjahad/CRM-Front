@@ -42,6 +42,7 @@ const leadSlice = createSlice({
     builder.addCase(fetchLeads.fulfilled, (state, action) => {
       const data = action?.payload?.data;
       state.items = data?.map((item: any) => ({
+        id: item.id,
         list: [
           {
             label: "نام و نام خانوادگی ",
@@ -52,9 +53,30 @@ const leadSlice = createSlice({
             value: item.leadType?.title,
           },
         ],
+        data: {
+          id: item.id,
+          customer: item.customer?.person?.fullName,
+          leadType: item.leadType?.title,
+        },
+      }));
+      const totalItems = action?.payload?.pagination?.total;
+      const limit = action?.payload?.pagination?.limit;
+      state.totalPages = Math.ceil(totalItems / limit);
+      state.total = action?.payload?.pagination?.total;
+      state.currentPage = action.meta.arg.page;
+      const filters = action.meta.arg.filters;
+      state.filters = filters;
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
+    });
+    builder.addCase(fetchAllLeads.fulfilled, (state, action) => {
+      const data = action?.payload?.data;
+      state.allItems = data?.map((item: any) => ({
+        "نام و نام خانوادگی": item.customer?.person?.fullName,
+        "نوع درخواست": item.leadType?.title,
+        
       }));
     });
-    builder.addCase(fetchAllLeads.fulfilled, (state, action) => {});
   },
 });
 export const fetchLeads = createAsyncThunk<any, any>(
@@ -88,3 +110,4 @@ export const fetchAllLeads = createAsyncThunk<any, any>(
   }
 );
 export default leadSlice.reducer;
+export const { setCheckedItems } = leadSlice.actions;

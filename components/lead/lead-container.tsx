@@ -6,8 +6,9 @@ import FormMaker from "../shared/form-maker";
 import LeadTable from "./lead-table";
 import { useFormik } from "formik";
 import ExportDataContainer from "../shared/export-data-container";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
+import { fetchLeads } from "@/store/lead-slice";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -16,17 +17,217 @@ export interface LeadContainerInterface {
       label: string;
       value: string;
     }[];
+    data: any;
   }[];
 }
 
 export default function LeadContainer({ leadList }: LeadContainerInterface) {
+  const dispatch = useDispatch<any>();
   const limitFormik = useFormik({
     initialValues: {
       limit: 5,
     },
     onSubmit: async () => {},
   });
+  const leadSearchFormik = useFormik({
+    initialValues: {
+      clientKeyWord: "",
+    },
+    onSubmit: async () => {},
+  });
+  function searchSubmitHandler() {
+    // dispatch(setCheckedItems([]));
+    const searchValue = leadSearchFormik.values.clientKeyWord;
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: limit,
+        filters: {
+          searchText: searchValue,
+        },
+      })
+    );
+  }
   const pages = useSelector((state: any) => state.lead.totalPages);
+  const limit = useSelector((state: any) => state.lead.limit);
+  const currentPage = useSelector((state: any) => state.lead.currentPage);
+  const filters = useSelector((state: any) => state.lead.filters);
+  const handlePageChange = (selectedItem: any) => {
+    const selectedPage = selectedItem.selected + 1;
+    dispatch(
+      fetchLeads({
+        page: selectedPage,
+        limit: limit,
+        filters: filters,
+      })
+    );
+  };
+  const formik = useFormik({
+    initialValues: {
+      openContracts: "",
+      contractState: [],
+      name: "",
+      gender: "",
+      birthdate: "",
+      birthdateType: "",
+      idNumber: "",
+      career: "",
+      location: "",
+      contractNumber: "",
+      contractDate: "",
+      contractDateType: "",
+      startDate: "",
+      startDateType: "",
+      endDate: "",
+      endDateType: "",
+      services: [],
+      minBuyRange: "",
+      maxBuyRange: "",
+      minSellRange: "",
+      maxSellRange: "",
+    },
+    onSubmit: async () => {},
+  });
+  const filterItems = [
+    {
+      title: "علاقه مندی(سرد،گرم ، داغ)",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "leadTemperature",
+              component: "radio",
+              placeholder: "علاقه مندی",
+              type: "text",
+              className: "w-full items-start p-0",
+              options: [
+                {
+                  label: "سرد",
+                  value: "COLD",
+                },
+                {
+                  label: "گرم",
+                  value: "WARM",
+                },
+                {
+                  label: "داغ",
+                  value: "HOT",
+                },
+              ],
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+    {
+      title: "وضعیت درخواست",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "leadStatus",
+              component: "radio",
+              placeholder: "وضعیت درخواست",
+              type: "text",
+              className: "flex flex-col  items-start",
+              options: [
+                {
+                  label: "سرد",
+                  value: "INITIAL",
+                },
+                {
+                  label: "در جریان",
+                  value: "INPROGRESS",
+                },
+                {
+                  label: "تبدیل به قرارداد",
+                  value: "CONTRACTED",
+                },
+                {
+                  label: "از دست رفته",
+                  value: "FAILED",
+                },
+              ],
+            },
+          ]}
+          className="w-full"
+        />
+      ),
+    },
+    {
+      title: "اطلاعات مشتری",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "name",
+              component: "input",
+              placeholder: "نام و نام خانوادگی",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "email",
+              component: "input",
+              placeholder: "ایمیل",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+            {
+              key: "phone",
+              component: "input",
+              placeholder: "تلفن همراه",
+              type: "text",
+              floating: true,
+              labelClassName: "w-full",
+              className: "w-full px-0",
+            },
+          ]}
+          className="flex flex-row w-full gap-y-2"
+        />
+      ),
+    },
+  ];
+
+  const rangeItems = [
+    {
+      title: "محدوده تاریخ ثبت",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "startDate",
+              dependantKey: "startDateType",
+              component: "date",
+              placeholder: "از تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+            {
+              key: "endDate",
+              dependantKey: "endDateType",
+              component: "date",
+              placeholder: "تا تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full items-start p-0",
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+  ];
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -34,7 +235,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           <FilterContainer
             onFilterHandler={() => {}}
             rangeItems={[]}
-            filterItems={[]}
+            filterItems={filterItems}
             sortList={[]}
             onSortHandler={() => {}}
             onCancleHandler={() => {}}
@@ -52,8 +253,23 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           </div>
         </div>
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow ">
-          <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-card">
-            درخواست ها
+          <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6">
+            <FormMaker
+              form={leadSearchFormik}
+              fields={[
+                {
+                  key: "leadKeyWord",
+                  component: "input",
+                  icon: "/icons/search-icon.png",
+                  type: "text",
+                  placeholder: "جستجوی درخواست ها",
+
+                  className: "rounded-md h-12 p-0 w-1/2",
+                  onClick: searchSubmitHandler,
+                },
+              ]}
+              className="w-full"
+            />
           </div>
 
           <LeadTable leadList={leadList} />
@@ -64,10 +280,10 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
                   breakLabel="..."
                   nextLabel="صفحه بعد"
                   previousLabel="صفحه قبل"
-                  onPageChange={() => {}}
+                  onPageChange={handlePageChange}
                   pageRangeDisplayed={2}
                   marginPagesDisplayed={3}
-                  forcePage={1}
+                  forcePage={currentPage - 1}
                   pageCount={pages}
                   renderOnZeroPageCount={null}
                   containerClassName="w-full relative flex justify-center items-center ltr"

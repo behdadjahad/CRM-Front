@@ -13,6 +13,7 @@ import { RootState } from "@/store";
 
 import AddCustomerToLeadContainer from "./AddCustomerToLeadContainer";
 import { CustomerDataInterface } from "../service/customer-infinite-card";
+import CustomerCard from "../share/customer/CustomerCard";
 
 export default function LeadCreationContainer() {
   const queryClient = useQueryClient();
@@ -65,11 +66,10 @@ export default function LeadCreationContainer() {
       leadType: "",
       leadTag: [],
       leadTemperature: "",
-      description:"",
+      description: "",
       leadResponsible: userData?.fullName,
     },
     onSubmit: async () => {},
- 
   });
 
   const { mutate: addLeadHandler } = useMutation({
@@ -112,7 +112,7 @@ export default function LeadCreationContainer() {
           isMainCustomer: false,
           firstName: customer?.firstName,
           lastName: customer?.lastName,
-          idNumber:customer?.idNumber,
+          idNumber: customer?.idNumber,
         },
       };
     }
@@ -149,6 +149,7 @@ export default function LeadCreationContainer() {
             className="cursor-pointer"
           />
         </div>
+
         <FormMaker
           form={formik}
           fields={[
@@ -235,10 +236,15 @@ export default function LeadCreationContainer() {
             setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {
-            console.log(customerData);
             setCustomer(customerData);
           }}
         />
+        {customer && (
+          <div className="p-2">
+            <CustomerCard {...customer} />
+          </div>
+        )}
+
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}

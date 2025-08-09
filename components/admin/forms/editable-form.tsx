@@ -28,7 +28,7 @@ export default function EditableForm({
   return (
     <>
       <Button
-        className="border-none p-0 text-[##212B36]"
+        className="border-none p-0 text-[#212B36]"
         onClick={() => {
           setOpenModal(true);
         }}
