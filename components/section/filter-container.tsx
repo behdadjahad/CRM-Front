@@ -45,7 +45,7 @@ export default function FilterContainer({
           مرتب سازی بر اساس
         </span>
       </Button> */}
-      {sortList && <SortDropDown list={sortList} onSortHandler={onSortHandler}/>}
+      {sortList && sortList.length > 0  && <SortDropDown list={sortList} onSortHandler={onSortHandler}/>}
 
       <FilterDrawer
         setState={setOpenFilter}

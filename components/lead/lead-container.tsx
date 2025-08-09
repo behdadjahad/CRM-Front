@@ -2,13 +2,17 @@
 
 import ReactPaginate from "react-paginate";
 import FilterContainer from "../section/filter-container";
-import FormMaker from "../shared/form-maker";
+import FormMaker, { OptionType } from "../shared/form-maker";
 import LeadTable from "./lead-table";
 import { useFormik } from "formik";
 import ExportDataContainer from "../shared/export-data-container";
 import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
-import { fetchLeads } from "@/store/lead-slice";
+import { fetchAllLeads, fetchLeads } from "@/store/lead-slice";
+import { useEffect, useState } from "react";
+import { getLeadTags } from "@/api/lead";
+import { useQuery } from "@tanstack/react-query";
+import { leadHeaderLabels } from "@/lib/utils";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -17,11 +21,26 @@ export interface LeadContainerInterface {
       label: string;
       value: string;
     }[];
-    data: any;
+    exportData: any;
   }[];
 }
 
 export default function LeadContainer({ leadList }: LeadContainerInterface) {
+  const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: leadTagData } = useQuery({
+    queryKey: ["leadTagData"],
+    queryFn: async () => await getLeadTags(),
+  });
+  useEffect(() => {
+    if (leadTagData && leadTagData?.data?.length > 0) {
+      const leadTags = leadTagData.data.map((leadTag: any) => ({
+        label: leadTag.title,
+        value: leadTag.title,
+      }));
+      setLeadTagOptions(leadTags);
+    }
+  }, [leadTagData]);
   const dispatch = useDispatch<any>();
   const limitFormik = useFormik({
     initialValues: {
@@ -31,19 +50,19 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
   });
   const leadSearchFormik = useFormik({
     initialValues: {
-      clientKeyWord: "",
+      leadKeyWord: "",
     },
     onSubmit: async () => {},
   });
   function searchSubmitHandler() {
     // dispatch(setCheckedItems([]));
-    const searchValue = leadSearchFormik.values.clientKeyWord;
+    const searchValue = leadSearchFormik.values.leadKeyWord;
     dispatch(
       fetchLeads({
         page: 1,
         limit: limit,
         filters: {
-          searchText: searchValue,
+          keyword: searchValue,
         },
       })
     );
@@ -52,6 +71,10 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
   const limit = useSelector((state: any) => state.lead.limit);
   const currentPage = useSelector((state: any) => state.lead.currentPage);
   const filters = useSelector((state: any) => state.lead.filters);
+  const total = useSelector((state: any) => state.lead.total);
+  const allItems = useSelector((state: any) => state.lead.allItems);
+  const checkedItems = useSelector((state: any) => state.lead.checkedItems);
+  const dateTimeRange = useSelector((state: any) => state.lead.dateTimeRange);
   const handlePageChange = (selectedItem: any) => {
     const selectedPage = selectedItem.selected + 1;
     dispatch(
@@ -64,27 +87,9 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
   };
   const formik = useFormik({
     initialValues: {
-      openContracts: "",
-      contractState: [],
-      name: "",
-      gender: "",
-      birthdate: "",
-      birthdateType: "",
-      idNumber: "",
-      career: "",
-      location: "",
-      contractNumber: "",
-      contractDate: "",
-      contractDateType: "",
-      startDate: "",
-      startDateType: "",
-      endDate: "",
-      endDateType: "",
-      services: [],
-      minBuyRange: "",
-      maxBuyRange: "",
-      minSellRange: "",
-      maxSellRange: "",
+      leadTemperature: "",
+      leadStatus: "",
+      leadTag: [],
     },
     onSubmit: async () => {},
   });
@@ -135,7 +140,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
               className: "flex flex-col  items-start",
               options: [
                 {
-                  label: "سرد",
+                  label: "ایجاد شده",
                   value: "INITIAL",
                 },
                 {
@@ -195,45 +200,106 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
         />
       ),
     },
-  ];
-
-  const rangeItems = [
     {
-      title: "محدوده تاریخ ثبت",
+      title: "برچسب",
       component: (
         <FormMaker
           form={formik}
           fields={[
             {
-              key: "startDate",
-              dependantKey: "startDateType",
-              component: "date",
-              placeholder: "از تاریخ",
+              key: "leadTag",
+              component: "multi-select",
+              placeholder: "برچسب",
               type: "text",
               floating: true,
-              className: "w-full px-0",
+              labelClassName: "w-full",
+              className: "w-full",
+              options: leadTagOptions,
+              isValidNewOption: true,
             },
             {
-              key: "endDate",
-              dependantKey: "endDateType",
-              component: "date",
-              placeholder: "تا تاریخ",
-              type: "text",
-              floating: true,
-              className: "w-full items-start p-0",
+              key: "leadTagPreview",
+              component: "tag-preview",
+              dependantKey: "leadTag",
+              className: "w-full",
             },
           ]}
-          className="flex flex-row w-full"
+          className="flex flex-row w-full gap-y-2"
         />
       ),
     },
   ];
+
+  // const rangeItems = [
+  //   {
+  //     title: "محدوده تاریخ ثبت",
+  //     component: (
+  //       <FormMaker
+  //         form={formik}
+  //         fields={[
+  //           {
+  //             key: "startDate",
+  //             dependantKey: "startDateType",
+  //             component: "date",
+  //             placeholder: "از تاریخ",
+  //             type: "text",
+  //             floating: true,
+  //             className: "w-full px-0",
+  //           },
+  //           {
+  //             key: "endDate",
+  //             dependantKey: "endDateType",
+  //             component: "date",
+  //             placeholder: "تا تاریخ",
+  //             type: "text",
+  //             floating: true,
+  //             className: "w-full items-start p-0",
+  //           },
+  //         ]}
+  //         className="flex flex-row w-full"
+  //       />
+  //     ),
+  //   },
+  // ];
+  function submitFilter() {
+    const filterData = {
+      temperature: formik.values.leadTemperature,
+      status: formik.values.leadStatus,
+      tags: formik.values.leadTag,
+    };
+
+    dispatch(
+      fetchLeads({
+        page: 1,
+        limit: limit,
+        filters: filterData,
+      })
+    );
+  }
+  const getDataHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      return await dispatch(
+        fetchAllLeads({
+          page: 1,
+          limit: total,
+          filters: filters,
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
         <div className="flex flex-row items-center justify-between">
           <FilterContainer
-            onFilterHandler={() => {}}
+            onFilterHandler={() => {
+              submitFilter();
+            }}
             rangeItems={[]}
             filterItems={filterItems}
             sortList={[]}
@@ -243,12 +309,12 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           <div className="flex gap-4">
             <LeadCreationContainer />
             <ExportDataContainer
-              onGetData={() => {}}
-              list={[]}
-              headerLabels={[]}
-              loading={false}
-              checkedItems={[]}
-              dateTimeRange={{}}
+              headerLabels={leadHeaderLabels}
+              list={allItems}
+              onGetData={getDataHandler}
+              loading={isLoading}
+              checkedItems={checkedItems}
+              dateTimeRange={dateTimeRange}
             />
           </div>
         </div>

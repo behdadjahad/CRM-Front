@@ -1,5 +1,5 @@
 import { fetchService } from "@/boot/fetch-service";
-import { limitForLeads } from "@/lib/utils";
+import { buildQueryString, limitForLeads } from "@/lib/utils";
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface LeadState {
@@ -41,22 +41,33 @@ const leadSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchLeads.fulfilled, (state, action) => {
       const data = action?.payload?.data;
-      state.items = data?.map((item: any) => ({
+      state.items = data?.map((item: any, index: number) => ({
         id: item.id,
         list: [
           {
-            label: "نام و نام خانوادگی ",
+            label: "نام و نام خانوادگی",
             value: item.customer?.person?.fullName,
           },
           {
             label: "نوع درخواست",
             value: item.leadType?.title,
           },
+          {
+            label: "علاقه مندی",
+            value: item?.temperature,
+          },
+          {
+            label: "وضعیت",
+            value: item?.status,
+          },
         ],
-        data: {
+        exportData: {
           id: item.id,
-          customer: item.customer?.person?.fullName,
-          leadType: item.leadType?.title,
+          ردیف: index + 1,
+          "نام و نام خانوادگی": item.customer?.person?.fullName,
+          "نوع درخواست": item.leadType?.title,
+          "علاقه مندی": item?.temperature,
+          وضعیت: item?.status,
         },
       }));
       const totalItems = action?.payload?.pagination?.total;
@@ -64,17 +75,18 @@ const leadSlice = createSlice({
       state.totalPages = Math.ceil(totalItems / limit);
       state.total = action?.payload?.pagination?.total;
       state.currentPage = action.meta.arg.page;
-      const filters = action.meta.arg.filters;
-      state.filters = filters;
+
       state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
       state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
     });
     builder.addCase(fetchAllLeads.fulfilled, (state, action) => {
       const data = action?.payload?.data;
-      state.allItems = data?.map((item: any) => ({
+      state.allItems = data?.map((item: any, index: number) => ({
+        ردیف: index + 1,
         "نام و نام خانوادگی": item.customer?.person?.fullName,
         "نوع درخواست": item.leadType?.title,
-        
+        "علاقه مندی": item?.temperature,
+        وضعیت: item?.status,
       }));
     });
   },
@@ -82,11 +94,18 @@ const leadSlice = createSlice({
 export const fetchLeads = createAsyncThunk<any, any>(
   "laed/fetchLeads",
   async ({ page, limit, filters }) => {
+    const queryParams = buildQueryString({
+      ...filters, // spread your filters into the query params
+    });
+    console.log(filters);
     try {
-      const result = await fetchService(`lead?page=${page}&limit=${limit}`, {
-        method: "GET",
-        //   body: filters,
-      });
+      const result = await fetchService(
+        `lead?page=${page}&limit=${limit}&${queryParams}`,
+        {
+          method: "GET",
+          //   body: filters,
+        }
+      );
 
       return result;
     } catch {

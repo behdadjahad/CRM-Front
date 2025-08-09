@@ -9,10 +9,11 @@ import {
 import { Fragment, useState } from "react";
 import { Checkbox } from "../ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
-import { setCheckedItems } from "@/store/lead-slice";
+import { fetchLeads, setCheckedItems } from "@/store/lead-slice";
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import LeadEditionContainer from "./LeadEditionContainer";
+import { getSortFieldFromLabel } from "@/lib/utils";
 
 export interface LeadTableInterface {
   leadList: {
@@ -21,13 +22,43 @@ export interface LeadTableInterface {
       label: string;
       value: string;
     }[];
-    data: any;
+    exportData: any;
   }[];
 }
 
 export default function LeadTable({ leadList }: LeadTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  type SortType = "asc" | "desc";
+  const [sortStates, setSortStates] = useState<Record<string, SortType>>({});
 
+  const limit = useSelector((state: any) => state.lead.limit);
+
+  const filters = useSelector((state: any) => state.lead.filters);
+  const toggleSort = (label: string) => {
+    console.log(label)
+    console.log(getSortFieldFromLabel(label));
+    // dispatch(config.setCheckedItems([]));
+    setSortStates((prev) => {
+      const newSort = prev[label] === "desc" ? "asc" : "desc";
+     
+      dispatch(
+        fetchLeads({
+          page: 1,
+          limit: limit,
+          filters: {
+            ...filters,
+            sortBy: getSortFieldFromLabel(label),
+            order: newSort,
+          },
+        })
+      );
+
+      return {
+        ...prev,
+        [label]: newSort,
+      };
+    });
+  };
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
@@ -47,7 +78,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
 
     dispatch(setCheckedItems(updatedItems));
   };
-  console.log(40, checkedItems);
+
   return (
     <Table>
       <TableHeader>
@@ -59,7 +90,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   const updatedCheckItems = checkedItems?.filter(
                     (item: any) => !leadList?.some((l) => l.id === item.id)
                   );
-                  const dataArray = leadList.map((item: any) => item.data);
+                  const dataArray = leadList.map((item: any) => item.exportData);
                   dispatch(
                     setCheckedItems([...updatedCheckItems, ...dataArray])
                   );
@@ -80,7 +111,20 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
               key={idx}
               className="text-center text-xs bg-card border-l font-bold"
             >
-              {col.label}
+              <div className="flex items-center gap-2 w-full justify-center">
+                <span>{col.label}</span>
+
+                <Button
+                  variant={"transparent"}
+                  onClick={() => toggleSort(col.label)}
+                >
+                  {sortStates[col.label] === "desc" ? (
+                    <FaChevronDown />
+                  ) : (
+                    <FaChevronUp />
+                  )}
+                </Button>
+              </div>
             </TableHead>
           ))}
 
@@ -94,7 +138,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
               <TableCell className="flex items-center justify-center">
                 <Checkbox
                   onCheckedChange={(checked: boolean) => {
-                    checkItemHandler(lead.data, checked);
+                    checkItemHandler(lead.exportData, checked);
                   }}
                   checked={checkedItems.some((obj: any) => obj.id === lead.id)}
                 />
@@ -126,9 +170,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                 <TableCell
                   colSpan={lead.list.length + 2}
                   className="text-sm text-gray-700"
-                >
-                      
-                </TableCell>
+                ></TableCell>
               </TableRow>
             )}
           </Fragment>

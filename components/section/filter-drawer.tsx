@@ -15,8 +15,7 @@ export interface FilterDrawerInterface {
   filterItems: any[];
   rangeItems: any[];
   onFilterHandler: any;
-  onCancleHandler:any
-
+  onCancleHandler: any;
 }
 
 export default function FilterDrawer({
@@ -25,8 +24,7 @@ export default function FilterDrawer({
   filterItems,
   rangeItems,
   onFilterHandler,
-  onCancleHandler
-
+  onCancleHandler,
 }: FilterDrawerInterface) {
   return (
     <div
@@ -64,30 +62,35 @@ export default function FilterDrawer({
           </Accordion>
         </div>
 
-        <div className="flex flex-col w-full">
-          <span className="p-5 font-bold text-base">محدوده ها</span>
-          <Accordion type="multiple" className="w-full px-5 overflow-visible">
-            {rangeItems.map((item) => (
-              <AccordionItem
-                className="py-3"
-                value={item.title}
-                key={item.title}
-              >
-                <AccordionTrigger className="font-bold text-sm">
-                  {item.title}
-                </AccordionTrigger>
-                <AccordionContent>{item.component}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-
+        {rangeItems && rangeItems.length > 0 && (
+          <div className="flex flex-col w-full">
+            <span className="p-5 font-bold text-base">محدوده ها</span>
+            <Accordion type="multiple" className="w-full px-5 overflow-visible">
+              {rangeItems.map((item) => (
+                <AccordionItem
+                  className="py-3"
+                  value={item.title}
+                  key={item.title}
+                >
+                  <AccordionTrigger className="font-bold text-sm">
+                    {item.title}
+                  </AccordionTrigger>
+                  <AccordionContent>{item.component}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        )}
         <div className="p-7 w-full flex gap-2">
           <Button variant={"info"} className="w-full" onClick={onFilterHandler}>
             اعمال فیلتر
           </Button>
-          <Button variant={"foreground"} className="w-full" onClick={onCancleHandler}>
-             لغو فیلتر
+          <Button
+            variant={"foreground"}
+            className="w-full"
+            onClick={onCancleHandler}
+          >
+            لغو فیلتر
           </Button>
         </div>
       </div>

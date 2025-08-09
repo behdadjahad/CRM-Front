@@ -178,3 +178,31 @@ export enum notificationEntityName {
   contract = "CONTRACT",
   customer = "CUSTOMER",
 }
+export function buildQueryString(params: Record<string, any>): string {
+  return Object.entries(params)
+    .filter(
+      ([_, value]) => value !== undefined && value !== null && value !== ""
+    )
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join("&");
+}
+export const getSortFieldFromLabel = (label: string): string | undefined => {
+  console.log(label);
+  const labelToFieldMap: Record<string, string> = {
+    "نام و نام خانوادگی": "customer.person.lastName",
+    "نوع درخواست": "leadType.title",
+    "علاقه مندی": "temperature",
+    وضعیت: "status",
+  };
+
+  return labelToFieldMap[label.trim()];
+};
+export const leadHeaderLabels = [
+  "نام و نام خانوادگی",
+  "نوع درخواست",
+  "علاقه مندی",
+  "وضعیت",
+];
