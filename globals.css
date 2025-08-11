@@ -11,15 +11,15 @@
     --aqua-mute: 225, 66%, 87%;
 
     /*gray colors*/
-  --slate: 220, 12%, 85%;
-  --slate-mute: 222, 6%, 66%;
-   --slate-foreground: 220, 6%, 85%;
-   --slate-background: 0, 0%, 98%;
+    --slate: 220, 12%, 85%;
+    --slate-mute: 222, 6%, 66%;
+    --slate-foreground: 220, 6%, 85%;
+    --slate-background: 0, 0%, 98%;
 
     --background: 224, 85%, 97%;
     --foreground: 220, 24%, 12%;
     --foreground-mute: 220, 6%, 66%;
-    --foreground-active:223,11%,28%;
+    --foreground-active: 223, 11%, 28%;
     /*red colors*/
     --danger: 348, 88%, 45%;
 
@@ -250,13 +250,42 @@
 
   border-radius: 4px;
 }
-.custom-guage text{
-  fill:#000 !important;
-  color:#000 !important;
+.custom-guage text {
+  fill: #000 !important;
+  color: #000 !important;
   text-decoration-color: #000 !important;
-
 }
-.gauge-component-class{
-    fill:#000 !important;
-  color:#000 !important;
+.gauge-component-class {
+  fill: #000 !important;
+  color: #000 !important;
+}
+
+.disabled-day {
+  color: #b6bcc2 !important;
+  pointer-events: none; /* optional: disable clicks */
+}
+.calendar-day {
+  background-color: white !important;
+  font-size: 12px !important;
+  height: 130px !important;
+  width: 158px !important;
+  border: 1px solid #e9eaeb !important;
+}
+
+
+.my-header-label {
+  color: #717680;
+  font-size: 14px !important;
+  background-color: white;
+  text-align: center;
+  border: 1px solid #e9eaeb !important;
+  height: 41px;
+  font-weight: 400;
+
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  vertical-align: middle; 
+  width: auto;
+
 }
