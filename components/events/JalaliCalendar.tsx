@@ -7,6 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
+import convertGaregrianToSolarWithTimeZone from "@/lib/calendar";
 dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
@@ -45,9 +46,10 @@ export default function JalaliCalendar({
       jalaliMonth: {
         type: "dayGrid",
         visibleRange: () => {
-          const jalaliCurrent = dayjs(currentDate).calendar("jalali");
-          const year = jalaliCurrent.year();
-          const month = jalaliCurrent.month(); // 0-based
+          const date = convertGaregrianToSolarWithTimeZone(currentDate);
+
+          const year = date.year;
+          const month = date.month - 1; // 0-based
 
           // Start at 1st day of the Jalali month
           let start = dayjs()
@@ -55,12 +57,13 @@ export default function JalaliCalendar({
             .year(year)
             .month(month)
             .date(1);
-
+          console.log(start.day());
           // Move backward *including* the current day until it's Saturday (6)
-          while (start.day() !== 6) {
-            start = start.subtract(1, "day");
+          if (start.day() !== 6) {
+            while (start.day() !== 6) {
+              start = start.subtract(1, "day");
+            }
           }
-
           // End at last day of the Jalali month
           let end = dayjs()
             .calendar("jalali")

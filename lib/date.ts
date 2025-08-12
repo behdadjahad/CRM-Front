@@ -100,6 +100,7 @@ export function convertToGregorian(
   //   .replace(" ", "T")
   //   .replace(/\s+/g, "");
 }
+
 export function convertDateTimeToGregorian(
   dateTimeStr: string,
   targetType: string

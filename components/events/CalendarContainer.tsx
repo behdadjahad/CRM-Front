@@ -9,6 +9,9 @@ import timezone from "dayjs/plugin/timezone";
 import { Button } from "../ui/button";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
+import convertGaregrianToSolarWithTimeZone from "@/lib/calendar";
+import WeeklyJalaliCalendar from "./WeeklyJalaliCalendar";
+import HijriCalendar from "./HijriCalendar";
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(jalaliday);
@@ -17,35 +20,10 @@ dayjs.locale("fa"); // Set
 dayjs.extend(timezone);
 
 export default function MonthlyCalendarContainer() {
-  const [currentDate, setCurrentDate] = useState(
-    dayjs().calendar("jalali").toDate()
-  );
-const getNextDayJalaliFromDate = (date:any) => {
-  // Convert to Jalali date with jalaliday plugin
-  const jalaliDate = dayjs(date).locale('fa').calendar('jalali');
+  const { toDay } = getToday();
+  const [currentDate, setCurrentDate] = useState(toDay);
+  const { day, monthName, year, fullDayName } = getData();
 
-  // Add 1 day
-  const nextDay = jalaliDate.add(1, 'day');
-
-  return {
-    year: nextDay.year(),
-    month: nextDay.month(),
-    day: nextDay.date(),
-  };
-};
-  console.log(currentDate);
-const formatJalaliDate = ({ year, month, day }:any) => {
-  const jalaliDate = dayjs()
-    .calendar("jalali")
-    .year(year)
-    .month(month)
-    .date(day);
-
-  // Format the date with Jalali month name in Persian
-  return jalaliDate.format("D MMMM YYYY");
-};
-  const jalaliDay = getNextDayJalaliFromDate(currentDate);
-  console.log(jalaliDay);
   const goToNextDay = () => {
     setCurrentDate((prevDate) => {
       // Convert previous date to dayjs Jalali object
@@ -59,18 +37,6 @@ const formatJalaliDate = ({ year, month, day }:any) => {
     year: number;
     month: number;
   } | null>(null);
-  const monthName = currentJalaliMonth
-    ? dayjs()
-        .calendar("jalali")
-        .year(currentJalaliMonth.year)
-        .month(currentJalaliMonth.month)
-        .format("MMMM")
-    : "";
-
-  const currentDayNumber = dayjs
-    .utc(new Date().toISOString())
-    .calendar("jalali")
-    .date();
 
   const goToPrevDay = () => {
     setCurrentDate((prev) => dayjs(prev).subtract(1, "day").toDate());
@@ -79,7 +45,6 @@ const formatJalaliDate = ({ year, month, day }:any) => {
   const goToToday = () => {
     setCurrentDate(dayjs().calendar("jalali").toDate());
   };
-  console.log(currentDate);
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col gap-4">
@@ -89,7 +54,7 @@ const formatJalaliDate = ({ year, month, day }:any) => {
               {monthName}
             </span>
             <span className="flex items-center justify-center flex-1 text-[#1C68DA] font-primary-bold">
-              {currentDayNumber}
+              {day}
             </span>
           </div>
           <div className="flex items-center justify-center gap-4 mb-4">
@@ -98,7 +63,7 @@ const formatJalaliDate = ({ year, month, day }:any) => {
             </Button>
 
             <div className="px-4 py-1 border rounded text-lg font-semibold">
-              {formatJalaliDate(jalaliDay)}
+              {fullDayName}
             </div>
 
             <Button onClick={goToNextDay} className="border rounded px-3 py-1">
@@ -110,13 +75,39 @@ const formatJalaliDate = ({ year, month, day }:any) => {
             </Button>
           </div>
         </div>{" "}
-        <JalaliCalendar
+        {/* <JalaliCalendar
           currentJalaliMonth={currentJalaliMonth}
           setCurrentJalaliMonth={setCurrentJalaliMonth}
+          currentDate={currentDate}
+          onDateChange={setCurrentDate}
+        /> */}
+        {/* <WeeklyJalaliCalendar currentDate={currentDate} /> */}
+        <HijriCalendar
+          currentHijriMonth={currentJalaliMonth}
+          setCurrentHijriMonth={setCurrentJalaliMonth}
           currentDate={currentDate}
           onDateChange={setCurrentDate}
         />
       </div>
     </div>
   );
+  function getToday() {
+    const toDay = dayjs().calendar("jalali").toDate();
+    console.log(toDay);
+    return { toDay };
+  }
+  function getData() {
+    const date = convertGaregrianToSolarWithTimeZone(currentDate);
+    const day = date.day;
+    const monthName = date
+      ? dayjs()
+          .calendar("jalali")
+          .year(date.year)
+          .month(date.month - 1) // date.month is 1-based
+          .format("MMMM")
+      : "";
+    const year = date.year;
+    const fullDayName = `${day} ${monthName} ${year}`;
+    return { day, monthName, year, fullDayName };
+  }
 }
