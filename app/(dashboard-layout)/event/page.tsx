@@ -1,6 +1,6 @@
 "use client";
 
-import MonthlyCalendarContainer from "@/components/events/CalendarContainer";
+import CalendarContainer from "@/components/events/CalendarContainer";
 
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
@@ -22,7 +22,7 @@ export default function Event() {
         ]}
       />
 
-      <MonthlyCalendarContainer />
+      <CalendarContainer />
     </main>
   );
 }
