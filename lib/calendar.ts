@@ -51,7 +51,7 @@ const jalaliMonthNames = [
 ];
 export function convertDateWithTimeZone(
   currentDate: Date,
-  calendarType: "jalali" | "hijri"
+  calendarType: "jalali" | "hijri" | "gregory"
 ) {
   const date = dayjs(currentDate);
 
@@ -80,12 +80,20 @@ export function convertDateWithTimeZone(
       year: parseInt(m.format("iYYYY"), 10),
       monthName: hijriMonthNames[monthNum - 1] || "",
     };
+  }
+  if (calendarType === "gregory") {
+    return {
+      day: gDate.gd,
+      month: gDate.gm,
+      year: gDate.gy,
+      monthName: date.format("MMMM"), // full month name in locale
+    };
   } else return {};
 }
 
 export function generateVisibleRange(
   currentDate: Date,
-  calendarType: "jalali" | "hijri"
+  calendarType: "jalali" | "hijri" | "gregory"
 ): { start: Date; end: Date } {
   if (calendarType === "jalali") {
     const date = dayjs(currentDate).calendar("jalali");
@@ -141,8 +149,35 @@ export function generateVisibleRange(
       end: end.toDate(),
     };
   }
+  if (calendarType === "gregory") {
+    const date = dayjs(currentDate);
+    const year = date.year();
+    const month = date.month(); // 0-based
 
-  throw new Error(`Unsupported calendar type: ${calendarType}`);
+    // Start at 1st day of Gregorian month
+    let start = dayjs().year(year).month(month).date(1);
+
+    // Move backward until Saturday (6)
+    while (start.day() !== 6) {
+      start = start.subtract(1, "day");
+    }
+
+    // End at last day of Gregorian month
+    let end = dayjs().year(year).month(month).endOf("month");
+
+    // Move forward until Friday (5)
+    while (end.day() !== 5) {
+      end = end.add(1, "day");
+    }
+    console.log({
+      start: start.toDate(),
+      end: end.toDate(),
+    });
+    return {
+      start: start.toDate(),
+      end: end.toDate(),
+    };
+  } else return { start: new Date(), end: new Date() };
 }
 export function generateWeekVisibleRange(
   date: Date,
@@ -151,34 +186,59 @@ export function generateWeekVisibleRange(
   let startOfWeek: Date;
   let endOfWeek: Date;
 
-  if (calendarType === "jalali" || calendarType === "gregory") {
+  if (calendarType === "jalali") {
     const day = dayjs(date).calendar(calendarType);
     const dayOfWeek = day.day(); // Sunday = 0, Saturday = 6
     const diffToSaturday = (dayOfWeek + 1) % 7; // week starts Saturday
     startOfWeek = day.subtract(diffToSaturday, "day").startOf("day").toDate();
-    endOfWeek = day.subtract(diffToSaturday, "day").add(6, "day").endOf("day").toDate();
+    endOfWeek = day
+      .subtract(diffToSaturday, "day")
+      .add(6, "day")
+      .endOf("day")
+      .toDate();
+  } else if (calendarType === "gregory") {
+    const day = dayjs(date);
+    const dayOfWeek = day.day(); // Sunday = 0, Saturday = 6
+    const diffToSaturday = (dayOfWeek + 1) % 7; // week starts Saturday
+    startOfWeek = day.startOf("day").subtract(diffToSaturday, "day").toDate();
+    endOfWeek = day
+      .startOf("day")
+      .subtract(diffToSaturday, "day")
+      .add(6, "day")
+      .endOf("day")
+      .toDate();
   } else if (calendarType === "hijri") {
     const day = moment(date);
     const dayOfWeek = day.day();
     const diffToSaturday = (dayOfWeek + 1) % 7;
-    startOfWeek = day.clone().subtract(diffToSaturday, "days").startOf("day").toDate();
-    endOfWeek = day.clone().subtract(diffToSaturday, "days").add(6, "days").endOf("day").toDate();
+    startOfWeek = day
+      .clone()
+      .subtract(diffToSaturday, "days")
+      .startOf("day")
+      .toDate();
+    endOfWeek = day
+      .clone()
+      .subtract(diffToSaturday, "days")
+      .add(6, "days")
+      .endOf("day")
+      .toDate();
   } else {
     throw new Error("Unsupported calendar type");
   }
-  console.log({ start: startOfWeek, end: endOfWeek })
+  console.log({ start: startOfWeek, end: endOfWeek });
   return { start: startOfWeek, end: endOfWeek };
 }
 export function getDayNumber(date: Date, calendarType: string) {
-  console.log(date)
+  console.log(date);
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
     case "hijri":
-      console.log(moment(date).format("iD"))
+      console.log(moment(date).format("iD"));
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":
+      return dayjs.utc(date).date();
     default:
       return dayjs.utc(date).date();
   }
@@ -243,6 +303,9 @@ export function getWeekdayLabel(
       dayIndex = (hijriDay + 1) % 7;
       break;
     case "gregory":
+      const gregDay = dayjs(date).day(); // 0=Sunday, 6=Saturday
+      dayIndex = (gregDay + 1) % 7; // Shift so Saturday = 0
+      break;
     default:
       dayIndex = dayjs(date).day(); // 0=Sunday
   }

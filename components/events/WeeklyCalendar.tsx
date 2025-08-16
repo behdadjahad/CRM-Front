@@ -31,7 +31,7 @@ export default function WeeklyCalendar({
     plugins: [timeGridPlugin],
     initialView: "customWeek",
     firstDay: 6, // week starts on Saturday
-    direction: "rtl",
+   direction: calendarType === "gregory" ? "ltr" : "rtl",
     headerToolbar: false,
     footerToolbar: false,
     slotDuration: "00:30:00", // hourly slots
@@ -52,9 +52,14 @@ export default function WeeklyCalendar({
       console.log(arg.date);
       const dayNumber = getDayNumber(arg.date, calendarType);
       const weekdayLabel = getWeekdayLabel(arg.date, calendarType);
-      return { html: `${weekdayLabel} ${dayNumber}` };
+      return { html: `${dayNumber} ${weekdayLabel}` };
     },
   };
 
-  return <FullCalendar {...calendarOptions} />;
+  return (
+    <FullCalendar
+      {...calendarOptions}
+      dayHeaderClassNames={() => ["my-header-label"]}
+    />
+  );
 }

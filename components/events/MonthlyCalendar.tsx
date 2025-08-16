@@ -13,14 +13,9 @@ dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
 type Props = {
-  setCurrentJalaliMonth?: React.Dispatch<
-    React.SetStateAction<{ year: number; month: number } | null>
-  >;
-  currentJalaliMonth?: any;
   currentDate: Date;
-  onDateChange?: (date: Date) => void;
   visibleRange: { start: Date; end: Date };
-  calendarType: "jalali" | "hijri";
+  calendarType: "jalali" | "hijri" | "gregory";
 };
 export default function MonthlyCalendar({
   currentDate,
@@ -30,13 +25,15 @@ export default function MonthlyCalendar({
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
+  console.log(visibleRange);
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin],
     initialView: "customMonth",
     firstDay: 6,
-    direction: "rtl",
+    direction: calendarType === "gregory" ? "ltr" : "rtl",
     headerToolbar: false,
     footerToolbar: false,
+
     views: {
       customMonth: {
         type: "dayGrid",
@@ -47,6 +44,7 @@ export default function MonthlyCalendar({
     events: [{ title: "Test Event", start: new Date() }],
 
     dayCellContent: (arg) => {
+      console.log(arg.date);
       const dayNumber = getDayNumber(arg.date, calendarType);
       return { html: `<div>${dayNumber}</div>` };
     },
@@ -65,7 +63,7 @@ export default function MonthlyCalendar({
   };
 
   return (
-    <div>
+    <div className="w-full">
       <FullCalendar
         {...calendarOptions}
         datesSet={handleDatesSet}
