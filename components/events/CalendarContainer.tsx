@@ -43,7 +43,13 @@ export default function CalendarContainer() {
     calendarRangeType,
     calendarType
   );
+  const toda = new Date();
+  const yyyy = toda.getFullYear();
+  const mm = String(toda.getMonth() + 1).padStart(2, "0"); // months are 0-based
+  const dd = String(toda.getDate()).padStart(2, "0");
 
+  const todayDate = `${yyyy}-${mm}-${dd}`;
+  console.log(todayDate);
   const goToNext = () => {
     setCurrentDate((prevDate) => {
       switch (calendarRangeType) {
@@ -150,24 +156,24 @@ export default function CalendarContainer() {
           calendarRangeType={calendarRangeType}
         />
         <div className="w-full">
-        {calendarRangeType === "monthly" ? (
-          <MonthlyCalendar
-            currentDate={currentDate}
-            visibleRange={calendarData.visibleRange}
-            calendarType={calendarType}
-          />
-        ) : calendarRangeType === "weekly" ? (
-          <WeeklyCalendar
-            currentDate={currentDate}
-            visibleRange={calendarData.visibleRange}
-            calendarType={calendarType}
-          />
-        ) : calendarRangeType === "daily" ? (
-          <DailyCalendar currentDate={currentDate} />
-        ) : (
-          <></>
+          {calendarRangeType === "monthly" ? (
+            <MonthlyCalendar
+              currentDate={currentDate}
+              visibleRange={calendarData.visibleRange}
+              calendarType={calendarType}
+            />
+          ) : calendarRangeType === "weekly" ? (
+            <WeeklyCalendar
+              currentDate={currentDate}
+              visibleRange={calendarData.visibleRange}
+              calendarType={calendarType}
+            />
+          ) : calendarRangeType === "daily" ? (
+            <DailyCalendar currentDate={currentDate} />
+          ) : (
+            <></>
           )}
-          </div>
+        </div>
       </div>
     </div>
   );

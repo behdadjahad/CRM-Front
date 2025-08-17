@@ -1,6 +1,12 @@
 import jalaali from "jalaali-js";
 import dayjs from "dayjs";
 import moment from "moment-hijri";
+
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 export function convertGaregrianToSolarWithTimeZone(currentDate: Date) {
   const date = dayjs(currentDate);
 
@@ -49,6 +55,20 @@ const jalaliMonthNames = [
   "بهمن",
   "اسفند",
 ];
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+// Example usage
+const tz = "+03:30"; // Iran time
+const dateString = "2025-08-17";
+
+// Use dayjs.tz to parse in the timezone
+const date = dayjs.tz(dateString, tz);
+
+console.log(date.format()); 
+
+
+
 export function convertDateWithTimeZone(
   currentDate: Date,
   calendarType: "jalali" | "hijri" | "gregory"
@@ -229,7 +249,8 @@ export function generateWeekVisibleRange(
   return { start: startOfWeek, end: endOfWeek };
 }
 export function getDayNumber(date: Date, calendarType: string) {
-  console.log(date);
+  console.log(date, "gregory");
+
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
@@ -238,9 +259,14 @@ export function getDayNumber(date: Date, calendarType: string) {
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":
-      return dayjs.utc(date).date();
-    default:
-      return dayjs.utc(date).date();
+
+    default: {
+      const startOfDay = dayjs.utc(date).startOf("day");
+      const adjusted = dayjs.utc(date).isAfter(startOfDay)
+        ? dayjs.utc(date).add(1, "day")
+        : dayjs.utc(date);
+      return adjusted.date();
+    }
   }
 }
 

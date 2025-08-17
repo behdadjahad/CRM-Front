@@ -14,18 +14,18 @@ dayjs.extend(jalaliday);
 
 type Props = {
   currentDate: Date;
-  visibleRange: { start: Date; end: Date };
+  visibleRange: { start: string; end: string };
   calendarType: "jalali" | "hijri" | "gregory";
 };
 export default function MonthlyCalendar({
   currentDate,
-  visibleRange,
+  visibleRange={start: "2025-07-19", end: "2025-08-30"},
   calendarType,
 }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
-  console.log(visibleRange);
+console.log(visibleRange, "visibleRange");
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin],
     initialView: "customMonth",
@@ -37,6 +37,7 @@ export default function MonthlyCalendar({
     views: {
       customMonth: {
         type: "dayGrid",
+        // visibleRange: {start: "2025-07-19", end: "2025-08-30"},
         visibleRange: visibleRange,
       },
     },
@@ -44,7 +45,8 @@ export default function MonthlyCalendar({
     events: [{ title: "Test Event", start: new Date() }],
 
     dayCellContent: (arg) => {
-      console.log(arg.date);
+     console.log(arg.date, "dayCellContent");
+      console.log(visibleRange);
       const dayNumber = getDayNumber(arg.date, calendarType);
       return { html: `<div>${dayNumber}</div>` };
     },
@@ -59,7 +61,7 @@ export default function MonthlyCalendar({
     const midDate = new Date(midTimestamp);
 
     const { year, month } = getMonthInfo(midDate, calendarType);
-    setVisibleMonth({ year, month });
+    // setVisibleMonth({ year, month });
   };
 
   return (
@@ -69,10 +71,12 @@ export default function MonthlyCalendar({
         datesSet={handleDatesSet}
         dayHeaderClassNames={() => ["my-header-label"]}
         dayCellClassNames={(arg) => {
+          console.log(arg.date, "dayCellClassNames");
           const { year: cellYear, month: cellMonth } = getMonthInfo(
             arg.date,
             calendarType
           );
+
           const { year: currentYear, month: currentMonth } = visibleMonth;
           const isOutOfMonth =
             cellYear !== currentYear || cellMonth !== currentMonth;
