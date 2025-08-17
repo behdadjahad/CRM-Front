@@ -5,10 +5,10 @@ import CalendarTimeFiltering, {
 } from "./calendar/calendar-time-filtering";
 export interface CalendarHeaderInterface {
   date: {
-    day: number;
-    monthName: string;
-    year: number;
-    month: number;
+    day?: number;
+    monthName?: string;
+    year?: number;
+    month?: number;
   };
   selectedDaysRangeStr: string;
   onPrev: () => void;
@@ -17,7 +17,7 @@ export interface CalendarHeaderInterface {
   onActiveTime: (value: CalendarRangeTimeType) => void;
   calendarRangeType: CalendarRangeTimeType;
 }
-const CalendarTimeFilteringList = [
+const CalendarTimeFilteringList: { label: string; value: CalendarRangeTimeType }[] = [
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },

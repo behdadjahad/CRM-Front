@@ -59,13 +59,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 // Example usage
-const tz = "+03:30"; // Iran time
-const dateString = "2025-08-17";
 
-// Use dayjs.tz to parse in the timezone
-const date = dayjs.tz(dateString, tz);
-
-console.log(date.format()); 
 
 
 
@@ -189,10 +183,7 @@ export function generateVisibleRange(
     while (end.day() !== 5) {
       end = end.add(1, "day");
     }
-    console.log({
-      start: start.toDate(),
-      end: end.toDate(),
-    });
+   
     return {
       start: start.toDate(),
       end: end.toDate(),

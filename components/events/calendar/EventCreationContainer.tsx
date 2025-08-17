@@ -6,6 +6,7 @@ import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "../lead/LeadContactTypeContainer";
 
+
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -57,6 +58,7 @@ export default function EventCreationContainer() {
             activeItem={activeLeadContactType}
           />
         </div>
+    
 
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button

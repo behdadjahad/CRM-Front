@@ -43,13 +43,7 @@ export default function CalendarContainer() {
     calendarRangeType,
     calendarType
   );
-  const toda = new Date();
-  const yyyy = toda.getFullYear();
-  const mm = String(toda.getMonth() + 1).padStart(2, "0"); // months are 0-based
-  const dd = String(toda.getDate()).padStart(2, "0");
 
-  const todayDate = `${yyyy}-${mm}-${dd}`;
-  console.log(todayDate);
   const goToNext = () => {
     setCurrentDate((prevDate) => {
       switch (calendarRangeType) {
@@ -216,6 +210,7 @@ export default function CalendarContainer() {
         calendarData = {
           date: date,
           selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
+          visibleRange: { start: currentDate, end: currentDate },
         };
         return { calendarData };
       default:

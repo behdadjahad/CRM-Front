@@ -14,12 +14,12 @@ dayjs.extend(jalaliday);
 
 type Props = {
   currentDate: Date;
-  visibleRange: { start: string; end: string };
+  visibleRange: { start:Date; end: Date };
   calendarType: "jalali" | "hijri" | "gregory";
 };
 export default function MonthlyCalendar({
   currentDate,
-  visibleRange={start: "2025-07-19", end: "2025-08-30"},
+  visibleRange,
   calendarType,
 }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(
@@ -61,7 +61,7 @@ console.log(visibleRange, "visibleRange");
     const midDate = new Date(midTimestamp);
 
     const { year, month } = getMonthInfo(midDate, calendarType);
-    // setVisibleMonth({ year, month });
+    setVisibleMonth({ year, month });
   };
 
   return (
