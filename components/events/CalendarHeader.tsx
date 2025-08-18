@@ -6,6 +6,7 @@ import CalendarTimeFiltering, {
 import CalendarTypeFiltering, {
   CalendarType,
 } from "./calendar/CalendarTypeFiltering";
+
 export interface CalendarHeaderInterface {
   date: {
     day?: number;
@@ -13,13 +14,13 @@ export interface CalendarHeaderInterface {
     year?: number;
     month?: number;
   };
-  selectedDaysRangeStr: string;
+  selectedDaysRange: any[];
   onPrev: () => void;
   onNext: () => void;
   onToday: () => void;
   onActiveTime: (value: CalendarRangeTimeType) => void;
   calendarRangeType: CalendarRangeTimeType;
-  fullRange?: string;
+  fullRange?: any[];
   onActiveCalendarType: (value: CalendarType) => void;
   calendarType: CalendarType;
 }
@@ -41,7 +42,7 @@ const CalendarTypeFilteringList: {
 ];
 export default function CalendarHeader({
   date,
-  selectedDaysRangeStr,
+  selectedDaysRange,
   fullRange,
   onPrev,
   onNext,
@@ -51,6 +52,7 @@ export default function CalendarHeader({
   onActiveCalendarType,
   calendarType,
 }: CalendarHeaderInterface) {
+  const isLtr = calendarType === "gregory";
   return (
     <div className="bg-card p-6 rounded-lg flex justify-between items-center">
       <div className="flex items-stretch gap-4">
@@ -64,7 +66,7 @@ export default function CalendarHeader({
         </div>
 
         <div className="flex flex-col items-start justify-between">
-          <div className="flex ltr" dir="ltr">
+          <div className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
             {" "}
             <span className=" text-[#181D27] font-primary-bold">
               {date.monthName}
@@ -73,7 +75,18 @@ export default function CalendarHeader({
               {date.year}
             </span>
           </div>
-          <div className="text-xs text-[#535862]">{fullRange}</div>
+          <div className="text-xs text-[#535862] flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
+            {fullRange &&
+              fullRange.length > 0 &&
+              fullRange?.map((item, index) => (
+                <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
+                  <span>{item.day}</span>
+                  <span>{item.monthName}</span>
+                  <span>{item.year}</span>
+                  <span>{index  < fullRange.length -1  && fullRange.length > 1 ? "-" : ""}</span>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
 
@@ -93,8 +106,17 @@ export default function CalendarHeader({
             <FaArrowRight />
           </Button>
 
-          <div className="px-4 py-1 border rounded text-sm text-[#414651] flex items-center justify-center">
-            {selectedDaysRangeStr}
+          <div className="px-4 py-1 border rounded text-sm text-[#414651] flex items-center justify-center" dir={isLtr ? "ltr" : "rtl"}>
+            {selectedDaysRange &&
+              selectedDaysRange.length > 0 &&
+              selectedDaysRange?.map((item, index) => (
+                <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
+                  <span>{item.day}</span>
+                  <span>{item.monthName}</span>
+                  <span>{item.year}</span>
+                  <span>{index  < selectedDaysRange.length -1  && selectedDaysRange.length > 1 ? "-" : ""}</span>
+                </div>
+              ))}
           </div>
 
           <Button onClick={onNext} className="border rounded" variant={"ghost"}>

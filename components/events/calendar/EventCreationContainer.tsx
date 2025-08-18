@@ -1,5 +1,4 @@
-'use client';
-
+"use client";
 
 import CustomModal from "@/components/shared/custom-modal";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,12 @@ import { MdClose } from "react-icons/md";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "../lead/LeadContactTypeContainer";
-import TextEditorInput from "@/components/shared/input/TextEditorInput";
+import AddCustomerToFeatureContainer from "../AddCustomerToFeatureContainer";
+import { CustomerDataInterface } from "@/components/service/customer-infinite-card";
 
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [customer, setCustomer] = useState<CustomerDataInterface>();
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
@@ -61,8 +62,18 @@ export default function EventCreationContainer() {
             activeItem={activeLeadContactType}
           />
         </div>
+        <AddCustomerToFeatureContainer
+          onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
+            console.log(selectedCustomer);
+            setCustomer(selectedCustomer);
+          }}
+          onSendCustomerData={(customerData: CustomerDataInterface) => {
+            setCustomer(customerData);
+          }}
+        />
 
-        <TextEditorInput />
+        {/* <TextEditorInput /> */}
+
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}

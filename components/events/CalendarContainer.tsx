@@ -299,14 +299,26 @@ export default function CalendarContainer() {
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
-          selectedDaysRangeStr:
-            calendarType === "gregory"
-              ? ` ${date.year}${date.monthName} ${date.day}`
-              : `${date.day} ${date.monthName} ${date.year}`,
-          fullRange:
-            calendarType === "gregory"
-              ? `${calendarInfo.year} ${calendarInfo.monthName} ${calendarInfo.endDay}- ${calendarInfo.year} ${calendarInfo.monthName} ${calendarInfo.startDay}`
-              : `${calendarInfo.startDay} ${date.monthName} ${date.year} - ${calendarInfo.endDay} ${date.monthName} ${date.year}`,
+          selectedDaysRange: [
+            {
+              day: date.day,
+              monthName: date.monthName,
+              year: date.year,
+            },
+          ],
+
+          fullRange: [
+            {
+              day: calendarInfo.startDay,
+              monthName: calendarInfo.monthName,
+              year: calendarInfo.year,
+            },
+            {
+              day: calendarInfo.endDay,
+              monthName: calendarInfo.monthName,
+              year: calendarInfo.year,
+            },
+          ],
         };
         return { calendarData };
       case "weekly":
@@ -328,28 +340,76 @@ export default function CalendarContainer() {
         calendarData = {
           date: date,
           visibleRange: weeklyVisibleRange,
-          selectedDaysRangeStr: `${selectedDateRange.start.day} ${selectedDateRange.start.monthName} ${selectedDateRange.start.year} - ${selectedDateRange.end.day} ${selectedDateRange.end.monthName} ${selectedDateRange.end.year}`,
-          fullRange: `${selectedDateRange.start.day} ${selectedDateRange.start.monthName} ${selectedDateRange.start.year} - ${selectedDateRange.end.day} ${selectedDateRange.end.monthName} ${selectedDateRange.end.year}`,
+          selectedDaysRange: [
+            {
+              day: selectedDateRange.start.day,
+              monthName: selectedDateRange.start.monthName,
+              year: selectedDateRange.start.year,
+            },
+            {
+              day: selectedDateRange.end.day,
+              monthName: selectedDateRange.end.monthName,
+              year: selectedDateRange.end.year,
+            },
+          ],
+
+          fullRange: [
+            {
+              day: selectedDateRange.start.day,
+              monthName: selectedDateRange.start.monthName,
+              year: selectedDateRange.start.year,
+            },
+            {
+              day: selectedDateRange.end.day,
+              monthName: selectedDateRange.end.monthName,
+              year: selectedDateRange.end.year,
+            },
+          ],
         };
         return { calendarData };
 
       case "daily":
         calendarData = {
           date: date,
-          selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
+          selectedDaysRange: [
+            {
+              day: date.day,
+              monthName: date.monthName,
+              year: date.year,
+            },
+          ],
           visibleRange: {
             start: new Date(currentDate),
             end: new Date(currentDate),
           },
-          fullRange: `${date.day} ${date.monthName} ${date.year}`,
+
+          fullRange: [
+            {
+              day: date.day,
+              monthName: date.monthName,
+              year: date.year,
+            },
+          ],
         };
         return { calendarData };
       default:
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
-          selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
-          fullRange: `${date.day} ${date.monthName} ${date.year}`,
+          selectedDaysRange: [
+            {
+              day: date.day,
+              monthName: date.monthName,
+              year: date.year,
+            },
+          ],
+          fullRange: [
+            {
+              day: date.day,
+              monthName: date.monthName,
+              year: date.year,
+            },
+          ],
         };
         return { calendarData };
     }
