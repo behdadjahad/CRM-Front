@@ -9,14 +9,19 @@ import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
 
 import timeGridPlugin from "@fullcalendar/timegrid"; //
-import { getDayNumber, getWeekdayLabel } from "@/lib/calendar";
+import {
+  convertDateWithTimeZone,
+  convertToGregorianYMD,
+  getDayNumber,
+  getWeekdayLabel,
+} from "@/lib/calendar";
 dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
 type Props = {
   currentDate: string;
 
-  visibleRange: {start:Date;end:Date};
+  visibleRange: { start: Date; end: Date };
   calendarType: any;
 };
 
@@ -27,11 +32,12 @@ export default function WeeklyCalendar({
 }: Props) {
   console.log(currentDate);
   console.log(visibleRange);
+
   const calendarOptions: CalendarOptions = {
     plugins: [timeGridPlugin],
     initialView: "customWeek",
     firstDay: 6, // week starts on Saturday
-   direction: calendarType === "gregory" ? "ltr" : "rtl",
+    direction: calendarType === "gregory" ? "ltr" : "rtl",
     headerToolbar: false,
     footerToolbar: false,
     slotDuration: "00:30:00", // hourly slots
@@ -49,10 +55,32 @@ export default function WeeklyCalendar({
 
     events: [{ title: "Test Event", start: new Date() }],
     dayHeaderContent: (arg) => {
-      console.log(arg.date);
+      const {
+        year: currentYear,
+        month: currentMonth,
+        day: currentDay,
+      } = convertDateWithTimeZone(currentDate, calendarType);
+      const {
+        year: cellYear,
+        month: cellMonth,
+        day: cellDay,
+      } = convertDateWithTimeZone(
+        convertToGregorianYMD(arg.date),
+        calendarType
+      );
+
+      const isCurrentDay =
+        currentYear === cellYear &&
+        currentMonth === cellMonth &&
+        currentDay === cellDay;
       const dayNumber = getDayNumber(arg.date, calendarType);
       const weekdayLabel = getWeekdayLabel(arg.date, calendarType);
-      return { html: `${dayNumber} ${weekdayLabel}` };
+
+      return {
+        html: `<div class="flex-container"><span class=" ${
+          isCurrentDay ? "current-day" : ""
+        }">${dayNumber}</span> <span>${weekdayLabel}</span></div>`,
+      };
     },
   };
 

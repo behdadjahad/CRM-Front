@@ -287,4 +287,9 @@
 }
 
 
-
+.current-day {
+  @apply bg-[#1C68DA] text-white rounded-full h-6 w-6 flex items-center justify-center;
+}
+.flex-container {
+  @apply flex items-center justify-center gap-2;
+}

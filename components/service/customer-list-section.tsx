@@ -8,9 +8,12 @@ import { debounce } from "lodash";
 export default function CustomerListSection({
   onCheckCustomerhandler,
   onSendSelectedCustomer,
+  multiSelect
 }: {
   onCheckCustomerhandler?: any;
-  onSendSelectedCustomer?: any;
+    onSendSelectedCustomer?: any;
+    
+    multiSelect?: boolean;
 }) {
   const [searchKeyWord, setSearchKeyWord] = useState<string>("");
   const customerSearchFormik = useFormik({

@@ -7,8 +7,13 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
-import { convertToGregorianYMD, getDayNumber, getMonthInfo, getWeekdayLabel } from "@/lib/calendar";
-
+import {
+  convertDateWithTimeZone,
+  convertToGregorianYMD,
+  getDayNumber,
+  getMonthInfo,
+  getWeekdayLabel,
+} from "@/lib/calendar";
 
 dayjs.extend(utc);
 dayjs.extend(jalaliday);
@@ -46,11 +51,31 @@ export default function MonthlyCalendar({
     events: [{ title: "Test Event", start: new Date() }],
 
     dayCellContent: (arg) => {
-      console.log(arg.date, "dayCellContent");
-      console.log(visibleRange);
-     console.log(dayjs(arg.date).format("YYYY-MM-DD")) ;
+      const {
+        year: currentYear,
+        month: currentMonth,
+        day: currentDay,
+      } = convertDateWithTimeZone(currentDate, calendarType);
+      const {
+        year: cellYear,
+        month: cellMonth,
+        day: cellDay,
+      } = convertDateWithTimeZone(
+        convertToGregorianYMD(arg.date),
+        calendarType
+      );
+
       const dayNumber = getDayNumber(arg.date, calendarType);
-      return { html: `<div>${dayNumber}</div>` };
+      const isCurrentDay =
+        currentYear === cellYear &&
+        currentMonth === cellMonth &&
+        currentDay === cellDay;
+
+      return {
+        html: `<div class=" ${
+          isCurrentDay ? "current-day" : ""
+        }">${dayNumber}</div>`,
+      };
     },
 
     dayHeaderContent: (arg) => {
@@ -75,22 +100,26 @@ export default function MonthlyCalendar({
         dayHeaderClassNames={() => ["my-header-label"]}
         dayCellClassNames={(arg) => {
           console.log(arg.date, "dayCellClassNames");
-          console.log(convertToGregorianYMD(arg.date))
-          console.log(dayjs(arg.date).format("YYYY-MM-DD"))
+          console.log(convertToGregorianYMD(arg.date));
+          console.log(dayjs(arg.date).format("YYYY-MM-DD"));
           const { year: cellYear, month: cellMonth } = getMonthInfo(
             convertToGregorianYMD(arg.date),
             calendarType
           );
-          console.log(getMonthInfo(convertToGregorianYMD(arg.date), calendarType));
-          console.log(getMonthInfo("2025-8-22", calendarType))
+          console.log(
+            getMonthInfo(convertToGregorianYMD(arg.date), calendarType)
+          );
+          console.log(getMonthInfo("2025-8-22", calendarType));
           const { year: currentYear, month: currentMonth } = visibleMonth;
           const isOutOfMonth =
             cellYear !== currentYear || cellMonth !== currentMonth;
+          const isCurrentDay = true;
           return isOutOfMonth
             ? ["calendar-day", "disabled-day"]
+            : isCurrentDay
+            ? ["calendar-day", "active-day"]
             : ["calendar-day"];
         }}
-   
       />
     </div>
   );

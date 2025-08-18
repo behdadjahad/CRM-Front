@@ -9,10 +9,12 @@ import LeadContactTypeContainer, {
 } from "../lead/LeadContactTypeContainer";
 import AddCustomerToFeatureContainer from "../AddCustomerToFeatureContainer";
 import { CustomerDataInterface } from "@/components/service/customer-infinite-card";
+import QuillEditor from "@/components/shared/input/TextEditorInput";
 
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [customer, setCustomer] = useState<CustomerDataInterface>();
+    const [content, setContent] = useState("");
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
@@ -70,8 +72,9 @@ export default function EventCreationContainer() {
           onSendCustomerData={(customerData: CustomerDataInterface) => {
             setCustomer(customerData);
           }}
+          multiSelect={true}
         />
-
+      <QuillEditor value={content} onChange={setContent} />
         {/* <TextEditorInput /> */}
 
         <div className="flex flex-row gap-4 items-center justify-end">

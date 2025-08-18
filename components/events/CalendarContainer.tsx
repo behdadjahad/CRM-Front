@@ -161,15 +161,31 @@ export default function CalendarContainer() {
 
         case "monthly": {
           // --- Jalali ---
+          // if (calendarType === "jalali") {
+          //   const dJ = dayjs(prevDateStr, FMT).calendar("jalali");
+          //   const dayOfMonth = dJ.date();
+
+          //   // anchor to prevDate (NOT dayjs())
+          //   const targetJ = dJ
+          //     .calendar("jalali")
+          //     .date(1) // go to first of current Jalali month
+          //     .month(dJ.month() - 1); // previous Jalali month
+
+          //   const lastDay = targetJ.daysInMonth();
+
+          //   return targetJ
+          //     .date(Math.min(dayOfMonth, lastDay))
+          //     .calendar("gregory")
+          //     .format(FMT);
+          // }
           if (calendarType === "jalali") {
             const dJ = dayjs(prevDateStr, FMT).calendar("jalali");
             const dayOfMonth = dJ.date();
 
-            // anchor to prevDate (NOT dayjs())
             const targetJ = dJ
               .calendar("jalali")
               .date(1) // go to first of current Jalali month
-              .month(dJ.month() - 1); // previous Jalali month
+              .subtract(1, "month"); // safe way to go to previous Jalali month
 
             const lastDay = targetJ.daysInMonth();
 
@@ -178,7 +194,6 @@ export default function CalendarContainer() {
               .calendar("gregory")
               .format(FMT);
           }
-
           // --- Hijri ---
           if (calendarType === "hijri") {
             const m = moment(prevDateStr, FMT);

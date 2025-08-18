@@ -67,6 +67,7 @@ export default function AddCustomerToFeatureContainer({
           onSendSelectedCustomer={(customer: CustomerDataInterface) => {
             setCustomerData(customer);
           }}
+          multiSelect={multiSelect}
         />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
