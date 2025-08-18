@@ -25,6 +25,7 @@ import DailyCalendar from "./DailyCalendar";
 import CalendarHeader from "./CalendarHeader";
 
 import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
+import { CalendarType } from "./calendar/CalendarTypeFiltering";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -252,6 +253,8 @@ export default function CalendarContainer() {
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col gap-4 w-full">
         <CalendarHeader
+          onActiveCalendarType={(value) => setCalendarType(value)}
+          calendarType={calendarType}
           {...calendarData}
           onPrev={goToPrev}
           onNext={goToNext}

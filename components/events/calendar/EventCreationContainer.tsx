@@ -1,3 +1,6 @@
+'use client';
+
+
 import CustomModal from "@/components/shared/custom-modal";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -5,7 +8,7 @@ import { MdClose } from "react-icons/md";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "../lead/LeadContactTypeContainer";
-
+import TextEditorInput from "@/components/shared/input/TextEditorInput";
 
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -58,8 +61,8 @@ export default function EventCreationContainer() {
             activeItem={activeLeadContactType}
           />
         </div>
-    
 
+        <TextEditorInput />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}

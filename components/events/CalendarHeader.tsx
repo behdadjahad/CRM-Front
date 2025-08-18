@@ -3,6 +3,9 @@ import { Button } from "../ui/button";
 import CalendarTimeFiltering, {
   CalendarRangeTimeType,
 } from "./calendar/calendar-time-filtering";
+import CalendarTypeFiltering, {
+  CalendarType,
+} from "./calendar/CalendarTypeFiltering";
 export interface CalendarHeaderInterface {
   date: {
     day?: number;
@@ -17,6 +20,8 @@ export interface CalendarHeaderInterface {
   onActiveTime: (value: CalendarRangeTimeType) => void;
   calendarRangeType: CalendarRangeTimeType;
   fullRange?: string;
+  onActiveCalendarType: (value: CalendarType) => void;
+  calendarType: CalendarType;
 }
 const CalendarTimeFilteringList: {
   label: string;
@@ -25,6 +30,14 @@ const CalendarTimeFilteringList: {
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },
+];
+const CalendarTypeFilteringList: {
+  label: string;
+  value: CalendarType;
+}[] = [
+  { label: "شمسی", value: "jalali" },
+  { label: "قمری", value: "hijri" },
+  { label: "میلادی", value: "gregory" },
 ];
 export default function CalendarHeader({
   date,
@@ -35,6 +48,8 @@ export default function CalendarHeader({
   onToday,
   onActiveTime,
   calendarRangeType,
+  onActiveCalendarType,
+  calendarType,
 }: CalendarHeaderInterface) {
   return (
     <div className="bg-card p-6 rounded-lg flex justify-between items-center">
@@ -61,12 +76,17 @@ export default function CalendarHeader({
           <div className="text-xs text-[#535862]">{fullRange}</div>
         </div>
       </div>
+
+      <CalendarTypeFiltering
+        list={CalendarTypeFilteringList}
+        onActive={onActiveCalendarType}
+        calendarType={calendarType}
+      />
       <CalendarTimeFiltering
         list={CalendarTimeFilteringList}
         onActiveTime={onActiveTime}
         calendarRangeType={calendarRangeType}
       />
-
       <div className="flex items-stretch justify-center gap-4 text-[#414651]">
         <div className="flex items-stretch justify-center">
           <Button onClick={onPrev} className="border rounded" variant={"ghost"}>
