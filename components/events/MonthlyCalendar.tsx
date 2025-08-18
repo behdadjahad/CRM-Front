@@ -7,14 +7,15 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
-import { getDayNumber, getMonthInfo, getWeekdayLabel } from "@/lib/calendar";
+import { convertToGregorianYMD, getDayNumber, getMonthInfo, getWeekdayLabel } from "@/lib/calendar";
+
 
 dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
 type Props = {
-  currentDate: Date;
-  visibleRange: { start:Date; end: Date };
+  currentDate: string;
+  visibleRange: { start: Date; end: Date };
   calendarType: "jalali" | "hijri" | "gregory";
 };
 export default function MonthlyCalendar({
@@ -25,7 +26,7 @@ export default function MonthlyCalendar({
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
-console.log(visibleRange, "visibleRange");
+
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin],
     initialView: "customMonth",
@@ -37,7 +38,7 @@ console.log(visibleRange, "visibleRange");
     views: {
       customMonth: {
         type: "dayGrid",
-        // visibleRange: {start: "2025-07-19", end: "2025-08-30"},
+
         visibleRange: visibleRange,
       },
     },
@@ -45,8 +46,9 @@ console.log(visibleRange, "visibleRange");
     events: [{ title: "Test Event", start: new Date() }],
 
     dayCellContent: (arg) => {
-     console.log(arg.date, "dayCellContent");
+      console.log(arg.date, "dayCellContent");
       console.log(visibleRange);
+     console.log(dayjs(arg.date).format("YYYY-MM-DD")) ;
       const dayNumber = getDayNumber(arg.date, calendarType);
       return { html: `<div>${dayNumber}</div>` };
     },
@@ -60,7 +62,8 @@ console.log(visibleRange, "visibleRange");
     const midTimestamp = (arg.start.getTime() + arg.end.getTime()) / 2;
     const midDate = new Date(midTimestamp);
 
-    const { year, month } = getMonthInfo(midDate, calendarType);
+    const { year, month } = getMonthInfo(currentDate, calendarType);
+    console.log(getMonthInfo(currentDate, calendarType));
     setVisibleMonth({ year, month });
   };
 
@@ -72,11 +75,14 @@ console.log(visibleRange, "visibleRange");
         dayHeaderClassNames={() => ["my-header-label"]}
         dayCellClassNames={(arg) => {
           console.log(arg.date, "dayCellClassNames");
+          console.log(convertToGregorianYMD(arg.date))
+          console.log(dayjs(arg.date).format("YYYY-MM-DD"))
           const { year: cellYear, month: cellMonth } = getMonthInfo(
-            arg.date,
+            convertToGregorianYMD(arg.date),
             calendarType
           );
-
+          console.log(getMonthInfo(convertToGregorianYMD(arg.date), calendarType));
+          console.log(getMonthInfo("2025-8-22", calendarType))
           const { year: currentYear, month: currentMonth } = visibleMonth;
           const isOutOfMonth =
             cellYear !== currentYear || cellMonth !== currentMonth;
@@ -84,6 +90,7 @@ console.log(visibleRange, "visibleRange");
             ? ["calendar-day", "disabled-day"]
             : ["calendar-day"];
         }}
+   
       />
     </div>
   );

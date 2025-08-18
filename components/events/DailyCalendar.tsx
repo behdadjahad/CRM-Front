@@ -6,7 +6,7 @@ import type { CalendarOptions } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid"; //
 
 type Props = {
-    currentDate: Date;
+    currentDate: string;
     
 };
 
@@ -33,7 +33,7 @@ export default function DailyCalendar({ currentDate }: Props) {
       },
     },
     dayHeaders: false,
-    events: [{ title: "Test Event", start: currentDate }],
+    events: [{ title: "Test Event", start: new Date() }],
   };
 
   return <FullCalendar {...calendarOptions} />;

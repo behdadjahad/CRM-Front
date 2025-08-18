@@ -10,10 +10,13 @@ import moment from "moment-hijri";
 
 import {
   convertDateWithTimeZone,
+  convertToGregorianYMD,
   generateVisibleRange,
   generateWeekVisibleRange,
+  getCalendarInfo,
   getMonthInfo,
   getToday,
+  getTodayInGregorianYMD,
 } from "@/lib/calendar";
 import MonthlyCalendar from "./MonthlyCalendar";
 import WeeklyCalendar from "./WeeklyCalendar";
@@ -31,7 +34,9 @@ dayjs.locale("fa"); // Set
 dayjs.extend(timezone);
 
 export default function CalendarContainer() {
-  const today = getToday();
+  // const today = getToday();
+  const today = getTodayInGregorianYMD();
+  console.log(today);
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -44,100 +49,205 @@ export default function CalendarContainer() {
     calendarType
   );
 
+  // Go to previous day/week/month
   const goToNext = () => {
     setCurrentDate((prevDate) => {
+      // prevDate is string like "2025-08-18"
       switch (calendarRangeType) {
         case "daily":
-          return dayjs(prevDate).add(1, "day").toDate();
-        case "weekly":
-          return dayjs(prevDate).add(1, "week").toDate();
-        case "monthly": {
-          const { year, month } = getMonthInfo(prevDate, calendarType);
+          return dayjs(prevDate, "YYYY-MM-DD")
+            .add(1, "day")
+            .format("YYYY-MM-DD");
 
+        case "weekly":
+          return dayjs(prevDate, "YYYY-MM-DD")
+            .add(1, "week")
+            .format("YYYY-MM-DD");
+
+        case "monthly": {
           if (calendarType === "jalali") {
-            const d = dayjs(prevDate).calendar("jalali");
+            const d = dayjs(prevDate, "YYYY-MM-DD").calendar("jalali");
             const dayOfMonth = d.date();
-            const target = dayjs()
-              .calendar("jalali")
-              .year(year)
-              .month(month + 1)
-              .date(1);
+
+            // anchor on prevDate instead of dayjs()
+            const target = d.clone().add(1, "month").date(1);
+
             const lastDay = target.daysInMonth();
             return target
               .date(Math.min(dayOfMonth, lastDay))
               .calendar("gregory")
-              .toDate();
+              .format("YYYY-MM-DD");
           }
 
           if (calendarType === "hijri") {
-            const m = moment(prevDate);
+            const m = moment(prevDate, "YYYY-MM-DD");
             const dayOfMonth = m.iDate();
-            const target = moment()
-              .iYear(year)
-              .iMonth(month + 1)
-              .iDate(1);
-            const lastDay = target.endOf("iMonth").iDate();
-            return target.iDate(Math.min(dayOfMonth, lastDay)).toDate();
+
+            // also anchor on prevDate
+            const target = m.clone().add(1, "iMonth").iDate(1);
+            const lastDay = target.clone().endOf("iMonth").iDate();
+
+            return target
+              .iDate(Math.min(dayOfMonth, lastDay))
+              .format("YYYY-MM-DD");
           }
 
           // Gregorian
-          return dayjs(prevDate).add(1, "month").toDate();
+          return dayjs(prevDate, "YYYY-MM-DD")
+            .add(1, "month")
+            .format("YYYY-MM-DD");
         }
         default:
           return prevDate;
       }
     });
   };
+  // const goToNext = () => {
+  //   setCurrentDate((prevDate) => {
 
+  //     switch (calendarRangeType) {
+  //       case "daily":
+  //         return dayjs(prevDate).add(1, "day").toDate();
+  //       case "weekly":
+  //         return dayjs(prevDate).add(1, "week").toDate();
+  //       case "monthly": {
+  //         const { year, month } = getMonthInfo(prevDate, calendarType);
+
+  //         if (calendarType === "jalali") {
+  //           const d = dayjs(prevDate).calendar("jalali");
+  //           const dayOfMonth = d.date();
+  //           const target = dayjs()
+  //             .calendar("jalali")
+  //             .year(year)
+  //             .month(month + 1)
+  //             .date(1);
+  //           const lastDay = target.daysInMonth();
+  //           return target
+  //             .date(Math.min(dayOfMonth, lastDay))
+  //             .calendar("gregory")
+  //             .toDate();
+  //         }
+
+  //         if (calendarType === "hijri") {
+  //           const m = moment(prevDate);
+  //           const dayOfMonth = m.iDate();
+  //           const target = moment()
+  //             .iYear(year)
+  //             .iMonth(month + 1)
+  //             .iDate(1);
+  //           const lastDay = target.endOf("iMonth").iDate();
+  //           return target.iDate(Math.min(dayOfMonth, lastDay)).toDate();
+  //         }
+
+  //         // Gregorian
+  //         return dayjs(prevDate).add(1, "month").toDate();
+  //       }
+  //       default:
+  //         return prevDate;
+  //     }
+  //   });
+  // };
   const goToPrev = () => {
-    setCurrentDate((prevDate) => {
+    setCurrentDate((prevDateStr) => {
+      const FMT = "YYYY-MM-DD";
+
       switch (calendarRangeType) {
         case "daily":
-          return dayjs(prevDate).subtract(1, "day").toDate();
-        case "weekly":
-          return dayjs(prevDate).subtract(1, "week").toDate();
-        case "monthly": {
-          const { year, month } = getMonthInfo(prevDate, calendarType);
+          return dayjs(prevDateStr, FMT).subtract(1, "day").format(FMT);
 
+        case "weekly":
+          return dayjs(prevDateStr, FMT).subtract(1, "week").format(FMT);
+
+        case "monthly": {
+          // --- Jalali ---
           if (calendarType === "jalali") {
-            const d = dayjs(prevDate).calendar("jalali");
-            const dayOfMonth = d.date();
-            const target = dayjs()
+            const dJ = dayjs(prevDateStr, FMT).calendar("jalali");
+            const dayOfMonth = dJ.date();
+
+            // anchor to prevDate (NOT dayjs())
+            const targetJ = dJ
               .calendar("jalali")
-              .year(year)
-              .month(month - 1)
-              .date(1);
-            const lastDay = target.daysInMonth();
-            return target
+              .date(1) // go to first of current Jalali month
+              .month(dJ.month() - 1); // previous Jalali month
+
+            const lastDay = targetJ.daysInMonth();
+
+            return targetJ
               .date(Math.min(dayOfMonth, lastDay))
               .calendar("gregory")
-              .toDate();
+              .format(FMT);
           }
 
+          // --- Hijri ---
           if (calendarType === "hijri") {
-            const m = moment(prevDate);
+            const m = moment(prevDateStr, FMT);
             const dayOfMonth = m.iDate();
-            const target = moment()
-              .iYear(year)
-              .iMonth(month - 1)
-              .iDate(1);
-            const lastDay = target.endOf("iMonth").iDate();
-            return target.iDate(Math.min(dayOfMonth, lastDay)).toDate();
+
+            // anchor to prevDate (NOT moment())
+            const target = m.clone().iDate(1).subtract(1, "iMonth");
+            const lastDay = target.clone().endOf("iMonth").iDate();
+
+            return target.iDate(Math.min(dayOfMonth, lastDay)).format(FMT);
           }
 
-          // Gregorian
-          return dayjs(prevDate).subtract(1, "month").toDate();
+          // --- Gregorian ---
+          return dayjs(prevDateStr, FMT).subtract(1, "month").format(FMT);
         }
+
         default:
-          return prevDate;
+          return prevDateStr;
       }
     });
   };
+  // const goToPrev = () => {
+  //   setCurrentDate((prevDate) => {
+  //     switch (calendarRangeType) {
+  //       case "daily":
+  //         return dayjs(prevDate).subtract(1, "day").toDate();
+  //       case "weekly":
+  //         return dayjs(prevDate).subtract(1, "week").toDate();
+  //       case "monthly": {
+  //         const { year, month } = getMonthInfo(prevDate, calendarType);
+
+  //         if (calendarType === "jalali") {
+  //           const d = dayjs(prevDate).calendar("jalali");
+  //           const dayOfMonth = d.date();
+  //           const target = dayjs()
+  //             .calendar("jalali")
+  //             .year(year)
+  //             .month(month - 1)
+  //             .date(1);
+  //           const lastDay = target.daysInMonth();
+  //           return target
+  //             .date(Math.min(dayOfMonth, lastDay))
+  //             .calendar("gregory")
+  //             .toDate();
+  //         }
+
+  //         if (calendarType === "hijri") {
+  //           const m = moment(prevDate);
+  //           const dayOfMonth = m.iDate();
+  //           const target = moment()
+  //             .iYear(year)
+  //             .iMonth(month - 1)
+  //             .iDate(1);
+  //           const lastDay = target.endOf("iMonth").iDate();
+  //           return target.iDate(Math.min(dayOfMonth, lastDay)).toDate();
+  //         }
+
+  //         // Gregorian
+  //         return dayjs(prevDate).subtract(1, "month").toDate();
+  //       }
+  //       default:
+  //         return prevDate;
+  //     }
+  //   });
+  // };
 
   const goToToday = () => {
     setCurrentDate(today);
   };
-
+  console.log(getCalendarInfo(currentDate, calendarType));
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col gap-4 w-full">
@@ -178,12 +288,22 @@ export default function CalendarContainer() {
   ) {
     let calendarData;
     const date = convertDateWithTimeZone(currentDate, calendarType);
+    console.log(date);
     switch (calendarRangeType) {
       case "monthly":
+        const calendarInfo = getCalendarInfo(currentDate, calendarType);
+        console.log(generateVisibleRange(currentDate, calendarType));
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
-          selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
+          selectedDaysRangeStr:
+            calendarType === "gregory"
+              ? ` ${date.year}${date.monthName} ${date.day}`
+              : `${date.day} ${date.monthName} ${date.year}`,
+          fullRange:
+            calendarType === "gregory"
+              ? `${calendarInfo.year} ${calendarInfo.monthName} ${calendarInfo.endDay}- ${calendarInfo.year} ${calendarInfo.monthName} ${calendarInfo.startDay}`
+              : `${calendarInfo.startDay} ${date.monthName} ${date.year} - ${calendarInfo.endDay} ${date.monthName} ${date.year}`,
         };
         return { calendarData };
       case "weekly":
@@ -193,16 +313,20 @@ export default function CalendarContainer() {
         );
         const selectedDateRange = {
           start: convertDateWithTimeZone(
-            weeklyVisibleRange.start,
+            convertToGregorianYMD(weeklyVisibleRange.start),
             calendarType
           ),
-          end: convertDateWithTimeZone(weeklyVisibleRange.end, calendarType),
+          end: convertDateWithTimeZone(
+            convertToGregorianYMD(weeklyVisibleRange.end),
+            calendarType
+          ),
         };
 
         calendarData = {
           date: date,
           visibleRange: weeklyVisibleRange,
           selectedDaysRangeStr: `${selectedDateRange.start.day} ${selectedDateRange.start.monthName} ${selectedDateRange.start.year} - ${selectedDateRange.end.day} ${selectedDateRange.end.monthName} ${selectedDateRange.end.year}`,
+          fullRange: `${selectedDateRange.start.day} ${selectedDateRange.start.monthName} ${selectedDateRange.start.year} - ${selectedDateRange.end.day} ${selectedDateRange.end.monthName} ${selectedDateRange.end.year}`,
         };
         return { calendarData };
 
@@ -210,7 +334,11 @@ export default function CalendarContainer() {
         calendarData = {
           date: date,
           selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
-          visibleRange: { start: currentDate, end: currentDate },
+          visibleRange: {
+            start: new Date(currentDate),
+            end: new Date(currentDate),
+          },
+          fullRange: `${date.day} ${date.monthName} ${date.year}`,
         };
         return { calendarData };
       default:
@@ -218,6 +346,7 @@ export default function CalendarContainer() {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
           selectedDaysRangeStr: `${date.day} ${date.monthName} ${date.year}`,
+          fullRange: `${date.day} ${date.monthName} ${date.year}`,
         };
         return { calendarData };
     }

@@ -16,8 +16,12 @@ export interface CalendarHeaderInterface {
   onToday: () => void;
   onActiveTime: (value: CalendarRangeTimeType) => void;
   calendarRangeType: CalendarRangeTimeType;
+  fullRange?: string;
 }
-const CalendarTimeFilteringList: { label: string; value: CalendarRangeTimeType }[] = [
+const CalendarTimeFilteringList: {
+  label: string;
+  value: CalendarRangeTimeType;
+}[] = [
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },
@@ -25,6 +29,7 @@ const CalendarTimeFilteringList: { label: string; value: CalendarRangeTimeType }
 export default function CalendarHeader({
   date,
   selectedDaysRangeStr,
+  fullRange,
   onPrev,
   onNext,
   onToday,
@@ -43,12 +48,17 @@ export default function CalendarHeader({
           </span>
         </div>
 
-        <div className="flex flex-col">
-          <div className="flex">
+        <div className="flex flex-col items-start justify-between">
+          <div className="flex ltr" dir="ltr">
             {" "}
-            <span className=" text-[#181D27] font-primary-bold">{date.monthName}</span>
-            <span className=" text-[#181D27] font-primary-bold">{date.year}</span>
+            <span className=" text-[#181D27] font-primary-bold">
+              {date.monthName}
+            </span>
+            <span className=" text-[#181D27] font-primary-bold">
+              {date.year}
+            </span>
           </div>
+          <div className="text-xs text-[#535862]">{fullRange}</div>
         </div>
       </div>
       <CalendarTimeFiltering

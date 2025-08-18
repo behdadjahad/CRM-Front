@@ -14,9 +14,9 @@ dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
 type Props = {
-  currentDate: Date;
+  currentDate: string;
 
-  visibleRange: any;
+  visibleRange: {start:Date;end:Date};
   calendarType: any;
 };
 
