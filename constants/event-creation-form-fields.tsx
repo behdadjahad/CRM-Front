@@ -1,4 +1,4 @@
-export function createCreationEventForms(leadType: string) {
+export function generateCreationEventForms(leadType: string) {
   switch (leadType) {
     case "phone":
       return {

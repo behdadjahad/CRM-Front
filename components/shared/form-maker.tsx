@@ -23,6 +23,7 @@ import SingleFileInput from "./single-file-input";
 import SingleFilePreview from "./single-file-preview";
 import TagPreview from "./tag-preview";
 import SelectableTagInput from "../form/inputs/SelectableTagInput";
+import TextEditorInput from "./input/TextEditorInput - Copy";
 
 export interface OptionType {
   label: string;
@@ -45,6 +46,7 @@ export interface FieldType {
     | "radio"
     | "slider"
     | "textarea"
+    | "text-editor"
     | "verification"
     | "file"
     | "single-file"
@@ -142,6 +144,8 @@ export default function FormMaker({
           return <SliderInput item={item} form={form} />;
         case "textarea":
           return <TextAreaInput item={item} form={form} />;
+        case "text-editor":
+          return <TextEditorInput item={item} form={form} />;
         case "verification":
           return <VerificationInput item={item} form={form} />;
         case "file":

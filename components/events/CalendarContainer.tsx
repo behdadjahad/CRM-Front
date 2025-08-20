@@ -17,6 +17,7 @@ import {
   getMonthInfo,
   getToday,
   getTodayInGregorianYMD,
+  revertDateWithTimeZone,
 } from "@/lib/calendar";
 import MonthlyCalendar from "./MonthlyCalendar";
 import WeeklyCalendar from "./WeeklyCalendar";
@@ -33,7 +34,18 @@ dayjs.extend(jalaliday);
 dayjs.locale("fa"); // Set
 
 dayjs.extend(timezone);
+import jalaali from "jalaali-js";
 
+const year = 1404;
+const result = jalaali.jalCal(year);
+
+if (result.leap === 0) {
+  console.log(`${year} is a leap year.`);
+  console.log(result.leap);
+} else {
+  console.log(`${year} is not a leap year.`);
+  console.log(result.leap);
+}
 export default function CalendarContainer() {
   // const today = getToday();
   const today = getTodayInGregorianYMD();
@@ -67,17 +79,45 @@ export default function CalendarContainer() {
 
         case "monthly": {
           if (calendarType === "jalali") {
-            const d = dayjs(prevDate, "YYYY-MM-DD").calendar("jalali");
-            const dayOfMonth = d.date();
+            const {
+              year: targetYear,
+              month: targetMonth,
+              day: targetday,
+            } = convertDateWithTimeZone(prevDate, calendarType);
+            const nextTarget =
+              targetMonth === 12
+                ? { year: targetYear + 1, month: 1, day: targetday }
+                : { year: targetYear, month: targetMonth + 1, day: targetday };
+            const nextTargetDate = revertDateWithTimeZone(
+              nextTarget,
+              calendarType
+            );
+            return nextTargetDate;
 
-            // anchor on prevDate instead of dayjs()
-            const target = d.clone().add(1, "month").date(1);
+            // const d = dayjs(prevDate, "YYYY-MM-DD").calendar("jalali");
+            // const dayOfMonth = d.date();
 
-            const lastDay = target.daysInMonth();
-            return target
-              .date(Math.min(dayOfMonth, lastDay))
-              .calendar("gregory")
-              .format("YYYY-MM-DD");
+            // // anchor on prevDate instead of dayjs()
+            // const target = d.clone().add(1, "month").date(1);
+
+            // const lastDay = target.daysInMonth();
+            // console.log(lastDay);
+
+            // console.log(targetYear, targetMonth, targetday);
+            // console.log(dayOfMonth);
+            // const isLeapYear =
+            //   jalaali.jalCal(targetYear).leap === 0 || targetMonth === 12;
+            // console.log(isLeapYear);
+            // console.log(isLeapYear);
+            // return target
+            //   .date(
+            //     Math.min(
+            //       isLeapYear ? dayOfMonth + 1 : dayOfMonth,
+            //       isLeapYear ? lastDay + 1 : lastDay
+            //     )
+            //   )
+            //   .calendar("gregory")
+            //   .format("YYYY-MM-DD");
           }
 
           if (calendarType === "hijri") {
@@ -148,6 +188,8 @@ export default function CalendarContainer() {
   //     }
   //   });
   // };
+  console.log("currentDate", currentDate);
+  console.log(generateVisibleRange("2025-03-20", "jalali"));
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -179,20 +221,49 @@ export default function CalendarContainer() {
           //     .format(FMT);
           // }
           if (calendarType === "jalali") {
-            const dJ = dayjs(prevDateStr, FMT).calendar("jalali");
-            const dayOfMonth = dJ.date();
+            const {
+              year: targetYear,
+              month: targetMonth,
+              day: targetday,
+            } = convertDateWithTimeZone(prevDateStr, calendarType);
+            const prevTarget =
+              targetMonth === 1
+                ? { year: targetYear -1 , month: 12, day: targetday }
+                : { year: targetYear, month: targetMonth -1 , day: targetday };
+            const prevTargetDate = revertDateWithTimeZone(
+              prevTarget,
+              calendarType
+            );
+            return prevTargetDate;
+            // const dJ = dayjs(prevDateStr, FMT).calendar("jalali");
+            // console.log(dJ);
+            // const dayOfMonth = dJ.date();
+            // console.log(dayOfMonth);
+            // const targetJ = dJ
+            //   .calendar("jalali")
+            //   .date(1) // go to first of current Jalali month
+            //   .subtract(1, "month"); // safe way to go to previous Jalali month
 
-            const targetJ = dJ
-              .calendar("jalali")
-              .date(1) // go to first of current Jalali month
-              .subtract(1, "month"); // safe way to go to previous Jalali month
+            // const lastDay = targetJ.daysInMonth();
+            // //check if the jalali year is leap year
+            // const {
+            //   year: targetYear,
+            //   month: targetMonth,
+            //   day: targetday,
+            // } = convertDateWithTimeZone(prevDateStr, calendarType);
 
-            const lastDay = targetJ.daysInMonth();
+            // const isLeapYear =
+            //   jalaali.jalCal(targetYear - 1).leap === 0 && targetMonth === 1;
 
-            return targetJ
-              .date(Math.min(dayOfMonth, lastDay))
-              .calendar("gregory")
-              .format(FMT);
+            // return targetJ
+            //   .date(
+            //     Math.min(
+            //       isLeapYear ? dayOfMonth - 1 : dayOfMonth,
+            //       isLeapYear ? lastDay + 1 : lastDay
+            //     )
+            //   )
+            //   .calendar("gregory")
+            //   .format(FMT);
           }
           // --- Hijri ---
           if (calendarType === "hijri") {
@@ -215,6 +286,7 @@ export default function CalendarContainer() {
       }
     });
   };
+
   // const goToPrev = () => {
   //   setCurrentDate((prevDate) => {
   //     switch (calendarRangeType) {

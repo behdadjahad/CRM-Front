@@ -4,6 +4,7 @@ import moment from "moment-hijri";
 
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { G } from "@react-pdf/renderer";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -207,6 +208,39 @@ export function convertDateWithTimeZone(
 
   throw new Error("Unsupported calendar type");
 }
+export function revertDateWithTimeZone(
+  dateObj: { day: number; month: number; year: number },
+  calendarType: "jalali" | "hijri" | "gregory"
+): string {
+  if (calendarType === "jalali") {
+    const gDate = jalaali.toGregorian(dateObj.year, dateObj.month, dateObj.day);
+    return dayjs(
+      `${gDate.gy}-${String(gDate.gm).padStart(2, "0")}-${String(
+        gDate.gd
+      ).padStart(2, "0")}`,
+      "YYYY-MM-DD",
+      true
+    ).format("YYYY-MM-DD");
+  }
+
+  if (calendarType === "hijri") {
+    const m = moment(
+      `${dateObj.year}-${String(dateObj.month).padStart(2, "0")}-${String(
+        dateObj.day
+      ).padStart(2, "0")}`,
+      "iYYYY-iM-iD"
+    );
+    return m.format("YYYY-MM-DD"); // convert Hijri to Gregorian
+  }
+
+  if (calendarType === "gregory") {
+    return `${dateObj.year}-${String(dateObj.month).padStart(2, "0")}-${String(
+      dateObj.day
+    ).padStart(2, "0")}`;
+  }
+
+  throw new Error("Unsupported calendar type");
+}
 
 // export function convertDateWithTimeZone(
 //   currentDate: Date,
@@ -253,28 +287,68 @@ export function generateVisibleRange(
   dateString: string,
   calendarType: "jalali" | "hijri" | "gregory"
 ): { start: Date; end: Date } {
-  if (calendarType === "jalali") {
-    const date = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
-    const year = date.year();
-    const month = date.month(); // 0-based
+  console.log(dateString);
+  // if (calendarType === "jalali") {
+  //   const date = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
+  //   const year = date.year();
+  //   const month = date.month(); // 0-based
+  //   console.log(year,month)
+  //   // Start at 1st day of Jalali month
+  //   let start = dayjs().calendar("jalali").year(year).month(month).date(1);
+  //   console.log(start, "start");
+  //   while (start.day() !== 6) {
+  //     start = start.subtract(1, "day");
+  //   }
 
-    // Start at 1st day of Jalali month
-    let start = dayjs().calendar("jalali").year(year).month(month).date(1);
+  //   // End at last day of Jalali month
+  //   let end = dayjs().calendar("jalali").year(year).month(month).endOf("month");
+  //   while (end.day() !== 5) {
+  //     end = end.add(1, "day");
+  //   }
+
+  //   return {
+  //     start: start.calendar("gregory").toDate(),
+  //     end: end.calendar("gregory").toDate(),
+  //   };
+  // }
+  if (calendarType === "jalali") {
+    const input = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
+    const { year: year, month: month } = convertDateWithTimeZone(dateString, calendarType);
+    console.log(year,month)
+    console.log(input)
+    // const year = input.year();
+    // const month = input.month();
+    // Start at the 1st of this Jalali month
+    let start = input
+      .clone()
+      .calendar("jalali")
+      .year(year)
+      .month(month-1)
+      .date(1);
+    // // Go back to Saturday
     while (start.day() !== 6) {
       start = start.subtract(1, "day");
     }
-
-    // End at last day of Jalali month
-    let end = dayjs().calendar("jalali").year(year).month(month).endOf("month");
+    // // End at the last day of this Jalali month
+    let end = input
+      .clone()
+      .calendar("jalali")
+      .year(year)
+      .month(month-1)
+      .endOf("month");
+    // Go forward to Friday
     while (end.day() !== 5) {
       end = end.add(1, "day");
     }
-
     return {
       start: start.calendar("gregory").toDate(),
       end: end.calendar("gregory").toDate(),
     };
   }
+
+  // You can keep your existing hijri and gregory logic
+
+  // ... keep hijri and gregory cases the same
 
   if (calendarType === "hijri") {
     const m = moment(dateString, "YYYY-MM-DD");
@@ -636,7 +710,7 @@ export function getMonthInfo(
 //     };
 //   }
 
-  // Gregorian
+// Gregorian
 //   const g = dayjs(dateString, "YYYY-MM-DD");
 //   return {
 //     year: g.year(),

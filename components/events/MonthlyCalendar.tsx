@@ -31,7 +31,7 @@ export default function MonthlyCalendar({
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
-
+  console.log(visibleRange);
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin],
     initialView: "customMonth",
@@ -51,11 +51,13 @@ export default function MonthlyCalendar({
     events: [{ title: "Test Event", start: new Date() }],
 
     dayCellContent: (arg) => {
+      console.log(convertToGregorianYMD(arg.date));
       const {
         year: currentYear,
         month: currentMonth,
         day: currentDay,
       } = convertDateWithTimeZone(currentDate, calendarType);
+      console.log(convertDateWithTimeZone("2025-03-20", "jalali"));
       const {
         year: cellYear,
         month: cellMonth,
@@ -65,7 +67,6 @@ export default function MonthlyCalendar({
         calendarType
       );
 
-      const dayNumber = getDayNumber(arg.date, calendarType);
       const isCurrentDay =
         currentYear === cellYear &&
         currentMonth === cellMonth &&
@@ -74,7 +75,7 @@ export default function MonthlyCalendar({
       return {
         html: `<div class=" ${
           isCurrentDay ? "current-day" : ""
-        }">${dayNumber}</div>`,
+        }">${cellDay}</div>`,
       };
     },
 
@@ -99,9 +100,6 @@ export default function MonthlyCalendar({
         datesSet={handleDatesSet}
         dayHeaderClassNames={() => ["my-header-label"]}
         dayCellClassNames={(arg) => {
-          console.log(arg.date, "dayCellClassNames");
-          console.log(convertToGregorianYMD(arg.date));
-          console.log(dayjs(arg.date).format("YYYY-MM-DD"));
           const { year: cellYear, month: cellMonth } = getMonthInfo(
             convertToGregorianYMD(arg.date),
             calendarType

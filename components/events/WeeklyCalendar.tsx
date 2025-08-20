@@ -73,13 +73,13 @@ export default function WeeklyCalendar({
         currentYear === cellYear &&
         currentMonth === cellMonth &&
         currentDay === cellDay;
-      const dayNumber = getDayNumber(arg.date, calendarType);
+
       const weekdayLabel = getWeekdayLabel(arg.date, calendarType);
 
       return {
         html: `<div class="flex-container"><span class=" ${
           isCurrentDay ? "current-day" : ""
-        }">${dayNumber}</span> <span>${weekdayLabel}</span></div>`,
+        }">${cellDay}</span> <span>${weekdayLabel}</span></div>`,
       };
     },
   };
