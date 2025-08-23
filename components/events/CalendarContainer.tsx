@@ -84,10 +84,18 @@ export default function CalendarContainer() {
               month: targetMonth,
               day: targetday,
             } = convertDateWithTimeZone(prevDate, calendarType);
+            const isLeapYear = jalaali.jalCal(targetYear).leap === 0;
             const nextTarget =
               targetMonth === 12
                 ? { year: targetYear + 1, month: 1, day: targetday }
-                : { year: targetYear, month: targetMonth + 1, day: targetday };
+                : {
+                    year: targetYear,
+                    month: targetMonth + 1,
+                    day:
+                      targetMonth === 11 && !isLeapYear && targetday === 30
+                        ? targetday - 1
+                        : targetday,
+                  };
             const nextTargetDate = revertDateWithTimeZone(
               nextTarget,
               calendarType
@@ -226,10 +234,18 @@ export default function CalendarContainer() {
               month: targetMonth,
               day: targetday,
             } = convertDateWithTimeZone(prevDateStr, calendarType);
+            const isLeapYear = jalaali.jalCal(targetYear - 1).leap === 0;
             const prevTarget =
               targetMonth === 1
-                ? { year: targetYear -1 , month: 12, day: targetday }
-                : { year: targetYear, month: targetMonth -1 , day: targetday };
+                ? {
+                    year: targetYear - 1,
+                    month: 12,
+                    day:
+                      !isLeapYear && targetday === 30
+                        ? targetday - 1
+                        : targetday,
+                  }
+                : { year: targetYear, month: targetMonth - 1, day: targetday };
             const prevTargetDate = revertDateWithTimeZone(
               prevTarget,
               calendarType
@@ -350,6 +366,7 @@ export default function CalendarContainer() {
           calendarRangeType={calendarRangeType}
         />
         <div className="w-full">
+       {/* <div className="col-span-3"> */}
           {calendarRangeType === "monthly" ? (
             <MonthlyCalendar
               currentDate={currentDate}
@@ -366,10 +383,12 @@ export default function CalendarContainer() {
             <DailyCalendar currentDate={currentDate} />
           ) : (
             <></>
-          )}
+            )}
+            </div>
+          {/* <div className="col-span-1">تاریخچه</div> */}
         </div>
       </div>
-    </div>
+    // </div>
   );
 
   function generateCalendarData(

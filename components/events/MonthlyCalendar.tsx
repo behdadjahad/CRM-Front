@@ -48,8 +48,19 @@ export default function MonthlyCalendar({
       },
     },
 
-    events: [{ title: "Test Event", start: new Date() }],
-
+    events: [
+      { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},
+    ],
+    eventContent: (arg) => {
+      // Extract time using dayjs or built-in formatter
+      console.log(arg.event.start)
+      const timeLabel = dayjs(arg.event.start).format("HH:mm");
+       console.log(timeLabel)
+      return {
+        html: `<div class="fc-event-time">${timeLabel}</div>
+           <div class="fc-event-title">${arg.event.title}</div>`,
+      };
+    },
     dayCellContent: (arg) => {
       console.log(convertToGregorianYMD(arg.date));
       const {

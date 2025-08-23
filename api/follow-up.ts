@@ -1,8 +1,8 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function getfollowUpTypes() {
+export async function getLaedfollowUpTypes() {
   try {
-    const result = await fetchService("follow-up-type");
+    const result = await fetchService("lead-follow-up-type");
 
     return result;
   } catch {}

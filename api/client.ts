@@ -1,6 +1,6 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function createClient(data: any, id: number) {
+export async function createClient(data: any, id?: number) {
   try {
     const result = await fetchService("person", {
       method: "POST",

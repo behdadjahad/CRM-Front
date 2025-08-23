@@ -1,34 +1,84 @@
+// {
+//   "type": "SMS",
+//   "baseJson":
+//     {
+//   "fields": [
+//     {
+//       "key": "smsContent",
+//       "component": "textarea",
+//       "placeholder": "متن پیامک خود را بنویسید",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full"
+//     },
+//     {
+//       "key": "smsDate",
+//       "dependantKey": "smsDateType",
+//       "component": "date-time",
+//       "placeholder": "تاریخ وزمان",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full md:w-1/2"
+//     },
+//     {
+//       "key": "smsSubject",
+//       "component": "input",
+//       "placeholder": "موضوع پیامک",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full md:w-1/2"
+//     },
+//     {
+//       "key": "userResponsible",
+//       "component": "input",
+//       "placeholder": "مسئول پیگیری",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full md:w-1/2"
+//     },
+//     {
+//       "key": "smsCenter",
+//       "component": "Select",
+//       "placeholder": "انتخاب شماره",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full md:w-1/2",
+//       "options": []
+//     },
+//     {
+//       "key": "description",
+//       "component": "textarea",
+//       "placeholder": "توضیحات",
+//       "type": "text",
+//       "floating": true,
+//       "className": "w-full"
+
+//     }
+//   ],
+//   "initialValues": {
+//     "description": "",
+//     "smsCenter": "",
+//     "userResponsible": "",
+//     "smsSubject": "",
+//     "smsDate": "",
+//     "smsDateType": "",
+//     "smsContent": ""
+//   }
+// }}
 {
-  "type": "SMS",
-  "baseJson": 
+  "type": "CALL",
+  "baseJson":
     {
   "fields": [
     {
-      "key": "smsContent",
-      "component": "textarea",
-      "placeholder": "متن پیامک خود را بنویسید",
-      "type": "text",
-      "floating": true,
-      "className": "w-full"
-    },
-    {
-      "key": "smsDate",
-      "dependantKey": "smsDateType",
-      "component": "date-time",
-      "placeholder": "تاریخ وزمان",
-      "type": "text",
-      "floating": true,
-      "className": "w-full md:w-1/2"
-    },
-    {
-      "key": "smsSubject",
+      "key": "subject",
       "component": "input",
-      "placeholder": "موضوع پیامک",
+      "placeholder": "موضوع تماس",
       "type": "text",
       "floating": true,
       "className": "w-full md:w-1/2"
     },
-    {
+       {
       "key": "userResponsible",
       "component": "input",
       "placeholder": "مسئول پیگیری",
@@ -37,32 +87,105 @@
       "className": "w-full md:w-1/2"
     },
     {
-      "key": "smsCenter",
-      "component": "Select",
-      "placeholder": "انتخاب شماره",
+      "key": "callDate",
+      "dependantKey": "callDateType",
+      "component": "date-time",
+      "placeholder": "تاریخ وزمان",
       "type": "text",
       "floating": true,
-      "className": "w-full md:w-1/2",
-      "options": []
+      "className": "w-full md:w-1/2"
     },
     {
-      "key": "description",
-      "component": "textarea",
-      "placeholder": "توضیحات",
+      "key": "callTime",
+      "component": "time",
+      "placeholder": "مدت تماس",
       "type": "text",
       "floating": true,
-      "className": "w-full"
-
-      
+      "className": "w-full md:w-1/2"
     }
+
   ],
   "initialValues": {
-    "description": "",
-    "smsCenter": "",
+
+    "callTime": "",
     "userResponsible": "",
-    "smsSubject": "",
-    "smsDate": "",
-    "smsDateType": "",
-    "smsContent": ""
+    "callDate": ""
+
+
   }
 }}
+{
+  "type": "VOIP",
+  "baseJson": {
+    "fields": [
+      {
+        "key": "callTitle",
+        "component": "input",
+        "placeholder": "عنوان تماس",
+        "type": "text",
+        "floating": true,
+        "className": "w-full md:w-1/2"
+      },
+      {
+        "key": "callStartDateTime",
+        "dependantKey": "callStartDateType",
+        "component": "date-time",
+        "placeholder": "تاریخ و زمان شروع",
+        "type": "text",
+        "floating": true,
+        "className": "w-full md:w-1/2"
+      },
+      {
+        "key": "callTime",
+        "component": "time",
+        "placeholder": "مدت تماس",
+        "type": "text",
+        "floating": true,
+        "className": "w-full"
+      },
+
+      {
+        "key": "userResponsible",
+        "component": "input",
+        "placeholder": "مسئول پیگیری",
+        "type": "text",
+        "floating": true,
+        "className": "w-full md:w-1/2"
+      },
+      {
+        "key": "callStatus",
+        "component": "Select",
+        "placeholder": "وضعیت تماس",
+        "type": "text",
+        "floating": true,
+        "className": "w-full md:w-1/2"
+      },
+      {
+        "key": "description",
+        "component": "textarea",
+        "placeholder": "توضیحات",
+        "type": "text",
+        "floating": true,
+        "className": "w-full"
+      },
+      {
+        "key": "callRecord",
+        "component": "input",
+        "placeholder": "ضبط صدا",
+        "type": "text",
+        "floating": true,
+        "className": "w-full"
+      }
+    ],
+    "initialValues": {
+      "callTitle": "",
+      "callStartDateTime": "",
+      "callTime": "",
+      "userResponsible": "",
+      "callStatus": "",
+      "description": "",
+      "callRecord": ""
+      
+    }
+  }
+}

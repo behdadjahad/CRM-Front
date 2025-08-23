@@ -13,22 +13,31 @@ import QuillEditor from "@/components/shared/input/TextEditorInput";
 import { generateCreationEventForms } from "@/constants/event-creation-form-fields";
 import { useFormik } from "formik";
 import FormMaker from "@/components/shared/form-maker";
-import { useQuery } from "@tanstack/react-query";
-import { getfollowUpTypes } from "@/api/follow-up";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getLaedfollowUpTypes } from "@/api/follow-up";
+import { createClient } from "@/api/client";
+import CustomerCard from "@/components/share/customer/CustomerCard";
+import { addEvent } from "@/api/event";
+import { convertDateTimeToGregorian } from "@/lib/date";
 
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [customer, setCustomer] = useState<CustomerDataInterface>();
-  const [content, setContent] = useState("");
+  const [customers, setCustomers] = useState<CustomerDataInterface[]>([]);
+
+  const [fields, setFields] = useState([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
-  }>({ label: "تماس", value: "phone" });
+  }>({ label: "تماس", value: "CALL" });
 
   const { LeadContactTypeList } = getData(activeLeadContactType.value);
   const formik = useFormik({
     initialValues: {
-      emailContent: "",
+      description: "",
+      isAutomatic: false,
+      dateTime: "",
+      dateTimeType: "",
+      subject: "",
     },
 
     // validationSchema: Yup.object({
@@ -36,14 +45,83 @@ export default function EventCreationContainer() {
     // }),
     onSubmit: () => {},
   });
+
   const { data: leadFormsData } = useQuery({
-    queryKey: ["leadFormsData", activeLeadContactType.value],
-    queryFn: async () => await getfollowUpTypes(),
-    enabled: !!activeLeadContactType.value,
+    queryKey: ["leadFormsData"],
+    queryFn: async () => await getLaedfollowUpTypes(),
   });
   useEffect(() => {
-    console.log(leadFormsData?.data);
-  }, [leadFormsData]);
+    console.log(leadFormsData);
+    if (leadFormsData?.data?.length > 0) {
+      console.log(leadFormsData?.data);
+      const fields = returnFields(
+        activeLeadContactType?.value,
+        leadFormsData?.data
+      );
+      setFields(fields);
+    }
+  }, [leadFormsData, activeLeadContactType]);
+
+  function returnFields(leadType: string, data: any[]) {
+    const formFields = data.find((item: any) => item?.type === leadType)
+      ?.baseJson.fields;
+    return formFields;
+  }
+  const { mutate: addPersonInfoHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return createClient(data);
+    },
+    onSuccess: (response) => {
+      if (response.status === "success") {
+        const data = response?.data;
+        const customer: CustomerDataInterface = {
+          id: response?.data?.customerId,
+          email: "",
+          phone: "",
+          firstName: data?.firstName,
+          lastName: data?.lastName,
+          idNumber: data?.idNumber,
+        };
+        setCustomers([...customers, customer]);
+      }
+    },
+  });
+  const { mutate: addEventHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return addEvent(data);
+    },
+    onSuccess: () => {},
+  });
+  console.log(customers);
+  function addPersonInfo(personData: CustomerDataInterface) {
+    const data = {
+      firstName: personData.firstName,
+      lastName: personData.lastName,
+      idNumber: personData.idNumber,
+      isMainCustomer: false,
+    };
+    addPersonInfoHandler(data);
+  }
+  function SubmitEvents() {
+    const customerIds = customers.map((customer) => customer?.id);
+    const data = {
+      isAutomatic: true,
+      subject: formik.values.subject,
+      body: formik.values.description,
+      informationJson: {
+        additionalProp1: {},
+      },
+      eventAt: convertDateTimeToGregorian(
+        formik.values.dateTime,
+        formik.values.dateTimeType
+      ),
+      // leadId: 1,
+      customerId: customerIds?.[0],
+      userResponsibleId: 1,
+      // followUpTypeId: 1
+    };
+    addEventHandler(data);
+  }
   return (
     <>
       <Button
@@ -90,53 +168,73 @@ export default function EventCreationContainer() {
         </div>
         <FormMaker
           form={formik}
+          // fields={[
+          //   {
+          //     key: "smsContent",
+          //     component: "textarea",
+          //     placeholder: "متن پیامک خود را بنویسید",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full",
+          //   },
+          //   {
+          //     key: "smsDate",
+          //     dependantKey: "smsDateType",
+          //     component: "date-time",
+          //     placeholder: "تاریخ وزمان",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full md:w-1/2",
+          //   },
+          //   {
+          //     key: "smsSubject",
+          //     component: "input",
+          //     placeholder: "موضوع پیامک",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full md:w-1/2",
+          //   },
+          //   {
+          //     key: "userResponsible",
+          //     component: "input",
+          //     placeholder: "مسئول پیگیری",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full md:w-1/2",
+          //   },
+          //   {
+          //     key: "smsCenter",
+          //     component: "Select",
+          //     placeholder: "انتخاب شماره",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full md:w-1/2",
+          //     options: [],
+          //   },
+          //   {
+          //     key: "description",
+          //     component: "textarea",
+          //     placeholder: "توضیحات",
+          //     type: "text",
+          //     floating: true,
+          //     className: "w-full",
+          //   },
+          // ]}
+          // fields={fields}
           fields={[
+            ...fields,
             {
-              key: "smsContent",
+              key: "description",
               component: "textarea",
-              placeholder: "متن پیامک خود را بنویسید",
+              placeholder: "توضیحات",
               type: "text",
               floating: true,
               className: "w-full",
             },
             {
-              key: "smsDate",
-              dependantKey: "smsDateType",
-              component: "date-time",
-              placeholder: "تاریخ وزمان",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/2",
-            },
-            {
-              key: "smsSubject",
-              component: "input",
-              placeholder: "موضوع پیامک",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/2",
-            },
-            {
-              key: "userResponsible",
-              component: "input",
-              placeholder: "مسئول پیگیری",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/2",
-            },
-            {
-              key: "smsCenter",
-              component: "Select",
-              placeholder: "انتخاب شماره",
-              type: "text",
-              floating: true,
-              className: "w-full md:w-1/2",
-              options: [],
-            },
-            {
-              key: "description",
-              component: "textarea",
-              placeholder: "توضیحات",
+              key: "isAutomatic",
+              component: "toggle",
+              label: "ارسال خودکار",
               type: "text",
               floating: true,
               className: "w-full",
@@ -147,20 +245,25 @@ export default function EventCreationContainer() {
         <AddCustomerToFeatureContainer
           onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
             console.log(selectedCustomer);
-            setCustomer(selectedCustomer);
+            // setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {
-            setCustomer(customerData);
+            // setCustomer(customerData);
+            addPersonInfo(customerData);
           }}
           multiSelect={true}
         />
-        {/* <QuillEditor value={content} onChange={setContent} /> */}
-        {/* <TextEditorInput /> */}
+        <div className="p-3 flex flex-col gap-2">
+          {customers?.map((customer: CustomerDataInterface) => (
+            <CustomerCard {...customer} key={customer?.id} />
+          ))}
+        </div>
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
             onClick={() => {
               setOpenModal(false);
+              SubmitEvents();
             }}
           >
             ثبت
@@ -182,28 +285,28 @@ export default function EventCreationContainer() {
     const LeadContactTypeList: LeadContactTypeContainerInterface["list"] = [
       {
         label: "تماس",
-        value: "phone",
+        value: "CALL",
         icon: "/icons/colored-phone-icon.png",
         activeClassName: "border border-[#EF26B2]",
         className: "text-[#C11574] bg-[#FDF2FA]",
       },
       {
         label: "پیامک",
-        value: "sms",
+        value: "SMS",
         icon: "/icons/colored-sms-icon.png",
         activeClassName: "border border-[#039855]",
         className: "text-[#087443] bg-[#EDFCF2]",
       },
       {
         label: "ایمیل",
-        value: "email",
+        value: "EMAIL",
         icon: "/icons/colored-email-icon.png",
         activeClassName: "border border-[#1C68DA]",
         className: "text-[#175CD3] bg-[#EFF8FF]",
       },
       {
         label: "جلسه",
-        value: "meeting",
+        value: "MEET",
         icon: "/icons/colored-meeting-icon.png",
         activeClassName: "border border-[#7500FE]",
         className: "text-[#6941C6] bg-[#F9F5FF]",

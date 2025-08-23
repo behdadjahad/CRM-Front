@@ -20,7 +20,8 @@ export default function DailyCalendar({ currentDate }: Props) {
     direction: "rtl",
     headerToolbar: false,
     footerToolbar: false,
-    slotDuration: "00:30:00", // hourly slots
+    slotDuration: "00:30:00",
+    allDaySlot: false,/// hourly slots
     slotLabelFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -33,7 +34,8 @@ export default function DailyCalendar({ currentDate }: Props) {
       },
     },
     dayHeaders: false,
-    events: [{ title: "Test Event", start: new Date() }],
+    // events: [{ title: "Test Event", start: new Date() }],
+     events: [{ title: "Test Event", start: "2025-08-20T23:30:00" }],
   };
 
   return <FullCalendar {...calendarOptions} />;

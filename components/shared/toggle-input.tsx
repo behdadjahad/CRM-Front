@@ -11,8 +11,6 @@ export default function ToggleInput({
 }) {
   return (
     <div className="flex items-center justify-start cursor-pointer gap-4 w-full">
-      <span className="text-subtitle">{item.label}</span>
-
       <div
         className={cn(
           "w-10 h-5 transition-all duration-200 bg-subtitle rounded-full relative",
@@ -32,6 +30,7 @@ export default function ToggleInput({
           )}
         />
       </div>
+      <span className="text-foreground">{item.label}</span>
     </div>
   );
 }

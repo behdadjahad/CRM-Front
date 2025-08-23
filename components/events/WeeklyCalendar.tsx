@@ -40,7 +40,8 @@ export default function WeeklyCalendar({
     direction: calendarType === "gregory" ? "ltr" : "rtl",
     headerToolbar: false,
     footerToolbar: false,
-    slotDuration: "00:30:00", // hourly slots
+    slotDuration: "00:30:00",
+    allDaySlot: false,// hourly slots
     slotLabelFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -53,7 +54,7 @@ export default function WeeklyCalendar({
       },
     },
 
-    events: [{ title: "Test Event", start: new Date() }],
+    events: [    { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},],
     dayHeaderContent: (arg) => {
       const {
         year: currentYear,
