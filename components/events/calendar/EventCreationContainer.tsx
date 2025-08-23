@@ -66,7 +66,7 @@ export default function EventCreationContainer() {
       setFields(fields);
     }
   }, [leadFormsData, activeLeadContactType]);
-
+console.log(fields)
   function returnFields(leadType: string, data: any[]) {
     const formFields = data.find((item: any) => item?.type === leadType)
       ?.baseJson.fields;

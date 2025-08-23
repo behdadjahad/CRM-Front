@@ -57,7 +57,7 @@ export default function CalendarContainer({
 }: CalendarContainerInterface) {
   console.log(data);
   const today = getTodayInGregorianYMD();
-
+  const [selectedDate, setSelectedDate] = useState<any>(null);
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -362,7 +362,7 @@ export default function CalendarContainer({
   console.log(getCalendarInfo(currentDate, calendarType));
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
-      <div className="border border-[#E9EAEB] rounded-lg flex flex-col gap-4 w-full">
+      <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
         <CalendarHeader
           onActiveCalendarType={(value) => setCalendarType(value)}
           calendarType={calendarType}
@@ -373,14 +373,18 @@ export default function CalendarContainer({
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        <div className="w-full">
-          {/* <div className="col-span-3"> */}
+        <div className="bg-[#F2F4F7] p-3">header</div>
+        <div className={`w-full ${selectedDate ? "grid grid-cols-4":""}`}>
+          <div className="col-span-3">
           {calendarRangeType === "monthly" ? (
             <MonthlyCalendar
               currentDate={currentDate}
               visibleRange={calendarData.visibleRange}
               calendarType={calendarType}
               events={data}
+              onSelectDate={(date: string) => {
+                setSelectedDate(date);
+              }}
             />
           ) : calendarRangeType === "weekly" ? (
             <WeeklyCalendar
@@ -390,15 +394,17 @@ export default function CalendarContainer({
               events={data}
             />
           ) : calendarRangeType === "daily" ? (
-                <DailyCalendar currentDate={currentDate} events={data} />
+            <DailyCalendar currentDate={currentDate} events={data} />
           ) : (
             <></>
           )}
         </div>
-        {/* <div className="col-span-1">تاریخچه</div> */}
+          {selectedDate && <div className="col-span-1 bg-card p-6">
+            <h2>تاریخچه رویدادها</h2>
+        </div> }
       </div>
     </div>
-    // </div>
+   </div>
   );
 
   function generateCalendarData(

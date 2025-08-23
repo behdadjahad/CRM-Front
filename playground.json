@@ -65,6 +65,57 @@
 //     "smsContent": ""
 //   }
 // }}
+ {  "type": "SMS",
+      "baseJson": {
+        "fields": [
+          {
+            "key": "smsContent",
+            "type": "text",
+            "floating": true,
+            "className": "w-full",
+            "component": "textarea",
+            "placeholder": "متن پیامک خود را بنویسید"
+          },
+          {
+            "key": "dateTime",
+            "type": "text",
+            "floating": true,
+            "className": "w-full md:w-1/2",
+            "component": "date-time",
+            "placeholder": "تاریخ وزمان",
+            "dependantKey": "dateTimeType"
+          },
+          {
+            "key": "subject",
+            "type": "text",
+            "floating": true,
+            "className": "w-full md:w-1/2",
+            "component": "input",
+            "placeholder": "موضوع پیامک"
+          },
+    
+          {
+            "key": "smsCenter",
+            "type": "text",
+            "options": [],
+            "floating": true,
+            "className": "w-full md:w-1/2",
+            "component": "Select",
+            "placeholder": "انتخاب شماره"
+          }
+       
+        ],
+        "initialValues": {
+       
+          "smsCenter": "",
+          "smsContent": ""
+    
+     
+        
+      
+        }
+      }
+    }
 {
   "type": "CALL",
   "baseJson":

@@ -7,6 +7,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
+import interactionPlugin from "@fullcalendar/interaction";
 import {
   convertDateWithTimeZone,
   convertToGregorianYMD,
@@ -23,19 +24,21 @@ type Props = {
   visibleRange: { start: Date; end: Date };
   calendarType: "jalali" | "hijri" | "gregory";
   events: { title: string; start: string }[];
+  onSelectDate: (date: string) => void;
 };
 export default function MonthlyCalendar({
   currentDate,
   visibleRange,
   calendarType,
   events,
+  onSelectDate,
 }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
   console.log(visibleRange);
   const calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin],
+    plugins: [dayGridPlugin, interactionPlugin],
     initialView: "customMonth",
     firstDay: 6,
     direction: calendarType === "gregory" ? "ltr" : "rtl",
@@ -49,7 +52,10 @@ export default function MonthlyCalendar({
         visibleRange: visibleRange,
       },
     },
-
+    selectable: true,
+    select: (arg) => {
+      onSelectDate(convertToGregorianYMD(arg.start));
+    },
     // events: [
     //   { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},
     // ],
