@@ -6,7 +6,7 @@ export interface LeadContactTypeCardInterface {
   className?: string;
   activeClassName?: string;
   onActiveItem: (label: string, value: string) => void;
-  icon: string;
+  icon?: string;
   activeItem: { value: string; label: string };
 }
 
@@ -30,13 +30,13 @@ export default function LeadContactTypeCard({
         onActiveItem(label, value);
       }}
     >
-      <Image
+    {icon && <Image
         src={icon}
         alt={"تصویر"}
         width={1024}
         height={1024}
         className="h-3 w-3"
-      />
+      />}  
       <div>{label}</div>
     </div>
   );

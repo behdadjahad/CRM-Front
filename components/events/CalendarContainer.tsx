@@ -36,6 +36,10 @@ dayjs.locale("fa"); // Set
 dayjs.extend(timezone);
 import jalaali from "jalaali-js";
 
+import LeadContactTypeContainer, {
+  LeadContactTypeContainerInterface,
+} from "./lead/LeadContactTypeContainer";
+
 const year = 1404;
 const result = jalaali.jalCal(year);
 
@@ -55,7 +59,10 @@ export interface CalendarContainerInterface {
 export default function CalendarContainer({
   data,
 }: CalendarContainerInterface) {
-  console.log(data);
+  const [activeLeadContactType, setActiveLeadContactType] = useState<{
+    label: string;
+    value: string;
+  }>({ label: "تماس", value: "CALL" });
   const today = getTodayInGregorianYMD();
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [currentDate, setCurrentDate] = useState(today);
@@ -69,7 +76,7 @@ export default function CalendarContainer({
     calendarRangeType,
     calendarType
   );
-
+  const { LeadContactTypeList } = getData();
   // Go to previous day/week/month
   const goToNext = () => {
     setCurrentDate((prevDate) => {
@@ -373,38 +380,49 @@ export default function CalendarContainer({
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        <div className="bg-[#F2F4F7] p-3">header</div>
-        <div className={`w-full ${selectedDate ? "grid grid-cols-4":""}`}>
+        <div className="bg-[#F2F4F7] p-3">
+          <LeadContactTypeContainer
+            list={LeadContactTypeList}
+            onActiveItem={(label: string, value: string) => {
+              setActiveLeadContactType({ label, value });
+            }}
+            activeItem={activeLeadContactType}
+          />
+        </div>
+
+        <div className={`w-full ${selectedDate ? "grid grid-cols-4" : ""}`}>
           <div className="col-span-3">
-          {calendarRangeType === "monthly" ? (
-            <MonthlyCalendar
-              currentDate={currentDate}
-              visibleRange={calendarData.visibleRange}
-              calendarType={calendarType}
-              events={data}
-              onSelectDate={(date: string) => {
-                setSelectedDate(date);
-              }}
-            />
-          ) : calendarRangeType === "weekly" ? (
-            <WeeklyCalendar
-              currentDate={currentDate}
-              visibleRange={calendarData.visibleRange}
-              calendarType={calendarType}
-              events={data}
-            />
-          ) : calendarRangeType === "daily" ? (
-            <DailyCalendar currentDate={currentDate} events={data} />
-          ) : (
-            <></>
+            {calendarRangeType === "monthly" ? (
+              <MonthlyCalendar
+                currentDate={currentDate}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                events={data}
+                onSelectDate={(date: string) => {
+                  setSelectedDate(date);
+                }}
+              />
+            ) : calendarRangeType === "weekly" ? (
+              <WeeklyCalendar
+                currentDate={currentDate}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                events={data}
+              />
+            ) : calendarRangeType === "daily" ? (
+              <DailyCalendar currentDate={currentDate} events={data} />
+            ) : (
+              <></>
+            )}
+          </div>
+          {selectedDate && (
+            <div className="col-span-1 bg-card p-6">
+              <h2>تاریخچه رویدادها</h2>
+            </div>
           )}
         </div>
-          {selectedDate && <div className="col-span-1 bg-card p-6">
-            <h2>تاریخچه رویدادها</h2>
-        </div> }
       </div>
     </div>
-   </div>
   );
 
   function generateCalendarData(
@@ -535,5 +553,53 @@ export default function CalendarContainer({
         };
         return { calendarData };
     }
+  }
+  function getData() {
+    const LeadContactTypeList: LeadContactTypeContainerInterface["list"] = [
+     {
+        label: "همه",
+        value: "All",
+        icon: "",
+        activeClassName: "",
+        className: "border-l rounded-none",
+      },
+      {
+        label: "تماس",
+        value: "CALL",
+        icon: "/icons/colored-phone-icon.png",
+        activeClassName: "border border-[#EF26B2]",
+        className: "text-[#C11574] bg-[#FDF2FA]",
+      },
+      {
+        label: "پیامک",
+        value: "SMS",
+        icon: "/icons/colored-sms-icon.png",
+        activeClassName: "border border-[#039855]",
+        className: "text-[#087443] bg-[#EDFCF2]",
+      },
+      {
+        label: "ایمیل",
+        value: "EMAIL",
+        icon: "/icons/colored-email-icon.png",
+        activeClassName: "border border-[#1C68DA]",
+        className: "text-[#175CD3] bg-[#EFF8FF]",
+      },
+      {
+        label: "جلسه",
+        value: "MEET",
+        icon: "/icons/colored-meeting-icon.png",
+        activeClassName: "border border-[#7500FE]",
+        className: "text-[#6941C6] bg-[#F9F5FF]",
+      },
+      {
+        label: "VOIP",
+        value: "VOIP",
+        icon: "/icons/colored-voip-icon.png",
+        activeClassName: "border border-[#D92D20]",
+        className: "text-[#B93815] bg-[#FEF6EE]",
+      },
+    ];
+
+    return { LeadContactTypeList };
   }
 }
