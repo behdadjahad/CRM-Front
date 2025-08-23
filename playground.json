@@ -87,8 +87,8 @@
       "className": "w-full md:w-1/2"
     },
     {
-      "key": "callDate",
-      "dependantKey": "callDateType",
+      "key": "dateTime",
+      "dependantKey": "dateTimeType",
       "component": "date-time",
       "placeholder": "تاریخ وزمان",
       "type": "text",
@@ -106,10 +106,9 @@
 
   ],
   "initialValues": {
-
-    "callTime": "",
-    "userResponsible": "",
-    "callDate": ""
+   "callTime": ""
+  
+ 
 
 
   }

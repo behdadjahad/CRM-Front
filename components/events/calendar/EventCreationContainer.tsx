@@ -19,6 +19,8 @@ import { createClient } from "@/api/client";
 import CustomerCard from "@/components/share/customer/CustomerCard";
 import { addEvent } from "@/api/event";
 import { convertDateTimeToGregorian } from "@/lib/date";
+import { RootState } from "@/store";
+import { useSelector } from "react-redux";
 
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -29,7 +31,7 @@ export default function EventCreationContainer() {
     label: string;
     value: string;
   }>({ label: "تماس", value: "CALL" });
-
+ const userData = useSelector((state: RootState) => state.user);
   const { LeadContactTypeList } = getData(activeLeadContactType.value);
   const formik = useFormik({
     initialValues: {
@@ -38,12 +40,15 @@ export default function EventCreationContainer() {
       dateTime: "",
       dateTimeType: "",
       subject: "",
+      userResponsible: userData?.id,
+      // ...initialValues
     },
 
     // validationSchema: Yup.object({
     //   emailContent: Yup.string().required("متن ایمیل الزامی است"),
     // }),
-    onSubmit: () => {},
+    onSubmit: () => { },
+    enableReinitialize:true
   });
 
   const { data: leadFormsData } = useQuery({
@@ -92,7 +97,7 @@ export default function EventCreationContainer() {
     },
     onSuccess: () => {},
   });
-  console.log(customers);
+  // console.log(customers);
   function addPersonInfo(personData: CustomerDataInterface) {
     const data = {
       firstName: personData.firstName,
@@ -105,7 +110,7 @@ export default function EventCreationContainer() {
   function SubmitEvents() {
     const customerIds = customers.map((customer) => customer?.id);
     const data = {
-      isAutomatic: true,
+      isAutomatic: formik.values.isAutomatic,
       subject: formik.values.subject,
       body: formik.values.description,
       informationJson: {
@@ -117,10 +122,11 @@ export default function EventCreationContainer() {
       ),
       // leadId: 1,
       customerId: customerIds?.[0],
-      userResponsibleId: 1,
+      userResponsibleId: formik.values.userResponsible,
       // followUpTypeId: 1
     };
     addEventHandler(data);
+    // console.log(data);
   }
   return (
     <>
@@ -223,6 +229,14 @@ export default function EventCreationContainer() {
           // fields={fields}
           fields={[
             ...fields,
+            {
+              key: "userResponsible",
+              component: "Select",
+              placeholder: "مسئول پیگیری",
+              type: "text",
+              floating: true,
+              className: "w-full md:w-1/2",
+            },
             {
               key: "description",
               component: "textarea",

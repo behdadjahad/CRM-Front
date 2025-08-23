@@ -6,11 +6,11 @@ import type { CalendarOptions } from "@fullcalendar/core";
 import timeGridPlugin from "@fullcalendar/timegrid"; //
 
 type Props = {
-    currentDate: string;
-    
+  currentDate: string;
+  events: { title: string; start: string }[];
 };
 
-export default function DailyCalendar({ currentDate }: Props) {
+export default function DailyCalendar({ currentDate, events }: Props) {
   console.log(currentDate);
 
   const calendarOptions: CalendarOptions = {
@@ -21,7 +21,7 @@ export default function DailyCalendar({ currentDate }: Props) {
     headerToolbar: false,
     footerToolbar: false,
     slotDuration: "00:30:00",
-    allDaySlot: false,/// hourly slots
+    allDaySlot: false, /// hourly slots
     slotLabelFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -35,7 +35,7 @@ export default function DailyCalendar({ currentDate }: Props) {
     },
     dayHeaders: false,
     // events: [{ title: "Test Event", start: new Date() }],
-     events: [{ title: "Test Event", start: "2025-08-20T23:30:00" }],
+    // events: [{ title: "Test Event", start: "2025-08-20T23:30:00" }],
   };
 
   return <FullCalendar {...calendarOptions} />;

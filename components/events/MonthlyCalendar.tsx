@@ -22,11 +22,13 @@ type Props = {
   currentDate: string;
   visibleRange: { start: Date; end: Date };
   calendarType: "jalali" | "hijri" | "gregory";
+  events: { title: string; start: string }[];
 };
 export default function MonthlyCalendar({
   currentDate,
   visibleRange,
   calendarType,
+  events,
 }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
@@ -48,27 +50,27 @@ export default function MonthlyCalendar({
       },
     },
 
-    events: [
-      { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},
-    ],
+    // events: [
+    //   { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},
+    // ],
+    events: events,
     eventContent: (arg) => {
       // Extract time using dayjs or built-in formatter
-      console.log(arg.event.start)
+
       const timeLabel = dayjs(arg.event.start).format("HH:mm");
-       console.log(timeLabel)
+
       return {
         html: `<div class="fc-event-time">${timeLabel}</div>
            <div class="fc-event-title">${arg.event.title}</div>`,
       };
     },
     dayCellContent: (arg) => {
-      console.log(convertToGregorianYMD(arg.date));
       const {
         year: currentYear,
         month: currentMonth,
         day: currentDay,
       } = convertDateWithTimeZone(currentDate, calendarType);
-      console.log(convertDateWithTimeZone("2025-03-20", "jalali"));
+
       const {
         year: cellYear,
         month: cellMonth,
@@ -100,7 +102,7 @@ export default function MonthlyCalendar({
     const midDate = new Date(midTimestamp);
 
     const { year, month } = getMonthInfo(currentDate, calendarType);
-    console.log(getMonthInfo(currentDate, calendarType));
+
     setVisibleMonth({ year, month });
   };
 
@@ -115,10 +117,7 @@ export default function MonthlyCalendar({
             convertToGregorianYMD(arg.date),
             calendarType
           );
-          console.log(
-            getMonthInfo(convertToGregorianYMD(arg.date), calendarType)
-          );
-          console.log(getMonthInfo("2025-8-22", calendarType));
+
           const { year: currentYear, month: currentMonth } = visibleMonth;
           const isOutOfMonth =
             cellYear !== currentYear || cellMonth !== currentMonth;

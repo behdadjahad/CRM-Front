@@ -23,12 +23,14 @@ type Props = {
 
   visibleRange: { start: Date; end: Date };
   calendarType: any;
+    events:{title:string,start:string}[]
 };
 
 export default function WeeklyCalendar({
   currentDate,
   visibleRange,
   calendarType,
+  events
 }: Props) {
   console.log(currentDate);
   console.log(visibleRange);

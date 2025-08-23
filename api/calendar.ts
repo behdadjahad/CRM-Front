@@ -1,8 +1,8 @@
 import { fetchService } from "@/boot/fetch-service";
 
-export async function getCalendarEvents() {
+export async function getCalendarData() {
   try {
-    const result = await fetchService("calendar");
+    const result = await fetchService("calender");
 
     return result;
   } catch {}

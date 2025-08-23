@@ -46,10 +46,18 @@ if (result.leap === 0) {
   console.log(`${year} is not a leap year.`);
   console.log(result.leap);
 }
-export default function CalendarContainer() {
-  // const today = getToday();
+export interface CalendarContainerInterface {
+  data: {
+    title: string;
+    start: string;
+  }[];
+}
+export default function CalendarContainer({
+  data,
+}: CalendarContainerInterface) {
+  console.log(data);
   const today = getTodayInGregorianYMD();
-  console.log(today);
+
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -366,28 +374,30 @@ export default function CalendarContainer() {
           calendarRangeType={calendarRangeType}
         />
         <div className="w-full">
-       {/* <div className="col-span-3"> */}
+          {/* <div className="col-span-3"> */}
           {calendarRangeType === "monthly" ? (
             <MonthlyCalendar
               currentDate={currentDate}
               visibleRange={calendarData.visibleRange}
               calendarType={calendarType}
+              events={data}
             />
           ) : calendarRangeType === "weekly" ? (
             <WeeklyCalendar
               currentDate={currentDate}
               visibleRange={calendarData.visibleRange}
               calendarType={calendarType}
+              events={data}
             />
           ) : calendarRangeType === "daily" ? (
-            <DailyCalendar currentDate={currentDate} />
+                <DailyCalendar currentDate={currentDate} events={data} />
           ) : (
             <></>
-            )}
-            </div>
-          {/* <div className="col-span-1">تاریخچه</div> */}
+          )}
         </div>
+        {/* <div className="col-span-1">تاریخچه</div> */}
       </div>
+    </div>
     // </div>
   );
 
