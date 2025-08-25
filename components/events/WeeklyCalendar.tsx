@@ -3,7 +3,7 @@
 import React from "react";
 import FullCalendar from "@fullcalendar/react";
 import type { CalendarOptions } from "@fullcalendar/core";
-
+import interactionPlugin from "@fullcalendar/interaction";
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
 import utc from "dayjs/plugin/utc";
@@ -12,9 +12,11 @@ import timeGridPlugin from "@fullcalendar/timegrid"; //
 import {
   convertDateWithTimeZone,
   convertToGregorianYMD,
+  formatEventDate,
   getDayNumber,
   getWeekdayLabel,
 } from "@/lib/calendar";
+import { cond } from "lodash";
 dayjs.extend(utc);
 dayjs.extend(jalaliday);
 
@@ -23,27 +25,37 @@ type Props = {
 
   visibleRange: { start: Date; end: Date };
   calendarType: any;
-    events:{title:string,start:string}[]
+  events: { title: string; start: string }[];
+  onSelectDate: (date: string) => void;
 };
 
 export default function WeeklyCalendar({
   currentDate,
   visibleRange,
   calendarType,
-  events
+  events,
+  onSelectDate,
 }: Props) {
   console.log(currentDate);
   console.log(visibleRange);
+  console.log(events);
 
+  const updatedEvents = events.map((event) => ({
+    ...event,
+    start: formatEventDate(event.start),
+    end: formatEventDate(event.start),
+    allDay: false,
+  }));
+  console.log(updatedEvents);
   const calendarOptions: CalendarOptions = {
-    plugins: [timeGridPlugin],
+    plugins: [timeGridPlugin, interactionPlugin],
     initialView: "customWeek",
     firstDay: 6, // week starts on Saturday
     direction: calendarType === "gregory" ? "ltr" : "rtl",
     headerToolbar: false,
     footerToolbar: false,
     slotDuration: "00:30:00",
-    allDaySlot: false,// hourly slots
+    allDaySlot: false, // hourly slots
     slotLabelFormat: {
       hour: "numeric",
       minute: "2-digit",
@@ -56,7 +68,7 @@ export default function WeeklyCalendar({
       },
     },
 
-    events: [    { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},],
+    events: updatedEvents,
     dayHeaderContent: (arg) => {
       const {
         year: currentYear,
@@ -85,6 +97,41 @@ export default function WeeklyCalendar({
         }">${cellDay}</span> <span>${weekdayLabel}</span></div>`,
       };
     },
+    selectable: true,
+    select: (arg) => {
+     console.log(convertToGregorianYMD(arg.start))
+      onSelectDate(convertToGregorianYMD(arg.start));
+    },
+    dayHeaderDidMount: () => {
+      const cornerCell = document.querySelector(
+        ".fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child"
+      );
+      console.log(cornerCell);
+      if (cornerCell) {
+        console.log(cornerCell);
+        // clear previous content
+        cornerCell.innerHTML = "";
+
+        // create Next.js Image element
+        const img = document.createElement("img");
+        img.src = "/icons/calendar-time.png";
+        img.width = 24;
+        img.height = 24;
+        img.style.display = "block";
+        img.style.margin = "4px auto";
+        cornerCell.appendChild(img);
+      }
+    },
+    // dayHeaderDidMount:(arg) => {
+    //   const cornerCell = document.querySelector(
+    //     ".fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child"
+    //   );
+    //   if (cornerCell) {
+    //     cornerCell.innerHTML = `<div class="flex justify-center items-center">
+    //       <i class="lucide lucide-calendar w-4 h-4 text-gray-600"></i>
+    //     </div>`;
+    //   }
+    // }
   };
 
   return (

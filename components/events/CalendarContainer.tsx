@@ -400,6 +400,7 @@ export default function CalendarContainer({
                 events={data}
                 onSelectDate={(date: string) => {
                   setSelectedDate(date);
+                  setCurrentDate(date);
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
@@ -408,6 +409,10 @@ export default function CalendarContainer({
                 visibleRange={calendarData.visibleRange}
                 calendarType={calendarType}
                 events={data}
+                onSelectDate={(date: string) => {
+                  setSelectedDate(date);
+                  setCurrentDate(date);
+                }}
               />
             ) : calendarRangeType === "daily" ? (
               <DailyCalendar currentDate={currentDate} events={data} />
@@ -556,7 +561,7 @@ export default function CalendarContainer({
   }
   function getData() {
     const LeadContactTypeList: LeadContactTypeContainerInterface["list"] = [
-     {
+      {
         label: "همه",
         value: "All",
         icon: "",

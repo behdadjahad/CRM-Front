@@ -307,3 +307,19 @@
 .event-time{
     @apply text-[#DD2590] 
 }
+.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child{
+    @apply flex items-center justify-center h-full w-full border-none;
+}
+.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child::after {
+  content: '';
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;      /* set image size */
+  height: 20px;
+  /* center */
+  background-image: url('/icons/calendar-time.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
