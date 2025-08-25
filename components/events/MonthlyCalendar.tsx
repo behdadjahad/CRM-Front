@@ -11,6 +11,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import {
   convertDateWithTimeZone,
   convertToGregorianYMD,
+  formatEventDate,
   getDayNumber,
   getMonthInfo,
   getWeekdayLabel,
@@ -36,7 +37,13 @@ export default function MonthlyCalendar({
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
-  console.log(visibleRange);
+  console.log(events);
+  const updatedEvents = events.map((event) => ({
+    ...event,
+    start: formatEventDate(event.start),
+    end: formatEventDate(event.start),
+    allDay: false,
+  }));
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: "customMonth",
@@ -59,15 +66,18 @@ export default function MonthlyCalendar({
     // events: [
     //   { title: "Test Event", start: "2025-08-20T23:50:30" ,   end: "2025-08-20T23:59:59",    allDay: false,},
     // ],
-    events: events,
+    events: updatedEvents,
     eventContent: (arg) => {
       // Extract time using dayjs or built-in formatter
 
       const timeLabel = dayjs(arg.event.start).format("HH:mm");
 
       return {
-        html: `<div class="fc-event-time">${timeLabel}</div>
-           <div class="fc-event-title">${arg.event.title}</div>`,
+        html: `
+        <div class="event-container">
+        <div class="event-time"pm2 >${timeLabel}</div>
+           <div class="event-text">${arg.event.title}</div>
+           </div>`,
       };
     },
     dayCellContent: (arg) => {

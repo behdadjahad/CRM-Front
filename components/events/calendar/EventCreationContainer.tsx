@@ -13,7 +13,7 @@ import QuillEditor from "@/components/shared/input/TextEditorInput";
 import { generateCreationEventForms } from "@/constants/event-creation-form-fields";
 import { useFormik } from "formik";
 import FormMaker from "@/components/shared/form-maker";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { createClient } from "@/api/client";
 import CustomerCard from "@/components/share/customer/CustomerCard";
@@ -21,17 +21,24 @@ import { addEvent } from "@/api/event";
 import { convertDateTimeToGregorian } from "@/lib/date";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-
+import { fetchAllUsers } from "@/store/all-users-slice";
+import { useDispatch } from "react-redux";
 export default function EventCreationContainer() {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [customers, setCustomers] = useState<CustomerDataInterface[]>([]);
-
+  const queryClient = useQueryClient();
   const [fields, setFields] = useState([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
   }>({ label: "تماس", value: "CALL" });
- const userData = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<any>();
+  useEffect(() => {
+    dispatch(fetchAllUsers());
+  }, [dispatch]);
+  const userOptions = useSelector((state: any) => state.allUsers.items);
+  console.log(userOptions)
+  const userData = useSelector((state: RootState) => state.user);
   const { LeadContactTypeList } = getData(activeLeadContactType.value);
   const formik = useFormik({
     initialValues: {
@@ -47,8 +54,8 @@ export default function EventCreationContainer() {
     // validationSchema: Yup.object({
     //   emailContent: Yup.string().required("متن ایمیل الزامی است"),
     // }),
-    onSubmit: () => { },
-    enableReinitialize:true
+    onSubmit: () => {},
+    enableReinitialize: true,
   });
 
   const { data: leadFormsData } = useQuery({
@@ -66,7 +73,7 @@ export default function EventCreationContainer() {
       setFields(fields);
     }
   }, [leadFormsData, activeLeadContactType]);
-console.log(fields)
+  console.log(fields);
   function returnFields(leadType: string, data: any[]) {
     const formFields = data.find((item: any) => item?.type === leadType)
       ?.baseJson.fields;
@@ -95,7 +102,11 @@ console.log(fields)
     mutationFn: (data: any) => {
       return addEvent(data);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["calendar"],
+      });
+    },
   });
   // console.log(customers);
   function addPersonInfo(personData: CustomerDataInterface) {
@@ -236,6 +247,7 @@ console.log(fields)
               type: "text",
               floating: true,
               className: "w-full md:w-1/2",
+              options:userOptions
             },
             {
               key: "description",

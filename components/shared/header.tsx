@@ -29,6 +29,7 @@ export default function Header({ setState }: HeaderInterface) {
       <ProfileDropDown className="hidden lg:flex" />
 
       <Notification unread={true} className="mr-auto lg:mr-0 lg:ml-auto" />
+      
 
       <Search />
     </header>

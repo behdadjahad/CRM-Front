@@ -13,6 +13,7 @@ import cityReducer from "./city-slice";
 import countryReducer from "./country-slice";
 import provinceReducer from "./province-slice";
 import leadReducer from "./lead-slice";
+import allUsersReducer from "./all-users-slice";
 
 
 export const store = configureStore({
@@ -30,6 +31,7 @@ export const store = configureStore({
     airline: airlineReducer,
     notification: notificationReducer,
     lead: leadReducer,
+    allUsers: allUsersReducer,
  
   },
 });

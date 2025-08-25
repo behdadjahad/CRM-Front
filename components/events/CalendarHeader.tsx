@@ -125,7 +125,7 @@ export default function CalendarHeader({
         </div>
         <Button
           onClick={onToday}
-          className="border rounded px-3 py-1"
+          className="border-[#1C68DA] rounded px-3 py-1 bg-[#1C68DA] text-card"
           variant={"ghost"}
         >
           امروز

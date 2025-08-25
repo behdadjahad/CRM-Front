@@ -380,7 +380,7 @@ export default function CalendarContainer({
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        <div className="bg-[#F2F4F7] p-3">
+        <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={LeadContactTypeList}
             onActiveItem={(label: string, value: string) => {

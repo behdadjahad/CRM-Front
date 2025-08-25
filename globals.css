@@ -285,11 +285,25 @@
   align-items: center; */
   vertical-align: middle;
 }
-
-
+.fc .fc-daygrid-day-frame {
+  max-height: 130px; /* adjust as needed */
+  overflow-y: auto;  /* allow scrolling if events overflow */
+}
+.fc .fc-daygrid-day {
+  height: 120px; /* fixed height */
+}
 .current-day {
   @apply bg-[#1C68DA] text-white rounded-full h-6 w-6 flex items-center justify-center;
 }
 .flex-container {
   @apply flex items-center justify-center gap-2;
+}
+.event-container{
+    @apply flex items-center justify-between w-full p-3 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA];
+}
+.event-text{
+  @apply text-[#C11574] font-bold 
+}
+.event-time{
+    @apply text-[#DD2590] 
 }

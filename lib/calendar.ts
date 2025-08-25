@@ -4,7 +4,12 @@ import moment from "moment-hijri";
 
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { G } from "@react-pdf/renderer";
+export function formatEventDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  // Ensure consistent ISO format without Z and without milliseconds
+  return date.toISOString().slice(0, 19);
+}
+
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
