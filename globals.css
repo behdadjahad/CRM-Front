@@ -299,7 +299,7 @@
   @apply flex items-center justify-center gap-2;
 }
 .event-container{
-    @apply flex items-center justify-between w-full p-3 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA];
+    @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA];
 }
 .event-text{
   @apply text-[#C11574] font-bold 

@@ -11,15 +11,34 @@ interface AddCustomerToLeadContainerInterface {
   onSendCustomerData: (values: CustomerDataInterface) => void;
   onSendSelectedCustomer: (customer: CustomerDataInterface) => void;
   multiSelect?: boolean;
+  onSendCheckedCustomers?: (checkedCustomers: CustomerDataInterface[]) => void;
 }
 export default function AddCustomerToFeatureContainer({
   onSendSelectedCustomer,
   onSendCustomerData,
   multiSelect,
+  onSendCheckedCustomers,
 }: AddCustomerToLeadContainerInterface) {
   const [openModal, setOpenModal] = useState(false);
   const [openSecondModal, setOpenSecondModal] = useState(false);
   const [customerData, setCustomerData] = useState<any>();
+  const [checkedCustomers, setCheckedCustomers] = useState<
+    CustomerDataInterface[]
+  >([]);
+  function checkCustomersHandler(
+    checked: boolean,
+    customer: CustomerDataInterface
+  ) {
+    console.log(32,checked,customer)
+    if (checked) {
+      setCheckedCustomers([...checkedCustomers, customer]);
+    } else {
+      const updatedCheckedCustomers = checkedCustomers.filter(
+        (item) => item.id !== customer.id
+      );
+      setCheckedCustomers(updatedCheckedCustomers);
+    }
+  }
   return (
     <>
       <Button
@@ -67,14 +86,28 @@ export default function AddCustomerToFeatureContainer({
           onSendSelectedCustomer={(customer: CustomerDataInterface) => {
             setCustomerData(customer);
           }}
+          onCheckCustomers={(
+            checked: boolean,
+            customer: CustomerDataInterface
+          ) => {
+            console.log(71, checked, customer);
+            checkCustomersHandler(checked, customer);
+          }}
           multiSelect={multiSelect}
+          checkedCustomers={checkedCustomers}
         />
         <div className="flex flex-row gap-4 items-center justify-end">
           <Button
             variant={"info"}
             onClick={() => {
               setOpenSecondModal(false);
-              if (customerData) onSendSelectedCustomer(customerData);
+
+              if (multiSelect && onSendCheckedCustomers) {
+                onSendCheckedCustomers(checkedCustomers);
+                setCheckedCustomers([])
+              } else if (customerData) {
+                onSendSelectedCustomer(customerData);
+              } else return;
             }}
           >
             ثبت

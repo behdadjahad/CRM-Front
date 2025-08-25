@@ -16,6 +16,9 @@ export interface CustomerInfiniteCardInterface {
   searchKeyWord: string;
   onSendSelectedCustomer?: (customer: CustomerDataInterface) => void;
   isActive?: boolean;
+  multiSelect?: boolean;
+  onCheckCustomers?: any;
+  checkedCustomers?: any[];
 }
 
 const highlightMatch = (text: string, keyword: string) => {
@@ -50,17 +53,26 @@ const CustomerInfiniteCard = forwardRef<
       searchKeyWord,
       onSendSelectedCustomer,
       isActive,
+      multiSelect,
+      onCheckCustomers,
+      checkedCustomers,
     },
     ref
   ) => {
+   console.log(checkedCustomers?.some(
+                (item) => item.id === 1
+              ))
+    console.log(checkedCustomers)
+    console.log(!multiSelect);
     const customerInfiniteCardContent = (
       <div
         key={customer.id}
         className={`border p-3 rounded-md cursor-pointer flex items-center justify-between ${
-          isActive ? " border-[#F8AC3F]" : " border-gray-200"
+          isActive && !multiSelect ? " border-[#F8AC3F]" : " border-gray-200"
         }`}
         onClick={() => {
-          if (onSendSelectedCustomer) {
+          if (onSendSelectedCustomer && !multiSelect) {
+            alert();
             if (isActive) {
               return;
             } else {
@@ -72,12 +84,21 @@ const CustomerInfiniteCard = forwardRef<
         }}
       >
         <div className="flex items-center gap-2">
-          {onCheckCustomerhandler && (
+          {(onCheckCustomerhandler || multiSelect) && (
             <Checkbox
-              onCheckedChange={(checked) =>
-                onCheckCustomerhandler(customer.id, Boolean(checked))
-              }
-              // checked={isChecked}
+              onCheckedChange={(checked) => {
+                if (multiSelect) {
+                  onCheckCustomers(checked, customer);
+                  
+                } else if (onCheckCustomerhandler) {
+
+                  onCheckCustomerhandler(customer.id, Boolean(checked));
+                }
+              }}
+              checked={checkedCustomers?.some(
+                (item) => item.id === customer.id
+              )}
+             
             />
           )}
           <div className="flex items-center gap-2">
@@ -134,7 +155,7 @@ const CustomerInfiniteCard = forwardRef<
     );
 
     const content = ref ? (
-      <article ref={ref} >{customerInfiniteCardContent}</article>
+      <article ref={ref}>{customerInfiniteCardContent}</article>
     ) : (
       <article>{customerInfiniteCardContent}</article>
     );

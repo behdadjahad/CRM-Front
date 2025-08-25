@@ -241,7 +241,7 @@ export default function LeadCreationContainer() {
         />
         {customer && (
           <div className="p-2">
-            <CustomerCard {...customer} />
+            <CustomerCard {...customer}/>
           </div>
         )}
 

@@ -16,7 +16,7 @@ import FormMaker from "@/components/shared/form-maker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { createClient } from "@/api/client";
-import CustomerCard from "@/components/share/customer/CustomerCard";
+import CustomerCard, { CustomerCardInterface } from "@/components/share/customer/CustomerCard";
 import { addEvent } from "@/api/event";
 import { convertDateTimeToGregorian } from "@/lib/date";
 import { RootState } from "@/store";
@@ -37,7 +37,7 @@ export default function EventCreationContainer() {
     dispatch(fetchAllUsers());
   }, [dispatch]);
   const userOptions = useSelector((state: any) => state.allUsers.items);
-  console.log(userOptions)
+  console.log(userOptions);
   const userData = useSelector((state: RootState) => state.user);
   const { LeadContactTypeList } = getData(activeLeadContactType.value);
   const formik = useFormik({
@@ -48,7 +48,6 @@ export default function EventCreationContainer() {
       dateTimeType: "",
       subject: "",
       userResponsible: userData?.id,
-      // ...initialValues
     },
 
     // validationSchema: Yup.object({
@@ -106,9 +105,12 @@ export default function EventCreationContainer() {
       queryClient.invalidateQueries({
         queryKey: ["calendar"],
       });
+      formik.resetForm();
+      setCustomers([]);
     },
   });
-  // console.log(customers);
+  console.log(customers);
+  console.log(customers.length);
   function addPersonInfo(personData: CustomerDataInterface) {
     const data = {
       firstName: personData.firstName,
@@ -139,6 +141,16 @@ export default function EventCreationContainer() {
     addEventHandler(data);
     // console.log(data);
   }
+  function submitCheckedCustomers(checkedCustomers: CustomerDataInterface[]) {
+    console.log(checkedCustomers, checkedCustomers?.length);
+    const newCustomers = checkedCustomers.filter(
+      (checkedCustomer) =>
+        !customers.some((customer) => customer.id === checkedCustomer.id)
+    );
+
+    setCustomers([...customers, ...newCustomers]);
+  }
+
   return (
     <>
       <Button
@@ -163,6 +175,9 @@ export default function EventCreationContainer() {
             size={20}
             onClick={() => {
               setOpenModal(false);
+              formik.resetForm();
+              setCustomers([]);
+              setActiveLeadContactType({ label: "تماس", value: "CALL" });
             }}
             className="cursor-pointer"
           />
@@ -247,7 +262,7 @@ export default function EventCreationContainer() {
               type: "text",
               floating: true,
               className: "w-full md:w-1/2",
-              options:userOptions
+              options: userOptions,
             },
             {
               key: "description",
@@ -277,11 +292,30 @@ export default function EventCreationContainer() {
             // setCustomer(customerData);
             addPersonInfo(customerData);
           }}
+          onSendCheckedCustomers={(
+            checkedCustomers: CustomerDataInterface[]
+          ) => {
+            submitCheckedCustomers(checkedCustomers);
+          }}
           multiSelect={true}
         />
         <div className="p-3 flex flex-col gap-2">
-          {customers?.map((customer: CustomerDataInterface) => (
-            <CustomerCard {...customer} key={customer?.id} />
+          {customers?.map((customer: any,index:number) => (
+            <CustomerCard
+              {...customer}
+              key={`customer-${index+1}`}
+              onDeleteHandler={(customerId: number) => {
+                if (!customerId) return;
+                else {
+                   setCustomers((prev) =>
+                    prev.filter((item) => item.id !== customerId)
+                  );
+                }
+                 
+
+              
+              }}
+            />
           ))}
         </div>
         <div className="flex flex-row gap-4 items-center justify-end">
@@ -298,7 +332,9 @@ export default function EventCreationContainer() {
             variant={"foreground"}
             onClick={() => {
               setOpenModal(false);
-              setActiveLeadContactType({ label: "", value: "" });
+              setActiveLeadContactType({ label: "تماس", value: "CALL" });
+              formik.resetForm();
+              setCustomers([]);
             }}
           >
             لغو

@@ -8,12 +8,15 @@ import { debounce } from "lodash";
 export default function CustomerListSection({
   onCheckCustomerhandler,
   onSendSelectedCustomer,
-  multiSelect
+  multiSelect,
+  onCheckCustomers,
+  checkedCustomers
 }: {
   onCheckCustomerhandler?: any;
     onSendSelectedCustomer?: any;
-    
+    onCheckCustomers?:any,
     multiSelect?: boolean;
+    checkedCustomers?:any[]
 }) {
   const [searchKeyWord, setSearchKeyWord] = useState<string>("");
   const customerSearchFormik = useFormik({
@@ -52,7 +55,10 @@ export default function CustomerListSection({
         onCheckCustomerhandler={onCheckCustomerhandler}
         searchKeyWord={searchKeyWord}
         onSendSelectedCustomer={onSendSelectedCustomer}
+        multiSelect={multiSelect}
+        onCheckCustomers={onCheckCustomers}
         key="notSuggested"
+        checkedCustomers={checkedCustomers}
       />
     </div>
   );

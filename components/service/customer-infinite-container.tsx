@@ -13,10 +13,16 @@ export default function CustomerInfiniteContainer({
   onCheckCustomerhandler,
   searchKeyWord,
   onSendSelectedCustomer,
+  multiSelect,
+  onCheckCustomers,
+  checkedCustomers
 }: {
   onCheckCustomerhandler?: any;
   searchKeyWord?: string;
   onSendSelectedCustomer?: any;
+  multiSelect?: boolean;
+    onCheckCustomers?: any;
+  checkedCustomers?:any[]
 }) {
   const { ref, inView } = useInView();
   const LIMIT = limitForInfiniteCustomers;
@@ -75,6 +81,9 @@ export default function CustomerInfiniteContainer({
                 if (customer?.id) setActiveCustomer(customer?.id);
               }}
               isActive={activeCustomer == customer?.id}
+              multiSelect={multiSelect}
+              onCheckCustomers={onCheckCustomers}
+              checkedCustomers={checkedCustomers}
             />
           );
         }
@@ -89,6 +98,9 @@ export default function CustomerInfiniteContainer({
               if (customer?.id) setActiveCustomer(customer?.id);
             }}
             isActive={activeCustomer == customer?.id}
+            multiSelect={multiSelect}
+            onCheckCustomers={onCheckCustomers}
+            checkedCustomers={checkedCustomers}
           />
         );
       })
