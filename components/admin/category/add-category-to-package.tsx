@@ -93,6 +93,12 @@ export default function AddCategoryToPackage({
                 className: "w-full md:w-1/2",
                 options: categoryList,
               },
+               {
+              key: "categoryPreview",
+              component: "tag-preview",
+              dependantKey: "categories",
+              className: "w-full",
+            },
             ]}
             className="flex flex-row w-full"
           />

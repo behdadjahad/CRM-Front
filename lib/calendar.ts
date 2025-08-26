@@ -745,3 +745,9 @@ export function getMonthInfo(
 
 //   return { year, month };
 // }
+export function getTimeOfDate(isoStr: string): string {
+  // Grab the part between T and Z
+  const time = isoStr.split("T")[1].replace("Z", "");
+  // Take only HH:mm
+  return time.substring(0, 5);
+}

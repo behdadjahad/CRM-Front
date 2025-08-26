@@ -121,7 +121,7 @@ export default function EventCreationContainer() {
     addPersonInfoHandler(data);
   }
   function SubmitEvents() {
-    const customerIds = customers.map((customer) => customer?.id);
+    const customerIds = customers?.map((customer) => customer?.id);
     const data = {
       isAutomatic: formik.values.isAutomatic,
       subject: formik.values.subject,
@@ -134,7 +134,7 @@ export default function EventCreationContainer() {
         formik.values.dateTimeType
       ),
       // leadId: 1,
-      customerId: customerIds?.[0],
+      customerIds: customerIds,
       userResponsibleId: formik.values.userResponsible,
       // followUpTypeId: 1
     };

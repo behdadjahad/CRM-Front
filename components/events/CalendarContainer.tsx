@@ -26,7 +26,6 @@ import DailyCalendar from "./DailyCalendar";
 import CalendarHeader from "./CalendarHeader";
 
 import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
-import { CalendarType } from "./calendar/CalendarTypeFiltering";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -39,6 +38,9 @@ import jalaali from "jalaali-js";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "./lead/LeadContactTypeContainer";
+import EventDetailContainer from "./EventDetailContainer";
+import { useMutation } from "@tanstack/react-query";
+import { getCalendarData } from "@/api/calendar";
 
 const year = 1404;
 const result = jalaali.jalCal(year);
@@ -63,6 +65,7 @@ export default function CalendarContainer({
     label: string;
     value: string;
   }>({ label: "تماس", value: "CALL" });
+
   const today = getTodayInGregorianYMD();
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [currentDate, setCurrentDate] = useState(today);
@@ -71,6 +74,7 @@ export default function CalendarContainer({
   const [calendarType, setCalendarType] = useState<
     "jalali" | "hijri" | "gregory"
   >("jalali");
+  const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
 
   const { calendarData } = generateCalendarData(
     calendarRangeType,
@@ -366,7 +370,30 @@ export default function CalendarContainer({
   const goToToday = () => {
     setCurrentDate(today);
   };
+  const { mutate: getSingleDateData, data: singleDateEvent } = useMutation({
+    mutationFn: (data: any) => {
+      return getCalendarData(data);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      if (data && data?.data ) {
+        const eventsOptions = data?.data?.map((item: any) => ({
+          title: item?.subject,
+          start: item?.occurenceDate,
+        }));
+        setSingleDateEvents(eventsOptions);
+      }
+    },
+  });
+  
   console.log(getCalendarInfo(currentDate, calendarType));
+  function getDateDataHandler(date: string) {
+    const data = {
+      startDateRange: date + "T00:00:00Z",
+      endDateRange: date + "T23:59:59Z",
+    };
+    getSingleDateData(data);
+  }
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -399,6 +426,7 @@ export default function CalendarContainer({
                 calendarType={calendarType}
                 events={data}
                 onSelectDate={(date: string) => {
+                  getDateDataHandler(date);
                   setSelectedDate(date);
                   setCurrentDate(date);
                 }}
@@ -410,6 +438,7 @@ export default function CalendarContainer({
                 calendarType={calendarType}
                 events={data}
                 onSelectDate={(date: string) => {
+                  getDateDataHandler(date);
                   setSelectedDate(date);
                   setCurrentDate(date);
                 }}
@@ -422,7 +451,10 @@ export default function CalendarContainer({
           </div>
           {selectedDate && (
             <div className="col-span-1 bg-card p-6">
-              <h2>تاریخچه رویدادها</h2>
+              <EventDetailContainer
+                eventList={singleDateEvents}
+                calendarType={calendarType}
+              />
             </div>
           )}
         </div>
