@@ -54,13 +54,13 @@ export default function CalendarHeader({
 }: CalendarHeaderInterface) {
   const isLtr = calendarType === "gregory";
   return (
-    <div className="bg-card p-6 rounded-lg flex justify-between items-center">
+    <div className={`bg-card p-6 rounded-lg flex justify-between items-center`}>
       <div className="flex items-stretch gap-4">
-        <div className="h-16 w-16 border rounded-lg flex flex-col items-center justify-between">
+        <div className={`h-16 w-16 border rounded-lg flex flex-col items-center justify-between `}>
           <span className="bg-[#FCFCFD] text-xs w-full text-center p-1 rounded-t-lg text-[#717680]">
             {date.monthName}
           </span>
-          <span className="flex items-center justify-center flex-1 text-[#1C68DA] font-primary-bold">
+          <span className={`flex items-center justify-center flex-1 text-[#1C68DA] font-primary-bold ${isLtr ? "custom-font":""}`}>
             {date.day}
           </span>
         </div>
@@ -71,7 +71,7 @@ export default function CalendarHeader({
             <span className=" text-[#181D27] font-primary-bold">
               {date.monthName}
             </span>
-            <span className=" text-[#181D27] font-primary-bold">
+            <span className={`text-[#181D27] font-primary-bold ${isLtr ? "custom-font":""}`}>
               {date.year}
             </span>
           </div>
@@ -80,9 +80,9 @@ export default function CalendarHeader({
               fullRange.length > 0 &&
               fullRange?.map((item, index) => (
                 <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
-                  <span>{item.day}</span>
+                  <span className={`${isLtr ? "custom-font":""}`}>{item.day}</span>
                   <span>{item.monthName}</span>
-                  <span>{item.year}</span>
+                  <span className={`${isLtr ? "custom-font":""}`}>{item.year}</span>
                   <span>{index  < fullRange.length -1  && fullRange.length > 1 ? "-" : ""}</span>
                 </div>
               ))}
@@ -102,7 +102,7 @@ export default function CalendarHeader({
       />
       <div className="flex items-stretch justify-center gap-4 text-[#414651]">
         <div className="flex items-stretch justify-center">
-          <Button onClick={onPrev} className="border rounded" variant={"ghost"}>
+          <Button onClick={isLtr?onNext:onPrev} className="border rounded" variant={"ghost"}>
             <FaArrowRight />
           </Button>
 
@@ -111,15 +111,15 @@ export default function CalendarHeader({
               selectedDaysRange.length > 0 &&
               selectedDaysRange?.map((item, index) => (
                 <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
-                  <span>{item.day}</span>
+                  <span className={`${isLtr ? "custom-font":""}`}>{item.day}</span>
                   <span>{item.monthName}</span>
-                  <span>{item.year}</span>
+                  <span className={`${isLtr ? "custom-font":""}`}>{item.year}</span>
                   <span>{index  < selectedDaysRange.length -1  && selectedDaysRange.length > 1 ? "-" : ""}</span>
                 </div>
               ))}
           </div>
 
-          <Button onClick={onNext} className="border rounded" variant={"ghost"}>
+          <Button onClick={isLtr? onPrev:onNext} className="border rounded" variant={"ghost"}>
             <FaArrowLeft />
           </Button>
         </div>

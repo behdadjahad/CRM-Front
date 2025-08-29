@@ -2,6 +2,7 @@ import LeadContactTypeCard from "./LeadContactTypeCard";
 
 export interface LeadContactTypeContainerInterface {
   list: {
+    id?: number;
     label: string;
     value: string;
     icon: string;
@@ -13,7 +14,7 @@ export interface LeadContactTypeContainerInterface {
     label: string;
     value: string;
   };
-  onActiveItem: (label:string,value: string) => void;
+  onActiveItem: (label: string, value: string) => void;
 }
 
 export default function LeadContactTypeContainer({

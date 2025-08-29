@@ -27,6 +27,7 @@ type Props = {
   calendarType: any;
   events: { title: string; start: string }[];
   onSelectDate: (date: string) => void;
+  onSelectEvent: (id: number) => void;
 };
 
 export default function WeeklyCalendar({
@@ -35,6 +36,7 @@ export default function WeeklyCalendar({
   calendarType,
   events,
   onSelectDate,
+  onSelectEvent,
 }: Props) {
   console.log(currentDate);
   console.log(visibleRange);
@@ -97,9 +99,28 @@ export default function WeeklyCalendar({
         }">${cellDay}</span> <span>${weekdayLabel}</span></div>`,
       };
     },
+    eventClick: (arg) => {
+      const eventId = arg.event.id; // <-- your event id
+      console.log("Clicked event id:", eventId);
+
+      onSelectEvent(Number(eventId));
+    },
+    eventContent: (arg) => {
+      // Extract time using dayjs or built-in formatter
+
+      const timeLabel = dayjs(arg.event.start).format("HH:mm");
+
+      return {
+        html: `
+            <div class="event-container">
+            <div class="event-time">${timeLabel}</div>
+               <div class="event-text">${arg.event.title}</div>
+               </div>`,
+      };
+    },
     selectable: true,
     select: (arg) => {
-     console.log(convertToGregorianYMD(arg.start))
+      console.log(convertToGregorianYMD(arg.start));
       onSelectDate(convertToGregorianYMD(arg.start));
     },
     dayHeaderDidMount: () => {

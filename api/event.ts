@@ -10,9 +10,26 @@ export async function addEvent(data: any) {
     return result;
   } catch {}
 }
+export async function deleteEvent(id: number) {
+  try {
+    const result = await fetchService(`event/${id}`, {
+      method: "DELETE",
+
+    });
+
+    return result;
+  } catch {}
+}
 export async function getEvent() {
   try {
     const result = await fetchService("event");
+
+    return result;
+  } catch {}
+}
+export async function getSingleEvent(id:number) {
+  try {
+    const result = await fetchService(`event/${id}`);
 
     return result;
   } catch {}

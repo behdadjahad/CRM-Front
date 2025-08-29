@@ -16,22 +16,33 @@ import FormMaker from "@/components/shared/form-maker";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { createClient } from "@/api/client";
-import CustomerCard, { CustomerCardInterface } from "@/components/share/customer/CustomerCard";
+import CustomerCard, {
+  CustomerCardInterface,
+} from "@/components/share/customer/CustomerCard";
 import { addEvent } from "@/api/event";
 import { convertDateTimeToGregorian } from "@/lib/date";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { fetchAllUsers } from "@/store/all-users-slice";
 import { useDispatch } from "react-redux";
-export default function EventCreationContainer() {
+import { cn } from "@/lib/utils";
+import { FaPlus } from "react-icons/fa";
+interface EventCreationContainerInterface {
+  useForDetail?: boolean;
+}
+export default function EventCreationContainer({
+  useForDetail,
+}: EventCreationContainerInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [customers, setCustomers] = useState<CustomerDataInterface[]>([]);
   const queryClient = useQueryClient();
   const [fields, setFields] = useState([]);
+  const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
-  }>({ label: "تماس", value: "CALL" });
+    id?: number;
+  }>(followUpTypeList?.[1]);
   const dispatch = useDispatch<any>();
   useEffect(() => {
     dispatch(fetchAllUsers());
@@ -39,7 +50,8 @@ export default function EventCreationContainer() {
   const userOptions = useSelector((state: any) => state.allUsers.items);
   console.log(userOptions);
   const userData = useSelector((state: RootState) => state.user);
-  const { LeadContactTypeList } = getData(activeLeadContactType.value);
+  const { LeadContactTypeList } = getData(activeLeadContactType?.value);
+  console.log(fields);
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -69,14 +81,26 @@ export default function EventCreationContainer() {
         activeLeadContactType?.value,
         leadFormsData?.data
       );
+
       setFields(fields);
+      const updatedList = LeadContactTypeList.map((item) => {
+        const match = leadFormsData?.data?.find(
+          (d: any) => d.type === item.value
+        );
+        return {
+          ...item,
+          id: match ? match.id : null, // add id if match found
+        };
+      });
+
+      setFollowUpTypeList(updatedList);
     }
   }, [leadFormsData, activeLeadContactType]);
   console.log(fields);
   function returnFields(leadType: string, data: any[]) {
     const formFields = data.find((item: any) => item?.type === leadType)
       ?.baseJson.fields;
-    return formFields;
+    return formFields || [];
   }
   const { mutate: addPersonInfoHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -136,7 +160,7 @@ export default function EventCreationContainer() {
       // leadId: 1,
       customerIds: customerIds,
       userResponsibleId: formik.values.userResponsible,
-      // followUpTypeId: 1
+      followUpTypeId: activeLeadContactType?.id,
     };
     addEventHandler(data);
     // console.log(data);
@@ -153,15 +177,30 @@ export default function EventCreationContainer() {
 
   return (
     <>
-      <Button
-        variant={"info"}
-        onClick={() => {
-          setOpenModal(true);
-        }}
-        // className={cn("text-aqua-foreground flex justify-end w-full")}
-      >
-        افزودن رویداد
-      </Button>
+      {!useForDetail ? (
+        <Button
+          variant={"info"}
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          // className={cn("text-aqua-foreground flex justify-end w-full")}
+        >
+          افزودن رویداد
+        </Button>
+      ) : (
+        <Button
+          variant={"transparent"}
+          onClick={() => {
+            setOpenModal(true);
+          }}
+          className={cn(
+            "w-7 h-7  rounded-full flex items-center justify-center p-0 bg-aqua"
+          )}
+        >
+          <FaPlus className="text-white" />
+        </Button>
+      )}
+
       <CustomModal
         minWidth="0"
         maxWidth="700px"
@@ -177,7 +216,7 @@ export default function EventCreationContainer() {
               setOpenModal(false);
               formik.resetForm();
               setCustomers([]);
-              setActiveLeadContactType({ label: "تماس", value: "CALL" });
+              setActiveLeadContactType(followUpTypeList?.[0]);
             }}
             className="cursor-pointer"
           />
@@ -186,14 +225,14 @@ export default function EventCreationContainer() {
           <div>
             <span>نوع درخواست </span>
             <span>
-              {activeLeadContactType.label &&
+              {activeLeadContactType?.label &&
                 `( ${activeLeadContactType.label} )`}
             </span>
           </div>
           <LeadContactTypeContainer
-            list={LeadContactTypeList}
-            onActiveItem={(label: string, value: string) => {
-              setActiveLeadContactType({ label, value });
+            list={followUpTypeList}
+            onActiveItem={(label: string, value: string, id?: number) => {
+              setActiveLeadContactType({ label, value, id });
             }}
             activeItem={activeLeadContactType}
           />
@@ -300,20 +339,17 @@ export default function EventCreationContainer() {
           multiSelect={true}
         />
         <div className="p-3 flex flex-col gap-2">
-          {customers?.map((customer: any,index:number) => (
+          {customers?.map((customer: any, index: number) => (
             <CustomerCard
               {...customer}
-              key={`customer-${index+1}`}
+              key={`customer-${index + 1}`}
               onDeleteHandler={(customerId: number) => {
                 if (!customerId) return;
                 else {
-                   setCustomers((prev) =>
+                  setCustomers((prev) =>
                     prev.filter((item) => item.id !== customerId)
                   );
                 }
-                 
-
-              
               }}
             />
           ))}

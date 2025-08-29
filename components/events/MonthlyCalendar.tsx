@@ -26,6 +26,7 @@ type Props = {
   calendarType: "jalali" | "hijri" | "gregory";
   events: { title: string; start: string }[];
   onSelectDate: (date: string) => void;
+  onSelectEvent:(id:number)=>void;
 };
 export default function MonthlyCalendar({
   currentDate,
@@ -33,17 +34,19 @@ export default function MonthlyCalendar({
   calendarType,
   events,
   onSelectDate,
+  onSelectEvent
 }: Props) {
   const [visibleMonth, setVisibleMonth] = useState(
     getMonthInfo(currentDate, calendarType)
   );
-  console.log(events);
+
   const updatedEvents = events.map((event) => ({
     ...event,
     start: formatEventDate(event.start),
     end: formatEventDate(event.start),
     allDay: false,
   }));
+  console.log(updatedEvents);
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: "customMonth",
@@ -75,10 +78,16 @@ export default function MonthlyCalendar({
       return {
         html: `
         <div class="event-container">
-        <div class="event-time"pm2 >${timeLabel}</div>
+        <div class="event-time">${timeLabel}</div>
            <div class="event-text">${arg.event.title}</div>
            </div>`,
       };
+    },
+    eventClick: (arg) => {
+      const eventId = arg.event.id; // <-- your event id
+      console.log("Clicked event id:", eventId);
+
+      onSelectEvent(Number(eventId))
     },
     dayCellContent: (arg) => {
       const {

@@ -119,7 +119,13 @@
     --link-shadow: 214.3 31.8% 91.4%;
   }
 }
-
+@font-face{
+  font-family: "customFont";
+  src:url(/public/fonts/Inter.ttf);
+}
+.custom-font{
+  font-family: "customFont";
+}
 @layer base {
   * {
     @apply border-border/20 leading-normal scroll-smooth;
@@ -299,13 +305,28 @@
   @apply flex items-center justify-center gap-2;
 }
 .event-container{
-    @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA];
+    @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA] cursor-pointer;
+}
+.event-call{
+ @apply  border-[#FCCEEE] bg-[#FDF2FA]
+}
+.event-sms{
+
+}
+.event-email{
+
+}
+.event-voip{
+
+}
+.event-meet{
+
 }
 .event-text{
-  @apply text-[#C11574] font-bold 
+  @apply text-[#C11574] font-bold
 }
 .event-time{
-    @apply text-[#DD2590] 
+    @apply text-[#DD2590]
 }
 .fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child{
     @apply flex items-center justify-center h-full w-full border-none;
@@ -322,4 +343,8 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
+}
+.fc-event{
+  background-color: transparent !important;
+  border:none !important;
 }

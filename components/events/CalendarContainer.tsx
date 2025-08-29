@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
@@ -39,8 +39,10 @@ import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "./lead/LeadContactTypeContainer";
 import EventDetailContainer from "./EventDetailContainer";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
+import { getLaedfollowUpTypes } from "@/api/follow-up";
+import { deleteEvent, getSingleEvent } from "@/api/event";
 
 const year = 1404;
 const result = jalaali.jalCal(year);
@@ -57,17 +59,24 @@ export interface CalendarContainerInterface {
     title: string;
     start: string;
   }[];
+  onFilter: (data: any) => void;
 }
 export default function CalendarContainer({
   data,
+  onFilter,
 }: CalendarContainerInterface) {
+  const [viewDetail, setViewDetail] = useState<boolean>(false);
+  const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
     label: string;
     value: string;
-  }>({ label: "تماس", value: "CALL" });
+    id?: number;
+  }>(followUpTypeList?.[0]);
 
   const today = getTodayInGregorianYMD();
   const [selectedDate, setSelectedDate] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<number>();
+  const [multiEvent, setMultiEvent] = useState<boolean>(true);
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -80,7 +89,29 @@ export default function CalendarContainer({
     calendarRangeType,
     calendarType
   );
+  const { data: leadFollowUpTypeData } = useQuery({
+    queryKey: ["leadFollowUpTypeData"],
+    queryFn: async () => await getLaedfollowUpTypes(),
+  });
   const { LeadContactTypeList } = getData();
+  useEffect(() => {
+    if (leadFollowUpTypeData) {
+      console.log(leadFollowUpTypeData);
+      console.log(leadFollowUpTypeData);
+      const updatedList = LeadContactTypeList.map((item: any) => {
+        const match = leadFollowUpTypeData?.data?.find(
+          (d: any) => d.type === item.value
+        );
+        return {
+          ...item,
+          id: match ? match.id : null, // add id if match found
+        };
+      });
+
+      setFollowUpTypeList(updatedList);
+    }
+  }, [leadFollowUpTypeData]);
+
   // Go to previous day/week/month
   const goToNext = () => {
     setCurrentDate((prevDate) => {
@@ -370,13 +401,13 @@ export default function CalendarContainer({
   const goToToday = () => {
     setCurrentDate(today);
   };
-  const { mutate: getSingleDateData, data: singleDateEvent } = useMutation({
+  const { mutate: getCalendarFilteredData } = useMutation({
     mutationFn: (data: any) => {
       return getCalendarData(data);
     },
     onSuccess: (data) => {
       console.log(data);
-      if (data && data?.data ) {
+      if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
           start: item?.occurenceDate,
@@ -385,14 +416,43 @@ export default function CalendarContainer({
       }
     },
   });
-  
+
+  const { mutate: getSingleEventHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return getSingleEvent(id);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      if (data && data?.data) {
+        // const eventsOptions = data?.data?.map((item: any) => ({
+        //   title: item?.subject,
+        //   start: item?.occurenceDate,
+        // }));
+        // setSingleDateEvents(eventsOptions);
+      }
+    },
+  });
+  const { mutate: deleteEventHandler } = useMutation({
+    mutationFn: (id: number) => {
+      return deleteEvent(id);
+    },
+    onSuccess: (data) => {},
+  });
+
   console.log(getCalendarInfo(currentDate, calendarType));
   function getDateDataHandler(date: string) {
     const data = {
       startDateRange: date + "T00:00:00Z",
       endDateRange: date + "T23:59:59Z",
     };
-    getSingleDateData(data);
+    getCalendarFilteredData(data);
+  }
+  function getFollowupTypeEvents(id?: number) {
+    const data = {
+      followUpTypeId: id,
+    };
+
+    getCalendarFilteredData(data);
   }
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
@@ -409,15 +469,17 @@ export default function CalendarContainer({
         />
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
-            list={LeadContactTypeList}
-            onActiveItem={(label: string, value: string) => {
-              setActiveLeadContactType({ label, value });
+            list={followUpTypeList}
+            onActiveItem={(label: string, value: string, id?: number) => {
+              setActiveLeadContactType({ label, value, id });
+              onFilter({ followUpTypeId: id });
+              // getFollowupTypeEvents(id);
             }}
             activeItem={activeLeadContactType}
           />
         </div>
 
-        <div className={`w-full ${selectedDate ? "grid grid-cols-4" : ""}`}>
+        <div className={`w-full ${viewDetail ? "grid grid-cols-4" : ""}`}>
           <div className="col-span-3">
             {calendarRangeType === "monthly" ? (
               <MonthlyCalendar
@@ -429,6 +491,14 @@ export default function CalendarContainer({
                   getDateDataHandler(date);
                   setSelectedDate(date);
                   setCurrentDate(date);
+                  setViewDetail(true);
+                  setMultiEvent(true);
+                }}
+                onSelectEvent={(id: number) => {
+                  setSelectedEvent(id);
+                  getSingleEventHandler(id);
+                  setViewDetail(true);
+                  setMultiEvent(false);
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
@@ -441,19 +511,40 @@ export default function CalendarContainer({
                   getDateDataHandler(date);
                   setSelectedDate(date);
                   setCurrentDate(date);
+                  setViewDetail(true);
+                  setMultiEvent(true);
+                }}
+                onSelectEvent={(id: number) => {
+                  setSelectedEvent(id);
+                  getSingleEventHandler(id);
+                  setViewDetail(true);
+                  setMultiEvent(false);
                 }}
               />
             ) : calendarRangeType === "daily" ? (
-              <DailyCalendar currentDate={currentDate} events={data} />
+              <DailyCalendar
+                currentDate={currentDate}
+                events={data}
+                onSelectEvent={(id: number) => {
+                  setSelectedEvent(id);
+                  getSingleEventHandler(id);
+                  setViewDetail(true);
+                  setMultiEvent(false);
+                }}
+              />
             ) : (
               <></>
             )}
           </div>
-          {selectedDate && (
+          {viewDetail && (
             <div className="col-span-1 bg-card p-6">
               <EventDetailContainer
                 eventList={singleDateEvents}
                 calendarType={calendarType}
+                multiEvent={multiEvent}
+                onDeleteHandler={(id) => {
+                  deleteEventHandler(id);
+                }}
               />
             </div>
           )}

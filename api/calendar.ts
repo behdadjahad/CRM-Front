@@ -1,9 +1,12 @@
 import { fetchService } from "@/boot/fetch-service";
+import { buildQueryString } from "@/lib/utils";
 
 export async function getCalendarData(data?: any) {
-  const query = data ? `calender?startDateRange=${data.startDateRange}&endDateRange=${data.endDateRange}`:"calender";
+  const queryParams = buildQueryString({
+   ...data, // spread your filters into the query params
+  });
   try {
-    const result = await fetchService(query);
+    const result = await fetchService(`calender?${queryParams}`);
 
     return result;
   } catch {}
