@@ -29,7 +29,7 @@ export async function getEvent() {
 }
 export async function getSingleEvent(id:number) {
   try {
-    const result = await fetchService(`event/${id}`);
+    const result = await fetchService(`event/single-event/${id}`);
 
     return result;
   } catch {}

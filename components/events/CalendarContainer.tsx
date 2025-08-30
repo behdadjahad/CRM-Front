@@ -7,7 +7,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import moment from "moment-hijri";
-
+import Image from "next/image";
 import {
   convertDateWithTimeZone,
   convertToGregorianYMD,
@@ -15,8 +15,10 @@ import {
   generateWeekVisibleRange,
   getCalendarInfo,
   getMonthInfo,
+  getTimeOfDate,
   getToday,
   getTodayInGregorianYMD,
+  getWeekdayLabel,
   revertDateWithTimeZone,
 } from "@/lib/calendar";
 import MonthlyCalendar from "./MonthlyCalendar";
@@ -43,6 +45,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
+import CalendarDetailSideBar from "./CalendarDetailSidebar";
+import DeleteConfirmation from "../admin/delete-confirmation";
+import { Button } from "../ui/button";
+import EventEditionContainer from "./EventEditionContainer";
 
 const year = 1404;
 const result = jalaali.jalCal(year);
@@ -77,6 +83,7 @@ export default function CalendarContainer({
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const [multiEvent, setMultiEvent] = useState<boolean>(true);
+
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -424,11 +431,17 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       console.log(data);
       if (data && data?.data) {
+        const eventsOptions = [
+          {
+            title:data?.data?.subject,
+            start: data?.data?.eventAt,
+          },
+        ];
         // const eventsOptions = data?.data?.map((item: any) => ({
         //   title: item?.subject,
-        //   start: item?.occurenceDate,
+        //   start: item?.eventAt,
         // }));
-        // setSingleDateEvents(eventsOptions);
+        setSingleDateEvents(eventsOptions);
       }
     },
   });
@@ -454,6 +467,46 @@ export default function CalendarContainer({
 
     getCalendarFilteredData(data);
   }
+  // const calendarDetailData = {
+  //   title: "تاریخچه رویدادها",
+  //   actions: (
+  //     <>
+  //       <Button
+  //         className="border-none p-0 text-[#212B36]"
+  //         onClick={() => {
+  //           setViewEditForm(true);
+  //         }}
+  //       >
+  //         <Image
+  //           src="/icons/edit-primary.png"
+  //           alt=""
+  //           width={1024}
+  //           height={1024}
+  //           className="w-4 h-4"
+  //           onClick={() => {}}
+  //         />
+  //       </Button>
+
+  //       <DeleteConfirmation onDelete={() => {}} />
+  //     </>
+  //   ),
+
+  //   // list: singleDateEvents,
+  //   list: singleDateEvents.map((item) => {
+  //     const date = convertDateWithTimeZone(item.start, calendarType); // pass event date to your util
+  //     const weekLabel = getWeekdayLabel(new Date(item?.start), calendarType);
+  //     return {
+  //       time: getTimeOfDate(item.start), // e.g., "10:30 AM"
+  //       weekLabel: weekLabel, // e.g., "Mon"
+  //       title: item?.title || "",
+  //       monthName: date.monthName, // e.g., "Aug"
+  //       day: date.day,
+  //       timeLabel: "ساعت",
+  //       // e.g., "26"
+  //     };
+  //   }),
+  // };
+
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -538,13 +591,17 @@ export default function CalendarContainer({
           </div>
           {viewDetail && (
             <div className="col-span-1 bg-card p-6">
-              <EventDetailContainer
+              {/* <EventDetailContainer
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 multiEvent={multiEvent}
                 onDeleteHandler={(id) => {
                   deleteEventHandler(id);
                 }}
+              /> */}
+              <CalendarDetailSideBar
+                eventList={singleDateEvents}
+                calendarType={calendarType}
               />
             </div>
           )}
