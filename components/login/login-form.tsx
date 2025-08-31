@@ -9,8 +9,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import { useState } from "react";
+import { setHashCode } from "@/store/role-slice";
+import { useDispatch } from "react-redux";
 
 export default function LoginForm() {
+  const dispatch = useDispatch<any>();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -53,17 +56,19 @@ export default function LoginForm() {
     //   expires: 7, // 7 days
     // });
     if (result?.status === "success") {
-      console.log(56,result)
+      console.log(56, result);
       const status = result.data.registerationStatus;
+        // dispatch(setHashCode(result?.data?.hash));
       if (status) {
         router.push("/pending-register");
       } else {
         router.push("/sale");
       }
-
-      
+       console.log(result?.data?.hash)
       localStorage.setItem("token", result?.data?.tokens?.accessToken);
       localStorage.setItem("refreshToken", result?.data?.tokens?.refreshToken);
+      localStorage.setItem("hash", result?.data?.hash);
+    
     } else {
       // toast
       // router.push("/login");

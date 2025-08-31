@@ -84,9 +84,9 @@ export default function ContractExpenseContainer() {
       //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
       //     return {},
       //   });
-      const servicePrices = Object?.entries(
+      const servicePrices =     allExpenses?.data?.servicePrices ? Object?.entries(
         allExpenses?.data?.servicePrices
-      ).map(([key, value]) => ({ key, ...(value as any) }));
+      ).map(([key, value]) => ({ key, ...(value as any) })):[];
       const totalServiceExpenses = servicePrices
         .filter((item) => item.groupedBuyPrices.length > 0)
         .map((item) => ({

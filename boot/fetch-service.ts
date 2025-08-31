@@ -1,10 +1,7 @@
 import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
-import Cookies from "js-cookie";
-import { redirect } from "next/navigation";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { RootState, store } from "@/store";
+
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
 export interface FetchServiceType {
@@ -16,14 +13,16 @@ export interface FetchServiceType {
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = localStorage.getItem("token");
+  const hashCode = localStorage.getItem("hash");
+  // const code =localStorage.getItem("currentPageCode");
   const code = "service";
-  // alert(code)
+  console.log(hashCode, code);
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
-    "x-page-code": code,
-    "x-access-hash": ""
+    ...(code ? { "x-page-code": code } : {}),
+    ...(hashCode ? { "x-access-hash": hashCode } : {}),
   };
 }
 
@@ -131,7 +130,10 @@ export async function fetchService(
   }
 
   const result = await response.json();
-
+  if (result?.meta?.accessChanged) {
+    const data = getAccess();
+    console.log(data);
+  }
   if (result.ui?.type === "toast") {
     CustomToast({
       type: result.status,
@@ -173,6 +175,21 @@ export async function renewAccessToken() {
     } else {
       return null;
     }
+  } catch (error) {
+    return null;
+  }
+}
+export async function getAccess() {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+  try {
+    const response = await fetch(`${config.ServerAddress}/api/v1/user/access`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   } catch (error) {
     return null;
   }

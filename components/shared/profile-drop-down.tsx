@@ -78,13 +78,13 @@ export default function ProfileDropDown({
         <div className="flex flex-row items-center gap-2 text-badge-foreground">
           <Image
             src={"/temp/avatar.png"}
-            alt={userData.fullName}
+            alt={userData?.fullName}
             width={24}
             height={24}
             className="shadow-[0px_4px_4px_0px_#00000040] rounded-full"
           />
 
-          <span className="text-xs">{userData.fullName}</span>
+          <span className="text-xs">{userData?.fullName}</span>
         </div>
 
         <ChevronDown size={16} />
