@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
 export interface FetchServiceType {
@@ -15,15 +16,14 @@ export interface FetchServiceType {
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = localStorage.getItem("token");
-  // const accessToken = Cookies.get("accesstoken"); // watch for exact key
-  // const refreshToken = Cookies.get("refreshToken");
-
-  // Use accessToken if it exists, otherwise use refreshToken
-  // const tokenToUse = accessToken || refreshToken;
+  const code = "service";
+  // alert(code)
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
+    "x-page-code": code,
+    "x-access-hash": ""
   };
 }
 

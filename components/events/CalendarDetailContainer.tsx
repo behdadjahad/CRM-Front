@@ -8,6 +8,7 @@ import EventDetailCard from "./EventDetailCard";
 import { Button } from "../ui/button";
 import DeleteConfirmation from "../admin/delete-confirmation";
 import { useState } from "react";
+import EventCreationContainer from "./calendar/EventCreationContainer";
 interface CalendarDetailContainerInterface {
   //   data: {
   //     title: string;
@@ -16,11 +17,15 @@ interface CalendarDetailContainerInterface {
   //   };
   eventList: any[];
   calendarType: "jalali" | "hijri" | "gregory";
+    isSingleEventData: boolean;
+    onDeleteEvent: (id: number) => void;
 }
 
 export default function CalendarDetailContainer({
   eventList,
   calendarType,
+    isSingleEventData,
+  onDeleteEvent
 }: CalendarDetailContainerInterface) {
   const [viewEditForm, setViewEditForm] = useState<boolean>(false);
   const { data } = generateEventsDetailData();
@@ -40,7 +45,7 @@ export default function CalendarDetailContainer({
   function generateEventsDetailData() {
     const data = {
       title: "تاریخچه رویدادها",
-      actions: (
+      actions: isSingleEventData ? (
         <>
           <Button
             className="border-none p-0 text-[#212B36]"
@@ -58,11 +63,12 @@ export default function CalendarDetailContainer({
             />
           </Button>
 
-          <DeleteConfirmation onDelete={() => {}} />
+          <DeleteConfirmation onDelete={() => {onDeleteEvent(eventList?.[0]?.id)}} />
         </>
+      ) : (
+        <EventCreationContainer useForDetail={true} />
       ),
 
-      // list: singleDateEvents,
       list: eventList.map((item) => {
         const date = convertDateWithTimeZone(item.start, calendarType); // pass event date to your util
         const weekLabel = getWeekdayLabel(new Date(item?.start), calendarType);

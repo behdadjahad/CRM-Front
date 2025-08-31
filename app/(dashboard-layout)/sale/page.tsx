@@ -32,8 +32,10 @@ import ContractOverview from "@/components/sale/contract-overview";
 import { useRouter } from "next/navigation";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { Button } from "@/components/ui/button";
+import { usePageCode } from "@/hooks/use-page-code";
 
 export default function Sale() {
+  usePageCode();
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
@@ -65,7 +67,9 @@ export default function Sale() {
     (state: any) => state.contract.ContractOverviewList
   );
   const scrollY = useSelector((state: any) => state.contract.scrollPosition);
-  const dateTimeRange=useSelector((state: any) => state.contract.dateTimeRange);
+  const dateTimeRange = useSelector(
+    (state: any) => state.contract.dateTimeRange
+  );
   const mainRef = useRef<HTMLDivElement>(null);
 
   const { data: contractTypeData } = useQuery({
@@ -486,7 +490,7 @@ export default function Sale() {
       })
     );
   }
-    const isChecked = contractLists?.every((item: any) =>
+  const isChecked = contractLists?.every((item: any) =>
     checkedItems.some((obj: any) => obj.id === item.id)
   );
   const getDataHandler = async () => {
@@ -521,7 +525,6 @@ export default function Sale() {
       dispatch(setCheckedItems(updatedItems));
     }
   }
-
 
   return (
     <main ref={mainRef}>

@@ -1,13 +1,24 @@
 import CalendarDetailContainer from "./CalendarDetailContainer";
 
 interface CalendarDetailSideBar {
-    eventList: any[]
-    calendarType: "jalali" | "hijri" | "gregory";
+  eventList: any[];
+  calendarType: "jalali" | "hijri" | "gregory";
+  isSingleEventData: boolean;
+  onDeleteEvent: (id: number) => void;
 }
 
 export default function CalendarDetailSideBar({
-    eventList,
-    calendarType
+  eventList,
+  calendarType,
+  isSingleEventData,
+  onDeleteEvent,
 }: CalendarDetailSideBar) {
-    return <CalendarDetailContainer eventList={eventList} calendarType={ calendarType} />;
+  return (
+    <CalendarDetailContainer
+      eventList={eventList}
+      calendarType={calendarType}
+      isSingleEventData={isSingleEventData}
+      onDeleteEvent={onDeleteEvent}
+    />
+  );
 }

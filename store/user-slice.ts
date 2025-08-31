@@ -12,6 +12,7 @@ export interface UserData {
   }[];
   registerationRequestId: number;
   status: string;
+  code: string;
 }
 
 const initialState: UserData = {
@@ -27,6 +28,7 @@ const initialState: UserData = {
   ],
   registerationRequestId: 0,
   status: "initial",
+  code:"service"
 };
 
 const userSlice = createSlice({

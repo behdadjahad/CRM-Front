@@ -19,7 +19,7 @@ import { sendSingleServiceData } from "@/api/service";
 import ContractInfoContainer, {
   ContractInfoInterface,
 } from "@/components/shared/contract-info-container";
-import Image from "next/image";
+
 import ExpertInfoContainer, {
   PersonInfoInterface,
 } from "@/components/shared/person-info-container";
@@ -29,6 +29,7 @@ import Link from "next/link";
 import { ServerImageAddress, totalVotes } from "@/lib/utils";
 
 export default function Service() {
+  const code = "service";
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
   const [contract, setContract] = useState<any>(null);
@@ -137,9 +138,10 @@ export default function Service() {
       {
         label: "",
         value: "",
-        image:
-          contract?.data?.mainCustomerSoldto?.person?.avatar ? ServerImageAddress + contract?.data?.mainCustomerSoldto?.person?.avatar :
-          ""
+        image: contract?.data?.mainCustomerSoldto?.person?.avatar
+          ? ServerImageAddress +
+            contract?.data?.mainCustomerSoldto?.person?.avatar
+          : "",
       },
       {
         label: "نام و نام خانوادگی",
@@ -163,7 +165,6 @@ export default function Service() {
             ?.communicationDetails,
       },
     ],
-    
   };
 
   return (

@@ -71,6 +71,7 @@ export default function CalendarContainer({
   data,
   onFilter,
 }: CalendarContainerInterface) {
+ 
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -82,7 +83,7 @@ export default function CalendarContainer({
   const today = getTodayInGregorianYMD();
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<number>();
-  const [multiEvent, setMultiEvent] = useState<boolean>(true);
+  const [isSingleEventData, setIsSingleEventData] = useState<boolean>(false);
 
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
@@ -91,7 +92,7 @@ export default function CalendarContainer({
     "jalali" | "hijri" | "gregory"
   >("jalali");
   const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
-
+  const [filteredEvents,setFilteredEvents]= useState<any[]>([]);
   const { calendarData } = generateCalendarData(
     calendarRangeType,
     calendarType
@@ -419,6 +420,21 @@ export default function CalendarContainer({
           title: item?.subject,
           start: item?.occurenceDate,
         }));
+        setFilteredEvents(eventsOptions);
+      }
+    },
+  });
+  const { mutate: getSingleDateHandler } = useMutation({
+    mutationFn: (data: any) => {
+      return getCalendarData(data);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      if (data && data?.data) {
+        const eventsOptions = data?.data?.map((item: any) => ({
+          title: item?.subject,
+          start: item?.occurenceDate,
+        }));
         setSingleDateEvents(eventsOptions);
       }
     },
@@ -432,15 +448,12 @@ export default function CalendarContainer({
       console.log(data);
       if (data && data?.data) {
         const eventsOptions = [
-          {
-            title:data?.data?.subject,
+          { id:data?.data?.id,
+            title: data?.data?.subject,
             start: data?.data?.eventAt,
           },
         ];
-        // const eventsOptions = data?.data?.map((item: any) => ({
-        //   title: item?.subject,
-        //   start: item?.eventAt,
-        // }));
+
         setSingleDateEvents(eventsOptions);
       }
     },
@@ -449,7 +462,9 @@ export default function CalendarContainer({
     mutationFn: (id: number) => {
       return deleteEvent(id);
     },
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      
+    },
   });
 
   console.log(getCalendarInfo(currentDate, calendarType));
@@ -458,8 +473,9 @@ export default function CalendarContainer({
       startDateRange: date + "T00:00:00Z",
       endDateRange: date + "T23:59:59Z",
     };
-    getCalendarFilteredData(data);
+    getSingleDateHandler(data);
   }
+
   function getFollowupTypeEvents(id?: number) {
     const data = {
       followUpTypeId: id,
@@ -526,7 +542,7 @@ export default function CalendarContainer({
             onActiveItem={(label: string, value: string, id?: number) => {
               setActiveLeadContactType({ label, value, id });
               onFilter({ followUpTypeId: id });
-              // getFollowupTypeEvents(id);
+              getFollowupTypeEvents(id);
             }}
             activeItem={activeLeadContactType}
           />
@@ -545,13 +561,13 @@ export default function CalendarContainer({
                   setSelectedDate(date);
                   setCurrentDate(date);
                   setViewDetail(true);
-                  setMultiEvent(true);
+                  setIsSingleEventData(false);
                 }}
                 onSelectEvent={(id: number) => {
                   setSelectedEvent(id);
                   getSingleEventHandler(id);
                   setViewDetail(true);
-                  setMultiEvent(false);
+                  setIsSingleEventData(true);
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
@@ -565,13 +581,13 @@ export default function CalendarContainer({
                   setSelectedDate(date);
                   setCurrentDate(date);
                   setViewDetail(true);
-                  setMultiEvent(true);
+                  setIsSingleEventData(false);
                 }}
                 onSelectEvent={(id: number) => {
                   setSelectedEvent(id);
                   getSingleEventHandler(id);
                   setViewDetail(true);
-                  setMultiEvent(false);
+                  setIsSingleEventData(true);
                 }}
               />
             ) : calendarRangeType === "daily" ? (
@@ -582,7 +598,7 @@ export default function CalendarContainer({
                   setSelectedEvent(id);
                   getSingleEventHandler(id);
                   setViewDetail(true);
-                  setMultiEvent(false);
+                  setIsSingleEventData(true);
                 }}
               />
             ) : (
@@ -602,6 +618,8 @@ export default function CalendarContainer({
               <CalendarDetailSideBar
                 eventList={singleDateEvents}
                 calendarType={calendarType}
+                isSingleEventData={isSingleEventData}
+                onDeleteEvent={(id)=>{deleteEventHandler(id)}}
               />
             </div>
           )}

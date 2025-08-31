@@ -1,6 +1,6 @@
 export interface EventDetailCardInterface {
   weekLabel: string;
-  day: string;
+  day: number;
   monthName: string;
   timeLabel: string;
   time: string;

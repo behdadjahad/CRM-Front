@@ -66,19 +66,19 @@ export default function ContractCreation({
     queryFn: async () => await getCities(),
   });
   useEffect(() => {
-    if (countryData && countryData.data.length > 0) {
+    if (countryData && countryData?.data?.length > 0) {
       const countryOptions: OptionType[] = countryData?.data?.map((item) => ({
-        label: item.name,
-        value: item.id.toString(),
+        label: item?.name,
+        value: item?.id?.toString(),
       }));
       setCountryOptions(countryOptions);
     }
   }, [countryData]);
 
   useEffect(() => {
-    if (cityData && cityData.data.length > 0) {
+    if (cityData && cityData?.data?.length > 0) {
       if (!formik.values.country) {
-        const cities: OptionType[] = cityData?.data.map((item) => ({
+        const cities: OptionType[] = cityData?.data?.map((item) => ({
           label: item.name,
           value: item.id.toString(),
         }));

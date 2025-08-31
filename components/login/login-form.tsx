@@ -53,6 +53,7 @@ export default function LoginForm() {
     //   expires: 7, // 7 days
     // });
     if (result?.status === "success") {
+      console.log(56,result)
       const status = result.data.registerationStatus;
       if (status) {
         router.push("/pending-register");
@@ -61,8 +62,8 @@ export default function LoginForm() {
       }
 
       
-      localStorage.setItem("token", result?.data?.accessToken);
-      localStorage.setItem("refreshToken", result?.data?.refreshToken);
+      localStorage.setItem("token", result?.data?.tokens?.accessToken);
+      localStorage.setItem("refreshToken", result?.data?.tokens?.refreshToken);
     } else {
       // toast
       // router.push("/login");
