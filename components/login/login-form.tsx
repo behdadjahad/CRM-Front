@@ -58,17 +58,21 @@ export default function LoginForm() {
     if (result?.status === "success") {
       console.log(56, result);
       const status = result.data.registerationStatus;
-        // dispatch(setHashCode(result?.data?.hash));
+      // dispatch(setHashCode(result?.data?.hash));
       if (status) {
         router.push("/pending-register");
       } else {
         router.push("/sale");
       }
-       console.log(result?.data?.hash)
+      console.log(result?.data?.hash);
+      console.log(68, result);
       localStorage.setItem("token", result?.data?.tokens?.accessToken);
       localStorage.setItem("refreshToken", result?.data?.tokens?.refreshToken);
       localStorage.setItem("hash", result?.data?.hash);
-    
+      localStorage.setItem(
+        "accessData",
+        JSON.stringify(result?.data?.accessJson)
+      );
     } else {
       // toast
       // router.push("/login");

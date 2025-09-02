@@ -34,7 +34,7 @@ import ExportDataContainer from "@/components/shared/export-data-container";
 import { Button } from "@/components/ui/button";
 
 export default function Sale() {
-
+  console.log(localStorage.getItem("accessData"));
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []

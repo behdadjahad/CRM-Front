@@ -238,14 +238,14 @@ export async function editPage(id: number, data: any) {
 }
 export async function getPage() {
   try {
-    const result = await fetchService("page");
+    const result = await fetchService("page?limit=50");
 
     return result;
   } catch {}
 }
 export async function getSinglePageFeature(pageId:number) {
   try {
-    const result = await fetchService(`page-feature/page/${pageId}`);
+    const result = await fetchService(`page-feature/page/${pageId}?limit=50`);
 
     return result;
   } catch {}

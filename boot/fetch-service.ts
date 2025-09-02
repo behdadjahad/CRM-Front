@@ -92,6 +92,15 @@ export async function fetchService(
   }: FetchServiceType = {},
   version = "api/v1"
 ) {
+  // --- Check 2: hash missing in localStorage ---
+  let hashCode = localStorage.getItem("hash");
+  if (!hashCode) {
+    const accessData = await getAccess();
+    if (accessData?.data?.hash) {
+      localStorage.setItem("hash", accessData.data.hash);
+      hashCode = accessData.data.hash;
+    }
+  }
   const executeFetch = async () => {
     const headers = makeHeaders(additionalHeaders);
     const options: any = {
@@ -130,11 +139,20 @@ export async function fetchService(
   }
 
   const result = await response.json();
-  if (result?.meta?.accessChanged) {
-    const data = getAccess();
-    console.log(data);
+
+  if (result?.meta?.hasChanged) {
+    const accessData = await getAccess();
+    if (accessData?.data) {
+      if (accessData.data.hash) {
+        localStorage.setItem("hash", accessData.data.hash);
+      }
+      if (accessData.data.accessToken) {
+        localStorage.setItem("token", accessData.data.accessToken);
+      }
+    }
   }
-  if (result.ui?.type === "toast") {
+
+  if (result?.ui?.type === "toast") {
     CustomToast({
       type: result.status,
       message: result.message,
@@ -190,7 +208,17 @@ export async function getAccess() {
         Authorization: `Bearer ${token}`,
       },
     });
+    return response.json();
   } catch (error) {
     return null;
   }
 }
+
+// export async function checkAccessHashIsSet() {
+//   const hashCode = localStorage.getItem("hash");
+//   if (!hashCode ) {
+//     const accessData = getAccess();
+//     localStorage.setItem("hash", accessData?.data?.hash);
+//     // localStorage.setItem("hash", accessData?.data?.hash);
+//   }
+// }
