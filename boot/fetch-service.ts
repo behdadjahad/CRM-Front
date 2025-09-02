@@ -15,7 +15,7 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = localStorage.getItem("token");
   const hashCode = localStorage.getItem("hash");
   // const code =localStorage.getItem("currentPageCode");
-  const code = "service";
+  const code = "contract";
   console.log(hashCode, code);
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",

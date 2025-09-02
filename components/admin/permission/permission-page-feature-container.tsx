@@ -2,19 +2,22 @@ import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { editPermission } from "@/api/admin";
+import { editPackageUnit, editPermission } from "@/api/admin";
 
 import PermissionPageSubTable from "../tables/permission-page-sub-table";
 interface PermissionPageFeatureContainerInterface {
   pageList: any[];
   permissionId: number;
+  subTable: "permission" | "unit";
 }
 export default function PermissionPageFeatureContainer({
   pageList,
   permissionId,
+  subTable,
 }: PermissionPageFeatureContainerInterface) {
   const queryClient = useQueryClient();
   const [permissionData, setPermissionData] = useState({});
+  console.log(permissionData);
   const { mutate: editPermissionData } = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return editPermission(id, data);
@@ -31,11 +34,30 @@ export default function PermissionPageFeatureContainer({
       });
     },
   });
-  function editPermissionDataHandler(permissionData: any) {
+  const { mutate: editUnitData } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return editPackageUnit(id, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageUnitData"],
+      });
+    },
+  });
+  function editDataHandler(permissionData: any) {
     const data = {
       accessesJson: permissionData,
     };
-    editPermissionData({ id: permissionId, data: data });
+    switch (subTable) {
+      case "permission":
+        editPermissionData({ id: permissionId, data: data });
+        break;
+      case "unit":
+        editUnitData({ id: permissionId, data: data });
+        break;
+      default:
+        return;
+    }
   }
 
   return (
@@ -46,7 +68,7 @@ export default function PermissionPageFeatureContainer({
           className="border-none flex justify-end w-fit"
           variant={"info"}
           onClick={() => {
-            editPermissionDataHandler(permissionData);
+            editDataHandler(permissionData);
           }}
         >
           اعمال تغییرات

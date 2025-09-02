@@ -158,7 +158,7 @@ export async function deletePackageUnit(id: number) {
 }
 export async function getPackageUnit() {
   try {
-    const result = await fetchService("package-unit");
+    const result = await fetchService("package-unit?limit=50");
 
     return result;
   } catch {}

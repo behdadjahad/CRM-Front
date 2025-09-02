@@ -31,6 +31,20 @@ export interface PackageUnitInterface {
   }[];
   data: PackageUnitDataInterface;
   permissionList: PermissionInterface[];
+    pageList: {
+    list: {
+      label: string;
+      value: string;
+    }[];
+    data: {
+      id: number;
+      title: string;
+      code: string;
+      url: string;
+      enabled?: boolean;
+      show?: boolean;
+    };
+  }[];
 }
 
 export default function PackageUnit() {
@@ -103,6 +117,40 @@ function getData(packageUnitData: any) {
           value: pkg?.id,
         })),
       },
+      pageList: item?.accessesJson?.pages?.map((page: any) => ({
+        id: page.pageId,
+        list: [
+          { label: "عنوان", value: page?.title },
+          { label: "کد", value: page?.code },
+          { label: "آدرس", value: page?.url },
+        ],
+        data: {
+          id: page?.pageId,
+          title: page?.title,
+          code: page?.code,
+          url: page?.url,
+          enabled: page?.enabled,
+          show: page?.show,
+        },
+        featureList: page?.features?.map((feature: any) => ({
+          id: feature.featureId,
+          list: [
+            { label: "نام", value: feature.name },
+            { label: "کد", value: feature.code },
+            // { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
+            { label: "توضیحات", value: feature.description },
+          ],
+          data: {
+            id: feature.featureId,
+            name: feature.name,
+            code: feature.code,
+            urlPattern: feature.urlPattern,
+            description: feature.description,
+            show: feature.show,
+            enabled: feature.enabled,
+          },
+        })),
+      })),
       permissionList: item?.permissions?.map((permission: any) => ({
         id: permission.id,
         list: [

@@ -275,6 +275,7 @@ export default function PermissionTable({
                   <PermissionPageFeatureContainer
                     pageList={permission?.pageList}
                     permissionId={permission.id}
+                    subTable="permission"
                   />
                 </TableCell>
               </TableRow>

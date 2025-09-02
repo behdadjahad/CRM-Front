@@ -30,13 +30,13 @@ import {
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
 
-
 import { cleanFormatPrice } from "@/lib/utils";
 import { useSelector } from "react-redux";
 import AddPermissionToPackageUnit from "../permission/add-permission-to-package-unit";
 import { NoData } from "../no-data";
 import TagContainer from "../tag-container";
 import PermissionTable from "./permission-table";
+import PermissionPageFeatureContainer from "../permission/permission-page-feature-container";
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
@@ -167,22 +167,25 @@ export default function PackageUnitTable({
                 </TableCell>
               ))}
               <TableCell className="text-center text-xs border">
-                {unit?.data?.categories?.length > 0 ?   <TagContainer
-                  list={unit?.data?.categories}
-                  onDeleteHandler={(itemId) => {
-                    deleteUnitFromCategoryHandler({
-                      categoryId: itemId,
-                      data: {
-                        packageUnits: [
-                          {
-                            packageUnitId: unit.id,
-                          },
-                        ],
-                      },
-                    });
-                  }}
-                />:<p>به دسته بندی اختصاص داده نشده است</p> } 
-             
+                {unit?.data?.categories?.length > 0 ? (
+                  <TagContainer
+                    list={unit?.data?.categories}
+                    onDeleteHandler={(itemId) => {
+                      deleteUnitFromCategoryHandler({
+                        categoryId: itemId,
+                        data: {
+                          packageUnits: [
+                            {
+                              packageUnitId: unit.id,
+                            },
+                          ],
+                        },
+                      });
+                    }}
+                  />
+                ) : (
+                  <p>به دسته بندی اختصاص داده نشده است</p>
+                )}
               </TableCell>
               <TableCell className="text-center text-xs border">
                 <div className="flex items-center gap-4 w-full justify-center">
@@ -228,7 +231,6 @@ export default function PackageUnitTable({
                   className="text-sm text-gray-700 p-4"
                 >
                   <div className="flex flex-col gap-4">
-                 
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center justify-between">
                         <div>لیست دسترسی ها </div>
@@ -236,7 +238,20 @@ export default function PackageUnitTable({
                         <AddPermissionToPackageUnit packageUnitId={unit.id} />
                       </div>
 
-                      <PermissionTable permissionList={unit?.permissionList} permissionTableType="packageUnitSubTable" packageUnitId={unit.id}/>
+                      <PermissionTable
+                        permissionList={unit?.permissionList}
+                        permissionTableType="packageUnitSubTable"
+                        packageUnitId={unit.id}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center justify-between"></div>
+
+                      <PermissionPageFeatureContainer
+                        pageList={unit?.pageList}
+                        permissionId={unit.id}
+                        subTable="unit"
+                      />
                     </div>
                   </div>
                 </TableCell>
