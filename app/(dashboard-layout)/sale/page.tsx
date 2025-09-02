@@ -32,9 +32,11 @@ import ContractOverview from "@/components/sale/contract-overview";
 import { useRouter } from "next/navigation";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { Button } from "@/components/ui/button";
+import { generatePageAccessData } from "@/lib/pages-data";
 
 export default function Sale() {
-
+const pagesData = generatePageAccessData();
+  
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []

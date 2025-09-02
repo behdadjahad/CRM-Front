@@ -19,7 +19,9 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
       const values = data?.length > 0 ? data.map((d: any) => d.value) : [];
    
       form.setFieldValue(item.key, [...form.values[item.key], ...values]);
+      form.setFieldValue(item.key, [...form.values[item.key], ...data]);
    
+      
 
 
     },

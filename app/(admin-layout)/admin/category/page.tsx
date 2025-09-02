@@ -40,6 +40,20 @@ export interface CategoryInterface {
     }[];
     data: PackageUnitDataInterface;
     permissionList: PermissionInterface[];
+       pageList: {
+    list: {
+      label: string;
+      value: string;
+    }[];
+    data: {
+      id: number;
+      title: string;
+      code: string;
+      url: string;
+      enabled?: boolean;
+      show?: boolean;
+    };
+  }[];
   }[];
 }
 

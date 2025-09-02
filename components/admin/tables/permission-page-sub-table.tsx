@@ -50,47 +50,45 @@ export default function PermissionPageSubTable({
     initialPageParam: 1,
   });
   const [selectedPages, setSelectedPages] = useState<any[]>([]);
- const [selectedFeatures, setSelectedFeatures] = useState<any[]>(
-    []
-  );
+  const [selectedFeatures, setSelectedFeatures] = useState<any[]>([]);
+const [selectedFeaturesByPage, setSelectedFeaturesByPage] = useState<Record<number, any[]>>({});
+  useEffect(() => {
+    if (!pageList) return;
 
-useEffect(() => {
-  if (!pageList) return;
-
-  // Initialize Pages
-  const initialPages = pageList.map((page) => ({
-    pageId: page?.id,
-    title: page?.data?.title,
-    code: page?.data?.code,
-    url: page?.data?.url,
-    show: page?.data?.show ?? false,
-    enabled: page?.data?.enabled ?? false,
-    showIsSubmitted: true,
-    enabledIsSubmitted: true,
-  }));
-
-  setSelectedPages(initialPages);
-
-  // Initialize Features
-  const initialFeatures = pageList.flatMap((page) => {
-    const features = page?.data?.features || [];
-    return features.map((feature: any) => ({
-      pageId: page.id,
-      featureId: feature.id,
-      name: feature.name,
-      code: feature.code,
-      urlPattern: feature.urlPattern,
-      description: feature.description,
-      show: feature.show ?? false,
-      enabled: feature.enabled ?? false,
+    // Initialize Pages
+    const initialPages = pageList.map((page) => ({
+      pageId: page?.id,
+      title: page?.data?.title,
+      code: page?.data?.code,
+      url: page?.data?.url,
+      show: page?.data?.show ?? false,
+      enabled: page?.data?.enabled ?? false,
       showIsSubmitted: true,
       enabledIsSubmitted: true,
     }));
-  });
 
-  setSelectedFeatures(initialFeatures);
-}, [pageList]);
-  
+    setSelectedPages(initialPages);
+
+    // Initialize Features
+    const initialFeatures = pageList.flatMap((page) => {
+      const features = page?.data?.features || [];
+      return features.map((feature: any) => ({
+        pageId: page.id,
+        featureId: feature.id,
+        name: feature.name,
+        code: feature.code,
+        urlPattern: feature.urlPattern,
+        description: feature.description,
+        show: feature.show ?? false,
+        enabled: feature.enabled ?? false,
+        showIsSubmitted: true,
+        enabledIsSubmitted: true,
+      }));
+    });
+
+    setSelectedFeatures(initialFeatures);
+  }, [pageList]);
+
   useEffect(() => {
     if (!pageList) return;
 
@@ -108,14 +106,11 @@ useEffect(() => {
     setSelectedPages(initialPages);
   }, [pageList]);
 
- 
- 
   function generateSelectedData(
     selectedFeatures: any[],
     selectedPages: any[]
     // 👈 callback to parent
   ) {
-   
     const result = {
       pages: selectedPages.map((page) => {
         const featuresForPage = selectedFeatures.filter(
@@ -123,19 +118,19 @@ useEffect(() => {
         );
 
         return {
-          pageId: page.pageId,
-          title: page.title,
-          code: page.code,
-          url: page.url,
-          show: page.show,
-          enabled: page.enabled,
+          pageId: page?.pageId,
+          title: page?.title,
+          code: page?.code,
+          url: page?.url,
+          show: page?.show,
+          enabled: page?.enabled,
           features:
             featuresForPage?.map((feature) => ({
-              featureId: feature.featureId,
-              name: feature.name,
-              code: feature.code,
-              description: feature.description,
-              urlPattern: feature.urlPattern[0],
+              featureId: feature?.featureId,
+              name: feature?.name,
+              code: feature?.code,
+              description: feature?.description,
+              urlPattern: feature?.urlPattern?.[0],
               show: feature.show,
               enabled: feature.enabled,
             })) || [],
@@ -196,8 +191,8 @@ useEffect(() => {
           url: data?.url,
           show: actionType === "show",
           enabled: actionType === "enabled",
-          showIsSubmitted:  false ,
-          enabledIsSubmitted:  false ,
+          showIsSubmitted: false,
+          enabledIsSubmitted: false,
         },
       ];
     }
@@ -339,6 +334,7 @@ useEffect(() => {
                         generateSelectedData(selectedFeatures, selectedPages);
                         setSelectedFeatures(selectedFeatures);
                       }}
+                   
                     />
                   </div>
                 </TableCell>

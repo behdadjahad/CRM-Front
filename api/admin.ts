@@ -31,7 +31,7 @@ export async function editPackage(id: number, data: any) {
 }
 export async function getPackage() {
   try {
-    const result = await fetchService("package");
+    const result = await fetchService("package?limit=50");
 
     return result;
   } catch {}
@@ -67,7 +67,7 @@ export async function deletePackageCategory(id: number) {
 }
 export async function getPackageCategory() {
   try {
-    const result = await fetchService("package-category");
+    const result = await fetchService("package-category?limit=50");
 
     return result;
   } catch {}

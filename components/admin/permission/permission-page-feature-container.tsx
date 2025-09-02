@@ -78,6 +78,7 @@ export default function PermissionPageFeatureContainer({
       <PermissionPageSubTable
         pageList={pageList}
         onDataGenerated={(data) => {
+          console.log(data)
           setPermissionData(data);
         }}
       />

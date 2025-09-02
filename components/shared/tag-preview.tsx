@@ -29,7 +29,7 @@ export default function TagPreview({
             className="bg-gray-50 px-2 text-gray-500 border rounded-full text-right w-fit relative h-8 flex items-center justify-between text-xs min-w-18 gap-2"
             key={tag}
           >
-            <div className="text-right">{tag}</div>
+            <div className="text-right">{tag.label}</div>
             <Button
               variant={"transparent"}
               onClick={() => {

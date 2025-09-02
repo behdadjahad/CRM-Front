@@ -22,6 +22,7 @@ export default function PermissionFeatureSubTable({
   pageId,
   onSendSelectedFeatures,
 }: PermissionFeatureSubTableInterface) {
+
   const limit = 5;
   const {
     data: allFeaturesData,
@@ -30,7 +31,7 @@ export default function PermissionFeatureSubTable({
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["allFeaturesData"],
+    queryKey: ["allFeaturesData",pageId],
     queryFn: ({ pageParam = 1 }) => getSinglePageFeature(pageId),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =

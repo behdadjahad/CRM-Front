@@ -44,7 +44,8 @@ export default function AddCategoryToPackage({
   });
   function addCatogoryToPackagehandler(values: any) {
     const id = values.packageId;
-    const data = { ids: values.categories };
+    const ids=values.categories.map((item:any)=>item.value)
+    const data = { ids: ids };
     addCategoryhandler({
       id: id,
       data: data,
