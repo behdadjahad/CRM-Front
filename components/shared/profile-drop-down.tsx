@@ -16,6 +16,7 @@ import { Button } from "../ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 export interface ProfileDropDownInterface {
   className?: string;
@@ -45,8 +46,8 @@ export default function ProfileDropDown({
       return logOut();
     },
     onSuccess: () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("refreshToken");
       router.push("/login");
       // Cookies.remove('accessToken', { path: '/' });
       // Cookies.remove('refreshToken', { path: '/' });
@@ -57,8 +58,8 @@ export default function ProfileDropDown({
   //   queryFn: () => getMe(),
   // });
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
+    const token = safeLocalStorage.getItem("token");
+    const refreshToken = safeLocalStorage.getItem("refreshToken");
     if (!token && !refreshToken) {
       router.push("/login");
     }

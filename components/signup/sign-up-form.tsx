@@ -12,6 +12,7 @@ import { SignUp, SignUpInput } from "@/api/signup";
 import { useMutation } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -44,8 +45,8 @@ export default function SignUpForm() {
     onSuccess: (result) => {
       if (result) {
         // router.push("/pending-register");
-        localStorage.setItem("token", result.data.tokens.accessToken);
-        localStorage.setItem("refreshToken", result.data.tokens.refreshToken);
+        safeLocalStorage.setItem("token", result.data.tokens.accessToken);
+        safeLocalStorage.setItem("refreshToken", result.data.tokens.refreshToken);
       }
     },
   });

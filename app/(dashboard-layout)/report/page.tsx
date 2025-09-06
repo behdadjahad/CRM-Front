@@ -30,6 +30,7 @@ import { exportMultipleSheets } from "@/lib/exportToExcel";
 import { ReportPDF } from "@/components/section/report-pdf";
 import { captureAllCharts } from "@/lib/pdf";
 import { splitRangeBySolarMonths } from "@/lib/date";
+import { usePageData } from "@/hooks/usePageData";
 
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
@@ -43,6 +44,9 @@ const IranMap = dynamic(() => import("@/components/section/iran-map"), {
   loading: () => <p>Loading map...</p>,
 });
 export default function Report() {
+  const pageFeatures = usePageData();
+
+
   const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
   const [satisfactionData, setSatisafactionData] = useState<any[]>([]);
   const [salesReportData, setSaleReportData] = useState<any[]>([]);
@@ -53,7 +57,7 @@ export default function Report() {
   const [overalData, setOveralData] = useState<any[]>([]);
   const [customerTypeData, setCustomerTypeData] = useState<any[]>([]);
   const [callReportData, setCallReportData] = useState<any[]>([]);
-   
+
   const printRef = useRef<HTMLDivElement>(null);
 
   // const ProfitReportData = {

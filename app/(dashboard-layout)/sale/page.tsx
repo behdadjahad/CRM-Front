@@ -35,8 +35,10 @@ import { Button } from "@/components/ui/button";
 
 import { usePageData } from "@/hooks/usePageData";
 import { AccessDenied } from "@/components/shared/AccessDenied";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 export default function Sale() {
+  
   const pageFeatures = usePageData();
   const createContract = pageFeatures?.find((item:any) => item?.code === "create-contract");
 
@@ -48,7 +50,7 @@ export default function Sale() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = safeLocalStorage.getItem("token");
     if (!token) {
       router.push("/login");
     } else {

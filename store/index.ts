@@ -15,7 +15,7 @@ import provinceReducer from "./province-slice";
 import leadReducer from "./lead-slice";
 import allUsersReducer from "./all-users-slice";
 import roleReducer from "./role-slice";
-
+import accessReducer from "./access-slice"; 
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +34,7 @@ export const store = configureStore({
     lead: leadReducer,
     allUsers: allUsersReducer,
     role: roleReducer,
+    access: accessReducer, // Add this line
  
   },
 });

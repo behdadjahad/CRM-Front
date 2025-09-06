@@ -1,3 +1,4 @@
+'use client'
 import { MdClose } from "react-icons/md";
 import CustomModal from "./custom-modal";
 import { useState } from "react";

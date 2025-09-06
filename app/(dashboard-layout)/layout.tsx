@@ -9,7 +9,11 @@ import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import "leaflet/dist/leaflet.css";
-
+import { AccessProvider } from "@/contexts/AccessContext"; // Add this import
+import { setCurrentPageCode } from "@/store/access-slice";
+import { useDispatch } from "react-redux";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
@@ -31,6 +35,8 @@ const iranSans = localFont({
 
 const queryClient = new QueryClient();
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,7 +50,10 @@ export default function RootLayout({
       >
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
-            <Layout>{children}</Layout>
+            <AccessProvider>
+            {/* <PageCodeHandler /> */}
+              <Layout>{children}</Layout>
+            </AccessProvider>
           </Provider>
         </QueryClientProvider>
         <Toaster />

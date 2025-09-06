@@ -5,7 +5,7 @@ export const pagesData = [
     code: "service",
   },
   {
-    url: "/contract",
-    code: "contract",
+    url: "/report",
+    code: "report",
   },
 ];
