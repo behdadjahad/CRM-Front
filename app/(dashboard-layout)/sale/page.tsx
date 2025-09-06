@@ -38,7 +38,9 @@ import { AccessDenied } from "@/components/shared/AccessDenied";
 
 export default function Sale() {
   const pageFeatures = usePageData();
-  const createContract = pageFeatures?.find((item:any) => item?.code === "create-contract");
+  const createContract = pageFeatures?.find(
+    (item: any) => item?.code === "create-contract"
+  );
 
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -550,10 +552,16 @@ export default function Sale() {
           />
         </div>
 
-        {(createContract?.show && createContract?.enabled) && <ContractCreation contractTypes={contractTypes} />}
-        {(!createContract?.show && !createContract?.enabled) && (<AccessDenied  variant={"foreground"} title=" ایجاد قرارداد" message="شما به این بخش دسترسی ندارید" />)}
-
-        
+        {createContract?.show && createContract?.enabled && (
+          <ContractCreation contractTypes={contractTypes} />
+        )}
+        {!createContract?.show && !createContract?.enabled && (
+          <AccessDenied
+            variant={"foreground"}
+            title="قرارداد جدید"
+            message="شما به این بخش دسترسی ندارید"
+          />
+        )}
       </div>
 
       <ContractOverview list={ContractOverviewList} />
