@@ -92,6 +92,7 @@ export default function Sale() {
       })
     );
   };
+
   const checkedItems = useSelector((state: any) => state.contract.checkedItems);
   useEffect(() => {
     if (contractTypeData && contractTypeData?.data?.length > 0) {
@@ -550,7 +551,7 @@ export default function Sale() {
         </div>
 
         {(createContract?.show && createContract?.enabled) && <ContractCreation contractTypes={contractTypes} />}
-        {(createContract?.show && createContract?.enabled) && <AccessDenied></AccessDenied>}
+        {(!createContract?.show && !createContract?.enabled) && (<AccessDenied  variant={"foreground"} title=" ایجاد قرارداد" message="شما به این بخش دسترسی ندارید" />)}
 
         
       </div>
