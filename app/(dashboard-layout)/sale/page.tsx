@@ -32,11 +32,14 @@ import ContractOverview from "@/components/sale/contract-overview";
 import { useRouter } from "next/navigation";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { Button } from "@/components/ui/button";
-import { generatePageAccessData } from "@/lib/pages-data";
+
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "@/components/shared/AccessDenied";
 
 export default function Sale() {
-const pagesData = generatePageAccessData();
-  
+  const pageFeatures = usePageData();
+  const createContract = pageFeatures?.find((item:any) => item?.code === "create-contract");
+
   const dispatch = useDispatch<any>();
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
@@ -546,7 +549,10 @@ const pagesData = generatePageAccessData();
           />
         </div>
 
-        <ContractCreation contractTypes={contractTypes} />
+        {(createContract?.show && createContract?.enabled) && <ContractCreation contractTypes={contractTypes} />}
+        {(createContract?.show && createContract?.enabled) && <AccessDenied></AccessDenied>}
+
+        
       </div>
 
       <ContractOverview list={ContractOverviewList} />

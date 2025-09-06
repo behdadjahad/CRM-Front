@@ -1,7 +1,11 @@
 export const pagesData = [
+  { url: "/sale", code: "sale", title: "sale" },
   {
     url: "/contract/service/:id",
     code: "service",
   },
-  { url: "", code: "" },
+  {
+    url: "/contract",
+    code: "contract",
+  },
 ];
