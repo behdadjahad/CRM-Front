@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { fetchUserData } from "@/store/user-slice";
+import { fetchUserData, testAction } from "@/store/user-slice";
 import { Button } from "../ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
@@ -26,9 +26,22 @@ export default function ProfileDropDown({
   className,
 }: ProfileDropDownInterface) {
   const userData = useSelector((state: any) => state.user);
+  const fullState = useSelector((state: any) => state);
+  console.log("🔍 Component userData:", userData);
+  console.log("🔍 Full Redux state:", fullState);
+  console.log("🔍 State keys:", Object.keys(fullState || {}));
   const router = useRouter();
   const dispatch = useDispatch<any>();
+
   useEffect(() => {
+    console.log("🎯 Testing Redux store");
+
+    // Test regular action first
+    console.log("🧪 Dispatching testAction");
+    dispatch(testAction());
+
+    // Then test async thunk
+    console.log("🎯 Dispatching fetchUserData");
     dispatch(fetchUserData());
   }, [dispatch]);
 

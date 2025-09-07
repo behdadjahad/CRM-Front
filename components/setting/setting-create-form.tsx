@@ -2,6 +2,7 @@ import { createSettingSubmitData, getTitleFromSlug } from "@/constants/setting";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
 import { useParams } from "next/navigation";
+import { usePageData } from "@/hooks/usePageData";
 
 export default function SettingCreateForm({
   form,
@@ -15,6 +16,7 @@ export default function SettingCreateForm({
   onSubmitHandler: (data: any) => any;
 }) {
   const { service } = useParams();
+
   return (
     <div className="flex flex-col gap-4 ">
       <div className="rounded-md p-3 flex flex-col gap-4 bg-card">

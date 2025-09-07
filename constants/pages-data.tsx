@@ -8,4 +8,20 @@ export const pagesData = [
     url: "/report",
     code: "report",
   },
+   {
+    url: "/customer",
+    code: "customers",
+  },
+{
+    url: "/setting/airport",
+   code:"airport-settings"
+  },
+  {
+    url: "/setting/hotel",
+   code:"hotel-settings"
+  },
+  {
+    url: "/setting/airline",
+    code:"airline-settings"
+  }
 ];

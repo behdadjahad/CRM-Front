@@ -39,3 +39,12 @@ export const safeLocalStorage = {
     }
   }
 };
+
+// 
+export function generateFeatureAccess(features: any, code: string) {
+  const feature = features?.find((item: any) => item?.code === code);
+  return {
+    enable: feature?.enable,
+    show: feature?.show,
+  };
+}

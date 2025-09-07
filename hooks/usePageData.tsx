@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 
 export function usePageData() {
 const pathname = usePathname();
+console.log("path",pathname)
 const dispatch=useDispatch()
   const pageData = useMemo(() => {
     const pageCode = pagesData?.find((item) => item.url === pathname)?.code;

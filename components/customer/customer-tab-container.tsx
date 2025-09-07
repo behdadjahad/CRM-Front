@@ -21,12 +21,20 @@ import {
   fetchCustomers,
   setCheckedItems,
 } from "@/store/customer-slice";
-
+import { usePageData } from "@/hooks/usePageData";
 import { useDispatch, useSelector } from "react-redux";
 import { convertToGregorian } from "@/lib/date";
 import ExportDataContainer from "@/components/shared/export-data-container";
+// import { pagesData } from "@/constants/pages-data";
+import { AccessDenied } from "../shared/AccessDenied";
+import { generateFeatureAccess } from "@/lib/generatePageData";
 
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
+   const pageFeatures = usePageData();
+
+  //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
+  // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
+
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
@@ -440,6 +448,10 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       <div className="gap-4 flex flex-col">
         <div className="flex items-center justify-between">
           {" "}
+          
+          {generateFeatureAccess(pageFeatures
+          ,"filter-customers")?.show && generateFeatureAccess(pageFeatures
+          ,"filter-customers")?.enable && (
           <FilterContainer
             onFilterHandler={() => {
               submitFilter();
@@ -452,7 +464,27 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
             }}
             onCancleHandler={cancleFilter}
           />
+            )
+          }
+        
+         {!generateFeatureAccess(pageFeatures
+          ,"filter-customers")?.show && !generateFeatureAccess(pageFeatures
+          ,"filter-customers")?.enable && (
+            <AccessDenied  variant={"foreground"}
+            title="   "
+            message="امکان سترسی به این قابلیت وجود ندارد "/>
+          )
+
+
+        }
           <div>
+
+
+
+
+            {generateFeatureAccess(pageFeatures
+          ,"export-customers")?.show && generateFeatureAccess(pageFeatures
+          ,"export-customers")?.enable && (
             <ExportDataContainer
               headerLabels={customerHeaderLabels}
               list={allItems}
@@ -461,6 +493,19 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
               checkedItems={checkedItems}
               dateTimeRange={dateTimeRange}
             />
+            )}
+            
+              {!generateFeatureAccess(pageFeatures
+          ,"export-customers")?.show && !generateFeatureAccess(pageFeatures
+          ,"export-customers")?.enable && (
+                 <AccessDenied
+                            variant={"foreground"}
+                            title="خروجی "
+                            message="شما به این بخش دسترسی ندارید"
+                          />
+              )
+            }
+           
           </div>
         </div>
 
