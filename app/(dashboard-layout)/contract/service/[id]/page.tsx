@@ -28,8 +28,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ServerImageAddress, totalVotes } from "@/lib/utils";
 
+
 export default function Service() {
-  const code = "service";
+
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
   const [contract, setContract] = useState<any>(null);

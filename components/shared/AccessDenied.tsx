@@ -4,8 +4,9 @@ import CustomModal from "./custom-modal";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 interface AccessDeniedInterface {
-  title: string;
+  title?: string;
   message?: string;
 
   icon?: React.ReactNode;
@@ -24,8 +25,8 @@ export function AccessDenied({
   return (
     <>
       <Button
-        variant={variant}
-        className={className}
+        variant={"disable"}
+        className={cn(`${title ? "disable-shadow":""}`,className)}
         onClick={() => setIsOpen(true)}
       >
         {icon ? icon : <></>} {title}

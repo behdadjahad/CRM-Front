@@ -13,6 +13,9 @@ import { getCities, getCountries } from "@/api/location";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ContractCreationInput, createContract } from "@/api/contract";
 import { getUsers } from "@/api/auth";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { AccessDenied } from "./AccessDenied";
 
 const RatingChart = dynamic(() => import("../shared/rating-chart"), {
   ssr: false,
@@ -31,6 +34,7 @@ export default function ContractInfoContainer({
   list,
   contract,
 }: ContractInfoInterface) {
+  const pageFeatures = usePageData();
   const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -145,53 +149,88 @@ export default function ContractInfoContainer({
                       e.stopPropagation();
                     }}
                   >
-                    <RatingChart
-                      value={item?.score?.scoreInPercent}
-                      color="#FFA500"
-                    />
+                    {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                      .show && (
+                      <RatingChart
+                        value={item?.score?.scoreInPercent}
+                        color="#FFA500"
+                      />
+                    )}
 
                     <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1 text-foreground">
-                      از مجموع {item?.score?.totalVotes} امتیاز
-                      <div
-                        onClick={() => {
-                          setOpenModal(true);
-                        }}
-                      >
-                        <Image
-                          src={"/icons/edit-pen.png"}
-                          alt="ادیت"
-                          width={16}
-                          height={16}
-                        />
-                      </div>
-                      <CustomModal
-                        minWidth="0"
-                        maxWidth="700px"
-                        isOpen={openModal}
-                        onRequestClose={() => setOpenModal(false)}
-                        contentLabel="رضایت مندی"
-                      >
-                        <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
-                          <span className="text-lg font-bold">
-                            نظر خود را ثبت کنید
-                          </span>
-                          <MdClose
-                            size={20}
-                            onClick={(e) => {
-                              setOpenModal(false);
-                              e.stopPropagation();
-                            }}
-                            className="cursor-pointer"
-                          />
-                        </div>
-                        <Satisfaction
-                          onCloseHandler={() => {
-                            setOpenModal(false);
-                          }}
-                          itemId={id}
-                          score={item?.score}
-                        />
-                      </CustomModal>
+                      {generateFeatureAccess(
+                        pageFeatures,
+                        "upsert-satisfaction"
+                      ).show && (
+                        <span>از مجموع {item?.score?.totalVotes} امتیاز</span>
+                      )}
+                      {generateFeatureAccess(
+                        pageFeatures,
+                        "upsert-satisfaction"
+                      ).show &&
+                        generateFeatureAccess(
+                          pageFeatures,
+                          "upsert-satisfaction"
+                        ).enable && (
+                          <>
+                            <div
+                              onClick={() => {
+                                setOpenModal(true);
+                              }}
+                            >
+                              <Image
+                                src={"/icons/edit-pen.png"}
+                                alt="ادیت"
+                                width={16}
+                                height={16}
+                              />
+                            </div>
+                            <CustomModal
+                              minWidth="0"
+                              maxWidth="700px"
+                              isOpen={openModal}
+                              onRequestClose={() => setOpenModal(false)}
+                              contentLabel="رضایت مندی"
+                            >
+                              <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                                <span className="text-lg font-bold">
+                                  نظر خود را ثبت کنید
+                                </span>
+                                <MdClose
+                                  size={20}
+                                  onClick={(e) => {
+                                    setOpenModal(false);
+                                    e.stopPropagation();
+                                  }}
+                                  className="cursor-pointer"
+                                />
+                              </div>
+                              <Satisfaction
+                                onCloseHandler={() => {
+                                  setOpenModal(false);
+                                }}
+                                itemId={id}
+                                score={item?.score}
+                              />
+                            </CustomModal>
+                          </>
+                        )}
+                      {!generateFeatureAccess(
+                        pageFeatures,
+                        "upsert-satisfaction"
+                      ).show &&
+                        !generateFeatureAccess(
+                          pageFeatures,
+                          "upsert-satisfaction"
+                        ).enable && <AccessDenied  icon={ 
+                        
+                         <Image
+                                src={"/icons/edit-pen.png"}
+                                alt="ادیت"
+                                width={16}
+                                height={16}
+                              />
+                        } />}
                     </div>
                   </div>
                 ) : (
@@ -202,144 +241,159 @@ export default function ContractInfoContainer({
               </div>
             </div>
           ))}
-          <Button
-            className="text-primary-active border-none"
-            onClick={() => {
-              setOpenEditModal(true);
-            }}
-          >
-            ویرایش اطلاعات
-            <Image
-              src={"/icons/edit-primary.png"}
-              alt="edit"
-              width={1024}
-              height={1024}
-              className="w-4 h-4"
-            />
-          </Button>
-          <CustomModal
-            isOpen={openEditModal}
-            onRequestClose={() => setOpenEditModal(false)}
-            contentLabel="ویرایش"
-          >
-            <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
-              <span>ویرایش</span>
-
-              <MdClose
-                size={20}
-                onClick={() => setOpenEditModal(false)}
-                className="cursor-pointer"
-              />
-            </div>
-
-            <div className="w-full flex flex-col items-end">
-              <FormMaker
-                form={formik}
-                fields={[
-                  {
-                    key: "number",
-                    component: "input",
-                    placeholder: "شماره قرارداد",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                    readonly: true,
-                    disabled: true,
-                  },
-                  {
-                    key: "date",
-                    component: "date",
-                    placeholder: "تاریخ قرارداد",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                  },
-                  {
-                    key: "subject",
-                    component: "input",
-                    placeholder: "موضوع قرارداد",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                    readonly: true,
-                    disabled: true,
-                  },
-                  {
-                    key: "accountant",
-                    component: "Select",
-                    placeholder: "مسئول قرارداد",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                    options: userOptions,
-                  },
-                  {
-                    key: "country",
-                    component: "Select",
-                    placeholder: "کشور",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                    options: countryOptions,
-                  },
-                  {
-                    key: "city",
-                    component: "Select",
-                    placeholder: "شهر",
-                    type: "text",
-                    floating: true,
-                    className: "w-full md:w-1/2",
-                    options: cityOptions,
-                  },
-                  {
-                    key: "description",
-                    component: "textarea",
-                    placeholder: "توضیحات",
-                    type: "text",
-                    floating: true,
-                    className: "w-full",
-                  },
-                ]}
-                className="flex flex-row w-full"
-              />
-
-              <div className="flex flex-row gap-4">
+          {generateFeatureAccess(pageFeatures, "edit-contract")?.show &&
+            generateFeatureAccess(pageFeatures, "edit-contract")?.enable && (
+              <>
                 <Button
-                  variant={"info"}
+                  className="text-primary-active border-none"
                   onClick={() => {
-                    EditContractMutation({
-                      id: contract?.data.id,
-                      data: {
-                        contractTypeId: contract.data.contractType.id,
-                        contractDate: convertToGregorian(
-                          formik.values.date,
-                          contract.data.dateType
-                        ),
-                        dateType: contract.data.dateType,
-                        description: formik.values.description,
-                        userSubmitterId: Number(contract.data.userSubmitter.id),
-                        userResponsibleId: Number(formik.values.accountant),
-                        destinationCityId: Number(formik.values.city),
-                        destinationCountryId: Number(formik.values.country),
-                      },
-                    });
-                    setOpenEditModal(false);
+                    setOpenEditModal(true);
                   }}
                 >
-                  ثبت
+                  ویرایش اطلاعات
+                  <Image
+                    src={"/icons/edit-primary.png"}
+                    alt="edit"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
                 </Button>
-                <Button
-                  variant={"foreground"}
-                  onClick={() => {
-                    setOpenEditModal(false);
-                    formik.resetForm();
-                  }}
+                <CustomModal
+                  isOpen={openEditModal}
+                  onRequestClose={() => setOpenEditModal(false)}
+                  contentLabel="ویرایش"
                 >
-                  لغو
-                </Button>
-              </div>
-            </div>
-          </CustomModal>
+                  <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                    <span>ویرایش</span>
+
+                    <MdClose
+                      size={20}
+                      onClick={() => setOpenEditModal(false)}
+                      className="cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="w-full flex flex-col items-end">
+                    <FormMaker
+                      form={formik}
+                      fields={[
+                        {
+                          key: "number",
+                          component: "input",
+                          placeholder: "شماره قرارداد",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                          readonly: true,
+                          disabled: true,
+                        },
+                        {
+                          key: "date",
+                          component: "date",
+                          placeholder: "تاریخ قرارداد",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                        },
+                        {
+                          key: "subject",
+                          component: "input",
+                          placeholder: "موضوع قرارداد",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                          readonly: true,
+                          disabled: true,
+                        },
+                        {
+                          key: "accountant",
+                          component: "Select",
+                          placeholder: "مسئول قرارداد",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                          options: userOptions,
+                        },
+                        {
+                          key: "country",
+                          component: "Select",
+                          placeholder: "کشور",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                          options: countryOptions,
+                        },
+                        {
+                          key: "city",
+                          component: "Select",
+                          placeholder: "شهر",
+                          type: "text",
+                          floating: true,
+                          className: "w-full md:w-1/2",
+                          options: cityOptions,
+                        },
+                        {
+                          key: "description",
+                          component: "textarea",
+                          placeholder: "توضیحات",
+                          type: "text",
+                          floating: true,
+                          className: "w-full",
+                        },
+                      ]}
+                      className="flex flex-row w-full"
+                    />
+
+                    <div className="flex flex-row gap-4">
+                      <Button
+                        variant={"info"}
+                        onClick={() => {
+                          EditContractMutation({
+                            id: contract?.data.id,
+                            data: {
+                              contractTypeId: contract.data.contractType.id,
+                              contractDate: convertToGregorian(
+                                formik.values.date,
+                                contract.data.dateType
+                              ),
+                              dateType: contract.data.dateType,
+                              description: formik.values.description,
+                              userSubmitterId: Number(
+                                contract.data.userSubmitter.id
+                              ),
+                              userResponsibleId: Number(
+                                formik.values.accountant
+                              ),
+                              destinationCityId: Number(formik.values.city),
+                              destinationCountryId: Number(
+                                formik.values.country
+                              ),
+                            },
+                          });
+                          setOpenEditModal(false);
+                        }}
+                      >
+                        ثبت
+                      </Button>
+                      <Button
+                        variant={"foreground"}
+                        onClick={() => {
+                          setOpenEditModal(false);
+                          formik.resetForm();
+                        }}
+                      >
+                        لغو
+                      </Button>
+                    </div>
+                  </div>
+                </CustomModal>
+              </>
+            )}
+          {generateFeatureAccess(pageFeatures, "edit-contract")?.show &&
+            !generateFeatureAccess(pageFeatures, "edit-contract")?.enable && (
+              <AccessDenied title={"ویرایش اطلاعات"} />
+            )}
         </div>
       </div>
     </div>
