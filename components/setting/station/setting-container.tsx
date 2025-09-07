@@ -13,12 +13,16 @@ import {
   getSettingDelete,
   sliceMap,
 } from "@/constants/setting";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { store } from "@/store";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { buildRowOptions } from "@/lib/utils";
 import { convertToGregorian } from "@/lib/date";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "@/components/shared/AccessDenied";
+import { render } from "@fullcalendar/core/preact.js";
 
 export default function SettingContainer({
   cities,
@@ -36,6 +40,7 @@ export default function SettingContainer({
   airlines: any[];
 }) {
   const [hasReset, setHasReset] = useState<boolean>(false);
+ const pageFeatures = usePageData();
 
   const { service } = useParams();
   const settingSearchFormik = useFormik({
@@ -287,30 +292,132 @@ export default function SettingContainer({
       })
     );
   }
+const pathname = usePathname();
+const serviceType = pathname?.split("/").pop();  // "hotel" | "airport" | "airline"
+
+function renderFilter() {
+  if (serviceType === "airline") {
+    // always show
+    return (
+      <FilterContainer
+        onFilterHandler={submitFilter}
+        rangeItems={rangeItems}
+        filterItems={filterItems}
+        sortList={[]}
+        onSortHandler={() => {}}
+        onCancleHandler={cancleFilter}
+      />
+    );
+  }
+
+  if (
+    serviceType === "hotel" &&
+    generateFeatureAccess(pageFeatures, "filter-accommodations")?.show &&
+    generateFeatureAccess(pageFeatures, "filter-accommodations")?.enable
+  ) {
+    return (
+      <FilterContainer
+        onFilterHandler={submitFilter}
+        rangeItems={rangeItems}
+        filterItems={filterItems}
+        sortList={[]}
+        onSortHandler={() => {}}
+        onCancleHandler={cancleFilter}
+      />
+    );
+  }
+
+  if (
+    serviceType === "airport" &&
+    generateFeatureAccess(pageFeatures, "filter-airports")?.show &&
+    generateFeatureAccess(pageFeatures, "filter-airports")?.enable
+  ) {
+    return (
+      <FilterContainer
+        onFilterHandler={submitFilter}
+        rangeItems={rangeItems}
+        filterItems={filterItems}
+        sortList={[]}
+        onSortHandler={() => {}}
+        onCancleHandler={cancleFilter}
+      />
+    );
+  }
+
+  return (
+    <AccessDenied
+      variant="foreground"
+      title=""
+      message="امکان دسترسی به این قابلیت وجود ندارد"
+    />
+  );
+}
+function renderExport() {
+  if (serviceType === "airline") {
+    return (
+      <ExportDataContainer
+        onGetData={getDataHandler}
+        list={totalItems}
+        headerLabels={createSettingHeaderLabels(serviceType)}
+        loading={isLoading}
+        checkedItems={checkedItems}
+        dateTimeRange={dateTimeRange}
+      />
+    );
+  }
+
+  if (
+    serviceType === "hotel" &&
+    generateFeatureAccess(pageFeatures, "export-accommodations")?.show &&
+    generateFeatureAccess(pageFeatures, "export-accommodations")?.enable
+  ) {
+    return (
+      <ExportDataContainer
+        onGetData={getDataHandler}
+        list={totalItems}
+        headerLabels={createSettingHeaderLabels(serviceType)}
+        loading={isLoading}
+        checkedItems={checkedItems}
+        dateTimeRange={dateTimeRange}
+      />
+    );
+  }
+
+  if (
+    serviceType === "airport" &&
+    generateFeatureAccess(pageFeatures, "create-airports")?.show &&
+    generateFeatureAccess(pageFeatures, "create-airports")?.enable
+  ) {
+    return (
+      <ExportDataContainer
+        onGetData={getDataHandler}
+        list={totalItems}
+        headerLabels={createSettingHeaderLabels(serviceType)}
+        loading={isLoading}
+        checkedItems={checkedItems}
+        dateTimeRange={dateTimeRange}
+      />
+    );
+  }
+
+  return (
+    <AccessDenied
+      variant="foreground"
+      title="خروجی"
+      message="شما به این بخش دسترسی ندارید"
+    />
+  );
+}
+
+
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
         <div className="flex flex-row items-center justify-between">
-          <FilterContainer
-            onFilterHandler={() => {
-              submitFilter();
-            }}
-            rangeItems={rangeItems}
-            filterItems={filterItems}
-            sortList={[]}
-            onSortHandler={() => {}}
-            onCancleHandler={() => {
-              cancleFilter();
-            }}
-          />
-          <ExportDataContainer
-            onGetData={getDataHandler}
-            list={totalItems}
-            headerLabels={createSettingHeaderLabels(service)}
-            loading={isLoading}
-            checkedItems={checkedItems}
-            dateTimeRange={dateTimeRange}
-          />
+         
+          
+          {renderFilter()}
+          {renderExport()}
         </div>
 
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow">

@@ -36,8 +36,10 @@ export const safeLocalStorage = {
     } catch (error) {
       console.error("Error removing localStorage:", error);
     }
-  },
+  }
 };
+
+// 
 export function generateFeatureAccess(features: any, code: string) {
   const feature = features?.find((item: any) => item?.code === code);
   return {
