@@ -225,10 +225,11 @@ export default function ContractInfoContainer({
                         ).enable && <AccessDenied  icon={ 
                         
                          <Image
-                                src={"/icons/edit-pen.png"}
+                                src={"/icons/disable-edit-pen.png"}
                                 alt="ادیت"
-                                width={16}
-                                height={16}
+                                width={1024}
+                          height={1024}
+                          className="w-3 h-3"
                               />
                         } />}
                     </div>

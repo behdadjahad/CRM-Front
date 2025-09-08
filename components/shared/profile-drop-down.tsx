@@ -25,12 +25,15 @@ export interface ProfileDropDownInterface {
 export default function ProfileDropDown({
   className,
 }: ProfileDropDownInterface) {
-  const userData = useSelector((state: any) => state.user);
-  const router = useRouter();
-  const dispatch = useDispatch<any>();
-  useEffect(() => {
+    const dispatch = useDispatch<any>();
+
+    useEffect(() => {
     dispatch(fetchUserData());
   }, [dispatch]);
+  const userData = useSelector((state: any) => state.user);
+
+  const router = useRouter();
+
 
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,
