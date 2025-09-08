@@ -37,14 +37,16 @@ import { usePageData } from "@/hooks/usePageData";
 import { AccessDenied } from "@/components/shared/AccessDenied";
 import { safeLocalStorage } from "@/lib/generatePageData";
 
+
 export default function Sale() {
-  
+  const dispatch = useDispatch<any>();
+
   const pageFeatures = usePageData();
   const createContract = pageFeatures?.find(
     (item: any) => item?.code === "create-contract"
   );
 
-  const dispatch = useDispatch<any>();
+
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
   );

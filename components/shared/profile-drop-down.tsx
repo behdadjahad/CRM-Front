@@ -45,12 +45,7 @@ export default function ProfileDropDown({
 
 
 
-  useEffect(() => {
-    console.log("🎯 Testing Redux store");
 
-    console.log("🎯 Dispatching fetchUserData");
-    dispatch(fetchUserData());
-  }, [dispatch]);
 
 
 
