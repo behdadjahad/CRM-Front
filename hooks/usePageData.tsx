@@ -12,11 +12,12 @@ console.log("path",pathname)
 const dispatch=useDispatch()
   const pageData = useMemo(() => {
     const pageCode = pagesData?.find((item) => item.url === pathname)?.code;
+    console.log("age",pageCode)
     dispatch(setCurrentPageCode(pageCode as string));
     if (!pageCode) return null;
     return generatePageAccessData(pageCode);
  
   }, [pathname, pagesData]);
-
+console.log(pageData,"---------------")
   return pageData?.features;
 }

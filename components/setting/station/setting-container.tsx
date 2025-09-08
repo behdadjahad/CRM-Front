@@ -23,6 +23,7 @@ import { generateFeatureAccess } from "@/lib/generatePageData";
 import { usePageData } from "@/hooks/usePageData";
 import { AccessDenied } from "@/components/shared/AccessDenied";
 import { render } from "@fullcalendar/core/preact.js";
+import Image from "next/image";
 
 export default function SettingContainer({
   cities,
@@ -296,8 +297,11 @@ const pathname = usePathname();
 const serviceType = pathname?.split("/").pop();  // "hotel" | "airport" | "airline"
 
 function renderFilter() {
-  if (serviceType === "airline") {
-    // always show
+  if (
+    serviceType === "airline" &&
+    generateFeatureAccess(pageFeatures, "filter-airlines")?.show &&
+    generateFeatureAccess(pageFeatures, "filter-airlines")?.enable
+  ) {
     return (
       <FilterContainer
         onFilterHandler={submitFilter}
@@ -309,6 +313,7 @@ function renderFilter() {
       />
     );
   }
+
 
   if (
     serviceType === "hotel" &&
@@ -347,13 +352,26 @@ function renderFilter() {
   return (
     <AccessDenied
       variant="foreground"
-      title=""
+      title="فیلتر"
       message="امکان دسترسی به این قابلیت وجود ندارد"
-    />
+      icon={(  <Image
+                                                src={"/icons/disable-filter.png"}
+                                                alt="edit"
+                                                width={24}
+                                                height={24}
+                                              />)}/>
+            
+    
+    
+ 
   );
 }
 function renderExport() {
-  if (serviceType === "airline") {
+if (
+    serviceType === "airline" &&
+    generateFeatureAccess(pageFeatures, "export-airlines")?.show &&
+    generateFeatureAccess(pageFeatures, "export-airlines")?.enable
+  ) {
     return (
       <ExportDataContainer
         onGetData={getDataHandler}

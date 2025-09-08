@@ -5,6 +5,7 @@ import CustomerTabContent from "./customer-tab-content";
 import FilterContainer from "../section/filter-container";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
+import Image from "next/image";
 import {
   contractStateOptions,
   followUpOptions,
@@ -32,6 +33,7 @@ import { generateFeatureAccess } from "@/lib/generatePageData";
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
    const pageFeatures = usePageData();
 
+   console.log("ffff",pageFeatures)
   //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
   // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
 
@@ -467,12 +469,18 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
             )
           }
         
-         {!generateFeatureAccess(pageFeatures
+         {generateFeatureAccess(pageFeatures
           ,"filter-customers")?.show && !generateFeatureAccess(pageFeatures
           ,"filter-customers")?.enable && (
             <AccessDenied  variant={"foreground"}
-            title="   "
-            message="امکان سترسی به این قابلیت وجود ندارد "/>
+            title="فیلتر "
+            message="امکان سترسی به این قابلیت وجود ندارد "
+             icon={(  <Image
+                                            src={"/icons/disable-filter.png"}
+                                            alt="edit"
+                                            width={24}
+                                            height={24}
+                                          />)}/>
           )
 
 
@@ -495,13 +503,20 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
             />
             )}
             
-              {!generateFeatureAccess(pageFeatures
+              {generateFeatureAccess(pageFeatures
           ,"export-customers")?.show && !generateFeatureAccess(pageFeatures
           ,"export-customers")?.enable && (
                  <AccessDenied
-                            variant={"foreground"}
+                            variant={""}
                             title="خروجی "
                             message="شما به این بخش دسترسی ندارید"
+                            icon={(  <Image
+                                            src={"/icons/disable-download.png"}
+                                            alt="edit"
+                                            width={1024}
+                                            height={1024}
+                                            className="w-4 h-4"
+                                          />)}
                           />
               )
             }

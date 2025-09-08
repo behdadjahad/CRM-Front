@@ -177,13 +177,12 @@ const serviceType = pathname?.split("/").pop(); // "hotel" | "airport" | "airlin
 const featureCodeMap: Record<string, string> = {
   hotel: "create-accommodations",
   airport: "create-airports",
+  airline:"create-airlines"
 };
 
 // decide if form should be shown
 const shouldShowForm =
-  serviceType === "airline"
-    ? true // always show for airline
-    : generateFeatureAccess(
+   generateFeatureAccess(
         pageFeatures,
         featureCodeMap[serviceType ?? ""] ?? ""
       )?.show &&

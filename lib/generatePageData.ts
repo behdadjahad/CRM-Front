@@ -1,5 +1,7 @@
 export function generatePageAccessData(pageCode: any) {
+  console.log("input",pageCode)
   const accessData = safeLocalStorage.getItem("accessData");
+  console.log(accessData)
   if (accessData) {
     const matchPage = JSON.parse(accessData)?.pages?.find(
       (item: any) => pageCode in item
