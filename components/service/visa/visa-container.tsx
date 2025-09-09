@@ -220,7 +220,7 @@ export default function VisaContainer() {
   useEffect(() => {
     if (VisaEntranceTypesData) {
       const visaEntranceTypeOptions: OptionType[] =
-        VisaEntranceTypesData.data.map((item: any) => ({
+        VisaEntranceTypesData?.data?.map((item: any) => ({
           label: item.name,
           value: item.id.toString(),
         }));
