@@ -34,6 +34,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
   const pageFeatures = usePageData();
 
 
+
   //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
   // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
 
@@ -529,8 +530,8 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
             <button
               key={tab}
               className={`w-full text-center h-full py-2 ${activeTab === tab
-                  ? "border-b-2 border-black font-bold text-black"
-                  : "text-neutral-500"
+                ? "border-b-2 border-black font-bold text-black"
+                : "text-neutral-500"
                 }`}
               onClick={() => {
                 setActiveTab(tab);

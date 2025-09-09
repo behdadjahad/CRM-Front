@@ -215,7 +215,7 @@ export default function ContractInfoContainer({
                             </CustomModal>
                           </>
                         )}
-                      {!generateFeatureAccess(
+                      {generateFeatureAccess(
                         pageFeatures,
                         "upsert-satisfaction"
                       ).show &&

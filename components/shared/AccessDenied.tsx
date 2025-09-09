@@ -1,7 +1,7 @@
-'use client'
+"use client";
 import { MdClose } from "react-icons/md";
 import CustomModal from "./custom-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,8 @@ interface AccessDeniedInterface {
   icon?: React.ReactNode;
   variant?: any;
   className?: string;
+  state?: boolean;
+  setState?: (state: boolean) => void;
 }
 
 export function AccessDenied({
@@ -20,13 +22,21 @@ export function AccessDenied({
   variant,
   className,
   title,
+  state,
+  setState,
 }: AccessDeniedInterface) {
+  console.log("AccessDenied state", state);
+
   const [isOpen, setIsOpen] = useState(false);
+  useEffect(() => {
+    setIsOpen(state!);
+  }, [state]);
+
   return (
     <>
       <Button
         variant={"disable"}
-        className={cn(`${title ? "disable-shadow":""}`,className)}
+        className={cn(`${title ? "disable-shadow" : ""}`, className)}
         onClick={() => setIsOpen(true)}
       >
         {icon ? icon : <></>} {title}
@@ -35,7 +45,10 @@ export function AccessDenied({
         minWidth="0"
         maxWidth="610px"
         isOpen={isOpen}
-        onRequestClose={() => setIsOpen(false)}
+        onRequestClose={() => {
+          // setState!(false);
+          setIsOpen(false);
+        }}
         contentLabel="ویرایش"
         overflow="visible"
       >
@@ -46,13 +59,12 @@ export function AccessDenied({
             size={20}
             onClick={() => {
               setIsOpen(false);
+              // setState!(false);
             }}
             className="cursor-pointer flex justify-end"
           />
         </div>
-        <div
-          className="flex flex-col items-center gap-6"
-        >
+        <div className="flex flex-col items-center gap-6">
           <Image
             src={"/icons/access-alert.png"}
             alt="edit"
@@ -64,7 +76,7 @@ export function AccessDenied({
             <h2>محدودیت سطح کاربری</h2>
             {message && <p className="text-sm text-gray-500">{message}</p>}
           </div>
-          <Button variant={'info'}>خرید سرویس</Button>
+          <Button variant={"info"}>خرید سرویس</Button>
         </div>
       </CustomModal>
     </>

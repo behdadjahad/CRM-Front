@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import ContractExpenseCard, {
   ExpenseCardInterface,
 } from "./contract-expense-card";
-
+import Image from "next/image";
 import CurrencyDropDown from "../shared/currency-drop-down";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -13,6 +13,9 @@ import OveralExpenseContainer from "./overal-expense-container";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatPrice } from "@/lib/utils";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "../shared/AccessDenied";
 
 export interface ExpenseContainerInterface {
   expenseList: ExpenseCardInterface[];
@@ -27,6 +30,7 @@ export interface ExpenseContainerInterface {
 }
 
 export default function ContractExpenseContainer() {
+  const pageFeatures = usePageData();
   const [overalExpense, setOveralExpense] = useState<any[]>([]);
   const [contractCurrency, setContractCurrency] = useState<any>({});
   const [serviceExpenses, setServiceExpenses] = useState<any>([]);
@@ -48,7 +52,6 @@ export default function ContractExpenseContainer() {
   });
   useEffect(() => {
     if (allExpenses) {
-    
       const overalExpenseData = [
         { label: "هزینه", value: allExpenses?.data?.buyPrice },
         {
@@ -84,9 +87,11 @@ export default function ContractExpenseContainer() {
       //  const servicePrices = Object.values(allExpenses.servicePrices).map((item) => {
       //     return {},
       //   });
-      const servicePrices =     allExpenses?.data?.servicePrices ? Object?.entries(
-        allExpenses?.data?.servicePrices
-      ).map(([key, value]) => ({ key, ...(value as any) })):[];
+      const servicePrices = allExpenses?.data?.servicePrices
+        ? Object?.entries(allExpenses?.data?.servicePrices).map(
+            ([key, value]) => ({ key, ...(value as any) })
+          )
+        : [];
       const totalServiceExpenses = servicePrices
         .filter((item) => item.groupedBuyPrices.length > 0)
         .map((item) => ({
@@ -154,7 +159,6 @@ export default function ContractExpenseContainer() {
       setContractCurrency(contractExchangeRate);
       setOveralExpense(overalExpenseData);
       setServiceExpenses(totalServiceExpenses);
-      
     }
   }, [allExpenses]);
 
@@ -261,10 +265,31 @@ export default function ContractExpenseContainer() {
           <h2 className="text-lg text-gray-900 font-bold">
             واحد ارزی کل قرارداد
           </h2>
-          <CurrencyDropDown
-            contractCurrency={contractCurrency}
-            onCurrencyHandler={exchangeRateHandler}
-          />
+          {generateFeatureAccess(pageFeatures, "change-exchange-rates")?.show &&
+            generateFeatureAccess(pageFeatures, "change-exchange-rates")
+              ?.enable && (
+              <CurrencyDropDown
+                contractCurrency={contractCurrency}
+                onCurrencyHandler={exchangeRateHandler}
+              />
+            )}
+          {generateFeatureAccess(pageFeatures, "change-exchange-rates")
+            ?.show &&
+            !generateFeatureAccess(pageFeatures, "change-exchange-rates")
+              ?.enable && (
+              <AccessDenied
+                title={contractCurrency?.name}
+                icon={
+                  <Image
+                    src={"/icons/disable-edit.png"}
+                    alt="ادیت"
+                    width={1024}
+                    height={1024}
+                    className="w-6 h-6"
+                  />
+                }
+              />
+            )}
         </div>
         <div className="flex items-center justify-between">
           <div>هزینه های قرارداد</div>
