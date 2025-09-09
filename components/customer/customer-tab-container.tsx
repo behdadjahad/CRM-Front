@@ -31,9 +31,9 @@ import { AccessDenied } from "../shared/AccessDenied";
 import { generateFeatureAccess } from "@/lib/generatePageData";
 
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
-   const pageFeatures = usePageData();
+  const pageFeatures = usePageData();
 
-   console.log("ffff",pageFeatures)
+
   //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
   // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
 
@@ -62,7 +62,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       followUpEndDate: undefined,
       followUpEndDateType: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
 
   const filterItems = [
@@ -282,23 +282,23 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       followUpStatus: formik.values.followupStatus,
       followUpDateTimeRangeStart: formik.values.followUpStartDate
         ? convertToGregorian(
-            formik.values.followUpStartDate,
-            formik.values.followUpStartDateType
-          )
+          formik.values.followUpStartDate,
+          formik.values.followUpStartDateType
+        )
         : "",
 
       followUpDateTimeRangeEnd: formik.values.followUpEndDate
         ? convertToGregorian(
-            formik.values.followUpEndDate,
-            formik.values.followUpEndDateType
-          )
+          formik.values.followUpEndDate,
+          formik.values.followUpEndDateType
+        )
         : "",
       avServices: formik.values.services,
       dateTimeRangeStart: formik.values.startDate
         ? convertToGregorian(
-            formik.values.startDate,
-            formik.values.startDateType
-          )
+          formik.values.startDate,
+          formik.values.startDateType
+        )
         : "",
       dateTimeRangeEnd: formik.values.endDate
         ? convertToGregorian(formik.values.endDate, formik.values.endDateType)
@@ -450,77 +450,77 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       <div className="gap-4 flex flex-col">
         <div className="flex items-center justify-between">
           {" "}
-          
+
           {generateFeatureAccess(pageFeatures
-          ,"filter-customers")?.show && generateFeatureAccess(pageFeatures
-          ,"filter-customers")?.enable && (
-          <FilterContainer
-            onFilterHandler={() => {
-              submitFilter();
-            }}
-            rangeItems={rangeItems}
-            filterItems={filterItems}
-            sortList={customerSortlist}
-            onSortHandler={(item: string, itemType?: string) => {
-              submitSort(item, itemType);
-            }}
-            onCancleHandler={cancleFilter}
-          />
+            , "filter-customers")?.show && generateFeatureAccess(pageFeatures
+              , "filter-customers")?.enable && (
+              <FilterContainer
+                onFilterHandler={() => {
+                  submitFilter();
+                }}
+                rangeItems={rangeItems}
+                filterItems={filterItems}
+                sortList={customerSortlist}
+                onSortHandler={(item: string, itemType?: string) => {
+                  submitSort(item, itemType);
+                }}
+                onCancleHandler={cancleFilter}
+              />
             )
           }
-        
-         {generateFeatureAccess(pageFeatures
-          ,"filter-customers")?.show && !generateFeatureAccess(pageFeatures
-          ,"filter-customers")?.enable && (
-            <AccessDenied  variant={"foreground"}
-            title="فیلتر "
-            message="امکان سترسی به این قابلیت وجود ندارد "
-             icon={(  <Image
-                                            src={"/icons/disable-filter.png"}
-                                            alt="edit"
-                                            width={24}
-                                            height={24}
-                                          />)}/>
-          )
+
+          {generateFeatureAccess(pageFeatures
+            , "filter-customers")?.show && !generateFeatureAccess(pageFeatures
+              , "filter-customers")?.enable && (
+              <AccessDenied variant={"foreground"}
+                title="فیلتر "
+                message="امکان دسترسی به این قابلیت وجود ندارد "
+                icon={(<Image
+                  src={"/icons/disable-filter.png"}
+                  alt="edit"
+                  width={24}
+                  height={24}
+                />)} />
+            )
 
 
-        }
+          }
           <div>
 
 
 
 
             {generateFeatureAccess(pageFeatures
-          ,"export-customers")?.show && generateFeatureAccess(pageFeatures
-          ,"export-customers")?.enable && (
-            <ExportDataContainer
-              headerLabels={customerHeaderLabels}
-              list={allItems}
-              onGetData={getDataHandler}
-              loading={isLoading}
-              checkedItems={checkedItems}
-              dateTimeRange={dateTimeRange}
-            />
-            )}
-            
-              {generateFeatureAccess(pageFeatures
-          ,"export-customers")?.show && !generateFeatureAccess(pageFeatures
-          ,"export-customers")?.enable && (
-                 <AccessDenied
-                            variant={""}
-                            title="خروجی "
-                            message="شما به این بخش دسترسی ندارید"
-                            icon={(  <Image
-                                            src={"/icons/disable-download.png"}
-                                            alt="edit"
-                                            width={1024}
-                                            height={1024}
-                                            className="w-4 h-4"
-                                          />)}
-                          />
+              , "export-customers")?.show && generateFeatureAccess(pageFeatures
+                , "export-customers")?.enable && (
+                <ExportDataContainer
+                  headerLabels={customerHeaderLabels}
+                  list={allItems}
+                  onGetData={getDataHandler}
+                  loading={isLoading}
+                  checkedItems={checkedItems}
+                  dateTimeRange={dateTimeRange}
+                />
+              )}
+
+            {generateFeatureAccess(pageFeatures
+              , "export-customers")?.show && !generateFeatureAccess(pageFeatures
+                , "export-customers")?.enable && (
+                <AccessDenied
+                  variant={""}
+                  title="خروجی "
+                  message="شما به این بخش دسترسی ندارید"
+                  icon={(<Image
+                    src={"/icons/disable-download.png"}
+                    alt="edit"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />)}
+                />
               )
             }
-           
+
           </div>
         </div>
 
@@ -528,11 +528,10 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           {tabList.map((tab: any) => (
             <button
               key={tab}
-              className={`w-full text-center h-full py-2 ${
-                activeTab === tab
+              className={`w-full text-center h-full py-2 ${activeTab === tab
                   ? "border-b-2 border-black font-bold text-black"
                   : "text-neutral-500"
-              }`}
+                }`}
               onClick={() => {
                 setActiveTab(tab);
                 setTabData(tab);

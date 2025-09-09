@@ -17,6 +17,7 @@ export const services: ServiceCardInterface[] = [
     name: "Visa",
     form: <VisaContainer />,
     disable: false,
+     disableImage: "/images/services/disable/disable-nature.png",
   },
   // {
   //   id: 2,
@@ -41,6 +42,7 @@ export const services: ServiceCardInterface[] = [
     name: "Flight",
     form: <TicketContainer transportationType="Airline" />,
     disable: false,
+     disableImage: "/images/services/disable/disable-nature.png",
   },
   {
     id: 4,
@@ -77,6 +79,7 @@ export const services: ServiceCardInterface[] = [
     name: "Accommodation",
     form: <HotelContainer />,
     disable: false,
+     disableImage: "/images/services/disable/disable-nature.png",
   },
   // {
   //   id: 7,
@@ -161,5 +164,6 @@ export const services: ServiceCardInterface[] = [
     name: "Other",
     form: <OtherContainer />,
     disable: false,
+     disableImage: "/images/services/disable/disable-nature.png",
   },
 ];

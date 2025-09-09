@@ -7,9 +7,11 @@ import { Button } from "../ui/button";
 export default function MultiAddedTextInput({
   form,
   item,
+  hasAccess=true
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  hasAccess?:boolean
 }) {
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<string[]>(
@@ -53,7 +55,7 @@ const handleRemove = (index: number) => {
             }
           )}
           readOnly={item.readonly}
-          disabled={item.disabled ?? false}
+          disabled={(item.disabled || !hasAccess) ?? false}
         />
 
         {/* Floating Label */}

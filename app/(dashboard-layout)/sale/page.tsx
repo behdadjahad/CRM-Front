@@ -103,12 +103,11 @@ export default function Sale() {
   useEffect(() => {
     if (contractTypeData && contractTypeData?.data?.length > 0) {
       setContractTypes(
-        contractTypeData.data.map((item: any) => ({
+        contractTypeData?.data?.map((item: any) => ({
           id: item.id,
           image: "http://185.126.203.246:3000/public/" + item.iconFile,
           title: item.name,
-          activeImage:
-            "http://185.126.203.246:3000/public/" + item.activeIconFile,
+          activeImage: "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
     }
@@ -137,13 +136,13 @@ export default function Sale() {
       minSellRange: "",
       maxSellRange: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   const limitFormik = useFormik({
     initialValues: {
       limit: limit,
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
 
   const filterItems = [
@@ -426,9 +425,9 @@ export default function Sale() {
       gender: formik.values.gender,
       birthDate: formik.values.birthdate
         ? convertToGregorian(
-            formik.values.birthdate,
-            formik.values.birthdateType
-          )
+          formik.values.birthdate,
+          formik.values.birthdateType
+        )
         : "",
       customerIdNumber: formik.values.idNumber,
       customerJob: formik.values.career,
@@ -436,9 +435,9 @@ export default function Sale() {
       contractNo: formik.values.contractNumber,
       contractDate: formik.values.contractDate
         ? convertToGregorian(
-            formik.values.contractDate,
-            formik.values?.contractDateType
-          )
+          formik.values.contractDate,
+          formik.values?.contractDateType
+        )
         : "",
     };
 

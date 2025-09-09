@@ -6,9 +6,11 @@ import { components, SingleValueProps, OptionProps } from "react-select";
 const SelectInput = React.memo(function SelectInput({
   form,
   item,
+   disabled=false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  disabled?:boolean
 }) {
   const handleValueChange = useCallback(
     (data: any) => {

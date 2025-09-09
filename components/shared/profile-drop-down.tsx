@@ -34,20 +34,12 @@ export default function ProfileDropDown({
 
   const userData=useSelector((state :any )=> state.login)
 
-
+console.log("user-data",userData)
 
   useEffect(() => {
 
     dispatch(fetchLogin());
   }, [dispatch]);
-
-
-
-
-
-
-
-
 
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,

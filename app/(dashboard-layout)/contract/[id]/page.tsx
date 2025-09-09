@@ -43,9 +43,14 @@ import { sendServiceData } from "@/api/service";
 import { convertDate, convertToGregorian } from "@/lib/date";
 
 import { getUsers } from "@/api/auth";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { AccessDenied } from "@/components/shared/AccessDenied";
 
 export default function Contract() {
   const router = useRouter();
+  const pageFeatures = usePageData();
+
   const [contractServices, setContractServices] = useState<OptionType[]>([]);
   const [category, setCategory] = useState("personal");
   const [countryOptions, setCountryOptions] = useState<OptionType[]>([]);
@@ -317,7 +322,7 @@ export default function Contract() {
         .matches(/^\d{10}$/, "کدملی باید یک  عدد ده رقمی باشد"),
       // career: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
     enableReinitialize: true,
   });
 
@@ -340,7 +345,7 @@ export default function Contract() {
       email: Yup.string().required(REQUIRED_TEXT),
       website: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
     enableReinitialize: true,
   });
 
@@ -359,7 +364,7 @@ export default function Contract() {
       email: Yup.string().required(REQUIRED_TEXT),
       website: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
     enableReinitialize: true,
   });
   const organizationContactFormik = useFormik({
@@ -373,7 +378,7 @@ export default function Contract() {
       organizationEmail: Yup.string().required(REQUIRED_TEXT),
       organizationWebsite: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
 
   const livingFormik = useFormik({
@@ -398,7 +403,7 @@ export default function Contract() {
       country: Yup.string().required(REQUIRED_TEXT),
     }),
     enableReinitialize: true,
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
 
   const workFormik = useFormik({
@@ -423,7 +428,7 @@ export default function Contract() {
       workCountry: Yup.string().required(REQUIRED_TEXT),
     }),
     enableReinitialize: true,
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
 
   const organizationFormik = useFormik({
@@ -437,7 +442,7 @@ export default function Contract() {
       // organizationCategory: Yup.string().required(REQUIRED_TEXT),
       // organizationAddress: Yup.string().required(REQUIRED_TEXT),
     }),
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
   const organizationAddressFormik = useFormik({
     initialValues: {
@@ -457,7 +462,7 @@ export default function Contract() {
       organizationAddress: Yup.string().required(REQUIRED_TEXT),
     }),
     enableReinitialize: true,
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
   const { mutate: SubmitterHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -489,7 +494,7 @@ export default function Contract() {
     mutationFn: ({ data, personId }: { data: any; personId: number }) => {
       return editClient(data, personId);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
   const { mutate: organizationSubmitHandler } = useMutation({
     mutationFn: (data: any) => {
@@ -509,13 +514,13 @@ export default function Contract() {
     mutationFn: (data: any) => {
       return insertAddressData(data);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
   const { mutate: addressEditHandler } = useMutation({
     mutationFn: ({ data, addressId }: { data: any; addressId: number }) => {
       return editAddressData(data, addressId);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
   function submitAddressInfo() {
     const data = {
@@ -565,19 +570,19 @@ export default function Contract() {
     mutationFn: (data: any) => {
       return insertCommunicationData(data);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
   const { mutate: editCommunicateHandler } = useMutation({
     mutationFn: (data: any) => {
       return editCommunicationData(data);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
   const { mutate: submitService } = useMutation({
     mutationFn: (data: any) => {
       return sendServiceData(data, Number(id));
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
 
   const { data: countryData } = useQuery({
@@ -759,9 +764,9 @@ export default function Contract() {
       birthdate:
         personalFormik.values.birthdate && personalFormik.values.birthdateType
           ? convertToGregorian(
-              personalFormik.values.birthdate,
-              personalFormik.values.birthdateType
-            )
+            personalFormik.values.birthdate,
+            personalFormik.values.birthdateType
+          )
           : "",
 
       idCertificate: personalFormik.values.socialNumber,
@@ -806,9 +811,9 @@ export default function Contract() {
               value:
                 contract?.data?.submitDateTime && contract?.data?.dateType
                   ? convertDate(
-                      contract?.data?.submitDateTime,
-                      contract?.data?.dateType
-                    )
+                    contract?.data?.submitDateTime,
+                    contract?.data?.dateType
+                  )
                   : "",
             },
             {
@@ -817,9 +822,9 @@ export default function Contract() {
               value:
                 contract?.data?.contractDate && contract?.data?.dateType
                   ? convertDate(
-                      contract?.data?.contractDate,
-                      contract?.data?.dateType
-                    )
+                    contract?.data?.contractDate,
+                    contract?.data?.dateType
+                  )
                   : "",
             },
             {
@@ -875,6 +880,9 @@ export default function Contract() {
 
       <div className={category === "organization" ? "hidden" : ""}>
         <FormTabContainer
+          buttonAccess={generateFeatureAccess(pageFeatures
+            , "customer-creation")?.show && generateFeatureAccess(pageFeatures
+              , "customer-creation")?.enable ? true : false}
           defaultValue="اطلاعات مشتری"
           tabs={[
             {
@@ -894,22 +902,44 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
+                  roleAcess={generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable ? true : false}
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
                   {" "}
-                  <Button
-                    variant={"info"}
-                    className="w-24 mx-2"
-                    onClick={() => {
-                      submitService({ avServices: contractServices });
-                    }}
-                  >
-                    ثبت
-                  </Button>
+                  {
+                    generateFeatureAccess(pageFeatures
+                      , "add-service")?.show && generateFeatureAccess(pageFeatures
+                        , "add-service")?.enable && (<Button
+                          variant={"info"}
+                          className="w-24 mx-2"
+                          onClick={() => {
+                            submitService({ avServices: contractServices });
+                          }}
+                        >
+                          ثبت
+                        </Button>)
+                  }
+                  {generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && !generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable && (<AccessDenied
+                        variant={""}
+                        title=" ثبت "
+                        message="شما به این بخش دسترسی ندارید"
+
+                      />
+
+                    )}
+
                   <RegisteryForm
+
+                    roleAcess={generateFeatureAccess(pageFeatures
+                      , "add-service")?.show && generateFeatureAccess(pageFeatures
+                        , "add-service")?.enable ? true : false}
                     submitForm={SubmitterHandler}
                     accountant={
                       contract?.userResponsible?.id
@@ -1022,21 +1052,30 @@ export default function Contract() {
 
               children: (
                 <ServiceContainer
+                  roleAcess={generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable ? true : false}
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
                   {" "}
-                  <Button
-                    variant={"info"}
-                    className="w-24 mx-2"
-                    onClick={() => {
-                      submitService({ avServices: contractServices });
-                    }}
-                  >
-                    ثبت
-                  </Button>
+                  {
+                    generateFeatureAccess(pageFeatures
+                      , "add-service")?.show && generateFeatureAccess(pageFeatures
+                        , "add-service")?.enable && (<Button
+                          variant={"info"}
+                          className="w-24 mx-2"
+                          onClick={() => {
+                            submitService({ avServices: contractServices });
+                          }}
+                        >
+                          ثبت
+                        </Button>)
+
+                  }
+
                   <RegisteryForm
                     submitForm={SubmitterHandler}
                     accountant={
@@ -1176,6 +1215,10 @@ export default function Contract() {
 
       <div className={category === "personal" ? "hidden" : ""}>
         <FormTabContainer
+          buttonAccess={generateFeatureAccess(pageFeatures
+            , "customer-creation")?.show && generateFeatureAccess(pageFeatures
+              , "customer-creation")?.enable ? true : false}
+
           defaultValue="اطلاعات سازمان"
           tabs={[
             {

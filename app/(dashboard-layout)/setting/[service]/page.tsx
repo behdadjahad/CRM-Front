@@ -26,13 +26,13 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ServiceSetting() {
-const pageFeatures=usePageData()
+  const pageFeatures = usePageData()
 
 
 
-// const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
-// const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
-// const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
+  // const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
+  // const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
+  // const filterAirport=pageFeatures?.find((item : any)=>item.code==="filter-airports")
 
 
   const dispatch = useDispatch();
@@ -51,6 +51,8 @@ const pageFeatures=usePageData()
     queryFn: async () => await getAirlinesData(301),
   });
 
+
+
   useEffect(() => {
     if (airlineData && airlineData?.data?.length > 0) {
       const airlinesOptions = airlineData?.data?.map((item: any) => ({
@@ -64,7 +66,7 @@ const pageFeatures=usePageData()
   const [hotels, setHotels] = useState<OptionType[]>([]);
   const formik = useFormik({
     initialValues: createSettingFormValues(service),
-    onSubmit: () => {},
+    onSubmit: () => { },
   });
   const { data: countryData } = useQuery({
     queryKey: ["countries"],
@@ -171,28 +173,32 @@ const pageFeatures=usePageData()
     submitHandler(data);
   }
 
-const pathname = usePathname();
-const serviceType = pathname?.split("/").pop(); // "hotel" | "airport" | "airline"
+  const pathname = usePathname();
+  const serviceType = pathname?.split("/").pop(); // "hotel" | "airport" | "airline"
 
-const featureCodeMap: Record<string, string> = {
-  hotel: "create-accommodations",
-  airport: "create-airports",
-  airline:"create-airlines"
-};
+  const featureCodeMap: Record<string, string> = {
+    hotel: "create-accommodations",
+    airport: "create-airports",
+    airline: "create-airlines"
+  };
+  console.log("hiiiii",)
+  // decide if form should be shown
+  const shouldShowForm =
+    generateFeatureAccess(
+      pageFeatures,
+      featureCodeMap[serviceType!]
+    )?.show &&
+    generateFeatureAccess(
+      pageFeatures,
+      featureCodeMap[serviceType!]
+    )?.enable;
 
-// decide if form should be shown
-const shouldShowForm =
-   generateFeatureAccess(
-        pageFeatures,
-        featureCodeMap[serviceType ?? ""] ?? ""
-      )?.show &&
-      generateFeatureAccess(
-        pageFeatures,
-        featureCodeMap[serviceType ?? ""] ?? ""
-      )?.enable;
+  // If user doesn't have access, disable the form
+  const isDisabled = true;
 
-
-console.log("serviceType",serviceType)
+  console.log("serviceType", serviceType)
+  console.log("shouldShowForm", shouldShowForm)
+  console.log("isDisabled", isDisabled)
 
   return (
     <main>
@@ -209,22 +215,24 @@ console.log("serviceType",serviceType)
         ]}
       />
 
-  {shouldShowForm && (
-  <SettingCreateForm
-    fields={createSettingFormFields(
-      service,
-      countries,
-      cities,
-      airports,
-      accommodationTypes,
-      hotels,
-      airlines
-    )}
-    form={formik}
-    title={service}
-    onSubmitHandler={(data) => submit(data)}
-  />
-)}
+      {/* {shouldShowForm && ( */}
+      <SettingCreateForm
+        fields={createSettingFormFields(
+          service,
+          countries,
+          cities,
+          airports,
+          accommodationTypes,
+          hotels,
+          airlines,
+          isDisabled
+        )}
+        hasAccess={shouldShowForm}
+        form={formik}
+        title={service}
+        onSubmitHandler={(data) => submit(data)}
+      />
+      {/* )} */}
       <SettingContainer
         countries={countries}
         cities={cities}

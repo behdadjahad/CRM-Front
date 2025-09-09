@@ -14,6 +14,10 @@ import { getLeadTags } from "@/api/lead";
 import { useQuery } from "@tanstack/react-query";
 import { buildRowOptions, leadHeaderLabels } from "@/lib/utils";
 import { CustomerDataInterface } from "../service/customer-infinite-card";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { AccessDenied } from "../shared/AccessDenied";
+import Image from "next/image";
+import { usePageData } from "@/hooks/usePageData";
 
 export interface LeadContainerInterface {
   leadList: {
@@ -35,6 +39,8 @@ export interface LeadContainerInterface {
 }
 
 export default function LeadContainer({ leadList }: LeadContainerInterface) {
+
+  const pageFeatures = usePageData()
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasReset, setHasReset] = useState<boolean>(false);
@@ -57,7 +63,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     initialValues: {
       leadKeyWord: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   function searchSubmitHandler() {
     dispatch(setCheckedItems([]));
@@ -97,13 +103,13 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
       leadStatus: "",
       leadTag: [],
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   const limitFormik = useFormik({
     initialValues: {
       limit: limit,
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   const filterItems = [
     {
@@ -338,26 +344,99 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
         <div className="flex flex-row items-center justify-between">
-          <FilterContainer
-            onFilterHandler={() => {
-              submitFilter();
-            }}
-            rangeItems={[]}
-            filterItems={filterItems}
-            sortList={[]}
-            onSortHandler={() => {}}
-            onCancleHandler={cancleFilter}
-          />
+          {/* ______________________ */}
+          {
+            generateFeatureAccess(pageFeatures, "filter-lead")?.show && generateFeatureAccess(pageFeatures, "filter-lead")?.enable && (
+              <FilterContainer
+                onFilterHandler={() => {
+                  submitFilter();
+                }}
+                rangeItems={[]}
+                filterItems={filterItems}
+                sortList={[]}
+                onSortHandler={() => { }}
+                onCancleHandler={cancleFilter}
+              />
+            )
+          }
+
+          {
+            generateFeatureAccess(pageFeatures, "filter-lead")?.show && !generateFeatureAccess(pageFeatures, "filter-lead")?.enable && (
+              <AccessDenied variant={"foreground"}
+                title="فیلتر "
+                message="امکان دسترسی به این قابلیت وجود ندارد "
+                icon={(<Image
+                  src={"/icons/disable-filter.png"}
+                  alt="edit"
+                  width={24}
+                  height={24}
+                />
+                )
+                }
+              />
+            )
+          }
+          {/* ________create________ */}
+
           <div className="flex gap-4">
-            <LeadCreationContainer />
-            <ExportDataContainer
-              headerLabels={leadHeaderLabels}
-              list={allItems}
-              onGetData={getDataHandler}
-              loading={isLoading}
-              checkedItems={checkedItems}
-              dateTimeRange={dateTimeRange}
-            />
+
+            {
+              generateFeatureAccess(pageFeatures, "lead-action")?.show && generateFeatureAccess(pageFeatures, "lead-action")?.enable && (
+                <LeadCreationContainer />
+              )
+            }
+            {
+              generateFeatureAccess(pageFeatures, "lead-action")?.show && !generateFeatureAccess(pageFeatures, "lead-action")?.enable && (
+                <AccessDenied
+                  variant={""}
+                  title=" درخواست جدید "
+                  message="شما به این بخش دسترسی ندارید"
+                  icon={(<Image
+                    src={"/icons/disable-plus.png"}
+                    alt="edit"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />)}
+                />
+              )
+            }
+
+            {/* ---------export------------- */}
+
+            {
+              generateFeatureAccess(pageFeatures, "export-lead")?.show && generateFeatureAccess(pageFeatures, "export-lead")?.enable && (
+                <ExportDataContainer
+                  headerLabels={leadHeaderLabels}
+                  list={allItems}
+                  onGetData={getDataHandler}
+                  loading={isLoading}
+                  checkedItems={checkedItems}
+                  dateTimeRange={dateTimeRange}
+                />
+              )
+
+
+
+            }
+            {
+              generateFeatureAccess(pageFeatures, "export-lead")?.show && !generateFeatureAccess(pageFeatures, "export-lead")?.enable && (
+                <AccessDenied
+                  variant={""}
+                  title="خروجی "
+                  message="شما به این بخش دسترسی ندارید"
+                  icon={(<Image
+                    src={"/icons/disable-download.png"}
+                    alt="edit"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />)}
+                />
+              )
+            }
+
+
           </div>
         </div>
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow ">

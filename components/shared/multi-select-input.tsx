@@ -7,9 +7,11 @@ import { FormMakerInterface } from "./form-maker";
 const MultiSelectInput = React.memo(function MultiSelectInput({
   form,
   item,
+  disabled=false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  disabled?:boolean
 }) {
   const [options, setOptions] = useState(item.options || []);
 
@@ -21,7 +23,7 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
       form.setFieldValue(item.key, [...form.values[item.key], ...values]);
       form.setFieldValue(item.key, [...form.values[item.key], ...data]);
    
-      
+    
 
 
     },
@@ -72,6 +74,7 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
         handleValueChange(data);
         if (item.onChange) item.onChange(data);
       }}
+      isDisabled={item.disabled}
       placeholder={item.placeholder || item.label || "انتخاب کنید"}
       value={[]} // Keep it empty to avoid tags inside
       components={{

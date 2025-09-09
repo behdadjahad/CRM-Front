@@ -11,6 +11,7 @@ export interface ServiceContainerInterface {
   askQuestion?: boolean;
   multiChosen?: boolean;
   onActiveItemChange?: any;
+  roleAcess?: boolean
 }
 
 export default function ServiceContainer({
@@ -20,6 +21,7 @@ export default function ServiceContainer({
   multiChosen,
   children,
   onActiveItemChange,
+  roleAcess 
 }: ServiceContainerInterface) {
   const [activeItem, setActiveItem] = useState<any>([]);
 
@@ -32,7 +34,7 @@ export default function ServiceContainer({
     >
       {(Array.isArray(activeItem)
         ? activeItem.length > 0 &&
-          activeItem.every((item) => item.isSelected === false)
+        activeItem.every((item) => item.isSelected === false)
         : activeItem && activeItem.isSelected === false) &&
         askQuestion && (
           <div className="flex justify-between w-full p-4 bg-background-active rounded-lg overflow-hidden">
@@ -73,43 +75,44 @@ export default function ServiceContainer({
       <div className="flex flex-row flex-wrap items-center justify-start gap-2 w-full">
         {services.map((item) => (
           <ServiceCard
+            hasAccess={roleAcess}
             key={item.id}
             {...item}
             clickFunction={() => {
               if (item.disable) {
                 return;
               } else {
-                 if (multiChosen) {
-                const isExist = activeItem.some(
-                  (obj: any) => obj.id === item.id
-                );
-                if (isExist) {
-                  setActiveItem(
-                    activeItem.filter((obj: any) => obj.id !== item.id)
+                if (multiChosen) {
+                  const isExist = activeItem.some(
+                    (obj: any) => obj.id === item.id
                   );
-                  onActiveItemChange(
-                    activeItem.filter((obj: any) => obj.id !== item.id)
-                  );
+                  if (isExist) {
+                    setActiveItem(
+                      activeItem.filter((obj: any) => obj.id !== item.id)
+                    );
+                    onActiveItemChange(
+                      activeItem.filter((obj: any) => obj.id !== item.id)
+                    );
+                  } else {
+                    setActiveItem([...activeItem, item]);
+                    onActiveItemChange([...activeItem, item]);
+                  }
+                } else if (activeItem && activeItem.title === item.title) {
+                  setActiveItem(null);
+                  onActiveItemChange(item);
                 } else {
-                  setActiveItem([...activeItem, item]);
-                  onActiveItemChange([...activeItem, item]);
+                  setActiveItem(item);
+                  onActiveItemChange(item);
                 }
-              } else if (activeItem && activeItem.title === item.title) {
-                setActiveItem(null);
-                onActiveItemChange(item);
-              } else {
-                setActiveItem(item);
-                onActiveItemChange(item);
               }
-              }
-             
+
             }}
             isActive={
               multiChosen
                 ? activeItem.some((obj: any) => obj.id === item.id)
                 : activeItem && activeItem.id == item.id
             }
-            className={item.disable ? "cursor-not-allowed text-foreground-mute":"cursor-pointer"}
+            className={  !roleAcess ? "cursor-not-allowed text-foreground-mute" : roleAcess && item?.disable  ? "cursor-not-allowed text-foreground-mute": "cursor-pointer" }
           />
         ))}
       </div>

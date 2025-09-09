@@ -9,6 +9,8 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import FormMaker, { FormMakerInterface } from "./form-maker";
+import { AccessDenied } from "./AccessDenied";
+import Image from "next/image";
 
 export interface FormTabContainerInterface {
   tabs: {
@@ -22,12 +24,14 @@ export interface FormTabContainerInterface {
   }[];
   defaultValue: string;
   className?: string;
+  buttonAccess?: boolean
 }
 
 export default function FormTabContainer({
   tabs,
   defaultValue,
   className,
+  buttonAccess=true
 }: FormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue);
 
@@ -70,16 +74,24 @@ export default function FormTabContainer({
                     fields={formInfo.fields}
                     className={formInfo.className}
                   />
+                  {
+                    buttonAccess ? (<div className="w-full  flex items-end">
+                      <Button
+                        variant={"info"}
+                        className="w-24 mx-2"
+                        onClick={submitForm}
+                      >
+                        ثبت
+                      </Button>
+                    </div>) : (<div className="w-full  flex items-end">
+                      <AccessDenied
+                                      variant={""}
+                                      title=" ثبت "
+                                      message="شما به این بخش دسترسی ندارید"
+                                     
+                                    /></div>)
+                  }
 
-                  <div className="w-full flex items-end">
-                    <Button
-                      variant={"info"}
-                      className="w-24 mx-2"
-                      onClick={submitForm}
-                    >
-                      ثبت
-                    </Button>
-                  </div>
                 </div>
               ))
             ) : (

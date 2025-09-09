@@ -225,7 +225,7 @@ export default function ContractCreation({
                       formik.setFieldValue("number", " ");
                     } else {
                       setActiveItem(item);
-                      mutate(item.id);
+                      mutate(Number(item.id));
                     }
                   }}
                   isActive={activeItem && activeItem.title == item.title}
@@ -266,7 +266,7 @@ export default function ContractCreation({
                 type: "text",
                 floating: true,
                 className: "w-full md:w-1/2",
-                defaultValue: userData.fullName,
+                defaultValue: userData?.fullName,
               },
               {
                 key: "accountant",

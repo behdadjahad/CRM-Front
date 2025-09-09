@@ -42,19 +42,19 @@ export const sliceMap = {
     selector: (state: any) => state.station,
     fetchAction: fetchStations,
     fetchAllData: fetchAllStations,
-    setCheckedItems:setStationCheckedItems
+    setCheckedItems: setStationCheckedItems
   },
   hotel: {
     selector: (state: any) => state.hotel,
     fetchAction: fetchHotels,
     fetchAllData: fetchAllHotels,
-     setCheckedItems:setHotelCheckedItems
+    setCheckedItems: setHotelCheckedItems
   },
   airline: {
     selector: (state: any) => state.airline,
     fetchAction: fetchAirlines,
     fetchAllData: fetchAllAirlines,
-    setCheckedItems:setAirlineCheckedItems
+    setCheckedItems: setAirlineCheckedItems
   },
 };
 export function createSettingFormFields(
@@ -64,7 +64,8 @@ export function createSettingFormFields(
   airports?: any[],
   accommodationTypes?: any[],
   hotels?: any[],
-  airlines?: any[]
+  airlines?: any[],
+  disabled?: boolean
 ) {
   switch (service) {
     case "airport":
@@ -77,6 +78,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+          disabled: disabled,
         },
         {
           key: "city",
@@ -86,6 +88,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+          disabled: disabled,
         },
         {
           key: "airport",
@@ -95,6 +98,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: airports,
+          disabled: disabled,
         },
       ];
     case "hotel":
@@ -107,6 +111,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+          disabled: disabled,
         },
         {
           key: "city",
@@ -116,6 +121,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+          disabled: disabled,
         },
         {
           key: "accommadationType",
@@ -125,6 +131,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: accommodationTypes,
+          disabled: disabled,
         },
         {
           key: "hotel",
@@ -134,6 +141,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: hotels,
+          disabled: disabled,
         },
       ];
     case "airline":
@@ -146,6 +154,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+          disabled: disabled,
         },
         {
           key: "city",
@@ -155,6 +164,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+          disabled: disabled,
         },
 
         {
@@ -165,6 +175,7 @@ export function createSettingFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: airlines,
+          disabled: disabled,
         },
       ];
     default:
@@ -178,7 +189,8 @@ export function createSettingEditFormFields(
   airports?: any[],
   accommodationTypes?: any[],
   hotels?: any[],
-  airlines?: any[]
+  airlines?: any[],
+
 ) {
   switch (service) {
     case "airport":
@@ -191,6 +203,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+
         },
         {
           key: "city",
@@ -200,6 +213,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+
         },
         {
           key: "airport",
@@ -209,6 +223,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: airports,
+
         },
       ];
     case "hotel":
@@ -221,6 +236,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+
         },
         {
           key: "city",
@@ -230,6 +246,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+
         },
         {
           key: "accommadationType",
@@ -239,6 +256,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: accommodationTypes,
+
         },
         {
           key: "hotel",
@@ -248,6 +266,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: hotels,
+
         },
       ];
     case "airline":
@@ -260,6 +279,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: countries,
+
         },
         {
           key: "city",
@@ -269,6 +289,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: cities,
+
         },
 
         {
@@ -279,6 +300,7 @@ export function createSettingEditFormFields(
           floating: true,
           className: "w-full md:w-1/4",
           options: airlines,
+
         },
       ];
     default:

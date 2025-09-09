@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 export interface ServiceCardInterface {
-  id: number;
+  id: number | string;
   title: string;
   isActive?: boolean;
   clickFunction?: any;
@@ -20,6 +20,7 @@ export interface ServiceCardInterface {
   form?: any;
   disable?: boolean;
   disableImage?: string;
+  hasAccess?: boolean
 }
 
 export default function ServiceCard({
@@ -33,24 +34,26 @@ export default function ServiceCard({
   selectedImage,
   activeImage,
   disable,
-  disableImage
+  disableImage,
+  hasAccess
 }: ServiceCardInterface) {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg w-28 h-36 bg-card",className
+        `flex flex-col items-center justify-between text-xs text-right p-2 gap-2 border rounded-lg w-28 h-36 bg-card `,className
       )}
       onClick={clickFunction}
     >
       <Image
-        src={
-          isSelected && selectedImage
-            ? selectedImage
-            : isActive && activeImage
-              ? activeImage
-              : disable && disableImage
-              ? disableImage
-            : image
+        src={  hasAccess
+      ? isSelected && selectedImage
+        ? selectedImage
+        : isActive && activeImage
+        ? activeImage
+        : disable && disableImage
+        ? disableImage
+        : image
+      : !hasAccess && !disable ? disableImage! : disableImage! //to-do
         }
         alt={title}
         width={1080}

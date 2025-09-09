@@ -44,8 +44,11 @@ export const safeLocalStorage = {
 // 
 export function generateFeatureAccess(features: any, code: string) {
   const feature = features?.find((item: any) => item?.code === code);
+  console.log("feature", feature);
   return {
-    enable: feature?.enable,
+    enable: feature?.enabled,
     show: feature?.show,
   };
 }
+
+  
