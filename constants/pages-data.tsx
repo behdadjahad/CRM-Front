@@ -21,7 +21,7 @@ export const pagesData = [
     code: "lead",
   },
   {
-    url: "/customers",
+    url: "/customer",
     code: "customers",
   },
   {

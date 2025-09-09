@@ -7,9 +7,11 @@ import { components, SingleValueProps, OptionProps } from "react-select";
 const SuggestionInput = React.memo(function SelectInput({
   form,
   item,
+  disabled
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  disabled?:boolean
 }) {
   const [inputValue, setInputValue] = useState("");
 
@@ -52,7 +54,8 @@ const SuggestionInput = React.memo(function SelectInput({
 
   return (
     <Creatable
-      isClearable
+
+isDisabled={disabled}    
       inputValue={inputValue}
       onInputChange={(newValue) => {
         setInputValue(newValue);
