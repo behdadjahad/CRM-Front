@@ -33,7 +33,7 @@ import { generateFeatureAccess } from "@/lib/generatePageData";
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
    const pageFeatures = usePageData();
 
-   console.log("ffff",pageFeatures)
+ 
   //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
   // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
 
@@ -149,7 +149,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
         <FormMaker
           form={formik}
           fields={[
-            {
+{
               key: "contractState",
               component: "checkbox",
               placeholder: "وضعیت قرارداد",
@@ -297,7 +297,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       dateTimeRangeStart: formik.values.startDate
         ? convertToGregorian(
             formik.values.startDate,
-            formik.values.startDateType
+formik.values.startDateType
           )
         : "",
       dateTimeRangeEnd: formik.values.endDate
@@ -452,7 +452,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           {" "}
           
           {generateFeatureAccess(pageFeatures
-          ,"filter-customers")?.show && generateFeatureAccess(pageFeatures
+,"filter-customers")?.show && generateFeatureAccess(pageFeatures
           ,"filter-customers")?.enable && (
           <FilterContainer
             onFilterHandler={() => {

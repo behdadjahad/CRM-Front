@@ -10,6 +10,9 @@ import { MdClose } from "react-icons/md";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
 import { CustomToast } from "../shared/custome-toast";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { AccessDenied } from "../shared/AccessDenied";
 
 export interface ClientInfoCardInterface {
   data: {
@@ -38,6 +41,7 @@ export default function ClientInfoCard({
   clientData: any[];
   clientInfo: any;
 }) {
+  const pageFeatures = usePageData();
   const queryClient = useQueryClient();
 
   const formik = useFormik({
@@ -77,7 +81,7 @@ export default function ClientInfoCard({
   });
   function deleteHandler(key: number) {
     CustomToast({
-      type:"custom",
+      type: "custom",
       message: "آیا مشتری حذف شود؟",
       onConfirm: () => deleteCustomerHandler(key),
     });
@@ -102,29 +106,72 @@ export default function ClientInfoCard({
 
         <div className="w-1/5 flex flex-col gap-2">
           <div className="flex items-center justify-center gap-0.5">
-            <Button variant={"transparent"} className="p-0">
-              <Image
-                src="/icons/trash.png"
-                alt=""
-                width={1024}
-                height={1024}
-                className="w-5 h-5"
-                onClick={() => {
-                  deleteHandler(clientInfo.deleteKey);
-                  // deleteCustomerHandler(clientInfo.deleteKey);
-                }}
-              />
-            </Button>
-            <Button variant={"transparent"} className="p-0">
-              <Image
-                src="/icons/edit-primary.png"
-                alt=""
-                width={1024}
-                height={1024}
-                className="w-4 h-4"
-                onClick={() => setOpenModal(true)}
-              />
-            </Button>
+            {(generateFeatureAccess(pageFeatures, "delete-contract-customer")
+              ?.show &&
+              generateFeatureAccess(pageFeatures, "delete-contract-customer")
+                ?.enable) && 
+                <Button variant={"transparent"} className="p-0">
+                  <Image
+                    src="/icons/trash.png"
+                    alt=""
+                    width={1024}
+                    height={1024}
+                    className="w-5 h-5"
+                    onClick={() => {
+                      deleteHandler(clientInfo.deleteKey);
+                      // deleteCustomerHandler(clientInfo.deleteKey);
+                    }}
+                  />
+                </Button>
+              }
+            {(generateFeatureAccess(pageFeatures, "delete-contract-customer")
+              ?.show &&
+              !generateFeatureAccess(pageFeatures, "delete-contract-customer")
+                ?.enable) && 
+                <AccessDenied
+                  icon={
+                    <Image
+                      src={"/icons/disable-delete.png"}
+                      alt="حذف"
+                      width={1024}
+                      height={1024}
+                      className="w-4 h-4"
+                    />
+                  }
+                />
+              }
+            {(generateFeatureAccess(pageFeatures, "edit-contract-customer")
+              ?.show &&
+             generateFeatureAccess(pageFeatures, "edit-contract-customer")
+                ?.enable) && 
+                <Button variant={"transparent"} className="p-0">
+                  <Image
+                    src="/icons/edit-primary.png"
+                    alt=""
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                    onClick={() => setOpenModal(true)}
+                  />
+                </Button>
+              }
+            {(generateFeatureAccess(pageFeatures, "edit-contract-customer")
+              ?.show &&
+              !generateFeatureAccess(pageFeatures, "edit-contract-customer")
+                ?.enable) && 
+                <AccessDenied
+                  icon={
+                    <Image
+                      src={"/icons/disable-edit.png"}
+                      alt="ویرایش"
+                      width={1024}
+                      height={1024}
+                      className="w-4 h-4"
+                    />
+                  }
+                />
+           }
+
             <CustomModal
               minWidth="0"
               maxWidth="700px"

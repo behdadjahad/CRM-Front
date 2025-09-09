@@ -7,7 +7,7 @@ import ContractCreation from "@/components/sale/contract-creation";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
 import Title from "@/components/shared/title";
-
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
@@ -35,16 +35,15 @@ import { Button } from "@/components/ui/button";
 
 import { usePageData } from "@/hooks/usePageData";
 import { AccessDenied } from "@/components/shared/AccessDenied";
-import { safeLocalStorage } from "@/lib/generatePageData";
-
+import {
+  generateFeatureAccess,
+  safeLocalStorage,
+} from "@/lib/generatePageData";
 
 export default function Sale() {
   const dispatch = useDispatch<any>();
-
   const pageFeatures = usePageData();
-  const createContract = pageFeatures?.find(
-    (item: any) => item?.code === "create-contract"
-  );
+
 
 
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
@@ -555,56 +554,113 @@ export default function Sale() {
             ]}
           />
         </div>
+        {generateFeatureAccess(pageFeatures, "create-contracts")?.show &&
+          generateFeatureAccess(pageFeatures, "create-contracts")?.enable && (
+            <ContractCreation contractTypes={contractTypes} />
+          )}
 
-        {createContract?.show && createContract?.enabled && (
-          <ContractCreation contractTypes={contractTypes} />
-        )}
-        {!createContract?.show && !createContract?.enabled && (
-          <AccessDenied
-            variant={"foreground"}
-            title="قرارداد جدید"
-            message="شما به این بخش دسترسی ندارید"
-          />
-        )}
+        {generateFeatureAccess(pageFeatures, "create-contracts")?.show &&
+          !generateFeatureAccess(pageFeatures, "create-contracts")?.enable && (
+            <AccessDenied
+              title="قرارداد جدید"
+              icon={
+                <Image
+                  src={"/icons/disable-plus.png"}
+                  alt="ادیت"
+                  width={1024}
+                  height={1024}
+                  className="w-4 h-4"
+                />
+              }
+            />
+          )}
       </div>
 
       <ContractOverview list={ContractOverviewList} />
 
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-y-4">
-        <FilterContainer
-          onFilterHandler={() => {
-            submitFilter();
-          }}
-          rangeItems={rangeItems}
-          filterItems={filterItems}
-          sortList={customerSortlist}
-          onSortHandler={(item: string) => {
-            submitSort(item);
-          }}
-          onCancleHandler={cancleFilter}
-        />
+        {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
+          generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
+            <FilterContainer
+              onFilterHandler={() => {
+                submitFilter();
+              }}
+              rangeItems={rangeItems}
+              filterItems={filterItems}
+              sortList={customerSortlist}
+              onSortHandler={(item: string) => {
+                submitSort(item);
+              }}
+              onCancleHandler={cancleFilter}
+            />
+          )}
+        {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
+          !generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
+            <AccessDenied
+              title="فیلتر"
+              icon={
+                <Image
+                  src={"/icons/disable-filter.png"}
+                  alt="ادیت"
+                  width={1024}
+                  height={1024}
+                  className="w-6 h-6"
+                />
+              }
+            />
+          )}
         <div className="text-base font-bold h-9 flex items-center justify-center gap-4">
-          <Button
-            variant={"foreground"}
-            className=""
-            onClick={() => {
-              checkItemHandler();
-            }}
-          >
-            {contractLists?.every((item: any) =>
-              checkedItems.some((obj: any) => obj.id === item.id)
-            )
-              ? "حذف همه"
-              : "انتخاب همه"}
-          </Button>
-          <ExportDataContainer
-            headerLabels={contractHeaderLabels}
-            list={allItems}
-            onGetData={getDataHandler}
-            loading={isLoading}
-            checkedItems={checkedItems}
-            dateTimeRange={dateTimeRange}
-          />
+       
+          {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
+            generateFeatureAccess(pageFeatures, "check-all-contracts")
+              ?.enable && (
+              <Button
+                variant={"foreground"}
+                className=""
+                onClick={() => {
+                  checkItemHandler();
+                }}
+              >
+                {contractLists?.every((item: any) =>
+                  checkedItems.some((obj: any) => obj.id === item.id)
+                )
+                  ? "حذف همه"
+                  : "انتخاب همه"}
+              </Button>
+            )}
+          {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
+            !generateFeatureAccess(pageFeatures, "check-all-contracts")
+              ?.enable && (
+            <AccessDenied title={"انتخاب همه"} />
+            )}
+          {generateFeatureAccess(pageFeatures, "export-contracts")?.show &&
+            generateFeatureAccess(pageFeatures, "export-contracts")?.enable && (
+              <ExportDataContainer
+                headerLabels={contractHeaderLabels}
+                list={allItems}
+                onGetData={getDataHandler}
+                loading={isLoading}
+                checkedItems={checkedItems}
+                dateTimeRange={dateTimeRange}
+              />
+            )}
+          {generateFeatureAccess(pageFeatures, "export-contracts")?.show &&
+            !generateFeatureAccess(pageFeatures, "export-contracts")
+              ?.enable && (
+              <AccessDenied
+                title="خروجی"
+                icon={
+                  <Image
+                    src={"/icons/disable-download.png"}
+                    alt="ادیت"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
+                }
+              
+              />
+            )}
         </div>
       </div>
 
@@ -658,6 +714,7 @@ export default function Sale() {
           />
         </div>
       </div>
+      
     </main>
   );
 }
