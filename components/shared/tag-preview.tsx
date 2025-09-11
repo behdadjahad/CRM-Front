@@ -11,20 +11,21 @@ export default function TagPreview({
   form: any;
   item: FormMakerInterface["fields"][0];
 }) {
+  console.log(form.values[item.key as string])
   const handleRemove = (tag: string) => {
-    if (!item.dependantKey) return;
+    if (!item.key) return;
 
-    const updatedTags = form.values[item.dependantKey].filter(
+    const updatedTags = form.values[item.key].filter(
       (item: string) => item !== tag
     );
 
-    form.setFieldValue(item.dependantKey, updatedTags);
+    form.setFieldValue(item.key, updatedTags);
   };
 
   return (
     <div className="flex flex-wrap gap-2  w-full items-center">
-      {form.values[item.dependantKey as string] &&
-        form.values[item.dependantKey as string].map((tag: any) => (
+      {form.values[item.key as string] &&
+        form.values[item.key as string].map((tag: any) => (
           <div
             className="bg-gray-50 px-2 text-gray-500 border rounded-full text-right w-fit relative h-8 flex items-center justify-between text-xs min-w-18 gap-2"
             key={tag}

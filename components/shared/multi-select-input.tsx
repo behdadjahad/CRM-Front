@@ -17,13 +17,14 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
     (data: any) => {
       console.log(data);
       const values = data?.length > 0 ? data.map((d: any) => d.value) : [];
-   
+
       form.setFieldValue(item.key, [...form.values[item.key], ...values]);
-      form.setFieldValue(item.key, [...form.values[item.key], ...data]);
-   
-      
-
-
+      if (item.dependantKey) {
+        form.setFieldValue(item.dependantKey, [
+          ...(form.values[item.dependantKey] || []), // <-- safe fallback
+          ...(data || []),
+        ]);
+      }
     },
     [item.key, form]
   );
@@ -41,6 +42,12 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
         ...(form.values[item.key] || []),
         inputValue,
       ]);
+      if (item.dependantKey) {
+        form.setFieldValue(item.dependantKey, [
+          ...(form.values[item.dependantKey] || []),
+          newOption,
+        ]);
+      }
       if (item?.sendValue) item?.sendValue(inputValue);
     }
   };

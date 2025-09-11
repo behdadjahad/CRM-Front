@@ -94,11 +94,19 @@ export default function AddPermissionToPackageUnit({
             fields={[
               {
                 key: "permissions",
+                dependantKey:"permissions-preview",
                 component: "multi-select",
                 placeholder: "دسترسی ها را انتخاب کنید",
                 type: "text",
                 className: "w-full md:w-1/2",
                 options: permissionList,
+              },
+              {
+                key: "permissions-preview",
+                component: "tag-preview",
+
+                className: "w-full",
+
               },
             ]}
             className="flex flex-row w-full"

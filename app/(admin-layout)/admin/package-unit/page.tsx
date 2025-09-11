@@ -190,7 +190,7 @@ function getData(packageUnitData: any) {
             list: [
               { label: "نام", value: feature.name },
               { label: "کد", value: feature.code },
-              { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
+              { label: "الگو آدرس", value: feature?.urlPattern?.join?.(", ") },
               { label: "توضیحات", value: feature.description },
             ],
             data: {

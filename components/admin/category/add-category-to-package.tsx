@@ -25,6 +25,7 @@ export default function AddCategoryToPackage({
     initialValues: {
       packageId: packageId,
       categories: "",
+      categoryPreview:""
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -45,7 +46,7 @@ export default function AddCategoryToPackage({
   function addCatogoryToPackagehandler(values: any) {
     const id = values.packageId;
     const ids=values.categories.map((item:any)=>item.value)
-    const data = { ids: ids };
+    const data = { ids: values.categories };
     addCategoryhandler({
       id: id,
       data: data,
@@ -92,12 +93,12 @@ export default function AddCategoryToPackage({
                 placeholder: "دسته بندی",
                 type: "text",
                 className: "w-full md:w-1/2",
+                dependantKey:"categoryPreview",
                 options: categoryList,
               },
                {
               key: "categoryPreview",
               component: "tag-preview",
-              dependantKey: "categories",
               className: "w-full",
             },
             ]}
