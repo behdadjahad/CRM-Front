@@ -116,6 +116,9 @@ export default function PermissionTable({
       queryClient.invalidateQueries({
         queryKey: ["permissionData"],
       });
+       queryClient.invalidateQueries({
+        queryKey: ["roleData"],
+      });
     },
   });
   function editHandler(values: PermissionDataInterface) {

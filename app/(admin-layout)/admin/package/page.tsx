@@ -68,7 +68,7 @@ function getData(packageData: any) {
         { label: "توضیحات", value: item.description },
         {
           label: "قیمت",
-          value: formatPrice(item.price) + " " + item?.currency?.name,
+          value: formatPrice(item.price) + " " + (item?.currency?.name ? item?.currency?.name: ""),
         },
       ],
       data: {
@@ -84,7 +84,7 @@ function getData(packageData: any) {
           { label: "نام", value: category.name },
           {
             label: "قیمت",
-            value: formatPrice(category.price) + " " + category?.currency?.name,
+            value: formatPrice(category.price) + " " + (category?.currency?.name ? category?.currency?.name:""),
           },
           { label: "توضیحات", value: category.description },
         ],
