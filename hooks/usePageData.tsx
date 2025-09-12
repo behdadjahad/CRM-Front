@@ -16,7 +16,7 @@ const dispatch=useDispatch()
     const pageItem = pagesData.find((item) => matchPath(item.url, pathname));
 
     const pageCode = pageItem?.code;
-    dispatch(setCurrentPageCode(pageCode || ""));
+  dispatch(setCurrentPageCode(pageCode || ""));
 console.log("code",pageCode)
     if (!pageCode) return null;
     return generatePageAccessData(pageCode);
@@ -29,7 +29,7 @@ console.log("code",pageCode)
 //     dispatch(setCurrentPageCode(pageCode as string));
 //     if (!pageCode) return null;
 //     return generatePageAccessData(pageCode);
- 
+
 //   }, [pathname, pagesData]);
 console.log(pageData,"---------------")
   return pageData?.features;
