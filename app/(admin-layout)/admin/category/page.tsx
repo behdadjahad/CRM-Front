@@ -92,7 +92,7 @@ function getData(categoryData: any) {
       id: item.id,
       list: [
         { label: "نام", value: item.name },
-        { label: "قیمت", value: formatPrice(item.price) },
+        { label: "قیمت", value: formatPrice(item.price) + " " + (item?.currency?.name ? item?.currency?.name:"") },
         { label: "توضیحات", value: item.description },
       ],
       data: {
@@ -111,7 +111,7 @@ function getData(categoryData: any) {
         id: unit.id,
         list: [
           { label: "نام", value: unit.name },
-          { label: "قیمت", value: formatPrice(unit.price) },
+          { label: "قیمت", value: formatPrice(unit.price) + " " +(unit?.currency?.name ? unit?.currency?.name:"" ) },
           { label: "توضیحات", value: unit.description },
           { label: "نوع فروش واحد", value: unit.unitType },
           { label: "مدل فروش واحد", value: unit.unitModel },

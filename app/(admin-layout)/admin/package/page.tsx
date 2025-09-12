@@ -103,7 +103,7 @@ function getData(packageData: any) {
           id: unit.id,
           list: [
             { label: "نام", value: unit.name },
-            { label: "قیمت", value: unit.price },
+            { label: "قیمت",  value: formatPrice(unit.price) + " " +(unit?.currency?.name ? unit?.currency?.name:"" ) },
             { label: "توضیحات", value: unit.description },
             { label: "نوع فروش واحد", value: unit?.unitType },
             { label: "مدل فروش واحد", value: unit?.unitModel },
@@ -175,7 +175,7 @@ function getData(packageData: any) {
                   { label: "کد", value: feature.code },
                   {
                     label: "الگو آدرس",
-                    value: feature?.urlPattern?.join(", "),
+                    value: feature?.urlPattern?.join?.(", "),
                   },
                   { label: "توضیحات", value: feature.description },
                 ],
