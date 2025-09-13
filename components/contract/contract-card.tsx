@@ -177,10 +177,19 @@ export default function ContractCard({
                 />
               </div>
             )}
-          {!generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+          {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
             !generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
-            // <AccessDenied icon={ } />
-            <></>
+              <AccessDenied
+                icon={
+                  <Image
+                    src={"/icons/checkbox-icon.png"}
+                    alt="checkbox"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
+                }
+              />
             )}
           {contract?.customer?.image && (
             <Image
