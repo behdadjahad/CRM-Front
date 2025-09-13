@@ -18,25 +18,37 @@ export default function ContractContainer({
   mainRef,
 }: ContractContainerInterface) {
   const pageFeatures = usePageData();
-  const hasAccess = !generateFeatureAccess(pageFeatures, "contract-detail")
-    ?.enable;
-  const [isDisable, setIsDisable] = useState(false);
+  const hasAccess = generateFeatureAccess(
+    pageFeatures,
+    "contract-detail"
+  )?.enable;
+
   return (
     <div
       className={cn(
         "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5",
         className
       )}
-      onClick={() => setIsDisable(true)}
     >
-      {list?.map((item, index) => (
-        <ContractCard
-          {...item}
-          key={item?.header?.submitDate + item?.user?.name + index}
-          mainRef={mainRef}
-        />
-      ))}
-      <AccessDenied state={isDisable} setState={()=>setIsDisable(false)} />
+      {list?.map((item, index) => {
+        return hasAccess ? (
+          <ContractCard
+            {...item}
+            key={item?.header?.submitDate + item?.user?.name + index}
+            mainRef={mainRef}
+          />
+        ) : (
+          <AccessDenied
+            trigger={
+              <ContractCard
+                {...item}
+                key={item?.header?.submitDate + item?.user?.name + index}
+                mainRef={mainRef}
+              />
+            }
+          />
+        );
+      })}
     </div>
   );
 }

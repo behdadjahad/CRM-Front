@@ -5,15 +5,14 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { cloneElement, isValidElement } from "react";
 interface AccessDeniedInterface {
   title?: string;
   message?: string;
-
   icon?: React.ReactNode;
   variant?: any;
   className?: string;
-  state?: boolean;
-  setState?: (state: boolean) => void;
+  trigger?: React.ReactElement;
 }
 
 export function AccessDenied({
@@ -22,31 +21,46 @@ export function AccessDenied({
   variant,
   className,
   title,
-  state,
-  setState,
+  trigger,
 }: AccessDeniedInterface) {
-  console.log("AccessDenied state", state);
-
   const [isOpen, setIsOpen] = useState(false);
-  useEffect(() => {
-    setIsOpen(state!);
-  }, [state]);
 
   return (
     <>
-      <Button
-        variant={"disable"}
-        className={cn(`${title ? "disable-shadow" : ""}`, className)}
-        onClick={() => setIsOpen(true)}
-      >
-        {icon ? icon : <></>} {title}
-      </Button>
+      {trigger ? (
+        // cloneElement(trigger, {
+        //   onClick: (e: React.MouseEvent) => {
+        //     if (trigger.props.onClick) {
+        //       trigger.props.onClick(e);
+        //     }
+        //     setIsOpen(true);
+        //   },
+        // })
+        <div
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsOpen(true);
+          }}
+          className="cursor-pointer"
+        >
+          <div style={{ pointerEvents: "none" }}>{trigger}</div>
+        </div>
+      ) : (
+        <Button
+          variant={"disable"}
+          className={cn(`${title ? "disable-shadow" : ""}`, className)}
+          onClick={() => setIsOpen(true)}
+        >
+          {icon ? icon : <></>} {title}
+        </Button>
+      )}
+
       <CustomModal
         minWidth="0"
         maxWidth="610px"
         isOpen={isOpen}
         onRequestClose={() => {
-          // setState!(false);
           setIsOpen(false);
         }}
         contentLabel="ویرایش"
@@ -59,7 +73,6 @@ export function AccessDenied({
             size={20}
             onClick={() => {
               setIsOpen(false);
-              // setState!(false);
             }}
             className="cursor-pointer flex justify-end"
           />

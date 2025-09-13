@@ -120,11 +120,8 @@ export default function ContractCard({
     dispatch(setCheckedItems(updatedItems));
   };
   const checkedItems = useSelector((state: any) => state.contract.checkedItems);
-  console.log(header?.icon);
-  console.log(contract?.customer?.image);
-  // useEffect(() => {
-  //   console.log("isDisable",isDisable);
-  // }, [isDisable]);
+
+
   return (
     <Link
       className={cn(
@@ -135,7 +132,7 @@ export default function ContractCard({
       onClick={() => {
         const scrollTop = mainRef.current?.scrollTop || 0;
         dispatch(setScrollPosition(scrollTop));
-        // setIsDisable(true);
+
       }}
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground border">
@@ -241,9 +238,6 @@ export default function ContractCard({
                   .enable && (
                   <>
                     <div
-                      // onClick={() => {
-                      //   setOpenModal(true);
-                      // }}
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();

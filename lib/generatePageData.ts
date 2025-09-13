@@ -1,7 +1,9 @@
+import { RootState, store } from "@/store";
+
 export function generatePageAccessData(pageCode: any) {
-  console.log("input",pageCode)
+  console.log("input", pageCode);
   const accessData = safeLocalStorage.getItem("accessData");
-  console.log(accessData)
+  console.log(accessData);
   if (accessData) {
     const matchPage = JSON.parse(accessData)?.pages?.find(
       (item: any) => pageCode in item
@@ -38,18 +40,26 @@ export const safeLocalStorage = {
     } catch (error) {
       console.error("Error removing localStorage:", error);
     }
-  }
+  },
 };
 
-// 
-export function generateFeatureAccess(features: any, code: any) {
-  console.log("feature and code",features,code)
-  const feature = features?.find((item: any) => item?.code == code);
-  console.log("feature", feature);
-  return {
-    enable: feature?.enabled,
-    show: feature?.show,
-  };
+//
+export function generateFeatureAccess(features: any, code: string) {
+  const state: RootState = store.getState();
+  const roles = state.login.roles;
+  console.log(roles)
+  const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
+  if (isSuperAdmin) {
+    return {
+      enable: true,
+      show: true,
+    };
+  } else {
+    const feature = features?.find((item: any) => item?.code === code);
+    console.log("feature", feature);
+    return {
+      enable: feature?.enabled,
+      show: feature?.show,
+    };
+  }
 }
-
-  
