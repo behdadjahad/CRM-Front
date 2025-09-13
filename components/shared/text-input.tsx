@@ -8,7 +8,7 @@ import { FaUndo } from "react-icons/fa";
 export default function TextInput({
   form,
   item,
-     disabled
+  disabled=false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];

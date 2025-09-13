@@ -93,6 +93,7 @@ export default function LoginForm() {
 
       <FormMaker
         form={formik}
+        hasAccess
         fields={[
           {
             key: "email",

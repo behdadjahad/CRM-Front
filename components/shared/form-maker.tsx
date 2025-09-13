@@ -113,7 +113,7 @@ export default function FormMaker({
   form,
   fields,
   className,
-  hasAccess
+  hasAccess=true
 
 }: FormMakerInterface) {
 console.log("3",hasAccess)
