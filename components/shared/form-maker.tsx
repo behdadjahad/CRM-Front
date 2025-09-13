@@ -113,7 +113,7 @@ export default function FormMaker({
   form,
   fields,
   className,
-  disabled = false
+  disabled
 
 }: FormMakerInterface) {
   const renderField = useCallback(
@@ -123,17 +123,17 @@ export default function FormMaker({
 
       switch (item.component) {
         case "Select":
-          return <SelectInput form={form} item={{ ...item, disabled: isDisabled }} />;
+          return <SelectInput disabled={disabled} form={form} item={{ ...item, disabled: isDisabled }} />;
         case "multi-select":
-          return <MultiSelectInput disabled={isDisabled} form={form} item={item} />;
+          return <MultiSelectInput disabled={disabled}  form={form} item={item} />;
         case "tag-preview":
-          return <TagPreview form={form} item={item} />;
+          return <TagPreview  form={form} item={item} />;
         case "SuggestionInput":
-          return <SuggestionInput form={form} item={{ ...item, disabled: isDisabled }} />;
+          return <SuggestionInput  disabled={disabled}  form={form} item={{ ...item, disabled: isDisabled }} />;
         case "input":
-          return <TextInput hasAccess={!isDisabled} item={item} form={form} />;
+          return <TextInput disabled={disabled}  item={item} form={form} />;
         case "multi-added-input":
-          return <MultiAddedTextInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <MultiAddedTextInput  item={{ ...item, disabled: isDisabled }} form={form} />;
         case "phone":
           return <PhoneNumberInput item={{ ...item, disabled: isDisabled }} form={form} />;
         case "date":

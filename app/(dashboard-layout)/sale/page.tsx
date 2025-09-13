@@ -553,13 +553,13 @@ export default function Sale() {
             ]}
           />
         </div>
-        {generateFeatureAccess(pageFeatures, "create-contracts")?.show &&
-          generateFeatureAccess(pageFeatures, "create-contracts")?.enable && (
+        {generateFeatureAccess(pageFeatures, "create-contract")?.show &&
+          generateFeatureAccess(pageFeatures, "create-contract")?.enable && (
             <ContractCreation contractTypes={contractTypes} />
           )}
 
-        {generateFeatureAccess(pageFeatures, "create-contracts")?.show &&
-          !generateFeatureAccess(pageFeatures, "create-contracts")?.enable && (
+        {generateFeatureAccess(pageFeatures, "create-contract")?.show &&
+          !generateFeatureAccess(pageFeatures, "create-contract")?.enable && (
             <AccessDenied
               title="قرارداد جدید"
               icon={

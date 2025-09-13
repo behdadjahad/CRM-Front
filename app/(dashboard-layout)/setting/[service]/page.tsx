@@ -181,24 +181,24 @@ export default function ServiceSetting() {
     airport: "create-airports",
     airline: "create-airlines"
   };
-  console.log("hiiiii",)
+  console.log("hiiiii",featureCodeMap[serviceType as any])
   // decide if form should be shown
   const shouldShowForm =
     generateFeatureAccess(
       pageFeatures,
-      featureCodeMap[serviceType!]
+    featureCodeMap[serviceType as any]
     )?.show &&
     generateFeatureAccess(
       pageFeatures,
-      featureCodeMap[serviceType!]
+     featureCodeMap[serviceType as any]
     )?.enable;
 
   // If user doesn't have access, disable the form
-  const isDisabled = true;
+  const disabled = !shouldShowForm;
 
   console.log("serviceType", serviceType)
   console.log("shouldShowForm", shouldShowForm)
-  console.log("isDisabled", isDisabled)
+  console.log("isDisabled", disabled)
 
   return (
     <main>
@@ -225,7 +225,7 @@ export default function ServiceSetting() {
           accommodationTypes,
           hotels,
           airlines,
-          isDisabled
+          disabled
         )}
         hasAccess={shouldShowForm}
         form={formik}

@@ -6,11 +6,11 @@ import { components, SingleValueProps, OptionProps } from "react-select";
 const SelectInput = React.memo(function SelectInput({
   form,
   item,
-   disabled=false
+  disabled = false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-  disabled?:boolean
+  disabled?: boolean
 }) {
   const handleValueChange = useCallback(
     (data: any) => {
@@ -43,7 +43,7 @@ const SelectInput = React.memo(function SelectInput({
   );
   return (
     <Creatable
-      isClearable
+      isDisabled={disabled}
       menuPlacement={item?.menuPlacement}
       isValidNewOption={() => false}
       options={item.options}

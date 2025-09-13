@@ -147,15 +147,19 @@ export async function fetchService(
   }
 
   const result = await response.json();
-
-  if (result?.meta?.hasChanged) {
+ console.log("in response out ", result)
+  if (result?.meta?.accessChanged) {
+    console.log("in response if ", result)
     const accessData = await getAccess();
+    console.log("in access",accessData)
     if (accessData?.data) {
       if (accessData.data.hash) {
         safeLocalStorage.setItem("hash", accessData.data.hash);
       }
-      if (accessData.data.accessToken) {
-        safeLocalStorage.setItem("token", accessData.data.accessToken);
+      if (accessData.data.accessJson) {
+        console.log("---------------------acess",JSON.stringify(accessData?.data?.accessJson))
+        safeLocalStorage.setItem("accessData", JSON.stringify(accessData?.data?.accessJson)
+);
       }
     }
   }

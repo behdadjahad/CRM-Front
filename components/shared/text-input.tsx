@@ -8,11 +8,11 @@ import { FaUndo } from "react-icons/fa";
 export default function TextInput({
   form,
   item,
-  hasAccess=true
+     disabled=true
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-  hasAccess?:boolean
+     disabled?:boolean
 }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   // const [inputValue, setInputValue] = useState(
@@ -79,7 +79,7 @@ export default function TextInput({
           }
         )}
         readOnly={item.readonly}
-         disabled={(item.disabled || !hasAccess) ?? false}
+         disabled={(item.disabled || !   disabled) ?? false}
       />
 
       {item.floating ? (

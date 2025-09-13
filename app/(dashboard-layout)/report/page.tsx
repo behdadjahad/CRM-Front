@@ -520,50 +520,74 @@ export default function Report() {
           onMouseEnter={() => setShowOptions(true)}
           onMouseLeave={() => setShowOptions(false)}
         >
-          {" "}
-          {!showOptions && (
-            <Button
-              type="button"
-              variant={"info"}
-              className="bg-quartiery-background text-tertiary-foreground"
-            >
-              <span>خروجی</span>
-              <Image
-                src={"/icons/dark-download.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-              />
-            </Button>
-          )}
-          {showOptions && (
-            <Button type="button" variant={"foreground"} className="">
-              <Image
-                src={"/icons/pdf.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleClick}
-              />
-              <Image
-                src={"/icons/excel.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleExport}
-              />
-              <Image
-                src={"/icons/print.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handlePrint}
-              />
-            </Button>
+        {(
+            <>
+
+              {generateFeatureAccess(pageFeatures, "export-reports")?.show && generateFeatureAccess(pageFeatures, "export-reports")?.enable && (<>
+                {!showOptions && (<Button
+                  type="button"
+                  variant={"info"}
+                  className="bg-quartiery-background text-tertiary-foreground"
+                >
+                  <span>خروجی</span>
+                  <Image
+                    src={"/icons/dark-download.png"}
+                    alt={"تصویر"}
+                    width={107}
+                    height={107}
+                    className="h-4 w-4"
+                  />
+                </Button>)}
+
+                {showOptions && (
+                  <Button type="button" variant={"foreground"} className="">
+                    <Image
+                      src={"/icons/pdf.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleClick}
+                    />
+                    <Image
+                      src={"/icons/excel.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleExport}
+                    />
+                    <Image
+                      src={"/icons/print.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handlePrint}
+                    />
+                  </Button>
+                )}
+              </>
+              )}
+
+              {generateFeatureAccess(pageFeatures
+                , "export-reports")?.show && !generateFeatureAccess(pageFeatures
+                  , "export-reports")?.enable && (
+                  <AccessDenied variant={"foreground"}
+                    title="خروجی "
+                    message="امکان دسترسی به این قابلیت وجود ندارد "
+                    icon={(<Image
+                      src={"/icons/disable-download.png"}
+                      alt="edit"
+                      width={24}
+                      height={24}
+                    />)} />
+                )
+
+
+              }
+            </>
+
           )}
         </div>
       </div>
