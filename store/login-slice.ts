@@ -1,5 +1,13 @@
 import { fetchService } from "@/boot/fetch-service";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { string } from "yup";
+
+export interface Permissions{
+  id:string | number,
+  name:string
+}
+
+
 
 export interface UserRole {
   id: number;

@@ -73,6 +73,7 @@ export default function LoginForm() {
         "accessData",
         JSON.stringify(result?.data?.accessJson)
       );
+      console.log("22222222",JSON.stringify(result?.data?.accessJson))
     } else {
       // toast
       // router.push("/login");

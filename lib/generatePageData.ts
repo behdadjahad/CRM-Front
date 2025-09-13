@@ -28,6 +28,9 @@ export const safeLocalStorage = {
     if (typeof window === "undefined") return;
     try {
       localStorage.setItem(key, value);
+      // to-do create new 
+      if (key === "accessData") {
+        window.location?.reload();      }
     } catch (error) {
       console.error("Error setting localStorage:", error);
     }
@@ -42,6 +45,7 @@ export const safeLocalStorage = {
     }
   },
 };
+
 
 //
 export function generateFeatureAccess(features: any, code: string) {
