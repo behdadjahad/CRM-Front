@@ -121,7 +121,6 @@ export default function ContractCard({
   };
   const checkedItems = useSelector((state: any) => state.contract.checkedItems);
 
-
   return (
     <Link
       className={cn(
@@ -132,7 +131,6 @@ export default function ContractCard({
       onClick={() => {
         const scrollTop = mainRef.current?.scrollTop || 0;
         dispatch(setScrollPosition(scrollTop));
-
       }}
     >
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-between w-full text-primary-foreground border">
@@ -160,23 +158,39 @@ export default function ContractCard({
 
       <div className="p-3.5 flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            {" "}
-            <Checkbox
-              onCheckedChange={(checked: boolean) => {
-                checkItemHandler(exportData, checked);
-              }}
-              checked={checkedItems.some(
-                (obj: any) => obj.id === exportData.id
-              )}
-            />
-          </div>
-
+          {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+            generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {" "}
+                <Checkbox
+                  onCheckedChange={(checked: boolean) => {
+                    checkItemHandler(exportData, checked);
+                  }}
+                  checked={checkedItems.some(
+                    (obj: any) => obj.id === exportData.id
+                  )}
+                />
+              </div>
+            )}
+          {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+            !generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
+              <AccessDenied
+                icon={
+                  <Image
+                    src={"/icons/checkbox-icon.png"}
+                    alt="checkbox"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
+                }
+              />
+            )}
           {contract?.customer?.image && (
             <Image
               src={contract?.customer?.image}
