@@ -126,29 +126,32 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
       <TableHeader>
         <TableRow>
           <TableHead className="text-center bg-white border-none">
-            <Checkbox
-              onCheckedChange={(checked: boolean) => {
-                if (checked) {
-                  const updatedCheckItems = checkedItems?.filter(
-                    (item: any) => !leadList?.some((l) => l.id === item.id)
-                  );
-                  const dataArray = leadList.map(
-                    (item: any) => item.exportData
-                  );
-                  dispatch(
-                    setCheckedItems([...updatedCheckItems, ...dataArray])
-                  );
-                } else {
-                  const updatedItems = checkedItems?.filter(
-                    (item: any) => !leadList?.some((l) => l.id === item.id)
-                  );
-                  dispatch(setCheckedItems(updatedItems));
-                }
-              }}
-              checked={leadList?.every((item) =>
-                checkedItems.some((obj: any) => obj.id === item.id)
-              )}
-            />
+            
+            {
+              <Checkbox
+                onCheckedChange={(checked: boolean) => {
+                  if (checked) {
+                    const updatedCheckItems = checkedItems?.filter(
+                      (item: any) => !leadList?.some((l) => l.id === item.id)
+                    );
+                    const dataArray = leadList.map(
+                      (item: any) => item.exportData
+                    );
+                    dispatch(
+                      setCheckedItems([...updatedCheckItems, ...dataArray])
+                    );
+                  } else {
+                    const updatedItems = checkedItems?.filter(
+                      (item: any) => !leadList?.some((l) => l.id === item.id)
+                    );
+                    dispatch(setCheckedItems(updatedItems));
+                  }
+                }}
+                checked={leadList?.every((item) =>
+                  checkedItems.some((obj: any) => obj.id === item.id)
+                )}
+              />
+            }
           </TableHead>
           {leadList?.[0]?.list.map((col, idx) => (
             <TableHead

@@ -42,7 +42,7 @@ export default function ContractContainer({
             trigger={
               <ContractCard
                 {...item}
-                key={item?.header?.submitDate + item?.user?.name + index}
+                key={item?.header?.submitDate + item?.user?.name + index + 'noAccess'}
                 mainRef={mainRef}
               />
             }
