@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -130,9 +131,8 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
       <TableHeader>
         <TableRow>
           <TableHead className="text-center bg-white border-none">
-            {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
-              !generateFeatureAccess(pageFeatures, "select-contract")
-                ?.enable && (
+            {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+              !generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
                 <AccessDenied
                   icon={
                     <Image
@@ -145,31 +145,33 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   }
                 />
               )}
-            {
-              <Checkbox
-                onCheckedChange={(checked: boolean) => {
-                  if (checked) {
-                    const updatedCheckItems = checkedItems?.filter(
-                      (item: any) => !leadList?.some((l) => l.id === item.id)
-                    );
-                    const dataArray = leadList.map(
-                      (item: any) => item.exportData
-                    );
-                    dispatch(
-                      setCheckedItems([...updatedCheckItems, ...dataArray])
-                    );
-                  } else {
-                    const updatedItems = checkedItems?.filter(
-                      (item: any) => !leadList?.some((l) => l.id === item.id)
-                    );
-                    dispatch(setCheckedItems(updatedItems));
-                  }
-                }}
-                checked={leadList?.every((item) =>
-                  checkedItems.some((obj: any) => obj.id === item.id)
-                )}
-              />
-            }
+
+            {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+              generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
+                <Checkbox
+                  onCheckedChange={(checked: boolean) => {
+                    if (checked) {
+                      const updatedCheckItems = checkedItems?.filter(
+                        (item: any) => !leadList?.some((l) => l.id === item.id)
+                      );
+                      const dataArray = leadList.map(
+                        (item: any) => item.exportData
+                      );
+                      dispatch(
+                        setCheckedItems([...updatedCheckItems, ...dataArray])
+                      );
+                    } else {
+                      const updatedItems = checkedItems?.filter(
+                        (item: any) => !leadList?.some((l) => l.id === item.id)
+                      );
+                      dispatch(setCheckedItems(updatedItems));
+                    }
+                  }}
+                  checked={leadList?.every((item) =>
+                    checkedItems.some((obj: any) => obj.id === item.id)
+                  )}
+                />
+              )}
           </TableHead>
           {leadList?.[0]?.list.map((col, idx) => (
             <TableHead
@@ -201,12 +203,33 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
           <Fragment key={lead.id}>
             <TableRow className="border border-gray-200 bg-card">
               <TableCell className="flex items-center justify-center">
-                <Checkbox
-                  onCheckedChange={(checked: boolean) => {
-                    checkItemHandler(lead.exportData, checked);
-                  }}
-                  checked={checkedItems.some((obj: any) => obj.id === lead.id)}
-                />
+                {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                  generateFeatureAccess(pageFeatures, "select-lead")
+                    ?.enable && (
+                    <Checkbox
+                      onCheckedChange={(checked: boolean) => {
+                        checkItemHandler(lead.exportData, checked);
+                      }}
+                      checked={checkedItems.some(
+                        (obj: any) => obj.id === lead.id
+                      )}
+                    />
+                  )}
+                {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                  !generateFeatureAccess(pageFeatures, "select-lead")
+                    ?.enable && (
+                    <AccessDenied
+                      icon={
+                        <Image
+                          src={"/icons/checkbox-icon.png"}
+                          alt="checkbox"
+                          width={1024}
+                          height={1024}
+                          className="w-4 h-4"
+                        />
+                      }
+                    />
+                  )}
               </TableCell>
               {lead.list.map((cell, cellIndex) => {
                 const statusMatch =
