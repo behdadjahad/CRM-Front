@@ -8,12 +8,13 @@ import { FaUndo } from "react-icons/fa";
 export default function TextInput({
   form,
   item,
-     disabled=true
+     disabled
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
      disabled?:boolean
 }) {
+  console.log("acecss input",disabled)
   const [passwordVisible, setPasswordVisible] = useState(false);
   // const [inputValue, setInputValue] = useState(
   //   item.defaultValue ? item.defaultValue : form.values[item.key]
@@ -79,7 +80,7 @@ export default function TextInput({
           }
         )}
         readOnly={item.readonly}
-         disabled={(item.disabled || !   disabled) ?? false}
+         disabled={(item?.disabled || disabled) ?? false}
       />
 
       {item.floating ? (

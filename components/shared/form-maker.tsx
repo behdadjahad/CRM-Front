@@ -104,7 +104,7 @@ export interface FormMakerInterface {
   form: any;
   fields: FieldType[];
   className?: string;
-  disabled?: boolean;
+  hasAccess?: boolean;
 
 
 }
@@ -113,56 +113,60 @@ export default function FormMaker({
   form,
   fields,
   className,
-  disabled
+  hasAccess
 
 }: FormMakerInterface) {
+console.log("3",hasAccess)
+
+
   const renderField = useCallback(
     (item: FormMakerInterface["fields"][0]) => {
+      console.log("4",hasAccess)
       // Use disabled from item first, then fallback to form-level disabled
-      const isDisabled = item.disabled !== undefined ? item.disabled : disabled;
+      // const isDisabled = item?.disabled !== undefined ? item?.disabled : disabled;
 
       switch (item.component) {
         case "Select":
-          return <SelectInput disabled={disabled} form={form} item={{ ...item, disabled: isDisabled }} />;
+          return <SelectInput disabled={!hasAccess} form={form} item={{ ...item,}} />;
         case "multi-select":
-          return <MultiSelectInput disabled={disabled}  form={form} item={item} />;
+          return <MultiSelectInput disabled={!hasAccess}  form={form} item={item} />;
         case "tag-preview":
           return <TagPreview  form={form} item={item} />;
         case "SuggestionInput":
-          return <SuggestionInput  disabled={disabled}  form={form} item={{ ...item, disabled: isDisabled }} />;
+          return <SuggestionInput  disabled={!hasAccess}  form={form} item={{ ...item,}} />;
         case "input":
-          return <TextInput disabled={disabled}  item={item} form={form} />;
+          return <TextInput disabled={!hasAccess}  item={item} form={form} />;
         case "multi-added-input":
-          return <MultiAddedTextInput  item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <MultiAddedTextInput  item={{ ...item,}} form={form} />;
         case "phone":
-          return <PhoneNumberInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <PhoneNumberInput item={{ ...item,}} form={form} />;
         case "date":
-          return <DateInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <DateInput item={{ ...item,}} form={form} />;
         case "date-time":
-          return <DateTimeInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <DateTimeInput item={{ ...item,}} form={form} />;
         case "time":
-          return <TimeInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <TimeInput item={{ ...item,}} form={form} />;
         case "selectable-tag-input":
-          return <SelectableTagInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <SelectableTagInput item={{ ...item,}} form={form} />;
 
         case "checkbox":
-          return <CheckboxInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <CheckboxInput item={{ ...item,}} form={form} />;
         case "radio":
-          return <RadioInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <RadioInput item={{ ...item,}} form={form} />;
         case "slider":
-          return <SliderInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <SliderInput item={{ ...item,}} form={form} />;
         case "textarea":
-          return <TextAreaInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <TextAreaInput item={{ ...item,}} form={form} />;
         case "text-editor":
-          return <TextEditorInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <TextEditorInput item={{ ...item,}} form={form} />;
         case "verification":
-          return <VerificationInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <VerificationInput item={{ ...item,}} form={form} />;
         case "file":
-          return <FileInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <FileInput item={{ ...item,}} form={form} />;
         case "single-file":
-          return <SingleFileInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <SingleFileInput item={{ ...item,}} form={form} />;
         case "toggle":
-          return <ToggleInput item={{ ...item, disabled: isDisabled }} form={form} />;
+          return <ToggleInput item={{ ...item,}} form={form} />;
         case "file-preview":
           return <FilePreview item={item} form={form} />;
         case "single-file-preview":
@@ -173,7 +177,7 @@ export default function FormMaker({
           return null;
       }
     },
-    [form, disabled]
+    [form,hasAccess]
   );
 
   return (

@@ -50,6 +50,7 @@ import { AccessDenied } from "@/components/shared/AccessDenied";
 export default function Contract() {
   const router = useRouter();
   const pageFeatures = usePageData();
+  console.log("check undefined", pageFeatures)
 
   const [contractServices, setContractServices] = useState<OptionType[]>([]);
   const [category, setCategory] = useState("personal");
@@ -784,7 +785,9 @@ export default function Contract() {
       });
     }
   }
-
+  console.log("1", generateFeatureAccess(pageFeatures
+    , "customer-creation")?.show && generateFeatureAccess(pageFeatures
+      , "customer-creation")?.enable)
   return (
     <main>
       <div>
@@ -880,7 +883,7 @@ export default function Contract() {
 
       <div className={category === "organization" ? "hidden" : ""}>
         <FormTabContainer
-          buttonAccess={generateFeatureAccess(pageFeatures
+          hasAccess={pageFeatures && generateFeatureAccess(pageFeatures
             , "customer-creation")?.show && generateFeatureAccess(pageFeatures
               , "customer-creation")?.enable ? true : false}
           defaultValue="اطلاعات مشتری"
@@ -902,7 +905,7 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
-                  roleAcess={generateFeatureAccess(pageFeatures
+                  roleAcess={pageFeatures && generateFeatureAccess(pageFeatures
                     , "add-service")?.show && generateFeatureAccess(pageFeatures
                       , "add-service")?.enable ? true : false}
                   askQuestion={false}
@@ -912,6 +915,7 @@ export default function Contract() {
                 >
                   {" "}
                   {
+
                     generateFeatureAccess(pageFeatures
                       , "add-service")?.show && generateFeatureAccess(pageFeatures
                         , "add-service")?.enable && (<Button
@@ -937,7 +941,7 @@ export default function Contract() {
 
                   <RegisteryForm
 
-                    roleAcess={generateFeatureAccess(pageFeatures
+                    roleAcess={pageFeatures && generateFeatureAccess(pageFeatures
                       , "add-service")?.show && generateFeatureAccess(pageFeatures
                         , "add-service")?.enable ? true : false}
                     submitForm={SubmitterHandler}
@@ -1061,7 +1065,9 @@ export default function Contract() {
                   onActiveItemChange={serviceHandler}
                 >
                   {" "}
+
                   {
+
                     generateFeatureAccess(pageFeatures
                       , "add-service")?.show && generateFeatureAccess(pageFeatures
                         , "add-service")?.enable && (<Button
@@ -1073,8 +1079,18 @@ export default function Contract() {
                         >
                           ثبت
                         </Button>)
-
                   }
+                  {generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && !generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable && (<AccessDenied
+                        variant={""}
+                        title=" ثبت "
+                        message="شما به این بخش دسترسی ندارید"
+
+                      />
+
+                    )}
+
 
                   <RegisteryForm
                     submitForm={SubmitterHandler}
@@ -1182,13 +1198,16 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
+                roleAcess={generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable ? true : false}
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
                   {" "}
-                  <Button
+                  {/* <Button
                     variant={"info"}
                     className="w-24 mx-2"
                     onClick={() => {
@@ -1196,7 +1215,32 @@ export default function Contract() {
                     }}
                   >
                     ثبت
-                  </Button>
+                  </Button> */}
+                  {
+
+                    generateFeatureAccess(pageFeatures
+                      , "add-service")?.show && generateFeatureAccess(pageFeatures
+                        , "add-service")?.enable && (<Button
+                          variant={"info"}
+                          className="w-24 mx-2"
+                          onClick={() => {
+                            submitService({ avServices: contractServices });
+                          }}
+                        >
+                          ثبت
+                        </Button>)
+                  }
+                  {generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && !generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable && (<AccessDenied
+                        variant={""}
+                        title=" ثبت "
+                        message="شما به این بخش دسترسی ندارید"
+
+                      />
+
+                    )}
+
                   <RegisteryForm
                     submitForm={SubmitterHandler}
                     accountant={
@@ -1215,7 +1259,7 @@ export default function Contract() {
 
       <div className={category === "personal" ? "hidden" : ""}>
         <FormTabContainer
-          buttonAccess={generateFeatureAccess(pageFeatures
+          hasAccess={generateFeatureAccess(pageFeatures
             , "customer-creation")?.show && generateFeatureAccess(pageFeatures
               , "customer-creation")?.enable ? true : false}
 
@@ -1247,7 +1291,10 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
-                  askQuestion={false}
+
+roleAcess={generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable ? true : false}                askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
@@ -1353,13 +1400,16 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
+                roleAcess={generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable ? true : false}
                   askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
                 >
                   {" "}
-                  <Button
+                  {/* <Button
                     variant={"info"}
                     className="w-24 mx-2"
                     onClick={() => {
@@ -1367,7 +1417,32 @@ export default function Contract() {
                     }}
                   >
                     ثبت
-                  </Button>
+                  </Button> */}
+                    {
+
+                    generateFeatureAccess(pageFeatures
+                      , "add-service")?.show && generateFeatureAccess(pageFeatures
+                        , "add-service")?.enable && (<Button
+                          variant={"info"}
+                          className="w-24 mx-2"
+                          onClick={() => {
+                            submitService({ avServices: contractServices });
+                          }}
+                        >
+                          ثبت
+                        </Button>)
+                  }
+                  {generateFeatureAccess(pageFeatures
+                    , "add-service")?.show && !generateFeatureAccess(pageFeatures
+                      , "add-service")?.enable && (<AccessDenied
+                        variant={""}
+                        title=" ثبت "
+                        message="شما به این بخش دسترسی ندارید"
+
+                      />
+
+                    )}
+
                   <RegisteryForm
                     submitForm={SubmitterHandler}
                     accountant={

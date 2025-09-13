@@ -24,17 +24,17 @@ export interface FormTabContainerInterface {
   }[];
   defaultValue: string;
   className?: string;
-  buttonAccess?: boolean
+  hasAccess?: boolean
 }
 
 export default function FormTabContainer({
   tabs,
   defaultValue,
   className,
-  buttonAccess=true
+  hasAccess
 }: FormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue);
-
+console.log("2",hasAccess)
   return (
     <>
       <Tabs
@@ -69,13 +69,15 @@ export default function FormTabContainer({
                   className="flex flex-col mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
                 >
                   <h2 className="px-2">{title}</h2>
-                  <FormMaker
+                  <FormMaker 
+                   hasAccess={hasAccess}
+                   //disable is true when user dont have access => has acess must be false
                     form={formInfo.form}
                     fields={formInfo.fields}
                     className={formInfo.className}
                   />
                   {
-                    buttonAccess ? (<div className="w-full  flex items-end">
+                    hasAccess ? (<div className="w-full  flex items-end">
                       <Button
                         variant={"info"}
                         className="w-24 mx-2"

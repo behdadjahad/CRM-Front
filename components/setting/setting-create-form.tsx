@@ -26,7 +26,7 @@ export default function SettingCreateForm({
       <div className="rounded-md p-3 flex flex-col gap-4 bg-card">
         <h2> {`ثبت ${getTitleFromSlug(service)}`}</h2>
         <FormMaker
-          disabled={hasAccess}
+          hasAccess={hasAccess}
           form={form}
           fields={[
             ...fields,

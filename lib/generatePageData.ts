@@ -8,6 +8,7 @@ export function generatePageAccessData(pageCode: any) {
     const matchPage = JSON.parse(accessData)?.pages?.find(
       (item: any) => pageCode in item
     );
+    console.log("match",matchPage)
     return matchPage ? matchPage[pageCode] : undefined;
   } else return null;
 }
@@ -51,7 +52,7 @@ export const safeLocalStorage = {
 export function generateFeatureAccess(features: any, code: string) {
   const state: RootState = store.getState();
   const roles = state.login.roles;
-  console.log(roles)
+  
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
   if (isSuperAdmin) {
     return {

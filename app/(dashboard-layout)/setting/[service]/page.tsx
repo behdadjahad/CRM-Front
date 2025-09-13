@@ -181,17 +181,17 @@ export default function ServiceSetting() {
     airport: "create-airports",
     airline: "create-airlines"
   };
-  console.log("hiiiii",featureCodeMap[serviceType as any])
+  console.log("hiiiii", featureCodeMap[serviceType as any])
   // decide if form should be shown
   const shouldShowForm =
     generateFeatureAccess(
       pageFeatures,
-    featureCodeMap[serviceType as any]
+      featureCodeMap[serviceType as any]
     )?.show &&
     generateFeatureAccess(
       pageFeatures,
-     featureCodeMap[serviceType as any]
-    )?.enable;
+      featureCodeMap[serviceType as any]
+    )?.enable
 
   // If user doesn't have access, disable the form
   const disabled = !shouldShowForm;
@@ -214,24 +214,58 @@ export default function ServiceSetting() {
           },
         ]}
       />
-
+      {
+        generateFeatureAccess(
+          pageFeatures,
+          featureCodeMap[serviceType as any]
+        )?.show &&
+        generateFeatureAccess(
+          pageFeatures,
+          featureCodeMap[serviceType as any]
+        )?.enable && (<SettingCreateForm
+          fields={createSettingFormFields(
+            service,
+            countries,
+            cities,
+            airports,
+            accommodationTypes,
+            hotels,
+            airlines,
+            disabled
+          )}
+          hasAccess={shouldShowForm}
+          form={formik}
+          title={service}
+          onSubmitHandler={(data) => submit(data)}
+        />)
+      }
+{
+        generateFeatureAccess(
+          pageFeatures,
+          featureCodeMap[serviceType as any]
+        )?.show &&
+        !generateFeatureAccess(
+          pageFeatures,
+          featureCodeMap[serviceType as any]
+        )?.enable && (<SettingCreateForm
+          fields={createSettingFormFields(
+            service,
+            countries,
+            cities,
+            airports,
+            accommodationTypes,
+            hotels,
+            airlines,
+            disabled
+          )}
+          hasAccess={shouldShowForm}
+          form={formik}
+          title={service}
+          onSubmitHandler={(data) => submit(data)}
+        />)
+      }
       {/* {shouldShowForm && ( */}
-      <SettingCreateForm
-        fields={createSettingFormFields(
-          service,
-          countries,
-          cities,
-          airports,
-          accommodationTypes,
-          hotels,
-          airlines,
-          disabled
-        )}
-        hasAccess={shouldShowForm}
-        form={formik}
-        title={service}
-        onSubmitHandler={(data) => submit(data)}
-      />
+
       {/* )} */}
       <SettingContainer
         countries={countries}
