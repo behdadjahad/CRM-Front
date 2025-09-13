@@ -130,7 +130,7 @@ const [selectedFeaturesByPage, setSelectedFeaturesByPage] = useState<Record<numb
               name: feature?.name,
               code: feature?.code,
               description: feature?.description,
-              urlPattern: feature?.urlPattern?.[0],
+              urlPattern: feature?.urlPattern,
               show: feature.show,
               enabled: feature.enabled,
             })) || [],
