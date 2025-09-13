@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
@@ -78,7 +79,7 @@ export default function PermissionPageFeatureContainer({
       <PermissionPageSubTable
         pageList={pageList}
         onDataGenerated={(data) => {
-          console.log(data)
+          console.log(81,data)
           setPermissionData(data);
         }}
       />

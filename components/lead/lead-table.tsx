@@ -14,7 +14,10 @@ import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import LeadEditionContainer from "./LeadEditionContainer";
 import { cn, getSortFieldFromLabel } from "@/lib/utils";
-
+import { AccessDenied } from "../shared/AccessDenied";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import Image from "next/image";
 export interface LeadTableInterface {
   leadList: {
     id: number;
@@ -29,6 +32,7 @@ export interface LeadTableInterface {
 }
 
 export default function LeadTable({ leadList }: LeadTableInterface) {
+  const pageFeatures = usePageData();
   const leadStatus = [
     {
       label: "ایجاد شده",
@@ -126,7 +130,21 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
       <TableHeader>
         <TableRow>
           <TableHead className="text-center bg-white border-none">
-            
+            {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+              !generateFeatureAccess(pageFeatures, "select-contract")
+                ?.enable && (
+                <AccessDenied
+                  icon={
+                    <Image
+                      src={"/icons/checkbox-icon.png"}
+                      alt="checkbox"
+                      width={1024}
+                      height={1024}
+                      className="w-4 h-4"
+                    />
+                  }
+                />
+              )}
             {
               <Checkbox
                 onCheckedChange={(checked: boolean) => {

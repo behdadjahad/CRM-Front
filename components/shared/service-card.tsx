@@ -62,7 +62,8 @@ export default function ServiceCard({
         className={cn(
           "w-24 rounded-lg h-24 border border-border/20",
           { "border-success": isActive },
-          { "border-primary": isSelected },
+          { "border-primary": isSelected && hasAccess},
+   
           imageClassName
         )}
       />

@@ -172,10 +172,12 @@ export default function Service() {
     pageFeatures,
     "contract-customers"
   )?.show;
-  const showExpenses = generateFeatureAccess(
+  const showExpenses = generateFeatureAccess(pageFeatures, "read-prices")?.show;
+
+  const serviceAccess = generateFeatureAccess(
     pageFeatures,
-    "read-prices"
-  )?.show;
+    "add-service"
+  )?.enable;
   
   return (
     <main className="flex flex-col">
@@ -205,7 +207,7 @@ export default function Service() {
       </div>
       <div
         className={`flex flex-col lg:flex-row gap-4 ${
-          (showCustomers || showExpenses) ? "" : "justify-center"
+          showCustomers || showExpenses ? "" : "justify-center"
         }`}
       >
         {" "}
@@ -264,8 +266,15 @@ export default function Service() {
                 }}
                 isActive={activeItem && activeItem.title == item.title}
                 isSelected={item.isSelected}
+                // className={
+                //   item.disable
+                //     ? "cursor-not-allowed text-foreground-mute"
+                //     : "cursor-pointer"
+                // }
                 className={
-                  item.disable
+                  !serviceAccess
+                    ? "cursor-not-allowed text-foreground-mute"
+                    : serviceAccess && item?.disable
                     ? "cursor-not-allowed text-foreground-mute"
                     : "cursor-pointer"
                 }
@@ -275,9 +284,7 @@ export default function Service() {
           {activeItem && activeItem.isSelected === true && activeItem.form}
         </div>
         <div className="w-full xl:w-1/4 flex flex-col">
-          {showExpenses && (
-            <ContractExpenseContainer />
-          )}
+          {showExpenses && <ContractExpenseContainer />}
           {showCustomers && (
             <div className="mt-4">
               <ClientInfoContainer />
