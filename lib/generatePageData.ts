@@ -30,8 +30,8 @@ export const safeLocalStorage = {
     try {
       localStorage.setItem(key, value);
       // to-do create new 
-      if (key === "accessData") {
-        window.location?.reload();      }
+      // if (key === "accessData") {
+      //   window.location?.reload();      }
     } catch (error) {
       console.error("Error setting localStorage:", error);
     }
