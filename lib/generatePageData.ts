@@ -54,7 +54,7 @@ export function generateFeatureAccess(features: any, code: string) {
   const roles = state.login.roles;
   
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
-  if (!isSuperAdmin) {
+  if (isSuperAdmin) {
     return {
       enable: true,
       show: true,

@@ -439,7 +439,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
 
           </div>
         </div>
-        <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow ">
+        <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow">
           <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6">
             <FormMaker
               form={leadSearchFormik}
