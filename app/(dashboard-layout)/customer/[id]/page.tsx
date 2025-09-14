@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/shared/breadcrumb";
 import PersonInfoContainer from "@/components/shared/person-info-container";
 import { PersonInfoInterface } from "@/components/shared/person-info-container";
 import Title from "@/components/shared/title";
+import { usePageData } from "@/hooks/usePageData";
 import { convertDate } from "@/lib/date";
 import { dateType } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -14,6 +15,9 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 export default function CustomerDetail() {
+
+
+
   const [customer, setCustomer] = useState<any>();
   const { id } = useParams();
   const { data: customerPersonalData } = useQuery({
@@ -28,7 +32,7 @@ export default function CustomerDetail() {
             label: "",
             value: "",
             image: ""
- 
+
           },
           {
             label: "نام و نام خانوادگی",
@@ -42,9 +46,9 @@ export default function CustomerDetail() {
             label: "تاریخ تولد",
             value: customerPersonalData?.data?.person?.birthdate
               ? convertDate(
-                  customerPersonalData?.data?.person?.birthdate,
-                  dateType
-                )
+                customerPersonalData?.data?.person?.birthdate,
+                dateType
+              )
               : "",
           },
           {
@@ -85,7 +89,7 @@ export default function CustomerDetail() {
         <PersonInfoContainer {...customer} />
         <CustomerDetailContent
           tabList={["اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
-          // tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
+        // tabList={["آماروگزارش ها", "اطلاعات شخصی", "قراردادها", "پیگیری ها"]}
         />
       </div>
     </main>

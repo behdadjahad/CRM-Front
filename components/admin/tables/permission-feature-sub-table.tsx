@@ -1,3 +1,4 @@
+
 import {
   Table,
   TableBody,
@@ -90,6 +91,7 @@ useEffect(() => {
     [];
 
   function toggleHandler(actionType: string, data: any) {
+
     const existingItem = selectedFeatures.find(
       (item) => item.featureId === data.id
     );
@@ -126,6 +128,7 @@ useEffect(() => {
     }
 
     setSelectedFeatures(updatedSelectedFeatures);
+    console.log("updatedSelectedFeatures", updatedSelectedFeatures);
     onSendSelectedFeatures(updatedSelectedFeatures);
   }
   // useEffect(() => {

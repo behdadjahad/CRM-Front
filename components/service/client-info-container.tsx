@@ -1,16 +1,20 @@
 import ClientInfoCard, { ClientInfoCardInterface } from "./client-info-card";
 import { useEffect, useState } from "react";
-
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useQuery } from "@tanstack/react-query";
 import { getCustomersData } from "@/api/customer";
 import { useParams } from "next/navigation";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
 import CustomerManager from "./customer-manager";
+import { AccessDenied } from "../shared/AccessDenied";
 
 export interface ClientInfoContainerInterface {
   clients: ClientInfoCardInterface[];
 }
 
 export default function ClientInfoContainer() {
+  const pageFeatures = usePageData();
   const { id } = useParams();
   const [clientList, setClientList] = useState<any[]>([]);
   const [clientsInfo, setClientsInfo] = useState<any[]>([]);
@@ -22,7 +26,6 @@ export default function ClientInfoContainer() {
 
   useEffect(() => {
     if (contractCustomersData) {
-  
       const clients = contractCustomersData?.data?.map((client: any) => [
         {
           label: "نام و نام خانوادگی",
@@ -38,35 +41,58 @@ export default function ClientInfoContainer() {
           value: client?.Communication?.email?.[0]?.communicationDetails,
         },
       ]);
-      const clientInfoList = contractCustomersData?.data?.map((client: any) => ({
-        editKey:client?.id,
-        deleteKey:client?.contractCustomers?.[0]?.id,
-        name:client?.person?.firstName,
-        family:client?.person?.lastName,
-        idNumber:client?.person?.idNumber,
-        phone:client?.Communication?.mobile?.[0]?.communicationDetails,
-        email:client?.Communication?.email?.[0]?.communicationDetails,
-      }))
+      const clientInfoList = contractCustomersData?.data?.map(
+        (client: any) => ({
+          editKey: client?.id,
+          deleteKey: client?.contractCustomers?.[0]?.id,
+          name: client?.person?.firstName,
+          family: client?.person?.lastName,
+          idNumber: client?.person?.idNumber,
+          phone: client?.Communication?.mobile?.[0]?.communicationDetails,
+          email: client?.Communication?.email?.[0]?.communicationDetails,
+        })
+      );
 
       setClientList(clients);
-      setClientsInfo(clientInfoList)
+      setClientsInfo(clientInfoList);
     }
   }, [contractCustomersData]);
 
   return (
-    <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
-      <h2 className="text-foreground text-lg">اطلاعات مشتری</h2>
-      <div className="flex flex-col gap-4">
-        {clientList?.map((item, index) => (
-          <ClientInfoCard
-            key={`client-${index}`}
-   
-            clientData={item}
-            clientInfo={clientsInfo[index]}
-          />
-        ))}
-      </div>
-      <CustomerManager />
-    </div>
+    <>
+      
+        <div className="bg-card p-4 rounded-lg overflow-hidden flex flex-col gap-4">
+          <h2 className="text-foreground text-lg">اطلاعات مشتری</h2>
+          <div className="flex flex-col gap-4">
+            {clientList?.map((item, index) => (
+              <ClientInfoCard
+                key={`client-${index}`}
+                clientData={item}
+                clientInfo={clientsInfo[index]}
+              />
+            ))}
+          </div>
+          {generateFeatureAccess(pageFeatures, "add-customer")?.show &&
+            generateFeatureAccess(pageFeatures, "add-customer")?.enable && (
+              <CustomerManager />
+            )}
+          {generateFeatureAccess(pageFeatures, "add-customer")?.show &&
+            !generateFeatureAccess(pageFeatures, "add-customer")?.enable && (
+              <AccessDenied
+                title="افزودن مشتری"
+                icon={
+                  <Image
+                    src={"/icons/disable-plus.png"}
+                    alt="ادیت"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
+                }
+              />
+            )}
+        </div>
+ 
+    </>
   );
 }

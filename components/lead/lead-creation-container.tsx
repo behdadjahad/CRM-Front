@@ -14,8 +14,18 @@ import { RootState } from "@/store";
 import AddCustomerToLeadContainer from "./AddCustomerToLeadContainer";
 import { CustomerDataInterface } from "../service/customer-infinite-card";
 import CustomerCard from "../share/customer/CustomerCard";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { pagesData } from "@/constants/pages-data";
+import { AccessDenied } from "../shared/AccessDenied";
+import Image from "next/image";
 
 export default function LeadCreationContainer() {
+
+  const pageFeatures=usePageData()
+
+console.log("pageFeatures",pageFeatures)
+
   const queryClient = useQueryClient();
   const dispatch = useDispatch<any>();
   const userData = useSelector((state: RootState) => state.user);
@@ -122,7 +132,9 @@ export default function LeadCreationContainer() {
 
   return (
     <>
-      <Button
+    {
+      generateFeatureAccess(pageFeatures,"code")?.show && generateFeatureAccess(pagesData,"")?.enable &&(
+ <Button
         variant={"info"}
         onClick={() => {
           setOpenModal(true);
@@ -131,6 +143,32 @@ export default function LeadCreationContainer() {
       >
         درخواست جدید
       </Button>
+      )
+
+
+
+}
+
+        {
+      !generateFeatureAccess(pageFeatures,"export-lead")?.show && !generateFeatureAccess(pagesData,"export-lead")?.enable &&(
+<AccessDenied
+                            variant={""}
+                            title=" درخواست جدید "
+                            message="شما به این بخش دسترسی ندارید"
+                            icon={(  <Image
+                                            src={"/icons/disable-download.png"}
+                                            alt="edit"
+                                            width={1024}
+                                            height={1024}
+                                            className="w-4 h-4"
+                                          />)}
+                          />
+      )
+
+
+
+}
+     
       <CustomModal
         minWidth="0"
         maxWidth="700px"
@@ -173,7 +211,7 @@ export default function LeadCreationContainer() {
               className: "w-full",
               readonly: true,
               disabled: true,
-              defaultValue: userData.fullName,
+              defaultValue: userData?.fullName,
             },
             {
               key: "leadTag",

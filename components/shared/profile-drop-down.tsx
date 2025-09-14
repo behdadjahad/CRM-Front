@@ -8,14 +8,17 @@ import {
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { fetchUserData } from "@/store/user-slice";
+import { fetchUserData, setUser } from "@/store/user-slice";
 import { Button } from "../ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getMe, logOut } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { safeLocalStorage } from "@/lib/generatePageData";
+import { fetchCurrencies } from "@/store/currency-slice";
+import { fetchLogin } from "@/store/login-slice";
 
 export interface ProfileDropDownInterface {
   className?: string;
@@ -24,15 +27,28 @@ export interface ProfileDropDownInterface {
 export default function ProfileDropDown({
   className,
 }: ProfileDropDownInterface) {
-  const userData = useSelector((state: any) => state.user);
+  // const userData = useSelector((state: any) => state.user);
+
   const router = useRouter();
   const dispatch = useDispatch<any>();
+
+  const userData=useSelector((state :any )=> state.login)
+
+console.log("user-data",userData)
+
   useEffect(() => {
-    dispatch(fetchUserData());
+
+    dispatch(fetchLogin());
   }, [dispatch]);
 
   const { mutate: fetchMe } = useMutation({
     mutationFn: getMe,
+    onSuccess: (result) => {
+      console.log("📝 fetchMe result:", result)
+      if (result?.data) {
+        dispatch(setUser(result.data));
+      }
+    },
     onError: (response: any) => {
       if (response.status === 403) {
         router.push("/login");
@@ -45,8 +61,8 @@ export default function ProfileDropDown({
       return logOut();
     },
     onSuccess: () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("refreshToken");
+      safeLocalStorage.removeItem("token");
+      safeLocalStorage.removeItem("refreshToken");
       router.push("/login");
       // Cookies.remove('accessToken', { path: '/' });
       // Cookies.remove('refreshToken', { path: '/' });
@@ -56,18 +72,24 @@ export default function ProfileDropDown({
   //   queryKey: ["userResponse"],
   //   queryFn: () => getMe(),
   // });
+
+
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("refreshToken");
+    const token = safeLocalStorage.getItem("token");
+    const refreshToken = safeLocalStorage.getItem("refreshToken");
     if (!token && !refreshToken) {
       router.push("/login");
     }
   }, []);
+
   useEffect(() => {
     fetchMe();
   }, []);
+
   console.log(userData);
   return (
+
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(

@@ -14,9 +14,8 @@ import countryReducer from "./country-slice";
 import provinceReducer from "./province-slice";
 import leadReducer from "./lead-slice";
 import allUsersReducer from "./all-users-slice";
-import roleReducer from "./role-slice";
-
-
+import accessReducer from "./access-slice";
+import loginReducer from "./login-slice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -33,8 +32,8 @@ export const store = configureStore({
     notification: notificationReducer,
     lead: leadReducer,
     allUsers: allUsersReducer,
-    role: roleReducer,
- 
+    access: accessReducer,
+    login:loginReducer
   },
 });
 

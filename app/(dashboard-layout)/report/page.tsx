@@ -30,6 +30,9 @@ import { exportMultipleSheets } from "@/lib/exportToExcel";
 import { ReportPDF } from "@/components/section/report-pdf";
 import { captureAllCharts } from "@/lib/pdf";
 import { splitRangeBySolarMonths } from "@/lib/date";
+import { usePageData } from "@/hooks/usePageData";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { AccessDenied } from "@/components/shared/AccessDenied";
 
 const GaugeComponent = dynamic(() => import("react-gauge-component"), {
   ssr: false,
@@ -43,6 +46,9 @@ const IranMap = dynamic(() => import("@/components/section/iran-map"), {
   loading: () => <p>Loading map...</p>,
 });
 export default function Report() {
+  const pageFeatures = usePageData();
+
+
   const [isWorldActive, setIsWorldActive] = useState<boolean>(true);
   const [satisfactionData, setSatisafactionData] = useState<any[]>([]);
   const [salesReportData, setSaleReportData] = useState<any[]>([]);
@@ -53,7 +59,7 @@ export default function Report() {
   const [overalData, setOveralData] = useState<any[]>([]);
   const [customerTypeData, setCustomerTypeData] = useState<any[]>([]);
   const [callReportData, setCallReportData] = useState<any[]>([]);
-   
+
   const printRef = useRef<HTMLDivElement>(null);
 
   // const ProfitReportData = {
@@ -184,7 +190,7 @@ export default function Report() {
     mutationFn: (data: any) => {
       return getReportData(data);
     },
-    onSuccess: () => {},
+    onSuccess: () => { },
   });
 
   useEffect(() => {
@@ -248,7 +254,7 @@ export default function Report() {
         {
           title: "(سود)",
           fill: "#6CCE81",
-          info: `سود کل ${subContractsOveralNo?.overallProfit < 0 ? 0:formatPrice(subContractsOveralNo?.overallProfit) } تومان`,
+          info: `سود کل ${subContractsOveralNo?.overallProfit < 0 ? 0 : formatPrice(subContractsOveralNo?.overallProfit)} تومان`,
 
           list: profitList,
         },
@@ -514,50 +520,74 @@ export default function Report() {
           onMouseEnter={() => setShowOptions(true)}
           onMouseLeave={() => setShowOptions(false)}
         >
-          {" "}
-          {!showOptions && (
-            <Button
-              type="button"
-              variant={"info"}
-              className="bg-quartiery-background text-tertiary-foreground"
-            >
-              <span>خروجی</span>
-              <Image
-                src={"/icons/dark-download.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-              />
-            </Button>
-          )}
-          {showOptions && (
-            <Button type="button" variant={"foreground"} className="">
-              <Image
-                src={"/icons/pdf.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleClick}
-              />
-              <Image
-                src={"/icons/excel.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleExport}
-              />
-              <Image
-                src={"/icons/print.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handlePrint}
-              />
-            </Button>
+        {(
+            <>
+
+              {generateFeatureAccess(pageFeatures, "export-reports")?.show && generateFeatureAccess(pageFeatures, "export-reports")?.enable && (<>
+                {!showOptions && (<Button
+                  type="button"
+                  variant={"info"}
+                  className="bg-quartiery-background text-tertiary-foreground"
+                >
+                  <span>خروجی</span>
+                  <Image
+                    src={"/icons/dark-download.png"}
+                    alt={"تصویر"}
+                    width={107}
+                    height={107}
+                    className="h-4 w-4"
+                  />
+                </Button>)}
+
+                {showOptions && (
+                  <Button type="button" variant={"foreground"} className="">
+                    <Image
+                      src={"/icons/pdf.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleClick}
+                    />
+                    <Image
+                      src={"/icons/excel.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleExport}
+                    />
+                    <Image
+                      src={"/icons/print.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handlePrint}
+                    />
+                  </Button>
+                )}
+              </>
+              )}
+
+              {generateFeatureAccess(pageFeatures
+                , "export-reports")?.show && !generateFeatureAccess(pageFeatures
+                  , "export-reports")?.enable && (
+                  <AccessDenied variant={"foreground"}
+                    title="خروجی "
+                    message="امکان دسترسی به این قابلیت وجود ندارد "
+                    icon={(<Image
+                      src={"/icons/disable-download.png"}
+                      alt="edit"
+                      width={24}
+                      height={24}
+                    />)} />
+                )
+
+
+              }
+            </>
+
           )}
         </div>
       </div>
@@ -590,50 +620,77 @@ export default function Report() {
           onMouseLeave={() => setShowOptions(false)}
         >
           {" "}
-          {!showOptions && (
-            <Button
-              type="button"
-              variant={"info"}
-              className="bg-quartiery-background text-tertiary-foreground"
-            >
-              <span>خروجی</span>
-              <Image
-                src={"/icons/dark-download.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-              />
-            </Button>
+          {(
+            <>
+
+              {generateFeatureAccess(pageFeatures, "export-reports")?.show && generateFeatureAccess(pageFeatures, "export-reports")?.enable && (<>
+                {!showOptions && (<Button
+                  type="button"
+                  variant={"info"}
+                  className="bg-quartiery-background text-tertiary-foreground"
+                >
+                  <span>خروجی</span>
+                  <Image
+                    src={"/icons/dark-download.png"}
+                    alt={"تصویر"}
+                    width={107}
+                    height={107}
+                    className="h-4 w-4"
+                  />
+                </Button>)}
+
+                {showOptions && (
+                  <Button type="button" variant={"foreground"} className="">
+                    <Image
+                      src={"/icons/pdf.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleClick}
+                    />
+                    <Image
+                      src={"/icons/excel.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handleExport}
+                    />
+                    <Image
+                      src={"/icons/print.png"}
+                      alt={"تصویر"}
+                      width={107}
+                      height={107}
+                      className="h-4 w-4"
+                      onClick={handlePrint}
+                    />
+                  </Button>
+                )}
+              </>
+              )}
+
+              {generateFeatureAccess(pageFeatures
+                , "export-reports")?.show && !generateFeatureAccess(pageFeatures
+                  , "export-reports")?.enable && (
+                  <AccessDenied variant={"foreground"}
+                    title="خروجی "
+                    message="امکان دسترسی به این قابلیت وجود ندارد "
+                    icon={(<Image
+                      src={"/icons/disable-download.png"}
+                      alt="edit"
+                      width={24}
+                      height={24}
+                    />)} />
+                )
+
+
+              }
+            </>
+
           )}
-          {showOptions && (
-            <Button type="button" variant={"foreground"} className="">
-              <Image
-                src={"/icons/pdf.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleClick}
-              />
-              <Image
-                src={"/icons/excel.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handleExport}
-              />
-              <Image
-                src={"/icons/print.png"}
-                alt={"تصویر"}
-                width={107}
-                height={107}
-                className="h-4 w-4"
-                onClick={handlePrint}
-              />
-            </Button>
-          )}
+
+         
         </div>
       </div>
       <div

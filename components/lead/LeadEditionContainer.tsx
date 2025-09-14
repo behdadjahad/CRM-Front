@@ -31,8 +31,9 @@ export default function LeadEditionContainer({
   const dispatch = useDispatch<any>();
   const currentPage = useSelector((state: any) => state.lead.currentPage);
   const limit = useSelector((state: any) => state.lead.limit);
-  const filters = useSelector((state: any) => state.lead.limit);
-  const userData = useSelector((state: RootState) => state.user);
+  const filters = useSelector((state: any) => state.lead.limit)
+
+  const userData=useSelector((state :any )=> state.login)
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [leadTypeOptions, setLeadTypeOptions] = useState<OptionType[]>([]);
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);

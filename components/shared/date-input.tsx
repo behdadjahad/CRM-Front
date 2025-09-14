@@ -7,9 +7,11 @@ import CustomeDatePicker, { DateCalendar } from "./custome-date-picker";
 export default function DateInput({
   form,
   item,
+  disabled=false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  disabled?:boolean
 }) {
   const [calendarType, setCalendarType] = useState<DateCalendar>("Solar");
   const handleCalendarTypeChange = (newCalendarType: DateCalendar) => {
@@ -20,6 +22,7 @@ export default function DateInput({
       className={cn("relative w-full", { "input-container": item.floating })}
     >
       <input
+      disabled={disabled}
         key={item.key}
         placeholder={
           item.floating || form.values[item.key] ? " " : item.placeholder

@@ -8,9 +8,11 @@ import CustomTimePicker from "./custom-time-picker";
 export default function TimeInput({
   form,
   item,
+  hasAccess = true
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  hasAccess?: boolean;
 }) {
   return (
     <div
@@ -18,6 +20,7 @@ export default function TimeInput({
     >
       {/* Input Field for Time */}
       <input
+        disabled={(item.disabled || !hasAccess) ?? false}
         key={item.key}
         placeholder={
           item.floating || form.values[item.key] ? " " : item.placeholder

@@ -17,6 +17,7 @@ export function createFormFields(
           floating: true,
           labelClassName: "w-full",
           className: "w-full md:w-1/2 lg:w-1/4",
+          
         },
         {
           key: "familyName",

@@ -9,6 +9,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { REQUIRED_TEXT } from "@/lib/utils";
 import { useState } from "react";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 
 export default function LoginForm() {
@@ -61,17 +62,18 @@ export default function LoginForm() {
       if (status) {
         router.push("/pending-register");
       } else {
+        console.log("in else",result?.data?.accessJson);
         router.push("/sale");
       }
-      console.log(result?.data?.hash);
       console.log(68, result);
-      localStorage.setItem("token", result?.data?.tokens?.accessToken);
-      localStorage.setItem("refreshToken", result?.data?.tokens?.refreshToken);
-      localStorage.setItem("hash", result?.data?.hash);
-      localStorage.setItem(
+      safeLocalStorage.setItem("token", result?.data?.tokens?.accessToken);
+      safeLocalStorage.setItem("refreshToken", result?.data?.tokens?.refreshToken);
+      safeLocalStorage.setItem("hash", result?.data?.hash);
+      safeLocalStorage.setItem(
         "accessData",
         JSON.stringify(result?.data?.accessJson)
       );
+      console.log("22222222",JSON.stringify(result?.data?.accessJson))
     } else {
       // toast
       // router.push("/login");
@@ -91,6 +93,7 @@ export default function LoginForm() {
 
       <FormMaker
         form={formik}
+        hasAccess
         fields={[
           {
             key: "email",

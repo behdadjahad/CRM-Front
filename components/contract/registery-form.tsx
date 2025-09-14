@@ -4,23 +4,27 @@ import { Button } from "../ui/button";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { cn } from "@/lib/utils";
+import { boolean } from "yup";
+import { AccessDenied } from "../shared/AccessDenied";
 export interface RegisteryFormInterface {
   accountant: string;
   accountantOptions: OptionType[];
   submitForm: (values: any) => void;
   className?: string;
+  roleAcess?: boolean
 }
 
 export default function RegisteryForm({
   submitForm,
- className,
+  className,
   accountant,
   accountantOptions,
+  roleAcess
 }: RegisteryFormInterface) {
   const userData = useSelector((state: RootState) => state.user);
   const formik = useFormik({
     initialValues: {
-      admitter: userData.fullName,
+      admitter: userData?.fullName,
       accountant: accountant,
       description: "",
     },
@@ -65,18 +69,26 @@ export default function RegisteryForm({
             className: "w-full md:w-1/2",
           },
         ]}
-        className={cn("w-full flex-row-reverse",className)}
+        className={cn("w-full flex-row-reverse", className)}
       />
-      <Button
-        variant={"info"}
-        className="w-24 mx-2"
-        onClick={(e) => {
-          e.preventDefault();
-          formik.handleSubmit();
-        }}
-      >
-        ثبت
-      </Button>
+      {
+        roleAcess ? (<Button
+          variant={"info"}
+          className="w-24 mx-2"
+          onClick={(e) => {
+            e.preventDefault();
+            formik.handleSubmit();
+          }}
+        >
+          ثبت
+        </Button>) : (<AccessDenied
+          variant={""}
+          title=" ثبت "
+          message="شما به این بخش دسترسی ندارید"
+
+        />)
+      }
+
     </div>
   );
 }

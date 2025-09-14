@@ -13,12 +13,17 @@ import {
   getSettingDelete,
   sliceMap,
 } from "@/constants/setting";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { store } from "@/store";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { buildRowOptions } from "@/lib/utils";
 import { convertToGregorian } from "@/lib/date";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "@/components/shared/AccessDenied";
+import { render } from "@fullcalendar/core/preact.js";
+import Image from "next/image";
 
 export default function SettingContainer({
   cities,
@@ -36,13 +41,16 @@ export default function SettingContainer({
   airlines: any[];
 }) {
   const [hasReset, setHasReset] = useState<boolean>(false);
+  const pageFeatures = usePageData();
+  console.log("second part", pageFeatures)
+
 
   const { service } = useParams();
   const settingSearchFormik = useFormik({
     initialValues: {
       settingKeyWord: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   const config = sliceMap[service as keyof typeof sliceMap];
 
@@ -67,7 +75,7 @@ export default function SettingContainer({
     initialValues: {
       limit: limit,
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   useEffect(() => {
     if (!config) return;
@@ -169,7 +177,7 @@ export default function SettingContainer({
       country: "",
       submitter: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
   const filterItems = [
     {
@@ -287,30 +295,309 @@ export default function SettingContainer({
       })
     );
   }
-  return (
-    <div className="bg-card rounded-lg p-6">
-      <div className="gap-4 flex flex-col">
-        <div className="flex flex-row items-center justify-between">
+  const pathname = usePathname();
+  const serviceType = pathname?.split("/").pop();  // "hotel" | "airport" | "airline"
+
+  function renderFilter() {
+    // if (
+    //   serviceType === "airline" &&
+    //   generateFeatureAccess(pageFeatures, "filter-airlines")?.show &&
+    //   generateFeatureAccess(pageFeatures, "filter-airlines")?.enable
+    // ) {
+    //   return (
+    //     <FilterContainer
+    //       onFilterHandler={submitFilter}
+    //       rangeItems={rangeItems}
+    //       filterItems={filterItems}
+    //       sortList={[]}
+    //       onSortHandler={() => { }}
+    //       onCancleHandler={cancleFilter}
+    //     />
+    //   );
+    // }
+    if (
+      serviceType === "airline"
+    ) {
+      if (generateFeatureAccess(pageFeatures, "filter-airlines")?.show &&
+        generateFeatureAccess(pageFeatures, "filter-airlines")?.enable) {
+        return (
           <FilterContainer
-            onFilterHandler={() => {
-              submitFilter();
-            }}
+            onFilterHandler={submitFilter}
             rangeItems={rangeItems}
             filterItems={filterItems}
             sortList={[]}
-            onSortHandler={() => {}}
-            onCancleHandler={() => {
-              cancleFilter();
-            }}
+            onSortHandler={() => { }}
+            onCancleHandler={cancleFilter}
           />
+        );
+      } else {
+        if (generateFeatureAccess(pageFeatures, "filter-airlines")?.show &&
+          !generateFeatureAccess(pageFeatures, "filter-airlines")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="فیلتر"
+              message="امکان دسترسی به این قابلیت وجود ندارد"
+              icon={(<Image
+                src={"/icons/disable-filter.png"}
+                alt="edit"
+                width={24}
+                height={24}
+              />)} />
+
+
+
+
+          );
+        }
+      }
+
+    }
+
+
+    // if (
+    //   serviceType === "hotel" &&
+    //   generateFeatureAccess(pageFeatures, "filter-accommodations")?.show &&
+    //   generateFeatureAccess(pageFeatures, "filter-accommodations")?.enable
+    // ) {
+    //   return (
+    //     <FilterContainer
+    //       onFilterHandler={submitFilter}
+    //       rangeItems={rangeItems}
+    //       filterItems={filterItems}
+    //       sortList={[]}
+    //       onSortHandler={() => { }}
+    //       onCancleHandler={cancleFilter}
+    //     />
+    //   );
+    // }
+    if (
+      serviceType === "hotel"
+    ) {
+      if (generateFeatureAccess(pageFeatures, "filter-accommodations")?.show &&
+        generateFeatureAccess(pageFeatures, "filter-accommodations")?.enable) {
+        return (
+          <FilterContainer
+            onFilterHandler={submitFilter}
+            rangeItems={rangeItems}
+            filterItems={filterItems}
+            sortList={[]}
+            onSortHandler={() => { }}
+            onCancleHandler={cancleFilter}
+          />
+        );
+      } else {
+        if (generateFeatureAccess(pageFeatures, "filter-accommodations")?.show &&
+          !generateFeatureAccess(pageFeatures, "filter-accommodations")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="فیلتر"
+              message="امکان دسترسی به این قابلیت وجود ندارد"
+              icon={(<Image
+                src={"/icons/disable-filter.png"}
+                alt="edit"
+                width={24}
+                height={24}
+              />)} />
+
+
+
+
+          );
+        }
+      }
+
+    }
+
+    if (
+      serviceType === "airport"
+    ) {
+      if (generateFeatureAccess(pageFeatures, "filter-airports")?.show &&
+        generateFeatureAccess(pageFeatures, "filter-airports")?.enable) {
+        return (
+          <FilterContainer
+            onFilterHandler={submitFilter}
+            rangeItems={rangeItems}
+            filterItems={filterItems}
+            sortList={[]}
+            onSortHandler={() => { }}
+            onCancleHandler={cancleFilter}
+          />
+        );
+      } else {
+        if (generateFeatureAccess(pageFeatures, "filter-airports")?.show &&
+          !generateFeatureAccess(pageFeatures, "filter-airports")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="فیلتر"
+              message="امکان دسترسی به این قابلیت وجود ندارد"
+              icon={(<Image
+                src={"/icons/disable-filter.png"}
+                alt="edit"
+                width={24}
+                height={24}
+              />)} />
+
+
+
+
+          );
+        }
+      }
+
+    }
+
+
+  }
+  function renderExport() {
+    if (
+      serviceType === "airline"
+
+    ) {
+      if (generateFeatureAccess(pageFeatures, "export-airlines")?.show &&
+        generateFeatureAccess(pageFeatures, "export-airlines")?.enable) {
+        return (
           <ExportDataContainer
             onGetData={getDataHandler}
             list={totalItems}
-            headerLabels={createSettingHeaderLabels(service)}
+            headerLabels={createSettingHeaderLabels(serviceType)}
             loading={isLoading}
             checkedItems={checkedItems}
             dateTimeRange={dateTimeRange}
           />
+        );
+      } else {
+        if (generateFeatureAccess(pageFeatures, "export-airlines")?.show &&
+          !generateFeatureAccess(pageFeatures, "export-airlines")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="خروجی"
+              message="شما به این بخش دسترسی ندارید"
+            />
+          );
+
+        }
+      }
+
+
+    }
+    if (
+      serviceType === "hotel"
+
+    ) {
+      if (generateFeatureAccess(pageFeatures, "export-accommodations")?.show &&
+        generateFeatureAccess(pageFeatures, "export-accommodations")?.enable) {
+        return (
+          <ExportDataContainer
+            onGetData={getDataHandler}
+            list={totalItems}
+            headerLabels={createSettingHeaderLabels(serviceType)}
+            loading={isLoading}
+            checkedItems={checkedItems}
+            dateTimeRange={dateTimeRange}
+          />
+        );
+      }
+      else {
+        if (generateFeatureAccess(pageFeatures, "export-accommodations")?.show &&
+          !generateFeatureAccess(pageFeatures, "export-accommodations")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="خروجی"
+              message="شما به این بخش دسترسی ندارید"
+            />
+          );
+
+        }
+
+      }
+
+    }
+
+    // if (
+    //   serviceType === "hotel" &&
+    //   generateFeatureAccess(pageFeatures, "export-accommodations")?.show &&
+    //   generateFeatureAccess(pageFeatures, "export-accommodations")?.enable
+    // ) {
+    //   return (
+    //     <ExportDataContainer
+    //       onGetData={getDataHandler}
+    //       list={totalItems}
+    //       headerLabels={createSettingHeaderLabels(serviceType)}
+    //       loading={isLoading}
+    //       checkedItems={checkedItems}
+    //       dateTimeRange={dateTimeRange}
+    //     />
+    //   );
+    // }
+    if (
+      serviceType === "airport"
+
+    ) {
+      if (generateFeatureAccess(pageFeatures, "export-airports")?.show &&
+        generateFeatureAccess(pageFeatures, "export-airports")?.enable) {
+        return (
+          <ExportDataContainer
+            onGetData={getDataHandler}
+            list={totalItems}
+            headerLabels={createSettingHeaderLabels(serviceType)}
+            loading={isLoading}
+            checkedItems={checkedItems}
+            dateTimeRange={dateTimeRange}
+          />
+        );
+      }
+      else {
+        if (generateFeatureAccess(pageFeatures, "export-airports")?.show &&
+          !generateFeatureAccess(pageFeatures, "export-airports")?.enable) {
+          return (
+            <AccessDenied
+              variant="foreground"
+              title="خروجی"
+              message="شما به این بخش دسترسی ندارید"
+            />
+          );
+
+        }
+
+      }
+
+    }
+
+
+    // if (
+    //   serviceType === "airport" &&
+    //   generateFeatureAccess(pageFeatures, "create-airports")?.show &&
+    //   generateFeatureAccess(pageFeatures, "create-airports")?.enable
+    // ) {
+    //   return (
+    //     <ExportDataContainer
+    //       onGetData={getDataHandler}
+    //       list={totalItems}
+    //       headerLabels={createSettingHeaderLabels(serviceType)}
+    //       loading={isLoading}
+    //       checkedItems={checkedItems}
+    //       dateTimeRange={dateTimeRange}
+    //     />
+    //   );
+    // }
+
+
+  }
+
+
+  return (
+    <div className="bg-card rounded-lg p-6">
+      <div className="gap-4 flex flex-col">
+        <div className="flex flex-row items-center justify-between">
+
+
+          {renderFilter()}
+          {renderExport()}
         </div>
 
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow">

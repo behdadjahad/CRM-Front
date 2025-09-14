@@ -5,6 +5,7 @@ import CustomerTabContent from "./customer-tab-content";
 import FilterContainer from "../section/filter-container";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
+import Image from "next/image";
 import {
   contractStateOptions,
   followUpOptions,
@@ -21,12 +22,22 @@ import {
   fetchCustomers,
   setCheckedItems,
 } from "@/store/customer-slice";
-
+import { usePageData } from "@/hooks/usePageData";
 import { useDispatch, useSelector } from "react-redux";
 import { convertToGregorian } from "@/lib/date";
 import ExportDataContainer from "@/components/shared/export-data-container";
+// import { pagesData } from "@/constants/pages-data";
+import { AccessDenied } from "../shared/AccessDenied";
+import { generateFeatureAccess } from "@/lib/generatePageData";
 
 export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
+  const pageFeatures = usePageData();
+
+
+
+  //  const exportCustomer=pageFeatures?.find((item :any)=>item?.code==="export-customers")
+  // const filterCustomers=pageFeatures?.find((item :any)=>item?.code==="filter-customers")
+
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const dispatch = useDispatch<any>();
@@ -52,7 +63,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       followUpEndDate: undefined,
       followUpEndDateType: "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
 
   const filterItems = [
@@ -272,23 +283,23 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       followUpStatus: formik.values.followupStatus,
       followUpDateTimeRangeStart: formik.values.followUpStartDate
         ? convertToGregorian(
-            formik.values.followUpStartDate,
-            formik.values.followUpStartDateType
-          )
+          formik.values.followUpStartDate,
+          formik.values.followUpStartDateType
+        )
         : "",
 
       followUpDateTimeRangeEnd: formik.values.followUpEndDate
         ? convertToGregorian(
-            formik.values.followUpEndDate,
-            formik.values.followUpEndDateType
-          )
+          formik.values.followUpEndDate,
+          formik.values.followUpEndDateType
+        )
         : "",
       avServices: formik.values.services,
       dateTimeRangeStart: formik.values.startDate
         ? convertToGregorian(
-            formik.values.startDate,
-            formik.values.startDateType
-          )
+          formik.values.startDate,
+          formik.values.startDateType
+        )
         : "",
       dateTimeRangeEnd: formik.values.endDate
         ? convertToGregorian(formik.values.endDate, formik.values.endDateType)
@@ -440,27 +451,77 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
       <div className="gap-4 flex flex-col">
         <div className="flex items-center justify-between">
           {" "}
-          <FilterContainer
-            onFilterHandler={() => {
-              submitFilter();
-            }}
-            rangeItems={rangeItems}
-            filterItems={filterItems}
-            sortList={customerSortlist}
-            onSortHandler={(item: string, itemType?: string) => {
-              submitSort(item, itemType);
-            }}
-            onCancleHandler={cancleFilter}
-          />
+
+          {generateFeatureAccess(pageFeatures
+            , "filter-customers")?.show && generateFeatureAccess(pageFeatures
+              , "filter-customers")?.enable && (
+              <FilterContainer
+                onFilterHandler={() => {
+                  submitFilter();
+                }}
+                rangeItems={rangeItems}
+                filterItems={filterItems}
+                sortList={customerSortlist}
+                onSortHandler={(item: string, itemType?: string) => {
+                  submitSort(item, itemType);
+                }}
+                onCancleHandler={cancleFilter}
+              />
+            )
+          }
+
+          {generateFeatureAccess(pageFeatures
+            , "filter-customers")?.show && !generateFeatureAccess(pageFeatures
+              , "filter-customers")?.enable && (
+              <AccessDenied variant={"foreground"}
+                title="فیلتر "
+                message="امکان دسترسی به این قابلیت وجود ندارد "
+                icon={(<Image
+                  src={"/icons/disable-filter.png"}
+                  alt="edit"
+                  width={24}
+                  height={24}
+                />)} />
+            )
+
+
+          }
           <div>
-            <ExportDataContainer
-              headerLabels={customerHeaderLabels}
-              list={allItems}
-              onGetData={getDataHandler}
-              loading={isLoading}
-              checkedItems={checkedItems}
-              dateTimeRange={dateTimeRange}
-            />
+
+
+
+
+            {generateFeatureAccess(pageFeatures
+              , "export-customers")?.show && generateFeatureAccess(pageFeatures
+                , "export-customers")?.enable && (
+                <ExportDataContainer
+                  headerLabels={customerHeaderLabels}
+                  list={allItems}
+                  onGetData={getDataHandler}
+                  loading={isLoading}
+                  checkedItems={checkedItems}
+                  dateTimeRange={dateTimeRange}
+                />
+              )}
+
+            {generateFeatureAccess(pageFeatures
+              , "export-customers")?.show && !generateFeatureAccess(pageFeatures
+                , "export-customers")?.enable && (
+                <AccessDenied
+                  variant={""}
+                  title="خروجی "
+                  message="شما به این بخش دسترسی ندارید"
+                  icon={(<Image
+                    src={"/icons/disable-download.png"}
+                    alt="edit"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />)}
+                />
+              )
+            }
+
           </div>
         </div>
 
@@ -468,11 +529,10 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           {tabList.map((tab: any) => (
             <button
               key={tab}
-              className={`w-full text-center h-full py-2 ${
-                activeTab === tab
-                  ? "border-b-2 border-black font-bold text-black"
-                  : "text-neutral-500"
-              }`}
+              className={`w-full text-center h-full py-2 ${activeTab === tab
+                ? "border-b-2 border-black font-bold text-black"
+                : "text-neutral-500"
+                }`}
               onClick={() => {
                 setActiveTab(tab);
                 setTabData(tab);

@@ -12,6 +12,8 @@ import {  useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { OptionType } from "./form-maker";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
 
 export interface CurrencyDropDownInterface {
   className?: string;
@@ -25,7 +27,7 @@ export default function CurrencyDropDown({
   onCurrencyHandler,
 }: CurrencyDropDownInterface) {
   const [currencies, setCurrencies] = useState<OptionType[]>([]);
-
+  const pageFeatures = usePageData();
 
   const { data: currency } = useQuery({
     queryKey: ["Currency"],
@@ -51,7 +53,8 @@ export default function CurrencyDropDown({
           className
         )}
       >
-        <div className="flex flex-row items-center gap-2 text-badge-foreground">
+      <div className="flex flex-row items-center gap-2 text-badge-foreground">
+    
           <Image
             src={"/icons/edit-primary.png"}
             width={16}
@@ -60,8 +63,8 @@ export default function CurrencyDropDown({
             alt="edit-currency"
           />
 
-          <span className="text-sm">{contractCurrency?.name ?? ""}</span>
-        </div>
+     <span className="text-sm">{contractCurrency?.name ?? ""}</span>
+        </div> 
       </DropdownMenuTrigger>
 
       <DropdownMenuContent>

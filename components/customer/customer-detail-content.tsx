@@ -16,6 +16,10 @@ import { limitForCustomerDetailContracts } from "@/lib/utils";
 import { CustomerPersonalInfo } from "./customer-personal-info";
 
 import ExportDataContainer from "../shared/export-data-container";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "../shared/AccessDenied";
+import Image from "next/image";
 // const ReactPaginate = dynamic(() => import('react-paginate'), { ssr: false });
 export default function CustomerDetailContent({
   tabList,
@@ -25,6 +29,8 @@ export default function CustomerDetailContent({
   const dispatch = useDispatch<any>();
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(tabList[0]);
+  const pageFeatures = usePageData();
+  console.log("single-customer", pageFeatures)
   const customerContractHeaderLabels = [
     "ردیف",
     "شماره قرارداد",
@@ -166,11 +172,10 @@ export default function CustomerDetailContent({
         {tabList.map((tab: any) => (
           <button
             key={tab}
-            className={`text-center text-xs font-bold md:text-sm h-full p-2 md:p-6 ${
-              activeTab === tab
-                ? "border-b-2 border-quartiery-background font-bold text-black"
-                : "text-neutral-500"
-            }`}
+            className={`text-center text-xs font-bold md:text-sm h-full p-2 md:p-6 ${activeTab === tab
+              ? "border-b-2 border-quartiery-background font-bold text-black"
+              : "text-neutral-500"
+              }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab.toUpperCase()}
@@ -181,14 +186,31 @@ export default function CustomerDetailContent({
         <div className="bg-card flex flex-col justify-between p-6 rounded-md custom-shadow mt-6 gap-4">
           <div className="flex justify-between items-center">
             <div>فیلتر</div>
-            <ExportDataContainer
-              headerLabels={customerContractHeaderLabels}
-              list={allItems}
-              onGetData={getDataHandler}
-              loading={isLoading}
-              checkedItems={checkedItems}
-              dateTimeRange={dateTimeRange}
-            />
+            {generateFeatureAccess(pageFeatures, "export-customer-contracts")?.show && generateFeatureAccess(pageFeatures, "export-customer-contracts")?.enable && (
+              <ExportDataContainer
+                headerLabels={customerContractHeaderLabels}
+                list={allItems}
+                onGetData={getDataHandler}
+                loading={isLoading}
+                checkedItems={checkedItems}
+                dateTimeRange={dateTimeRange}
+              />
+            )}
+            {generateFeatureAccess(pageFeatures, "export-customer-contracts")?.show && !generateFeatureAccess(pageFeatures, "export-customer-contracts")?.enable && (
+              <AccessDenied
+                variant={""}
+                title="خروجی "
+                message="شما به این بخش دسترسی ندارید"
+                icon={(<Image
+                  src={"/icons/disable-download.png"}
+                  alt="edit"
+                  width={1024}
+                  height={1024}
+                  className="w-4 h-4"
+                />)}
+              />
+            )}
+
           </div>
 
           <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#1C284F_100%)] rounded-sm p-3 flex items-center justify-between px-6 text-white">

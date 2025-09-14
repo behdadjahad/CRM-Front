@@ -1,6 +1,8 @@
 import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
-import { RootState, store } from "@/store";
+import { safeLocalStorage } from "@/lib/generatePageData";
+import { store } from '@/store';
+
 
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
@@ -12,10 +14,15 @@ export interface FetchServiceType {
 }
 
 function makeHeaders(additionalHeaders: HeaderType = {}) {
-  const token = localStorage.getItem("token");
-  const hashCode = localStorage.getItem("hash");
+  const token = safeLocalStorage.getItem("token");
+  const hashCode = safeLocalStorage.getItem("hash");
+  const state = store.getState();
+  const code = state.access.currentPageCode;
+  
+  console.log(hashCode, code);
   // const code =localStorage.getItem("currentPageCode");
-  const code = "contract";
+  // const code = "contract";
+
   console.log(hashCode, code);
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
@@ -93,16 +100,17 @@ export async function fetchService(
   version = "api/v1"
 ) {
   // --- Check 2: hash missing in localStorage ---
-  let hashCode = localStorage.getItem("hash");
+  let hashCode = safeLocalStorage.getItem("hash");
   if (!hashCode) {
     const accessData = await getAccess();
     if (accessData?.data?.hash) {
-      localStorage.setItem("hash", accessData.data.hash);
+      safeLocalStorage.setItem("hash", accessData.data.hash);
       hashCode = accessData.data.hash;
     }
   }
   const executeFetch = async () => {
     const headers = makeHeaders(additionalHeaders);
+    console.log("headers",headers);
     const options: any = {
       method,
       headers,
@@ -130,7 +138,7 @@ export async function fetchService(
     if (newAccessToken) {
       response = await executeFetch(); // retry original request with new token
     } else {
-      localStorage.removeItem("token");
+      safeLocalStorage.removeItem("token");
       // Cookies.remove("token");
       window.location.href = "/login";
 
@@ -139,15 +147,19 @@ export async function fetchService(
   }
 
   const result = await response.json();
-
-  if (result?.meta?.hasChanged) {
+ console.log("in response out ", result)
+  if (result?.meta?.accessChanged) {
+    console.log("in response if ", result)
     const accessData = await getAccess();
+    console.log("in access",accessData)
     if (accessData?.data) {
       if (accessData.data.hash) {
-        localStorage.setItem("hash", accessData.data.hash);
+        safeLocalStorage.setItem("hash", accessData.data.hash);
       }
-      if (accessData.data.accessToken) {
-        localStorage.setItem("token", accessData.data.accessToken);
+      if (accessData.data.accessJson) {
+        console.log("---------------------acess",JSON.stringify(accessData?.data?.accessJson))
+        safeLocalStorage.setItem("accessData", JSON.stringify(accessData?.data?.accessJson)
+);
       }
     }
   }
@@ -163,8 +175,8 @@ export async function fetchService(
 }
 
 export async function renewAccessToken() {
-  const refreshToken = localStorage.getItem("refreshToken");
-  const accessToken = localStorage.getItem("token");
+  const refreshToken = safeLocalStorage.getItem("refreshToken");
+  const accessToken = safeLocalStorage.getItem("token");
 
   if (!refreshToken) return null;
 
@@ -181,7 +193,7 @@ export async function renewAccessToken() {
 
     if (result.status === "success" && result?.data?.accessToken) {
       // Save new tokens
-      localStorage.setItem("token", result.data.accessToken);
+      safeLocalStorage.setItem("token", result.data.accessToken);
 
       // Cookies.set("token", result.data.accessToken, {
       //   path: "/",
@@ -198,7 +210,7 @@ export async function renewAccessToken() {
   }
 }
 export async function getAccess() {
-  const token = localStorage.getItem("token");
+  const token = safeLocalStorage.getItem("token");
   if (!token) return null;
   try {
     const response = await fetch(`${config.ServerAddress}/api/v1/user/access`, {

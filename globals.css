@@ -119,11 +119,11 @@
     --link-shadow: 214.3 31.8% 91.4%;
   }
 }
-@font-face{
+@font-face {
   font-family: "customFont";
-  src:url(/public/fonts/Inter.ttf);
+  src: url(/public/fonts/Inter.ttf);
 }
-.custom-font{
+.custom-font {
   font-family: "customFont";
 }
 @layer base {
@@ -293,7 +293,7 @@
 }
 .fc .fc-daygrid-day-frame {
   max-height: 130px; /* adjust as needed */
-  overflow-y: auto;  /* allow scrolling if events overflow */
+  overflow-y: auto; /* allow scrolling if events overflow */
 }
 .fc .fc-daygrid-day {
   height: 120px; /* fixed height */
@@ -304,47 +304,51 @@
 .flex-container {
   @apply flex items-center justify-center gap-2;
 }
-.event-container{
-    @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA] cursor-pointer;
+.event-container {
+  @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA] cursor-pointer;
 }
-.event-call{
- @apply  border-[#FCCEEE] bg-[#FDF2FA]
+.event-call {
+  @apply border-[#FCCEEE] bg-[#FDF2FA];
 }
-.event-sms{
-
+.event-sms {
 }
-.event-email{
-
+.event-email {
 }
-.event-voip{
-
+.event-voip {
 }
-.event-meet{
-
+.event-meet {
 }
-.event-text{
-  @apply text-[#C11574] font-bold
+.event-text {
+  @apply text-[#C11574] font-bold;
 }
-.event-time{
-    @apply text-[#DD2590]
+.event-time {
+  @apply text-[#DD2590];
 }
-.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child{
-    @apply flex items-center justify-center h-full w-full border-none;
+.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child {
+  @apply flex items-center justify-center h-full w-full border-none;
 }
-.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child::after {
-  content: '';
+.fc-timegrid
+  .fc-col-header
+  thead
+  .fc-scrollgrid-shrink
+  > th:first-child::after {
+  content: "";
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20px;      /* set image size */
+  width: 20px; /* set image size */
   height: 20px;
   /* center */
-  background-image: url('/icons/calendar-time.png');
+  background-image: url("/icons/calendar-time.png");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
-.fc-event{
+.fc-event {
   background-color: transparent !important;
-  border:none !important;
+  border: none !important;
+}
+.disable-shadow {
+  box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.2),
+    /* inner shadow */ 0 1px 2px hsla(0, 0%, 0%, 0.08); /* drop shadow */
 }

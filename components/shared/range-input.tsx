@@ -5,13 +5,16 @@ import { cn } from "@/lib/utils";
 export default function RangeInput({
   form,
   item,
+  hasAccess=true
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
+  hasAccess?:boolean
 }) {
   return (
     <div className={cn("relative w-full")}>
       <input
+      disabled={!hasAccess}
         key={item.key}
         type="range"
         min="0"

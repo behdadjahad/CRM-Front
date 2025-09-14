@@ -2,12 +2,13 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = safeLocalStorage.getItem("token");
     if (!token) {
       router.push("/login");
     } else {

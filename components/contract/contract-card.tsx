@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ServiceCard, { ServiceCardInterface } from "../shared/service-card";
 import { cn, formatPrice } from "@/lib/utils";
 import Image from "next/image";
@@ -15,6 +15,9 @@ import Link from "next/link";
 import { setCheckedItems, setScrollPosition } from "@/store/contract-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { Checkbox } from "../ui/checkbox";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
+import { AccessDenied } from "../shared/AccessDenied";
 // import Satisfaction from "../section/satisfaction";
 
 export interface ContractCardInterface {
@@ -69,6 +72,8 @@ export default function ContractCard({
   mainRef,
   exportData,
 }: ContractCardInterface) {
+  const pageFeatures = usePageData();
+
   const contractData = [
     {
       icon: "/icons/calendar-mute.png",
@@ -115,8 +120,7 @@ export default function ContractCard({
     dispatch(setCheckedItems(updatedItems));
   };
   const checkedItems = useSelector((state: any) => state.contract.checkedItems);
-  console.log(header?.icon)
-  console.log(contract?.customer?.image)
+
   return (
     <Link
       className={cn(
@@ -154,23 +158,39 @@ export default function ContractCard({
 
       <div className="p-3.5 flex flex-col gap-4">
         <div className="flex items-center gap-4">
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            {" "}
-            <Checkbox
-              onCheckedChange={(checked: boolean) => {
-                checkItemHandler(exportData, checked);
-              }}
-              checked={checkedItems.some(
-                (obj: any) => obj.id === exportData.id
-              )}
-            />
-          </div>
-
+          {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+            generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
+              <div
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                {" "}
+                <Checkbox
+                  onCheckedChange={(checked: boolean) => {
+                    checkItemHandler(exportData, checked);
+                  }}
+                  checked={checkedItems.some(
+                    (obj: any) => obj.id === exportData.id
+                  )}
+                />
+              </div>
+            )}
+          {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
+            !generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
+              <AccessDenied
+                icon={
+                  <Image
+                    src={"/icons/checkbox-icon.png"}
+                    alt="checkbox"
+                    width={1024}
+                    height={1024}
+                    className="w-4 h-4"
+                  />
+                }
+              />
+            )}
           {contract?.customer?.image && (
             <Image
               src={contract?.customer?.image}
@@ -217,54 +237,80 @@ export default function ContractCard({
               e.stopPropagation();
             }}
           >
-            <RatingChart value={score?.scoreInPercent} color="#FFA500" />
+            {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+              .show && (
+              <RatingChart value={score?.scoreInPercent} color="#FFA500" />
+            )}
 
             <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1">
-              از مجموع {score?.totalVotes} امتیاز
+              {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                .show && <span>از مجموع {score?.totalVotes} امتیاز</span>}
               {/* <Link href={`/sale/satisfaction/${id}`}> */}
-              <div
-                // onClick={() => {
-                //   setOpenModal(true);
-                // }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setOpenModal(true);
-                }}
-              >
-                <Image
-                  src={"/icons/edit-pen.png"}
-                  alt="ادیت"
-                  width={16}
-                  height={16}
-                />
-              </div>
-              <CustomModal
-                minWidth="0"
-                maxWidth="700px"
-                isOpen={openModal}
-                onRequestClose={() => setOpenModal(false)}
-                contentLabel="رضایت مندی"
-              >
-                <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
-                  <span className="text-lg font-bold">نظر خود را ثبت کنید</span>
-                  <MdClose
-                    size={20}
-                    onClick={(e) => {
-                      setOpenModal(false);
-                      e.stopPropagation();
-                    }}
-                    className="cursor-pointer"
+              {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                .show &&
+                generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                  .enable && (
+                  <>
+                    <div
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setOpenModal(true);
+                      }}
+                    >
+                      <Image
+                        src={"/icons/edit-pen.png"}
+                        alt="ادیت"
+                        width={16}
+                        height={16}
+                      />
+                    </div>
+                    <CustomModal
+                      minWidth="0"
+                      maxWidth="700px"
+                      isOpen={openModal}
+                      onRequestClose={() => setOpenModal(false)}
+                      contentLabel="رضایت مندی"
+                    >
+                      <div className="flex flex-row reverse w-full items-center justify-between p-2 pb-5">
+                        <span className="text-lg font-bold">
+                          نظر خود را ثبت کنید
+                        </span>
+                        <MdClose
+                          size={20}
+                          onClick={(e) => {
+                            setOpenModal(false);
+                            e.stopPropagation();
+                          }}
+                          className="cursor-pointer"
+                        />
+                      </div>
+                      <Satisfaction
+                        onCloseHandler={() => {
+                          setOpenModal(false);
+                        }}
+                        itemId={id}
+                        score={score}
+                      />
+                    </CustomModal>
+                  </>
+                )}
+              {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                .show &&
+                !generateFeatureAccess(pageFeatures, "upsert-satisfaction")
+                  .enable && (
+                  <AccessDenied
+                    icon={
+                      <Image
+                        src={"/icons/disable-edit-pen.png"}
+                        alt="ادیت"
+                        width={1024}
+                        height={1024}
+                        className="w-3 h-3"
+                      />
+                    }
                   />
-                </div>
-                <Satisfaction
-                  onCloseHandler={() => {
-                    setOpenModal(false);
-                  }}
-                  itemId={id}
-                  score={score}
-                />
-              </CustomModal>
+                )}
               {/* </Link> */}
             </div>
           </div>

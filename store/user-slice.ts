@@ -12,7 +12,6 @@ export interface UserData {
   }[];
   registerationRequestId: number;
   status: string;
-  code: string;
 }
 
 const initialState: UserData = {
@@ -28,13 +27,16 @@ const initialState: UserData = {
   ],
   registerationRequestId: 0,
   status: "initial",
-  code:"service"
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser:(state,action)=>{
+    state.fullName=action.payload.data.fullName;
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUserData.fulfilled, (state, action) => {
       const data = action?.payload?.data;
@@ -51,7 +53,7 @@ export const fetchUserData = createAsyncThunk(
   async () => {
     try {
       const result = await fetchService("user");
-
+      console.log("result user data",result)
       return result;
     } catch {
       return {};
@@ -71,3 +73,4 @@ export const fetchUserData = createAsyncThunk(
 // );
 
 export default userSlice.reducer;
+export const {  setUser } = userSlice.actions;

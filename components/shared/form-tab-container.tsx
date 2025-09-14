@@ -9,6 +9,8 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import FormMaker, { FormMakerInterface } from "./form-maker";
+import { AccessDenied } from "./AccessDenied";
+import Image from "next/image";
 
 export interface FormTabContainerInterface {
   tabs: {
@@ -22,15 +24,17 @@ export interface FormTabContainerInterface {
   }[];
   defaultValue: string;
   className?: string;
+  hasAccess?: boolean
 }
 
 export default function FormTabContainer({
   tabs,
   defaultValue,
   className,
+  hasAccess
 }: FormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue);
-
+console.log("2",hasAccess)
   return (
     <>
       <Tabs
@@ -65,21 +69,31 @@ export default function FormTabContainer({
                   className="flex flex-col mt-8 items-end p-8 border py-4 px-2 rounded-lg gap-6 w-full bg-card"
                 >
                   <h2 className="px-2">{title}</h2>
-                  <FormMaker
+                  <FormMaker 
+                   hasAccess={hasAccess}
+                   //disable is true when user dont have access => has acess must be false
                     form={formInfo.form}
                     fields={formInfo.fields}
                     className={formInfo.className}
                   />
+                  {
+                    hasAccess ? (<div className="w-full  flex items-end">
+                      <Button
+                        variant={"info"}
+                        className="w-24 mx-2"
+                        onClick={submitForm}
+                      >
+                        ثبت
+                      </Button>
+                    </div>) : (<div className="w-full  flex items-end">
+                      <AccessDenied
+                                      variant={""}
+                                      title=" ثبت "
+                                      message="شما به این بخش دسترسی ندارید"
+                                     
+                                    /></div>)
+                  }
 
-                  <div className="w-full flex items-end">
-                    <Button
-                      variant={"info"}
-                      className="w-24 mx-2"
-                      onClick={submitForm}
-                    >
-                      ثبت
-                    </Button>
-                  </div>
                 </div>
               ))
             ) : (

@@ -27,9 +27,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ServerImageAddress, totalVotes } from "@/lib/utils";
+import { generateFeatureAccess } from "@/lib/generatePageData";
+import { usePageData } from "@/hooks/usePageData";
 
 export default function Service() {
-  const code = "service";
+  const pageFeatures = usePageData();
   const [serviceList, setServiceList] = useState<ServiceCardInterface[]>([]);
   const [activeItem, setActiveItem] = useState<any>(null);
   const [contract, setContract] = useState<any>(null);
@@ -166,7 +168,17 @@ export default function Service() {
       },
     ],
   };
+  const showCustomers = generateFeatureAccess(
+    pageFeatures,
+    "contract-customers"
+  )?.show;
+  const showExpenses = generateFeatureAccess(pageFeatures, "read-prices")?.show;
 
+  const serviceAccess = generateFeatureAccess(
+    pageFeatures,
+    "add-service"
+  )?.enable;
+  
   return (
     <main className="flex flex-col">
       <div className="w-full flex justify-between items-end">
@@ -193,9 +205,13 @@ export default function Service() {
           <Link href="/sale">برگشت</Link>
         </Button>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div
+        className={`flex flex-col lg:flex-row gap-4 ${
+          showCustomers || showExpenses ? "" : "justify-center"
+        }`}
+      >
         {" "}
-        <div className=" flex flex-col w-full xl:w-3/4 gap-4">
+        <div className={`flex flex-col w-full xl:w-3/4 gap-4`}>
           <div className="flex flex-col gap-1">
             <ExpertInfoContainer {...expert} />
             <ContractInfoContainer {...contractInfo} contract={contract} />
@@ -250,8 +266,15 @@ export default function Service() {
                 }}
                 isActive={activeItem && activeItem.title == item.title}
                 isSelected={item.isSelected}
+                // className={
+                //   item.disable
+                //     ? "cursor-not-allowed text-foreground-mute"
+                //     : "cursor-pointer"
+                // }
                 className={
-                  item.disable
+                  !serviceAccess
+                    ? "cursor-not-allowed text-foreground-mute"
+                    : serviceAccess && item?.disable
                     ? "cursor-not-allowed text-foreground-mute"
                     : "cursor-pointer"
                 }
@@ -261,10 +284,12 @@ export default function Service() {
           {activeItem && activeItem.isSelected === true && activeItem.form}
         </div>
         <div className="w-full xl:w-1/4 flex flex-col">
-          <ContractExpenseContainer />
-          <div className="mt-4">
-            <ClientInfoContainer />
-          </div>
+          {showExpenses && <ContractExpenseContainer />}
+          {showCustomers && (
+            <div className="mt-4">
+              <ClientInfoContainer />
+            </div>
+          )}
         </div>
       </div>
     </main>
