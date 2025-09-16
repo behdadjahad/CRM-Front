@@ -2,6 +2,7 @@ import InvoiceCard from "./InvoiceCard";
 
 export interface InvoiceListInterface {
   data: {
+    id: number;
     title: string;
     description: string;
     paymentDates: { label: string; value: string }[];

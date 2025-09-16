@@ -1,6 +1,8 @@
 import { Button } from "../ui/button";
 import Image from "next/image";
+import Link from "next/link";
 export interface InvoiceCardInterface {
+  id: number;
   title: string;
   description: string;
   paymentDates: { label: string; value: string }[];
@@ -10,6 +12,7 @@ export interface InvoiceCardInterface {
 }
 
 export default function InvoiceCard({
+  id,
   title,
   description,
   paymentDates,
@@ -18,6 +21,7 @@ export default function InvoiceCard({
   actions,
 }: InvoiceCardInterface) {
   return (
+    <Link href={`invoice-detail/${id}`}>
     <div className="custom-shadow p-4 w-full bg-card rounded-lg">
       <div className="flex justify-between flex-row-reverse">
         <div className="flex flex-col gap-2">
@@ -52,6 +56,7 @@ export default function InvoiceCard({
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      </Link>
   );
 }
