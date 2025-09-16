@@ -100,7 +100,7 @@ export default function AddPackageUnitToCategory({
               component: "Select",
               placeholder: "واحد پکیج",
               type: "text",
-              className: "w-full md:w-1/3",
+              className: "w-full md:w-1/2",
               options: packageUnitOptions,
             },
           ]}

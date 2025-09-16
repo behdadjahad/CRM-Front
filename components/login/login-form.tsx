@@ -56,13 +56,13 @@ export default function LoginForm() {
     //   expires: 7, // 7 days
     // });
     if (result?.status === "success") {
-
+   
       const status = result.data.registerationStatus;
       // dispatch(setHashCode(result?.data?.hash));
       if (status) {
         router.push("/pending-register");
       } else {
-    
+   
         router.push("/sale");
       }
 
@@ -73,7 +73,7 @@ export default function LoginForm() {
         "accessData",
         JSON.stringify(result?.data?.accessJson)
       );
-      
+  
     } else {
       // toast
       // router.push("/login");
