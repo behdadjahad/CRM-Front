@@ -83,6 +83,19 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
           />
         ),
       },
+      {
+        label: "درخواست های خرید",
+        link: "/admin/invoices",
+        icon: (
+          <Image
+            src={"/icons/permission-icon.png"}
+            alt="دسترسی"
+            width={1024}
+            height={1024}
+             className="w-8 h-8"
+          />
+        ),
+      },
     
     ],
   },
