@@ -16,6 +16,7 @@ import leadReducer from "./lead-slice";
 import allUsersReducer from "./all-users-slice";
 import accessReducer from "./access-slice";
 import loginReducer from "./login-slice";
+import adminInvoiceReducer from "./admin-invoice-slice";
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -33,7 +34,8 @@ export const store = configureStore({
     lead: leadReducer,
     allUsers: allUsersReducer,
     access: accessReducer,
-    login:loginReducer
+    login:loginReducer,
+    adminInvoice:adminInvoiceReducer
   },
 });
 

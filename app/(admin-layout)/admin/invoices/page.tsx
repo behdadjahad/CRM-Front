@@ -50,7 +50,7 @@ const AdminInvoicesPage: React.FC = () => {
             />
 
             {/* Statistics Cards */}
-            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8 p-6">
                 {STATS_CARDS.map((card) => (
                     <div key={card.key} className="bg-white rounded-lg border border-gray-200 p-6">
                         <div className="flex items-center">
@@ -68,7 +68,7 @@ const AdminInvoicesPage: React.FC = () => {
                         </div>
                     </div>
                 ))}
-            </div> */}
+            </div>
 
             {/* Requests Container */}
             <AdminRequestsContainer
