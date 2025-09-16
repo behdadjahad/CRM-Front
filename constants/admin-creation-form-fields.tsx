@@ -466,6 +466,35 @@ export function createFormFields(
           description: "",
         },
       };
+    case "label":
+      return {
+        title: "لیبل",
+        fields: [
+          {
+            key: "name",
+            component: "input",
+            placeholder: "نام",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+
+          {
+            key: "description",
+            component: "input",
+            placeholder: "توضیحات",
+            type: "text",
+            floating: true,
+            labelClassName: "w-full",
+            className: "w-full md:w-1/2",
+          },
+        ],
+        initialValues: {
+          name: "",
+          description: "",
+        },
+      };
     default:
       return {
         title: "",
