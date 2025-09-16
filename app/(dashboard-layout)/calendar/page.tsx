@@ -1,7 +1,7 @@
 "use client";
 
 import { getCalendarData } from "@/api/calendar";
-import { getEvent } from "@/api/event";
+
 import EventCreationContainer from "@/components/events/calendar/EventCreationContainer";
 import CalendarContainer from "@/components/events/CalendarContainer";
 
@@ -16,8 +16,7 @@ export default function Calendar() {
     queryKey: ["calendar"],
     queryFn: async () => await getCalendarData(),
   });
-  console.log(calendar?.data)
-  console.log(calendarData)
+
   useEffect(() => {
     if (calendar && calendar?.data && calendar?.data?.length > 0) {
       const calendarDataList = calendar?.data?.map((item:any) => ({

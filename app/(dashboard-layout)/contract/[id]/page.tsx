@@ -50,7 +50,7 @@ import { AccessDenied } from "@/components/shared/AccessDenied";
 export default function Contract() {
   const router = useRouter();
   const pageFeatures = usePageData();
-  console.log("check undefined", pageFeatures)
+
 
   const [contractServices, setContractServices] = useState<OptionType[]>([]);
   const [category, setCategory] = useState("personal");
@@ -785,9 +785,7 @@ export default function Contract() {
       });
     }
   }
-  console.log("1", generateFeatureAccess(pageFeatures
-    , "customer-creation")?.show && generateFeatureAccess(pageFeatures
-      , "customer-creation")?.enable)
+
   return (
     <main>
       <div>

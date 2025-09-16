@@ -19,7 +19,7 @@ export async function getLegalDocuments(registerationRequestId:number) {
   }
 }
 export async function uploadDocumnets(data: any) {
-  console.log(data);
+
   try {
  
     const formData = buildFormData(data, "licenseFile");

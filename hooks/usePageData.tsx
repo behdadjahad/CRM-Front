@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 
 export function usePageData() {
   const pathname = usePathname();
-  console.log("path", pathname)
+ 
   const dispatch = useDispatch()
   const pageData = useMemo(() => {
     // instead of strict equality, use matchPath
@@ -17,7 +17,7 @@ export function usePageData() {
 
     const pageCode = pageItem?.code;
     dispatch(setCurrentPageCode(pageCode || ""));
-    console.log("code", pageCode)
+  
     if (!pageCode) return null;
     return generatePageAccessData(pageCode);
   }, [pathname]);
@@ -32,6 +32,6 @@ export function usePageData() {
   //     return generatePageAccessData(pageCode);
 
   //   }, [pathname, pagesData]);
-  console.log(pageData, "---------------")
+
   return pageData?.features;
 }

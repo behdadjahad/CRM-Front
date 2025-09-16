@@ -50,16 +50,7 @@ import DeleteConfirmation from "../admin/delete-confirmation";
 import { Button } from "../ui/button";
 import EventEditionContainer from "./EventEditionContainer";
 
-const year = 1404;
-const result = jalaali.jalCal(year);
 
-if (result.leap === 0) {
-  console.log(`${year} is a leap year.`);
-  console.log(result.leap);
-} else {
-  console.log(`${year} is not a leap year.`);
-  console.log(result.leap);
-}
 export interface CalendarContainerInterface {
   data: {
     title: string;
@@ -104,8 +95,7 @@ export default function CalendarContainer({
   const { LeadContactTypeList } = getData();
   useEffect(() => {
     if (leadFollowUpTypeData) {
-      console.log(leadFollowUpTypeData);
-      console.log(leadFollowUpTypeData);
+     
       const updatedList = LeadContactTypeList.map((item: any) => {
         const match = leadFollowUpTypeData?.data?.find(
           (d: any) => d.type === item.value
@@ -254,8 +244,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
-  console.log("currentDate", currentDate);
-  console.log(generateVisibleRange("2025-03-20", "jalali"));
+
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -414,7 +403,7 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-      console.log(data);
+  
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -429,7 +418,7 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-      console.log(data);
+    
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -445,7 +434,6 @@ export default function CalendarContainer({
       return getSingleEvent(id);
     },
     onSuccess: (data) => {
-      console.log(data);
       if (data && data?.data) {
         const eventsOptions = [
           { id:data?.data?.id,
@@ -467,7 +455,7 @@ export default function CalendarContainer({
     },
   });
 
-  console.log(getCalendarInfo(currentDate, calendarType));
+
   function getDateDataHandler(date: string) {
     const data = {
       startDateRange: date + "T00:00:00Z",
@@ -634,11 +622,11 @@ export default function CalendarContainer({
   ) {
     let calendarData;
     const date = convertDateWithTimeZone(currentDate, calendarType);
-    console.log(date);
+   
     switch (calendarRangeType) {
       case "monthly":
         const calendarInfo = getCalendarInfo(currentDate, calendarType);
-        console.log(generateVisibleRange(currentDate, calendarType));
+      
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),

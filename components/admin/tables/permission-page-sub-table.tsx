@@ -24,7 +24,7 @@ export default function PermissionPageSubTable({
   pageList,
   onDataGenerated,
 }: PagePermissionSubTableInterface) {
-  console.log(pageList);
+
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const toggleRow = (index: number) => {
     setExpandedRows((prev) =>

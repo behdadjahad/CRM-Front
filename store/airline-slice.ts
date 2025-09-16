@@ -62,7 +62,7 @@ const airlineSlice = createSlice({
           : "",
         "ثبت کننده": item?.userSubmitter?.fullName,
       }));
-      console.log(state.items);
+ 
       state.editData = data?.map((item: any) => ({
         id: item.id,
         country: item?.country?.id,

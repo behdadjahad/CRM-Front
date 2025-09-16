@@ -42,7 +42,7 @@ export default function SettingContainer({
 }) {
   const [hasReset, setHasReset] = useState<boolean>(false);
   const pageFeatures = usePageData();
-  console.log("second part", pageFeatures)
+
 
 
   const { service } = useParams();

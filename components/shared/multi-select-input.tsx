@@ -17,16 +17,12 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
 
   const handleValueChange = useCallback(
     (data: any) => {
-      console.log(data);
+     
       const values = data?.length > 0 ? data.map((d: any) => d.value) : [];
    
       form.setFieldValue(item.key, [...form.values[item.key], ...values]);
       form.setFieldValue(item.key, [...form.values[item.key], ...data]);
-   
-    
-
-
-    },
+   },
     [item.key, form]
   );
 

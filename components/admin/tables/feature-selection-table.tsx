@@ -23,7 +23,8 @@ export default function FeatureSelectionTable({
     onToggleFeature,
     featureStatus
 }: FeatureSelectionTableInterface) {
-  console.log(featureList);
+
+  
   return (
     <Table>
       <TableHeader>

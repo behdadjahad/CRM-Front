@@ -56,7 +56,7 @@ export default function PermissionTable({
   packageUnitId,
   roleId,
 }: PermissionTableInterface) {
-  console.log(permissionList);
+
   const { permissionEditFormData } = getData("permission");
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const toggleRow = (index: number) => {

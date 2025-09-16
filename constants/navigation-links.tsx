@@ -62,6 +62,32 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
+            {
+        label: "پکیج ها",
+        link: "/packages",
+        icon: (
+          <Image
+            src={"/icons/menu-package-icon.svg"}
+            alt="پکیج ها"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
+      {
+        label: "فاکتورها",
+        link: "/invoice",
+        icon: (
+          <Image
+            src={"/icons/menu-invoice-icon.svg"}
+            alt="فاکتورها"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
       {
         label: "گزارش ها",
         link: "/report",
@@ -100,6 +126,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
+
     ],
   },
   {

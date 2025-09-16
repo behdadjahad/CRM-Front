@@ -1,14 +1,14 @@
 import { RootState, store } from "@/store";
 
 export function generatePageAccessData(pageCode: any) {
-  console.log("input", pageCode);
+
   const accessData = safeLocalStorage.getItem("accessData");
-  console.log(accessData);
+
   if (accessData) {
     const matchPage = JSON.parse(accessData)?.pages?.find(
       (item: any) => pageCode in item
     );
-    console.log("match",matchPage)
+
     return matchPage ? matchPage[pageCode] : undefined;
   } else return null;
 }
@@ -61,7 +61,7 @@ export function generateFeatureAccess(features: any, code: string) {
     };
   } else {
     const feature = features?.find((item: any) => item?.code === code);
-    console.log("feature", feature);
+
     return {
       enable: feature?.enabled,
       show: feature?.show,

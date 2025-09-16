@@ -19,11 +19,11 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
   const state = store.getState();
   const code = state.access.currentPageCode;
   
-  console.log(hashCode, code);
+  
   // const code =localStorage.getItem("currentPageCode");
   // const code = "contract";
 
-  console.log(hashCode, code);
+  
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
@@ -110,7 +110,7 @@ export async function fetchService(
   }
   const executeFetch = async () => {
     const headers = makeHeaders(additionalHeaders);
-    console.log("headers",headers);
+  
     const options: any = {
       method,
       headers,
@@ -147,17 +147,17 @@ export async function fetchService(
   }
 
   const result = await response.json();
- console.log("in response out ", result)
+ 
   if (result?.meta?.accessChanged) {
-    console.log("in response if ", result)
+
     const accessData = await getAccess();
-    console.log("in access",accessData)
+
     if (accessData?.data) {
       if (accessData.data.hash) {
         safeLocalStorage.setItem("hash", accessData.data.hash);
       }
       if (accessData.data.accessJson) {
-        console.log("---------------------acess",JSON.stringify(accessData?.data?.accessJson))
+
         safeLocalStorage.setItem("accessData", JSON.stringify(accessData?.data?.accessJson)
 );
       }

@@ -43,7 +43,7 @@ const InvoiceDetailPage: React.FC = () => {
             };
             setRequest(updatedRequest);
             // In a real app, you'd send this to the backend
-            console.log(`Request ${request.invoiceId} status updated to ${newStatus}`);
+            
             setIsProcessingAction(false);
         }, 1000);
     };

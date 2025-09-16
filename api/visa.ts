@@ -10,7 +10,7 @@ export async function getSubmittedVisas(id: number) {
 export async function sendVisaData(data: any, id: number) {
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+
       return { error: "No data to send" };
     }
 
@@ -41,7 +41,7 @@ export async function sendVisaData(data: any, id: number) {
 export async function editVisaData(data: any, id: number) {
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+      
       return { error: "No data to send" };
     }
 

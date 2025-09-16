@@ -251,7 +251,7 @@ export default function LeadEditionContainer({
         />
         <AddCustomerToLeadContainer
           onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
-            console.log(selectedCustomer);
+  
             setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {

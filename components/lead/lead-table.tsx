@@ -82,8 +82,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
 
   const filters = useSelector((state: any) => state.lead.filters);
   const toggleSort = (label: string) => {
-    console.log(label);
-    console.log(getSortFieldFromLabel(label));
+   
     // dispatch(config.setCheckedItems([]));
     setSortStates((prev) => {
       const newSort = prev[label] === "desc" ? "asc" : "desc";
@@ -240,7 +239,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   cell.label === "علاقه مندی"
                     ? leadTemp.find((temp) => temp.value === cell.value)
                     : null;
-                console.log();
+           
                 return (
                   <TableCell key={cellIndex} className="text-center text-xs">
                     {cell.label == "وضعیت" ? (

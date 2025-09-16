@@ -181,7 +181,7 @@ export default function ServiceSetting() {
     airport: "create-airports",
     airline: "create-airlines"
   };
-  console.log("hiiiii", featureCodeMap[serviceType as any])
+
   // decide if form should be shown
   const shouldShowForm =
     generateFeatureAccess(
@@ -196,9 +196,7 @@ export default function ServiceSetting() {
   // If user doesn't have access, disable the form
   const disabled = !shouldShowForm;
 
-  console.log("serviceType", serviceType)
-  console.log("shouldShowForm", shouldShowForm)
-  console.log("isDisabled", disabled)
+  
 
   return (
     <main>

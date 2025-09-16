@@ -59,11 +59,8 @@ const CustomerInfiniteCard = forwardRef<
     },
     ref
   ) => {
-   console.log(checkedCustomers?.some(
-                (item) => item.id === 1
-              ))
-    console.log(checkedCustomers)
-    console.log(!multiSelect);
+
+
     const customerInfiniteCardContent = (
       <div
         key={customer.id}

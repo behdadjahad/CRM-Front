@@ -39,7 +39,7 @@ const accessSlice = createSlice({
     },
     setCurrentPageCode: (state, action: PayloadAction<string>) => {
       state.currentPageCode = action.payload;
-      console.log("currentPageCode",state.currentPageCode);
+   
     },
     setHash: (state, action: PayloadAction<string>) => {
       state.hash = action.payload;

@@ -24,7 +24,7 @@ export default function LeadCreationContainer() {
 
   const pageFeatures=usePageData()
 
-console.log("pageFeatures",pageFeatures)
+
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch<any>();
@@ -270,7 +270,7 @@ console.log("pageFeatures",pageFeatures)
         />
         <AddCustomerToLeadContainer
           onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
-            console.log(selectedCustomer);
+           
             setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {

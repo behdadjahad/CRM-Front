@@ -18,7 +18,7 @@ export default function PermissionPageFeatureContainer({
 }: PermissionPageFeatureContainerInterface) {
   const queryClient = useQueryClient();
   const [permissionData, setPermissionData] = useState({});
-  console.log(permissionData);
+
   const { mutate: editPermissionData } = useMutation({
     mutationFn: ({ id, data }: { id: number; data: any }) => {
       return editPermission(id, data);
@@ -79,7 +79,7 @@ export default function PermissionPageFeatureContainer({
       <PermissionPageSubTable
         pageList={pageList}
         onDataGenerated={(data) => {
-          console.log(81,data)
+        
           setPermissionData(data);
         }}
       />

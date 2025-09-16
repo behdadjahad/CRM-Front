@@ -128,7 +128,7 @@ useEffect(() => {
     }
 
     setSelectedFeatures(updatedSelectedFeatures);
-    console.log("updatedSelectedFeatures", updatedSelectedFeatures);
+    
     onSendSelectedFeatures(updatedSelectedFeatures);
   }
   // useEffect(() => {

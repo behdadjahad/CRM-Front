@@ -11,7 +11,7 @@ export async function addCeoDetail(data: any) {
   } catch {}
 }
 export async function addCeoCommunication(data: any) {
-  console.log(data)
+
   try {
     const result = await fetchService("communication/many/ceo", {
       method: "POST",

@@ -24,7 +24,7 @@ export default function EventDetailContainer({
   onDeleteHandler
 }: EventDetailContainerInterface) {
   const { list, actions } = generateEventDetail();
-  console.log(eventList);
+
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -62,7 +62,7 @@ export default function EventDetailContainer({
   );
 
   function generateEventDetail() {
-    console.log(eventList);
+   
     const actions = <>action</>;
     const list = eventList.map((item) => {
       const date = convertDateWithTimeZone(item.start, calendarType); // pass event date to your util

@@ -146,7 +146,7 @@ export const fetchLeads = createAsyncThunk<any, any>(
     const queryParams = buildQueryString({
       ...filters, // spread your filters into the query params
     });
-    console.log(filters);
+  
     try {
       const result = await fetchService(
         `lead?page=${page}&limit=${limit}&${queryParams}`,

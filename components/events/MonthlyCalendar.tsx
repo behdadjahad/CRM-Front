@@ -46,7 +46,7 @@ export default function MonthlyCalendar({
     end: formatEventDate(event.start),
     allDay: false,
   }));
-  console.log(updatedEvents);
+
   const calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],
     initialView: "customMonth",
@@ -85,7 +85,7 @@ export default function MonthlyCalendar({
     },
     eventClick: (arg) => {
       const eventId = arg.event.id; // <-- your event id
-      console.log("Clicked event id:", eventId);
+     
 
       onSelectEvent(Number(eventId))
     },

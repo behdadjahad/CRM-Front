@@ -116,12 +116,12 @@ export default function FormMaker({
   hasAccess=true
 
 }: FormMakerInterface) {
-console.log("3",hasAccess)
+
 
 
   const renderField = useCallback(
     (item: FormMakerInterface["fields"][0]) => {
-      console.log("4",hasAccess)
+      
       // Use disabled from item first, then fallback to form-level disabled
       // const isDisabled = item?.disabled !== undefined ? item?.disabled : disabled;
 

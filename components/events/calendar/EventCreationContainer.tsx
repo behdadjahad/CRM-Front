@@ -48,10 +48,10 @@ export default function EventCreationContainer({
     dispatch(fetchAllUsers());
   }, [dispatch]);
   const userOptions = useSelector((state: any) => state.allUsers.items);
-  console.log(userOptions);
+ 
   const userData = useSelector((state: RootState) => state.user);
   const { LeadContactTypeList } = getData(activeLeadContactType?.value);
-  console.log(fields);
+ 
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -74,9 +74,9 @@ export default function EventCreationContainer({
     queryFn: async () => await getLaedfollowUpTypes(),
   });
   useEffect(() => {
-    console.log(leadFormsData);
+   
     if (leadFormsData?.data?.length > 0) {
-      console.log(leadFormsData?.data);
+      
       const fields = returnFields(
         activeLeadContactType?.value,
         leadFormsData?.data
@@ -96,7 +96,7 @@ export default function EventCreationContainer({
       setFollowUpTypeList(updatedList);
     }
   }, [leadFormsData, activeLeadContactType]);
-  console.log(fields);
+
   function returnFields(leadType: string, data: any[]) {
     const formFields = data.find((item: any) => item?.type === leadType)
       ?.baseJson.fields;
@@ -133,8 +133,7 @@ export default function EventCreationContainer({
       setCustomers([]);
     },
   });
-  console.log(customers);
-  console.log(customers.length);
+ 
   function addPersonInfo(personData: CustomerDataInterface) {
     const data = {
       firstName: personData.firstName,
@@ -166,7 +165,7 @@ export default function EventCreationContainer({
     // console.log(data);
   }
   function submitCheckedCustomers(checkedCustomers: CustomerDataInterface[]) {
-    console.log(checkedCustomers, checkedCustomers?.length);
+  
     const newCustomers = checkedCustomers.filter(
       (checkedCustomer) =>
         !customers.some((customer) => customer.id === checkedCustomer.id)
@@ -324,7 +323,7 @@ export default function EventCreationContainer({
         />{" "}
         <AddCustomerToFeatureContainer
           onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
-            console.log(selectedCustomer);
+            
             // setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {

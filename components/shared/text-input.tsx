@@ -14,7 +14,7 @@ export default function TextInput({
   item: FormMakerInterface["fields"][0];
      disabled?:boolean
 }) {
-  console.log("acecss input",disabled)
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   // const [inputValue, setInputValue] = useState(
   //   item.defaultValue ? item.defaultValue : form.values[item.key]

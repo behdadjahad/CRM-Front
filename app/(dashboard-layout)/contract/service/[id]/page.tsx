@@ -71,7 +71,7 @@ export default function Service() {
       setContract(contractData);
     }
   }, [contractData]);
-  console.log(contract?.data?.mainCustomerSoldto?.person?.avatar);
+
   const contractInfo: ContractInfoInterface = {
     list: [
       {

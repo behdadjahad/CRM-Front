@@ -19,7 +19,7 @@ export default function SettingCreateForm({
   onSubmitHandler: (data: any) => any;
 }) {
   const { service } = useParams();
-  console.log(hasAccess, "hasAccess111")
+ 
 
   return (
     <div className="flex flex-col gap-4 ">

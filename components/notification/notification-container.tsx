@@ -86,7 +86,7 @@ export default function NotificationContainer() {
           filterItems={[]}
           sortList={[]}
           onSortHandler={(item: string) => {
-            console.log(item);
+      
           }}
           onCancleHandler={() => {}}
         />

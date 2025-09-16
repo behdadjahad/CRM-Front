@@ -74,7 +74,7 @@ export async function getPackageCategory() {
 }
 
 export async function addCategorytoPackage(id: number, items: any) {
-  console.log(id);
+
   try {
     const result = await fetchService(`package-category/add-to-package/${id}`, {
       method: "POST",

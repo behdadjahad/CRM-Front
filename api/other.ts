@@ -3,7 +3,7 @@ import { fetchService } from "@/boot/fetch-service";
 export async function sendOtherData(data: any, id: number) {
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendOtherData: No data provided!");
+   
       return { error: "No data to send" };
     }
 
@@ -34,7 +34,7 @@ export async function sendOtherData(data: any, id: number) {
 export async function editOtherData(data: any, id: number) {
     try {
       if (!data || Object.keys(data).length === 0) {
-        console.warn("editOtherData: No data provided!");
+        
         return { error: "No data to send" };
       }
   

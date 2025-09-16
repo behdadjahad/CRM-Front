@@ -10,7 +10,7 @@ const roleSlice = createSlice({
   initialState,
   reducers: {
     setHashCode(state, action) {
-      console.log(13, action.payload);
+    
       state.hashCode = action.payload;
     },
   },

@@ -22,7 +22,7 @@ export default function PackagesPage() {
 
     const handlePackagePurchase = (packageId: string) => {
         // Handle package purchase logic
-        console.log('Purchasing package:', packageId);
+      
         // You can add purchase logic here, such as:
         // - Redirect to checkout page
         // - Open purchase modal

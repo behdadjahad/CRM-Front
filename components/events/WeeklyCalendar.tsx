@@ -38,9 +38,7 @@ export default function WeeklyCalendar({
   onSelectDate,
   onSelectEvent,
 }: Props) {
-  console.log(currentDate);
-  console.log(visibleRange);
-  console.log(events);
+
 
   const updatedEvents = events.map((event) => ({
     ...event,
@@ -48,7 +46,7 @@ export default function WeeklyCalendar({
     end: formatEventDate(event.start),
     allDay: false,
   }));
-  console.log(updatedEvents);
+  
   const calendarOptions: CalendarOptions = {
     plugins: [timeGridPlugin, interactionPlugin],
     initialView: "customWeek",
@@ -101,7 +99,7 @@ export default function WeeklyCalendar({
     },
     eventClick: (arg) => {
       const eventId = arg.event.id; // <-- your event id
-      console.log("Clicked event id:", eventId);
+     
 
       onSelectEvent(Number(eventId));
     },
@@ -120,16 +118,16 @@ export default function WeeklyCalendar({
     },
     selectable: true,
     select: (arg) => {
-      console.log(convertToGregorianYMD(arg.start));
+    
       onSelectDate(convertToGregorianYMD(arg.start));
     },
     dayHeaderDidMount: () => {
       const cornerCell = document.querySelector(
         ".fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child"
       );
-      console.log(cornerCell);
+   
       if (cornerCell) {
-        console.log(cornerCell);
+   
         // clear previous content
         cornerCell.innerHTML = "";
 

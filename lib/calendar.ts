@@ -292,7 +292,7 @@ export function generateVisibleRange(
   dateString: string,
   calendarType: "jalali" | "hijri" | "gregory"
 ): { start: Date; end: Date } {
-  console.log(dateString);
+
   // if (calendarType === "jalali") {
   //   const date = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
   //   const year = date.year();
@@ -319,8 +319,7 @@ export function generateVisibleRange(
   if (calendarType === "jalali") {
     const input = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
     const { year: year, month: month } = convertDateWithTimeZone(dateString, calendarType);
-    console.log(year,month)
-    console.log(input)
+
     // const year = input.year();
     // const month = input.month();
     // Start at the 1st of this Jalali month
@@ -587,13 +586,13 @@ export function generateWeekVisibleRange(
 //   return { start: startOfWeek, end: endOfWeek };
 // }
 export function getDayNumber(date: Date, calendarType: string) {
-  console.log(date, "gregory");
+ 
 
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
     case "hijri":
-      console.log(moment(date).format("iD"));
+    
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":

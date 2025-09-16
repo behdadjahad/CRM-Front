@@ -34,7 +34,7 @@ export default function FormTabContainer({
   hasAccess
 }: FormTabContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue);
-console.log("2",hasAccess)
+
   return (
     <>
       <Tabs

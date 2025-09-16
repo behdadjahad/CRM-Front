@@ -30,7 +30,7 @@ export default function CustomerDetailContent({
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState(tabList[0]);
   const pageFeatures = usePageData();
-  console.log("single-customer", pageFeatures)
+
   const customerContractHeaderLabels = [
     "ردیف",
     "شماره قرارداد",

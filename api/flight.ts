@@ -36,7 +36,7 @@ export async function sendFlightData(data: any, id: number) {
 
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+      
       return { error: "No data to send" };
     }
 
@@ -70,7 +70,7 @@ export async function editFlightData(data: any, id: number) {
 
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+      
       return { error: "No data to send" };
     }
 

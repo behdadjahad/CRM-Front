@@ -29,7 +29,7 @@ export default function AddCustomerToFeatureContainer({
     checked: boolean,
     customer: CustomerDataInterface
   ) {
-    console.log(32,checked,customer)
+
     if (checked) {
       setCheckedCustomers([...checkedCustomers, customer]);
     } else {
@@ -90,7 +90,7 @@ export default function AddCustomerToFeatureContainer({
             checked: boolean,
             customer: CustomerDataInterface
           ) => {
-            console.log(71, checked, customer);
+          
             checkCustomersHandler(checked, customer);
           }}
           multiSelect={multiSelect}

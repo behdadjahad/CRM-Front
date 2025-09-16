@@ -30,8 +30,7 @@ export default function DailyCalendar({
     }
   }, [currentDate]);
 
-  console.log(currentDate);
-  console.log(events);
+
   const updatedEvents = events.map((event) => ({
     ...event,
     start: formatEventDate(event.start),
@@ -74,7 +73,7 @@ export default function DailyCalendar({
     },
     eventClick: (arg) => {
       const eventId = arg.event.id; // <-- your event id
-      console.log("Clicked event id:", eventId);
+  
 
       onSelectEvent(Number(eventId));
     },

@@ -25,7 +25,7 @@ export async function getServiceTypes() {
 export async function sendHotelData(data: any, id: number) {
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+    
       return { error: "No data to send" };
     }
 
@@ -56,7 +56,7 @@ export async function sendHotelData(data: any, id: number) {
 export async function editHotelData(data: any, id: number) {
   try {
     if (!data || Object.keys(data).length === 0) {
-      console.warn("sendHotelData: No data provided!");
+ 
       return { error: "No data to send" };
     }
 

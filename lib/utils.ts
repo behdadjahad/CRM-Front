@@ -190,7 +190,7 @@ export function buildQueryString(params: Record<string, any>): string {
     .join("&");
 }
 export const getSortFieldFromLabel = (label: string): string | undefined => {
-  console.log(label);
+
   const labelToFieldMap: Record<string, string> = {
     "نام و نام خانوادگی": "customer.person.lastName",
     "نوع درخواست": "leadType.title",

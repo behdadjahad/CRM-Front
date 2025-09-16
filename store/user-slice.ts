@@ -53,7 +53,7 @@ export const fetchUserData = createAsyncThunk(
   async () => {
     try {
       const result = await fetchService("user");
-      console.log("result user data",result)
+
       return result;
     } catch {
       return {};
