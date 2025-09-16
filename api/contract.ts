@@ -223,3 +223,4 @@ export interface ContractOutput {
   isItFinalized: boolean;
   contractStatus: string;
 }
+
