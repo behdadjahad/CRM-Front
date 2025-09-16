@@ -5,6 +5,9 @@ export interface InvoiceListInterface {
     title: string;
     description: string;
     paymentDates: { label: string; value: string }[];
+    status: { label: string, className?: string };
+    price: { amount: string; currency: string };
+    actions: { label: string; icon: string }[];
   }[];
 }
 
