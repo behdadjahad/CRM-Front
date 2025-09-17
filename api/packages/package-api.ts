@@ -3,13 +3,16 @@ import { fetchService } from "@/boot/fetch-service";
 
 export async function getPackages() {
   try {
-    const result = await fetchService(`/packages`, {
+    const result = await fetchService(`package/package-list`, {
       method: "GET",
-    
+      additionalHeaders: {
+        "Cache-Control": "no-cache"
+      },
     });
 
     return result;
-  } catch {
+  } catch (error) {
+    console.error('❌ Error fetching packages:', error);
     return {};
   }
 }
@@ -17,9 +20,9 @@ export async function getPackages() {
 
 export async function getPackageCategories() {
   try {
-    const result = await fetchService(`/packages/categories`, {
+    const result = await fetchService(`packages/categories`, {
       method: "GET",
-    
+
     });
 
     return result;
@@ -30,9 +33,9 @@ export async function getPackageCategories() {
 
 export async function getPackageUnits() {
   try {
-    const result = await fetchService(`/packages/units`, {
+    const result = await fetchService(`packages/units`, {
       method: "GET",
-    
+
     });
 
     return result;
@@ -42,13 +45,25 @@ export async function getPackageUnits() {
 }
 
 
-export async function selectPackage(packageId:number,chadcoCustomerId:number) {
+export async function selectPackage({
+  packages,
+  categories,
+  units,
+}: {
+  packages?: number[];
+  categories?: number[];
+  units?: { unitId: number }[];
+}, chadcoCustomerId: number) {
   try {
     const result = await fetchService(`packages/select/${chadcoCustomerId}`, {
       method: "POST",
-      body: packageId,
+      body: {
+        packages,
+        categories,
+        units,
+      },
     });
 
     return result;
-  } catch {}
+  } catch { }
 }

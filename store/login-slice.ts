@@ -68,6 +68,7 @@ const loginSlice = createSlice({
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
       const data = action?.payload?.data;
         state.fullName = data?.fullName;
+        state.chadcoCustomerId = data?.chadcoCustomerId;
         state.id=data?.id;
        state.roles = data.roles || [];
     state.avatar = data.avatar;

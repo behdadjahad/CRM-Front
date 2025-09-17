@@ -1,5 +1,5 @@
 "use client";
-import { getPackage } from "@/api/admin";
+// import { getPackage } from "@/api/admin";
 
 import PackageContainer from "@/components/admin/package-container";
 
@@ -11,6 +11,7 @@ import { formatPrice } from "@/lib/utils";
 import { fetchCurrencies } from "@/store/currency-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { getPackages } from "@/api/packages/package-api";
 export interface PackageDataInterface {
   id: number;
   title: string;
@@ -31,13 +32,14 @@ export interface PackageInterface {
 export default function Package() {
   const { data: packageData } = useQuery({
     queryKey: ["packageData"],
-    queryFn: async () => await getPackage(),
+    queryFn: async () => await getPackages(),
   });
   const { packageList } = getData(packageData);
   const dispatch = useDispatch<any>();
   useEffect(() => {
     dispatch(fetchCurrencies());
   }, [dispatch]);
+
   return (
     <main className="flex flex-col">
       <Title label="پکیج" />
@@ -129,7 +131,7 @@ function getData(packageData: any) {
             enabledDurationInDays: unit?.enabledDurationInDays,
             unitModel: unit?.unitModel,
             unitType: unit?.unitType,
-            categories: unit?.packageCategories.map((pkg: any) => ({
+            categories: unit?.packageCategories?.map((pkg: any) => ({
               label: pkg?.name,
               value: pkg?.id,
             })),

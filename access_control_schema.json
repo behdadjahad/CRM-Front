@@ -1,0 +1,348 @@
+{
+    "access_control_system": {
+        "version": "1.0.0",
+        "description": "Comprehensive access control system for CRM application",
+        "components": {
+            "users": {
+                "description": "System users who need access to features",
+                "table": "User",
+                "fields": {
+                    "id": "Primary key",
+                    "username": "Unique username",
+                    "email": "Unique email address",
+                    "password_hash": "Encrypted password",
+                    "created_at": "Account creation timestamp",
+                    "updated_at": "Last update timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                }
+            },
+            "customers": {
+                "description": "Organizations/companies using the system",
+                "table": "ChadcoCustomer",
+                "fields": {
+                    "id": "Primary key",
+                    "name": "Customer organization name",
+                    "email": "Customer contact email",
+                    "phone": "Customer contact phone",
+                    "created_at": "Customer registration timestamp",
+                    "updated_at": "Last update timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                }
+            },
+            "roles": {
+                "description": "Collections of permissions assigned to users",
+                "table": "Role",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "name": "Role name (e.g., 'admin', 'manager', 'user')",
+                    "description": "Role description",
+                    "inherited_roles": "JSON array of inherited role IDs",
+                    "accesses_json": "JSON object with role-specific access overrides"
+                },
+                "json_schema": {
+                    "inherited_roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "description": "Array of role IDs that this role inherits from"
+                    },
+                    "accesses_json": {
+                        "type": "object",
+                        "patternProperties": {
+                            "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+                                "type": "object",
+                                "properties": {
+                                    "read": {
+                                        "type": "boolean"
+                                    },
+                                    "write": {
+                                        "type": "boolean"
+                                    },
+                                    "delete": {
+                                        "type": "boolean"
+                                    },
+                                    "admin": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "description": "Access permissions for each page/feature"
+                            }
+                        },
+                        "description": "Role-specific access overrides"
+                    }
+                }
+            },
+            "permissions": {
+                "description": "Specific access rights to pages and features",
+                "table": "Permission",
+                "fields": {
+                    "id": "Primary key",
+                    "name": "Permission name",
+                    "description": "Permission description",
+                    "resource": "Page or feature identifier",
+                    "action": "Action type (read, write, delete, admin)"
+                }
+            },
+            "pages": {
+                "description": "System pages that users can access",
+                "table": "Page",
+                "fields": {
+                    "id": "Primary key",
+                    "name": "Page display name",
+                    "path": "URL path to the page",
+                    "code": "Unique identifier for the page",
+                    "description": "Page description"
+                }
+            },
+            "page_features": {
+                "description": "Specific features available on each page",
+                "table": "PageFeatures",
+                "fields": {
+                    "id": "Primary key",
+                    "page_id": "Foreign key to page",
+                    "name": "Feature name",
+                    "description": "Feature description",
+                    "feature_type": "Type of feature (read, write, delete, admin)"
+                }
+            },
+            "packages": {
+                "description": "Service packages that customers can subscribe to",
+                "table": "Package",
+                "fields": {
+                    "id": "Primary key",
+                    "title": "Package title",
+                    "description": "Package description",
+                    "price": "Package price",
+                    "created_at": "Package creation timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                }
+            },
+            "package_units": {
+                "description": "Individual units within packages that define specific access rights",
+                "table": "PackageUnit",
+                "fields": {
+                    "id": "Primary key",
+                    "title": "Unit title",
+                    "description": "Unit description",
+                    "package_unit_label_id": "Foreign key to package unit label",
+                    "accesses_json": "JSON object defining access permissions",
+                    "unit_type": "Type of unit (rent, sale)",
+                    "unit_model": "Pricing model (perDuration, perCount, flat)",
+                    "enabled_duration_in_days": "Duration in days for enabled access",
+                    "show_duration_in_days": "Duration in days for display",
+                    "count_unit": "Count unit value",
+                    "price": "Unit price",
+                    "currency_id": "Foreign key to currency",
+                    "created_at": "Unit creation timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                },
+                "json_schema": {
+                    "accesses_json": {
+                        "type": "object",
+                        "patternProperties": {
+                            "^[a-zA-Z_][a-zA-Z0-9_]*$": {
+                                "type": "object",
+                                "properties": {
+                                    "read": {
+                                        "type": "boolean"
+                                    },
+                                    "write": {
+                                        "type": "boolean"
+                                    },
+                                    "delete": {
+                                        "type": "boolean"
+                                    },
+                                    "admin": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Access permissions defined by this package unit"
+                    }
+                }
+            }
+        },
+        "relationships": {
+            "user_customer_permissions": {
+                "description": "Many-to-many relationship between users and customers through permissions",
+                "table": "ChadcoCustomerPermission",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "user_id": "Foreign key to user"
+                }
+            },
+            "customer_packages": {
+                "description": "Many-to-many relationship between customers and packages",
+                "table": "ChadcoCustomerPackage",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "package_id": "Foreign key to package",
+                    "created_at": "Association creation timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                }
+            },
+            "customer_package_units": {
+                "description": "Many-to-many relationship between customers and package units",
+                "table": "ChadcoCustomerPackageUnit",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "package_unit_id": "Foreign key to package unit",
+                    "created_at": "Association creation timestamp",
+                    "deleted_at": "Soft delete timestamp"
+                }
+            },
+            "customer_access": {
+                "description": "Customer access rights to specific page features",
+                "table": "ChadcoCustomerAccess",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "package_unit_id": "Foreign key to package unit",
+                    "page_id": "Foreign key to page",
+                    "page_feature_id": "Foreign key to page feature",
+                    "package_unit_cost_id": "Foreign key to package unit cost",
+                    "unit_model": "Pricing model for this access",
+                    "enabled_date": "Date when access is enabled",
+                    "show_date": "Date when access is shown to user",
+                    "counter": "Usage counter for this access"
+                }
+            },
+            "customer_access_logs": {
+                "description": "Log of customer access activities",
+                "table": "ChadcoCustomerAccessLog",
+                "fields": {
+                    "id": "Primary key",
+                    "chadco_customer_id": "Foreign key to customer",
+                    "unit_id": "Foreign key to package unit",
+                    "page_id": "Foreign key to page",
+                    "page_feature_id": "Foreign key to page feature",
+                    "unit_cost_model": "Cost model for this access",
+                    "submit_date": "Date when access was used",
+                    "entity_id": "ID of the entity being accessed",
+                    "action": "Action performed"
+                }
+            }
+        },
+        "permission_resolution_flow": {
+            "step_1": {
+                "description": "Get user's roles for a specific customer",
+                "query": "SELECT r.* FROM Role r JOIN ChadcoCustomerPermission ccp ON r.id = ccp.role_id WHERE ccp.user_id = ? AND ccp.chadco_customer_id = ?"
+            },
+            "step_2": {
+                "description": "Get permissions for each role",
+                "query": "SELECT p.* FROM Permission p JOIN RolePermission rp ON p.id = rp.permission_id WHERE rp.role_id IN (?)"
+            },
+            "step_3": {
+                "description": "Merge all role permissions into a single JSON object",
+                "process": "Combine all permissions with priority given to 'true' values"
+            },
+            "step_4": {
+                "description": "Apply role-specific overrides",
+                "process": "For each role, apply the accesses_json overrides to the merged permissions"
+            },
+            "step_5": {
+                "description": "Apply package unit access restrictions",
+                "process": "Check customer's package units and apply their access restrictions"
+            },
+            "step_6": {
+                "description": "Return final access JSON to frontend",
+                "output": "Final JSON object with all access permissions resolved"
+            }
+        },
+        "json_examples": {
+            "permission_json": {
+                "dashboard": {
+                    "read": true,
+                    "write": false,
+                    "delete": false,
+                    "admin": false
+                },
+                "customers": {
+                    "read": true,
+                    "write": true,
+                    "delete": false,
+                    "admin": false
+                },
+                "reports": {
+                    "read": true,
+                    "write": false,
+                    "delete": false,
+                    "admin": false
+                }
+            },
+            "role_override_json": {
+                "customers": {
+                    "delete": true
+                },
+                "reports": {
+                    "write": true,
+                    "admin": true
+                }
+            },
+            "final_access_json": {
+                "dashboard": {
+                    "read": true,
+                    "write": false,
+                    "delete": false,
+                    "admin": false
+                },
+                "customers": {
+                    "read": true,
+                    "write": true,
+                    "delete": true,
+                    "admin": false
+                },
+                "reports": {
+                    "read": true,
+                    "write": true,
+                    "delete": false,
+                    "admin": true
+                }
+            }
+        },
+        "api_endpoints": {
+            "get_user_permissions": {
+                "method": "GET",
+                "path": "/api/permissions/user/{user_id}/customer/{customer_id}",
+                "description": "Get resolved permissions for a user in a specific customer context",
+                "response": "Final access JSON object"
+            },
+            "check_access": {
+                "method": "POST",
+                "path": "/api/access/check",
+                "body": {
+                    "user_id": "integer",
+                    "customer_id": "integer",
+                    "page": "string",
+                    "feature": "string"
+                },
+                "response": {
+                    "has_access": "boolean",
+                    "permissions": "object"
+                }
+            },
+            "update_role_permissions": {
+                "method": "PUT",
+                "path": "/api/roles/{role_id}/permissions",
+                "body": "Role permissions JSON object",
+                "response": "Updated role object"
+            }
+        },
+        "security_considerations": [
+            "Always validate JSON structure before processing",
+            "Implement proper role hierarchy and inheritance",
+            "Log all access attempts for audit purposes",
+            "Use secure token-based authentication",
+            "Implement rate limiting for permission checks",
+            "Validate user context before granting access",
+            "Use prepared statements to prevent SQL injection",
+            "Encrypt sensitive permission data in transit"
+        ]
+    }
+}

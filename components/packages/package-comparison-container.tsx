@@ -1,53 +1,71 @@
 "use client";
 
 import React, { useState } from 'react';
-import { PackageComparisonContainerProps } from '@/types/packages';
+import { ComparisonData, PackageCardProp } from '@/types/packages';
 import PackageCard from './package-card';
 import { cn } from '@/lib/utils';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
 
 
 
-const PackageComparisonContainer: React.FC<PackageComparisonContainerProps> = ({
-  data,
-  onPackageSelect,
-  onPackagePurchase,
-  className
+const PackageComparisonContainer: React.FC<ComparisonData> = ({
+  packages,
+  categories,
+  // onPackageSelect,
+
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(
-    data.selectedPackageId || null
+    // packages[0].id || null
   );
 
-  const handlePackageSelect = (packageId: string) => {
-    setSelectedPackageId(packageId);
-    onPackageSelect(packageId);
+  // Get customer ID from Redux store
+  const chadcoCustomerId = useSelector((state: RootState) => state.login.chadcoCustomerId);
+
+  const handlePackageSelect = (packageId: number, result?: any) => {
+    setSelectedPackageId(packageId.toString());
+    console.log('Package selected:', packageId, result);
+    // You can add additional logic here for handling the selection
   };
 
-  const handlePackagePurchase = (packageId: string) => {
-    onPackagePurchase(packageId);
-  };
+  // const handlePackageSelect = (packageId: string) => {
+  //   setSelectedPackageId(packageId);
+  //   onPackageSelect(packageId);
+  // };
+
+  // const handlePackagePurchase = (packageId: string) => {
+  //   onPackagePurchase(packageId);
+  // };
 
   // Filter packages based on search term
-  const filteredPackages = data.packages.filter(pkg =>
-    pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    pkg.subtitle.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPackages = packages?.filter(pkg =>
+    pkg.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    pkg.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div className={cn("w-full space-y-8", className)}>
+    <div className={cn("w-full flex justify-end items-end space-y-8 ",)}>
 
 
       {/* Package cards grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {filteredPackages.map((packageData) => (
-          <PackageCard
-            key={packageData.id}
-            package={packageData}
-            isSelected={selectedPackageId === packageData.id}
-            onSelect={handlePackageSelect}
-            onPurchase={handlePackagePurchase}
-            className="h-full"
-          />
+      <div className="grid grid-cols-1 w-10/12 md:grid-cols-2 lg:grid-cols-12 gap-6">
+        {filteredPackages?.map((packageData) => (
+          <>
+            <div key={packageData.id} className='col-span-3'>
+              <PackageCard
+                key={packageData.id}
+                data={packageData}
+                chadcoCustomerId={chadcoCustomerId}
+                onPackageSelect={handlePackageSelect}
+              // isSelected={selectedPackageId === packageData.id.toString()}
+              // onSelect={handlePackageSelect}
+              // onPurchase={handlePackagePurchase}
+              // className="h-full"
+              />
+            </div>
+
+          </>
         ))}
       </div>
 
@@ -69,7 +87,7 @@ const PackageComparisonContainer: React.FC<PackageComparisonContainerProps> = ({
           <div className="flex items-center space-x-2 space-x-reverse">
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
             <span className="text-blue-800 font-medium">
-              پکیج انتخاب شده: {data.packages.find(p => p.id === selectedPackageId)?.name}
+              {/* پکیج انتخاب شده: {packages.find(p => p.id === selectedPackageId)?.title} */}
             </span>
           </div>
         </div>

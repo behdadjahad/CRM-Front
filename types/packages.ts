@@ -1,61 +1,146 @@
-// Package-related type definitions
-export interface Package {
-    id: string;
-    name: string;
-    subtitle: string;
-    originalPrice?: number;
-    currentPrice: number;
-    currency: string;
-    duration: number;
-    durationUnit: 'month' | 'year' | 'day';
-    icon: PackageIcon;
-    buttonText: string;
-    buttonVariant: 'primary' | 'secondary' | 'outline';
-    isPopular?: boolean;
-    isSelected?: boolean;
-    features: PackageFeature[];
-    categories: PackageCategory[];
+// types/packages.ts
+export interface PageFeature {
+  featureId: number;
+  code?: string;
+  name?: string;
+  description?: string | null;
+  urlPattern?: string | string[];
+  show?: boolean;
+  enabled?: boolean;
 }
 
-export interface PackageIcon {
-    type: 'gold' | 'silver' | 'bronze' | 'blue' | 'white';
-    color: 'gold' | 'silver' | 'bronze' | 'blue' | 'white';
+export interface PageAccess {
+  url: string;
+  code: string;
+  title: string;
+  pageId: number;
+  show: boolean;
+  enabled: boolean;
+  features?: PageFeature[];
 }
 
-export interface PackageFeature {
-    id: string;
-    name: string;
-    description?: string;
-    isIncluded: boolean;
-    usageLimit?: number | 'unlimited';
-    remainingUsage?: number;
-    isExpired?: boolean;
+export interface Unit {
+  id: number;
+  name: string;
+  description?: string | null;
+  accessesJson?: { pages?: PageAccess[] };
+  unitType?: string | null;
+  unitModel?: string | null;
+  enabledDurationInDays?: number;
+  showDurationInDays?: number;
+  countUnit?: number;
+  price?: number;
+  packageUnitLabel?: { id: number; name: string } | null;
+  // createdAt, updatedAt...
+}
+
+export interface UnitLabel {
+  label: { id: number; name: string };
+  units: Unit[];
 }
 
 export interface PackageCategory {
-    id: string;
+  id: number;
+  name: string;
+  description?: string | null;
+  deletedAt: string,
+  currencyId: number,
+  price: number,
+  currency: string,
+  units: UnitLabel[];
+}
+
+export interface PackageItem {
+  id: number;
+  title: string;
+  description?: string | null;
+  price?: number;
+  packageCategories: PackageCategory[];
+}
+
+export interface ComparisonFeature {
+  id: number; // label.id
+  name: string;
+}
+
+export interface ComparisonCategory {
+  id: number;
+  name: string;
+  features: ComparisonFeature[];
+}
+
+export interface ComparisonData {
+  packages: Package[];
+  categories: ComparisonCategory[];
+}
+
+
+
+
+export interface Package {
+  id: number;
+  title: string;
+  description?: string | null;
+  price?: number;
+
+  createdAt: string,
+  updatedAt: string,
+  deletedAt: string,
+  currencyId: number,
+  currency: {
+    id: number,
+    name: string,
+    description: string
+  }
+  packageCategories: {
+    id: number;
     name: string;
-    features: PackageFeature[];
-    isExpanded?: boolean;
+    description?: string | null;
+
+    units: {
+      label: {
+        id: number;
+        name: string;
+      };
+      units: {
+        id: number;
+        name: string;
+        description?: string | null;
+        accessesJson?: {
+          pages?: {
+            url: string;
+            code: string;
+            title: string;
+            pageId: number;
+            show: boolean;
+            enabled: boolean;
+            features?: {
+              featureId: number;
+              code?: string;
+              name?: string;
+              description?: string | null;
+              urlPattern?: string | string[];
+              show?: boolean;
+              enabled?: boolean;
+            }[];
+          }[];
+        };
+        unitType?: string | null;
+        unitModel?: string | null;
+        enabledDurationInDays?: number;
+        showDurationInDays?: number;
+        countUnit?: number;
+        price?: number;
+        currencyId?: number;
+        packageUnitLabel?: { id: number; name: string } | null;
+      }[];
+    }[];
+  }[];
 }
 
-export interface PackageComparisonData {
-    packages: Package[];
-    categories: PackageCategory[];
-    selectedPackageId?: string;
-}
 
-export interface PackageCardProps {
-    package: Package;
-    isSelected: boolean;
-    onSelect: (packageId: string) => void;
-    onPurchase: (packageId: string) => void;
-    className?: string;
-}
-
-export interface PackageComparisonContainerProps {
-    data: PackageComparisonData;
-    onPackageSelect: (packageId: string) => void;
-    onPackagePurchase: (packageId: string) => void;
-    className?: string;
+export interface PackageCardProp {
+  data: Package;
+  chadcoCustomerId?: number;
+  onPackageSelect?: (packageId: number, result?: any) => void;
 }

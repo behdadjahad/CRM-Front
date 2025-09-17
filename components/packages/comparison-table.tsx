@@ -1,42 +1,80 @@
 "use client";
 
 import React, { useMemo } from 'react';
-import { PackageComparisonData } from '@/types/packages';
+import { ComparisonData, Package, PackageItem, Unit } from '@/types/packages';
 import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 interface ComparisonTableProps {
-    data: PackageComparisonData;
+    data: ComparisonData;
     className?: string;
 }
 
 const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) => {
+    // تابع کمکی برای گرفتن یونیت مربوطه
+    const getUnitForFeature = (
+        pkg: Package,
+        categoryId: number,
+        featureId: number
+    ): Unit | null => {
+        const category = pkg.packageCategories.find((c) => c.id === categoryId);
+        if (!category) return null;
+
+        const unitLabel = category.units.find((u) => u.label.id === featureId);
+        if (!unitLabel) return null;
+
+        return unitLabel.units[0] ?? null; // اولین یونیت
+    };
+
     // Memoize expanded categories for better performance
     const expandedCategories = useMemo(
-        () => data.categories.filter(cat => cat.isExpanded).map(cat => cat.id),
+        () => data.categories.map(cat => cat.id.toString()),
         [data.categories]
     );
 
     // Optimized feature availability check
-    const isFeatureAvailable = (featureId: string, packageId: string): boolean => {
+    const isFeatureAvailable = (featureId: number, packageId: number): boolean => {
         const packageData = data.packages.find(p => p.id === packageId);
         if (!packageData) return false;
 
-        const feature = packageData.features.find(f => f.id === featureId);
-        return Boolean(feature?.isIncluded && !feature?.isExpired && feature?.usageLimit !== 0);
+        const unit = getUnitForFeature(packageData,
+            data.categories.find(c => c.features.some(f => f.id === featureId))?.id || 0,
+            featureId
+        );
+        return Boolean(unit);
     };
 
-    // Simplified feature cell renderer
-    const renderFeatureCell = (featureId: string, packageId: string) => {
-        const isAvailable = isFeatureAvailable(featureId, packageId);
+    // Enhanced feature cell renderer with existing logic
+    const renderFeatureCell = (featureId: number, packageId: number) => {
+        const packageData = data.packages.find(p => p.id === packageId);
+        if (!packageData) return null;
+
+        const category = data.categories.find(c => c.features.some(f => f.id === featureId));
+        if (!category) return null;
+
+        const unit = getUnitForFeature(packageData, category.id, featureId);
+        const isAvailable = Boolean(unit);
 
         return (
             <div className="flex justify-center">
                 {isAvailable ? (
-                    <Check className="w-4 h-4 text-green-500" />
+                    <div className="flex flex-col items-center">
+                        {/* <Check className="w-4 h-4 text-green-500 mb-1" /> */}
+                        {unit?.countUnit && unit.countUnit > 0 && (
+                            <span className="text-gray-500 text-xs">
+                                تعداد: {unit.countUnit}
+                            </span>
+                        )}
+                        {unit?.enabledDurationInDays && (
+                            <span className="text-gray-500 text-xs">
+                                مدت: {unit.enabledDurationInDays} روز
+                            </span>
+                        )}
+                    </div>
                 ) : (
-                    <span className="text-gray-400 text-lg">—</span>
+                    // to-do
+                    <span className="text-[#1C68DA] text-base">نامحدود</span>
                 )}
             </div>
         );
@@ -46,7 +84,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
         <div className={cn("w-full bg-white space-y-4", className)}>
             <Accordion type="multiple" defaultValue={expandedCategories}>
                 {data.categories.map((category) => (
-                    <AccordionItem key={category.id} value={category.id} className="border-0 mb-4">
+                    <AccordionItem key={category.id} value={category.id.toString()} className="border-0 mb-4">
                         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                             <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 bg-[#E9EAEB] border-0 rounded-t-lg">
                                 <div className="grid grid-cols-5 w-full">
