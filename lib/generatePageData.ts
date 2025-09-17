@@ -1,7 +1,6 @@
-import { RootState, store } from "@/store";
+// import { RootState, store } from "@/store";
 
 export function generatePageAccessData(pageCode: any) {
-
   const accessData = safeLocalStorage.getItem("accessData");
 
   if (accessData) {
@@ -29,7 +28,7 @@ export const safeLocalStorage = {
     if (typeof window === "undefined") return;
     try {
       localStorage.setItem(key, value);
-      // to-do create new 
+      // to-do create new
       // if (key === "accessData") {
       //   window.location?.reload();      }
     } catch (error) {
@@ -44,17 +43,16 @@ export const safeLocalStorage = {
     } catch (error) {
       console.error("Error removing localStorage:", error);
     }
-  }
+  },
 };
 //   },
 // };
 
-
 //
 export function generateFeatureAccess(features: any, code: string) {
-  const state: RootState = store.getState();
-  const roles = state.login.roles;
-  
+  // const state: RootState = store.getState();
+  const roles:string[] = [];
+
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
   if (isSuperAdmin) {
     return {

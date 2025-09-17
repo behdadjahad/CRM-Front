@@ -1,8 +1,14 @@
+"use client";
+
 import { cn, formatPrice } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { useState } from "react";
 
 import InvoiceList from "./InvoiceList";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "@/store";
+import { fetchInvoice } from "@/store/invoice-slice";
 
 interface InvoiceContainerInterface {
   tabList: { label: string; value: string }[];
@@ -52,12 +58,22 @@ export default function InvoiceContainer({
   defaultValue,
 }: InvoiceContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue?.value);
+  const dispatch = useDispatch<any>();
+  const chadcoCustomerId = useSelector((state: RootState) => state.login.chadcoCustomerId);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    dispatch(fetchInvoice({ chadcoCustomerId: chadcoCustomerId }));
+  };
+  const listItems = useSelector((state: RootState) => state.invoice.items);
+  console.log(listItems);
+
   return (
     <>
       <Tabs
         defaultValue={defaultValue.value}
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={handleTabChange}
         className={cn("w-full hidden md:block", className)}
         activationMode="automatic"
       >

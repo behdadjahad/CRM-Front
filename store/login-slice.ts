@@ -2,12 +2,10 @@ import { fetchService } from "@/boot/fetch-service";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { string } from "yup";
 
-export interface Permissions{
-  id:string | number,
-  name:string
+export interface Permissions {
+  id: string | number;
+  name: string;
 }
-
-
 
 export interface UserRole {
   id: number;
@@ -39,7 +37,7 @@ export interface LoginState {
   _count?: UserCount;
 }
 const initialState: LoginState = {
- fullName: "",
+  fullName: "",
   id: 0,
   chadcoCustomerId: 0,
   roles: [],
@@ -59,7 +57,6 @@ const initialState: LoginState = {
   _count: { notifications: 0 },
 };
 
-
 const loginSlice = createSlice({
   name: "login",
   initialState: initialState,
@@ -67,16 +64,16 @@ const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
       const data = action?.payload?.data;
-        state.fullName = data?.fullName;
-        state.id=data?.id;
-       state.roles = data.roles || [];
-    state.avatar = data.avatar;
-  state.birthdate = data.birthdate;
-  state.cityId = data.cityId;
-  state.deletedAt = data.deletedAt;
-  state.email = data.email;
-  state.firstName = data.firstName;
-    state.lastName = data.lastName;
+      state.fullName = data?.fullName;
+      state.id = data?.id;
+      state.roles = data.roles || [];
+      state.avatar = data.avatar;
+      state.birthdate = data.birthdate;
+      state.cityId = data.cityId;
+      state.deletedAt = data.deletedAt;
+      state.email = data.email;
+      state.firstName = data.firstName;
+      state.lastName = data.lastName;
       state.middleName = data.middleName;
       state.gender = data.gender;
       state.idNumber = data.idNumber;
@@ -84,6 +81,7 @@ const loginSlice = createSlice({
       state.uniqueId = data.uniqueId;
       state.userName = data.userName;
       state._count = data._count;
+      state.chadcoCustomerId = data.chadcoCustomerId;
     });
   },
 });
@@ -94,7 +92,7 @@ export const fetchLogin = createAsyncThunk<any>(
   async () => {
     try {
       const result = await fetchService("user");
-   
+
       return result;
     } catch {
       return {};

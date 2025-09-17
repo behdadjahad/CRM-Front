@@ -28,7 +28,7 @@ export default function InvoiceCard({
           <div>{title}</div>
           <div>{description}</div>
           <div className="flex gap-4 flex-wrap">
-            {paymentDates.map((item) => (
+            {paymentDates?.map((item) => (
               <div key={item.label} className="flex gap-2 flex-row-reverse">
                 <span>:{item.label}</span>
                 <span>{item.value}</span>
@@ -37,8 +37,8 @@ export default function InvoiceCard({
           </div>
         </div>
         <div className="flex flex-col gap-4 items-end">
-          <div className={status.className}>{status.label}</div>
-          <div><span>{price.currency}</span><span>{price.amount}</span></div>
+          <div className={status?.className}>{status?.label}</div>
+          <div><span>{price?.currency}</span><span>{price?.amount}</span></div>
           <div className="flex gap-2">
             {actions?.map((action, index) => (
               <Button key={`action-${index}`}>
