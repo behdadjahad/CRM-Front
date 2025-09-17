@@ -126,9 +126,9 @@ function getData(categoryData: any) {
           { label: "تعداد", value: unit.countUnit },
         ],
         data: {
-          id: item.id,
-          name: item.name,
-          price: formatPrice(item.price),
+          id: unit.id,
+          name: unit.name,
+          price: formatPrice(unit.price),
           unitType: unit.unitType,
           unitModel: unit.unitModel,
           enabledDurationInDays: unit.enabledDurationInDays,
@@ -141,7 +141,7 @@ function getData(categoryData: any) {
             value: ctgry?.id,
           })),
         },
-        pageList: item?.accessesJson?.pages?.map((page: any) => ({
+        pageList: unit?.accessesJson?.pages?.map((page: any) => ({
           id: page.pageId,
           list: [
             { label: "عنوان", value: page?.title },

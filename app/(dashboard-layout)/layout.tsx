@@ -14,7 +14,6 @@ import { fetchUserData } from "@/store/user-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
   variable: "--font-iran-sans-bold",
@@ -35,15 +34,11 @@ const iranSans = localFont({
 
 const queryClient = new QueryClient();
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <html lang="en" dir="rtl">
       <body
@@ -52,7 +47,7 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <AccessProvider>
-            {/* <PageCodeHandler /> */}
+              {/* <PageCodeHandler /> */}
               <Layout>{children}</Layout>
             </AccessProvider>
           </Provider>

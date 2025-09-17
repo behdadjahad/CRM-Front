@@ -119,7 +119,12 @@ function getData(packageUnitData: any) {
           label: pkg?.name,
           value: pkg?.id,
         })),
+   labelList: item?.packageUnitLabel?.map?.((label:any) => ({
+        name: label.name,
+        id: label.id,
+      })),
       },
+   
       pageList: item?.accessesJson?.pages?.map((page: any) => ({
         id: page.pageId,
         list: [

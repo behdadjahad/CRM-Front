@@ -88,8 +88,21 @@ export const adminSideBarMenuLinks: { category: string; links: NavLinkInterface[
         link: "/admin/invoices",
         icon: (
           <Image
-            src={"/icons/permission-icon.png"}
+            src={"/icons/package-order-icon.svg"}
             alt="دسترسی"
+            width={1024}
+            height={1024}
+             className="w-6 h-6"
+          />
+        ),
+      },
+      {
+        label: "لیبل",
+        link: "/admin/label",
+        icon: (
+          <Image
+            src={"/icons/label-icon.svg"}
+            alt="لیبل"
             width={1024}
             height={1024}
              className="w-8 h-8"

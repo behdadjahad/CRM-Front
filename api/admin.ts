@@ -450,3 +450,20 @@ export async function addPackageUnitToLabel(labelId: number, data: any) {
     return result;
   } catch {}
 }
+export async function removePackageUnitFromLabel(
+  labelId: number,
+  data: any
+) {
+  try {
+    const result = await fetchService(
+      `package-unit-label/remove-package-units/${labelId}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    return result;
+  } catch {}
+}
+

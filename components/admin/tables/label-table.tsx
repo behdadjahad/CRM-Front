@@ -22,6 +22,8 @@ import {
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
 import AddPackageUnitToLabel from "../package-unit/add-package-unit-to-label";
+import { NoData } from "../no-data";
+import PackageUnitTable from "./package-unit-table";
 export interface LabelTableInterface {
   labelList: LabelInterface[];
 }
@@ -137,15 +139,15 @@ export default function LabelTable({ labelList }: LabelTableInterface) {
                       <AddPackageUnitToLabel labelId={label?.id} />
                     </div>
 
-                    {/* {pkg.categoryList.length > 0 ? (
-                      <CategoryTable
-                        categoryList={pkg?.categoryList}
-                        isPackageSubTable={true}
-                        packageId={pkg?.id}
+                    {label?.packageUnitList?.length > 0 ? (
+                      <PackageUnitTable
+                        isLabelSubTable={true}
+                        labelId={label.id}
+                        packageUnitList={label.packageUnitList}
                       />
                     ) : (
                       <NoData />
-                    )} */}
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

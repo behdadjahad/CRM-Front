@@ -24,6 +24,7 @@ import {
   deletePackageUnit,
   editPackageUnit,
   removePackageUnitFromCategory,
+  removePackageUnitFromLabel,
 } from "@/api/admin";
 import {
   createFormFields,
@@ -40,14 +41,18 @@ import PermissionPageFeatureContainer from "../permission/permission-page-featur
 
 export interface PackageUnitTableInterface {
   packageUnitList: PackageUnitInterface[];
-  isCategorySubTable: boolean;
+  isCategorySubTable?: boolean;
+  isLabelSubTable?: boolean;
   categoryId?: number;
+  labelId?: number;
 }
 
 export default function PackageUnitTable({
   packageUnitList,
   isCategorySubTable,
   categoryId,
+  isLabelSubTable,
+  labelId,
 }: PackageUnitTableInterface) {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const queryClient = useQueryClient();
@@ -104,6 +109,19 @@ export default function PackageUnitTable({
       });
     },
   });
+  const { mutate: deleteUnitFromLabelHandler } = useMutation({
+    mutationFn: ({ labelId, data }: { labelId: number; data: any }) => {
+      return removePackageUnitFromLabel(labelId, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["packageUnitData"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["labelData"],
+      });
+    },
+  });
   const { mutate: deletePackageUnitHandler } = useMutation({
     mutationFn: (id: number) => {
       return deletePackageUnit(id);
@@ -118,6 +136,17 @@ export default function PackageUnitTable({
     if (isCategorySubTable && categoryId) {
       deleteUnitFromCategoryHandler({
         categoryId: categoryId,
+        data: {
+          packageUnits: [
+            {
+              packageUnitId: id,
+            },
+          ],
+        },
+      });
+    } else if (isLabelSubTable && labelId) {
+      deleteUnitFromLabelHandler({
+        labelId: labelId,
         data: {
           packageUnits: [
             {
@@ -145,6 +174,9 @@ export default function PackageUnitTable({
           ))}
           <TableHead className="text-center text-xs bg-card border font-bold">
             لیست دسته بندی ها
+          </TableHead>
+          <TableHead className="text-center text-xs bg-card border font-bold">
+            لیست لیبل ها
           </TableHead>
           <TableHead className="text-center text-xs bg-card border font-bold">
             عملیات
@@ -185,6 +217,27 @@ export default function PackageUnitTable({
                   />
                 ) : (
                   <p>به دسته بندی اختصاص داده نشده است</p>
+                )}
+              </TableCell>
+              <TableCell className="text-center text-xs border">
+                {unit?.data?.labelList?.length > 0 ? (
+                  <TagContainer
+                    list={unit?.data?.labelList}
+                    onDeleteHandler={(itemId) => {
+                      deleteUnitFromCategoryHandler({
+                        categoryId: itemId,
+                        data: {
+                          packageUnits: [
+                            {
+                              packageUnitId: unit.id,
+                            },
+                          ],
+                        },
+                      });
+                    }}
+                  />
+                ) : (
+                  <p>به لیبل اختصاص داده نشده است</p>
                 )}
               </TableCell>
               <TableCell className="text-center text-xs border">

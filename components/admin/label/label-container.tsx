@@ -5,10 +5,10 @@ import {
   createFormFields,
   formDataInterface,
 } from "@/constants/admin-creation-form-fields";
-import { addLabel, addPackage } from "@/api/admin";
+import { addLabel } from "@/api/admin";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-import { cleanFormatPrice } from "@/lib/utils";
+
 import { LabelInterface } from "@/app/(admin-layout)/admin/label/page";
 import CreationForm from "../forms/creation-form";
 import LabelTable from "../tables/label-table";

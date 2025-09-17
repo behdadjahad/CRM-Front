@@ -1,4 +1,4 @@
-import { addPackageUnitToLabel, getPackageCategory } from "@/api/admin";
+import { addPackageUnitToLabel, getPackageCategory, getPackageUnit } from "@/api/admin";
 import CustomModal from "@/components/shared/custom-modal";
 import FormMaker from "@/components/shared/form-maker";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ export default function AddPackageUnitToLabel({
   const queryClient = useQueryClient();
   const { data: packageUnitData } = useQuery({
     queryKey: ["packageUnitData"],
-    queryFn: async () => await getPackageCategory(),
+    queryFn: async () => await getPackageUnit(),
   });
   const { packageUnitList } = getData(packageUnitData);
   const [openModal, setOpenModal] = useState(false);
@@ -45,7 +45,7 @@ export default function AddPackageUnitToLabel({
   function addPackageUnitToLabelHandler(values: any) {
     const id = values.labelId;
     const ids = values.packageUnits;
-    const data = { ids: ids };
+    const data = { packageUnits: ids.map((id: any) => { return { packageUnitId: id } }) };
     addPackageUnitHandler({
       id: id,
       data: data,
