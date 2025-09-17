@@ -1,15 +1,27 @@
 "use client";
 
 import { fetchService } from "@/boot/fetch-service";
+import { limitForAdminInvoices } from "@/lib/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
 export interface InvoiceList {
   id: number;
 }
 export interface InvoiceState {
   items: InvoiceList[];
+  limit: number;
+  currentPage: number;
+  totalPages: number;
+  totalItems: number;
+  filters: any;
 }
 const initialState: InvoiceState = {
   items: [],
+  limit: limitForAdminInvoices,
+  currentPage: 1,
+  totalPages: 0,
+  totalItems: 0,
+  filters: {},
 };
 const adminInvoiceSlice = createSlice({
   name: "adminInvoice",
@@ -22,28 +34,29 @@ const adminInvoiceSlice = createSlice({
       console.log(data);
       state.items = data?.map((item: any) => ({
         id: item.id,
-        actions: [
+        list: [
           {
-            label: "مشاهده",
-            icon: "/icons/eye-icon.svg",
-          },
-          {
-            label: "دانلود",
-            icon: "/icons/download-icon.svg",
+            label: "شماره فاکتور",
+            value: item.invoiceNumber,
           },
         ],
       }));
+      const totalItems = action?.payload?.pagination?.total;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
+      state.totalPages = Math.ceil(totalItems / limit);
     });
   },
 });
 export const fetchInvoice = createAsyncThunk<any, any>(
   "adminInvoice/fetchInvoice",
 
-  async ({page,limit,filters }) => {
+  async ({ page, limit, filters }) => {
     try {
       const result = await fetchService(
-        'invoice'
-      ,true);
+        `invoice?page=${page}&limit=${limit}`,
+        true
+      );
       console.log(result);
       return result;
     } catch {

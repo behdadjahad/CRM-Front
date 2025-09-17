@@ -40,10 +40,7 @@ export const store = configureStore({
     access: accessReducer,
     login:loginReducer,
     invoice:invoiceReducer,
-    adminInvoice:adminInvoiceReducer,
-
-
-  },
+    adminInvoice:adminInvoiceReducer,},
 });
 
 // Infer the RootState and AppDispatch types from the store

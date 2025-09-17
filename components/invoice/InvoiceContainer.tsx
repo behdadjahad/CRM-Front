@@ -59,7 +59,9 @@ export default function InvoiceContainer({
 }: InvoiceContainerInterface) {
   const [activeTab, setActiveTab] = useState(defaultValue?.value);
   const dispatch = useDispatch<any>();
-  const chadcoCustomerId = useSelector((state: RootState) => state.login.chadcoCustomerId);
+  const chadcoCustomerId = useSelector(
+    (state: RootState) => state.login.chadcoCustomerId
+  );
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);

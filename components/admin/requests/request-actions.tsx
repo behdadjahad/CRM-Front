@@ -7,8 +7,8 @@ import { getStatusActions } from '@/lib/invoice-utils';
 
 interface RequestActionsProps {
     request: Request;
-    onStatusChange: (requestId: string, newStatus: RequestStatus) => void;
-    onViewDetails: (invoiceId: string) => void;
+    onStatusChange?: (requestId: string, newStatus: RequestStatus) => void;
+    onViewDetails?: (invoiceId: string) => void;
     loading?: boolean;
     className?: string;
 }
