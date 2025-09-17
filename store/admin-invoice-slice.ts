@@ -32,9 +32,13 @@ const adminInvoiceSlice = createSlice({
       console.log(action.payload);
       const data = action?.payload?.data;
       console.log(data);
-      state.items = data?.map((item: any) => ({
+      state.items = data?.map((item: any, index: number) => ({
         id: item.id,
         list: [
+          {
+            label: "ردیف",
+            value: index + 1,
+          },
           {
             label: "شماره فاکتور",
             value: item.invoiceNumber,

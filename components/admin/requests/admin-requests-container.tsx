@@ -35,7 +35,7 @@ export default function AdminRequestsContainer({
   const formik = useFormik({
     initialValues: {
       searchTerm: "",
-      status: "",
+      paymentStatus: "",
       amountFrom: "",
       amountTo: "",
       dateFrom: "",
@@ -44,31 +44,67 @@ export default function AdminRequestsContainer({
     onSubmit: async () => {},
   });
 
-  const filterItems = FILTER_ITEMS.map((item) => ({
-    ...item,
-    component: (
-      <FormMaker
-        form={formik}
-        fields={[item.component(formik)]}
-        className="flex flex-row w-full"
-      />
-    ),
-  }));
+  // const filterItems = FILTER_ITEMS.map((item) => ({
+  //   ...item,
+  //   component: (
+  //     <FormMaker
+  //       form={formik}
+  //       fields={[item.component(formik)]}
+  //       className="flex flex-row w-full"
+  //     />
+  //   ),
+  // }));
+  const filterItems = [
+    {
+      title: "وضعیت درخواست",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "paymentStatus",
+              component: "radio",
 
-  const rangeItems = RANGE_ITEMS.map((item) => ({
-    ...item,
-    component: (
-      <FormMaker
-        form={formik}
-        fields={item.component(formik)}
-        className="flex flex-row w-full"
-      />
-    ),
-  }));
+              type: "text",
+              className: "flex flex-col  items-start",
+              options: [
+                { label: "در انتظار تایید", value: "pending" },
+                { label: "در انتظار پرداخت", value: "waiting-for-payment" },
+                { label: "پرداخت نشده", value: "not-paid" },
+                { label: "پرداخت شده", value: "paid" },
+                { label: "رد شده", value: "rejected" },
+              ],
+            },
+          ]}
+          className="w-full"
+        />
+      ),
+    },
+  ];
+  // const rangeItems = RANGE_ITEMS.map((item) => ({
+  //   ...item,
+  //   component: (
+  //     <FormMaker
+  //       form={formik}
+  //       fields={item.component(formik)}
+  //       className="flex flex-row w-full"
+  //     />
+  //   ),
+  // }));
 
   const submitFilter = () => {
-    // Filter is already applied through useMemo
-    console.log("Filter applied:", formik.values);
+    const filterData = {
+      ...filters,
+      paymentStatus: formik.values.paymentStatus,
+    };
+    dispatch(
+      fetchInvoice({
+        page: 1,
+        limit: limit,
+        filters: filterData,
+      })
+    );
+
   };
 
   const cancelFilter = () => {
@@ -85,7 +121,7 @@ export default function AdminRequestsContainer({
   const currentPage = useSelector(
     (state: RootState) => state.adminInvoice.currentPage
   );
-  
+
   const total = useSelector(
     (state: RootState) => state.adminInvoice.totalItems
   );
@@ -115,7 +151,7 @@ export default function AdminRequestsContainer({
         <div className="flex flex-row items-center justify-between">
           <FilterContainer
             onFilterHandler={submitFilter}
-            rangeItems={rangeItems}
+            rangeItems={[]}
             filterItems={filterItems}
             sortList={SORT_OPTIONS}
             onCancleHandler={cancelFilter}

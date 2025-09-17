@@ -2,10 +2,8 @@
 import InvoiceContainer from "@/components/invoice/InvoiceContainer";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
-import { use } from "react";
 
 export default function Invoice() {
-  
   return (
     <main>
       <div>

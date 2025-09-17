@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { Request, RequestStatus } from "@/types/requests";
-import { mockRequests } from "@/data/requests-mock-data";
+
 import AdminRequestsContainer from "@/components/admin/requests/admin-requests-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
-import { useRouter } from "next/navigation";
-import { filterRequests, getStatusCounts } from "@/lib/invoice-utils";
-import { STATS_CARDS } from "@/constants/invoice-constants";
+
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { fetchInvoice } from "@/store/admin-invoice-slice";
@@ -77,8 +74,7 @@ export default function AdminInvoices() {
       </div> */}
 
       {/* Requests Container */}
-          <AdminRequestsContainer requestList={requestList} />
-          
+      <AdminRequestsContainer requestList={requestList} />
     </main>
   );
 }
