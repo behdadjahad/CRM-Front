@@ -1,21 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import AdminRequestsTable from "./admin-requests-table";
 import FilterContainer from "@/components/section/filter-container";
 import FormMaker from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import {
-  FILTER_ITEMS,
-  RANGE_ITEMS,
-  SORT_OPTIONS,
-} from "@/constants/invoice-constants";
+import { invoiceHeaderLabels } from "@/constants/invoice-constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { fetchInvoice } from "@/store/admin-invoice-slice";
+import { fetchAllInvoices, fetchInvoice } from "@/store/admin-invoice-slice";
 import ReactPaginate from "react-paginate";
 import { buildRowOptions } from "@/lib/utils";
+import ExportDataContainer from "@/components/shared/export-data-container";
 
 interface AdminRequestsContainerInterface {
   requestList: any[];
@@ -24,6 +21,7 @@ interface AdminRequestsContainerInterface {
 export default function AdminRequestsContainer({
   requestList,
 }: AdminRequestsContainerInterface) {
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch<any>();
   const limit = useSelector((state: RootState) => state.adminInvoice.limit);
   const limitFormik = useFormik({
@@ -104,7 +102,6 @@ export default function AdminRequestsContainer({
         filters: filterData,
       })
     );
-
   };
 
   const cancelFilter = () => {
@@ -145,6 +142,24 @@ export default function AdminRequestsContainer({
       })
     );
   }
+  const getDataHandler = async () => {
+    setIsLoading(true);
+
+    try {
+      return await dispatch(
+        fetchAllInvoices({
+          page: 1,
+          limit: total,
+          filters: filters,
+        })
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const allItems = useSelector((state: any) => state.adminInvoice.allItems);
+  const checkedItems = useSelector((state: any) => state.adminInvoice.checkedItems);
+  const dateTimeRange = useSelector((state: any) => state.adminInvoice.dateTimeRange);
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
@@ -153,18 +168,18 @@ export default function AdminRequestsContainer({
             onFilterHandler={submitFilter}
             rangeItems={[]}
             filterItems={filterItems}
-            sortList={SORT_OPTIONS}
+            sortList={[]}
             onCancleHandler={cancelFilter}
             onSortHandler={submitSort}
           />
-          {/* <ExportDataContainer
-            headerLabels={leadHeaderLabels}
+          <ExportDataContainer
+            headerLabels={invoiceHeaderLabels}
             list={allItems}
             onGetData={getDataHandler}
             loading={isLoading}
             checkedItems={checkedItems}
             dateTimeRange={dateTimeRange}
-          /> */}
+          />
           <></>
         </div>
         <div className="bg-card flex flex-col justify-between pb-6 rounded-md custom-shadow">
