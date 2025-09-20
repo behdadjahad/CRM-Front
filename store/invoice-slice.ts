@@ -1,6 +1,7 @@
 "use client";
 
 import { fetchService } from "@/boot/chadco-customer-service";
+import { getPaymentStatus } from "@/constants/invoice-constants";
 import { convertDate } from "@/lib/date";
 import {
   buildQueryString,
@@ -76,9 +77,9 @@ const invoiceSlice = createSlice({
         ],
         description: { label: "توضیحات سفارش", value: item?.requestMessage },
         status: {
-          label: "پرداخت شده",
-          className:
-            "bg-green-100 text-green-800 px-2 py-1 rounded-lg text-sm font-medium",
+          label: getPaymentStatus(item?.paymentStatus)?.label,
+          className:getPaymentStatus(item?.paymentStatus)?.className
+    
         },
       }));
       const totalItems = action?.payload?.pagination?.total;

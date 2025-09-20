@@ -197,6 +197,7 @@ export const getSortFieldFromLabel = (label: string): string | undefined => {
     "نوع درخواست": "leadType.title",
     "علاقه مندی": "temperature",
     وضعیت: "status",
+   "وضعیت سفارش": "paymentStatus",
   };
 
   return labelToFieldMap[label.trim()];

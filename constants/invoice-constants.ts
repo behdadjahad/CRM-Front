@@ -124,11 +124,7 @@ export type paymantStatus =
   | "CANCELED"
   | "PAYMENT_PENDING"
   | "PAID";
-export const paymantStatusOptions = [
-  {
-    label: "همه",
-    value: "",
-  },
+export const filterPaymantStatusOptions = [
   {
     label: "درانتظار تایید",
     value: "PENDING",
@@ -150,3 +146,46 @@ export const paymantStatusOptions = [
     value: "PAID",
   },
 ];
+export const paymantStatusOptions = [
+  {
+    label: "همه",
+    value: "",
+  },
+  {
+    label: "درانتظار تایید",
+    value: "PENDING",
+    className:
+      "bg-[#FEF0C7] text-[#DC6803] px-2 py-1 rounded-lg text-sm font-medium border border-[#DC6803]",
+  },
+  {
+    label: "رد شده",
+    value: "FAILED",
+  },
+  {
+    label: "پرداخت نشده",
+    value: "CANCELED",
+    className:
+      "bg-[#FEE4E2] text-[#D92D20] px-2 py-1 rounded-lg text-sm font-medium border border-[#D92D20]",
+  },
+  {
+    label: "درانتظار پرداخت",
+    value: "PAYMENT_PENDING",
+    className:
+      "bg-[#F9E2FE] text-[#B340E9] px-2 py-1 rounded-lg text-sm font-medium border border-[#B340E9]",
+  },
+  {
+    label: "پرداخت شده",
+    value: "PAID",
+    className:
+      "bg-[#D1FADF] text-[#039855] px-2 py-1 rounded-lg text-sm font-medium border border-[#039855]",
+  },
+];
+export function getPaymentStatus(value: paymantStatus) {
+  return (
+    paymantStatusOptions.find((option) => option.value === value) ?? {
+      label: "",
+      value,
+      className: "",
+    }
+  );
+}

@@ -63,7 +63,7 @@ export default function InvoiceCard({
           </div>
           <div className="flex flex-col gap-4 items-end">
             <div className={status?.className}>{status?.label}</div>
-            <div>
+            <div className="text-[#717680]">
               <span>{price?.currency}</span>
               <span>{price?.amount}</span>
             </div>

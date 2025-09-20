@@ -1,7 +1,9 @@
 "use client";
 
 import { fetchService } from "@/boot/chadco-customer-service";
-import { limitForAdminInvoices } from "@/lib/utils";
+import { getPaymentStatus } from "@/constants/invoice-constants";
+import { convertDate } from "@/lib/date";
+import { buildQueryString, dateType, formatPrice, limitForAdminInvoices } from "@/lib/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface InvoiceList {
@@ -45,6 +47,29 @@ const adminInvoiceSlice = createSlice({
             label: "شماره فاکتور",
             value: item.invoiceNumber,
           },
+          {
+            label: "تاریخ سفارش",
+
+            value: item?.issuedAt ? convertDate(item?.issuedAt, dateType) : "",
+          },
+          {
+            label: "مهلت پرداخت",
+
+            value: item?.dueAt ? convertDate(item?.dueAt, dateType) : "",
+          },
+          {
+            label: "تاریخ پرداخت",
+
+            value: item?.paidAt ? convertDate(item?.dueAt, dateType) : "",
+          },
+          {
+            label: "وضعیت سفارش",
+            value: getPaymentStatus(item?.paymentStatus)?.label,
+          },
+          {
+            label: "مبلغ سفارش",
+            value: item?.finalTotal ? formatPrice(item?.finalTotal) : "" + item?.currency?.name ?  item?.currency?.name : "",
+          },
         ],
       }));
       const totalItems = action?.payload?.pagination?.total;
@@ -65,8 +90,13 @@ export const fetchInvoice = createAsyncThunk<any, any>(
   "adminInvoice/fetchInvoice",
 
   async ({ page, limit, filters }) => {
+    const queryParams = buildQueryString({
+      ...filters, // spread your filters into the query params
+    });
     try {
-      const result = await fetchService(`invoice?page=${page}&limit=${limit}`);
+      const result = await fetchService(
+        `invoice?page=${page}&limit=${limit}&${queryParams}`
+      );
       console.log(result);
       return result;
     } catch {
@@ -78,8 +108,13 @@ export const fetchAllInvoices = createAsyncThunk<any, any>(
   "adminInvoice/fetchAllInvoices",
 
   async ({ page, limit, filters }) => {
+    const queryParams = buildQueryString({
+      ...filters, // spread your filters into the query params
+    });
     try {
-      const result = await fetchService(`invoice?page=${page}&limit=${limit}`);
+      const result = await fetchService(
+        `invoice?page=${page}&limit=${limit}&${queryParams}`
+      );
       console.log(result);
       return result;
     } catch {
