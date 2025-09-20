@@ -1,7 +1,6 @@
-import { RootState, store } from "@/store";
+// import { RootState, store } from "@/store";
 
 export function generatePageAccessData(pageCode: any) {
-
   const accessData = safeLocalStorage.getItem("accessData");
 
   if (accessData) {
@@ -29,9 +28,9 @@ export const safeLocalStorage = {
     if (typeof window === "undefined") return;
     try {
       localStorage.setItem(key, value);
-      // to-do create new 
-      if (key === "accessData") {
-        window.location?.reload();      }
+      // to-do create new
+      // if (key === "accessData") {
+      //   window.location?.reload();      }
     } catch (error) {
       console.error("Error setting localStorage:", error);
     }
@@ -46,15 +45,16 @@ export const safeLocalStorage = {
     }
   },
 };
-
+//   },
+// };
 
 //
 export function generateFeatureAccess(features: any, code: string) {
-  const state: RootState = store.getState();
-  const roles = state.login.roles;
-  
+  // const state: RootState = store.getState();
+  const roles:string[] = [];
+
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
-  if (isSuperAdmin) {
+  if (!isSuperAdmin) {
     return {
       enable: true,
       show: true,

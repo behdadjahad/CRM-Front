@@ -16,7 +16,11 @@ import leadReducer from "./lead-slice";
 import allUsersReducer from "./all-users-slice";
 import accessReducer from "./access-slice";
 import loginReducer from "./login-slice";
+import invoiceReducer from "./invoice-slice";
 import adminInvoiceReducer from "./admin-invoice-slice";
+
+
+
 export const store = configureStore({
   reducer: {
     user: userReducer,
@@ -35,13 +39,13 @@ export const store = configureStore({
     allUsers: allUsersReducer,
     access: accessReducer,
     login:loginReducer,
-    adminInvoice:adminInvoiceReducer
-  },
+    invoice:invoiceReducer,
+    adminInvoice:adminInvoiceReducer,},
 });
 
 // Infer the RootState and AppDispatch types from the store
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-// Custom hook to use dispatch with TypeScript
+// // Custom hook to use dispatch with TypeScript
 export const useAppDispatch: () => AppDispatch = useDispatch;

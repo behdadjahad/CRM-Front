@@ -1,75 +1,72 @@
-import { fetchService } from "@/boot/fetch-service";
+"use client";
+
+
+import { fetchService } from "@/boot/chadco-customer-service";
 import { limitForAdminInvoices } from "@/lib/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-export interface AdminInvoiceState {
-  items: any[];
+export interface InvoiceList {
+  id: number;
+}
+export interface InvoiceState {
+  items: InvoiceList[];
+  limit: number;
   currentPage: number;
   totalPages: number;
+  totalItems: number;
   filters: any;
-  limit: number;
-  allItems: any[];
-  total: number;
-  checkedItems: any[];
-  dateTimeRange: {
-    start: string;
-    end: string;
-  };
 }
-
-const initialState: AdminInvoiceState = {
+const initialState: InvoiceState = {
   items: [],
+  limit: limitForAdminInvoices,
   currentPage: 1,
   totalPages: 0,
+  totalItems: 0,
   filters: {},
-  limit: limitForAdminInvoices,
-  allItems: [],
-  total: 0,
-  checkedItems: [],
-  dateTimeRange: {
-    start: "",
-    end: "",
-  },
 };
 const adminInvoiceSlice = createSlice({
   name: "adminInvoice",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchInvoices.fulfilled, (state, action) => {
-      state.items = action?.payload?.data?.map((item: any, index: number) => ({
+    builder.addCase(fetchInvoice.fulfilled, (state, action) => {
+      console.log(action.payload);
+      const data = action?.payload?.data;
+      console.log(data);
+      state.items = data?.map((item: any, index: number) => ({
         id: item.id,
+        list: [
+          {
+            label: "ردیف",
+            value: index + 1,
+          },
+          {
+            label: "شماره فاکتور",
+            value: item.invoiceNumber,
+          },
+        ],
       }));
+      const totalItems = action?.payload?.pagination?.total;
+      const limit = action?.payload?.pagination?.limit;
+      state.limit = limit;
+      state.totalPages = Math.ceil(totalItems / limit);
     });
   },
 });
+export const fetchInvoice = createAsyncThunk<any, any>(
+  "adminInvoice/fetchInvoice",
 
-export const fetchInvoices = createAsyncThunk<any, any>(
-  "adminInvoice/fetchInvoices",
   async ({ page, limit, filters }) => {
     try {
-      const result = await fetchService(`?page=${page}&limit=${limit}`, {
-        method: "GET",
-      });
-
+      const result = await fetchService(
+        `invoice?page=${page}&limit=${limit}`,
+      );
+      console.log(result);
       return result;
     } catch {
       return {};
     }
   }
 );
-export const fetchAllInvoices = createAsyncThunk<any, any>(
-  "adminInvoice/fetchAllInvoices",
-  async ({ page, limit, filters }) => {
-    try {
-      const result = await fetchService(`page=${page}&limit=${limit}`, {
-        method: "GET",
-      });
 
-      return result;
-    } catch {
-      return {};
-    }
-  }
-);
 export default adminInvoiceSlice.reducer;

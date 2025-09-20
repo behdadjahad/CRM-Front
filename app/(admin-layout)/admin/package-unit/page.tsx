@@ -31,7 +31,7 @@ export interface PackageUnitInterface {
   }[];
   data: PackageUnitDataInterface;
   permissionList: PermissionInterface[];
-    pageList: {
+  pageList: {
     list: {
       label: string;
       value: string;
@@ -85,7 +85,10 @@ function getData(packageUnitData: any) {
         { label: "نام", value: item.name },
         {
           label: "قیمت",
-          value: formatPrice(item.price) + " " + item?.currency?.name,
+          value:
+            formatPrice(item.price) +
+            " " +
+            (item?.currency?.name ? item?.currency?.name : ""),
         },
         { label: "توضیحات", value: item?.description },
 
@@ -116,7 +119,12 @@ function getData(packageUnitData: any) {
           label: pkg?.name,
           value: pkg?.id,
         })),
+   labelList: item?.packageUnitLabel?.map?.((label:any) => ({
+        name: label.name,
+        id: label.id,
+      })),
       },
+   
       pageList: item?.accessesJson?.pages?.map((page: any) => ({
         id: page.pageId,
         list: [
@@ -137,7 +145,11 @@ function getData(packageUnitData: any) {
           list: [
             { label: "نام", value: feature.name },
             { label: "کد", value: feature.code },
-            // { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
+          
+            {
+              label: "الگو آدرس",
+              value: feature?.urlPattern?.join?.(", "),
+            },
             { label: "توضیحات", value: feature.description },
           ],
           data: {
@@ -190,7 +202,7 @@ function getData(packageUnitData: any) {
             list: [
               { label: "نام", value: feature.name },
               { label: "کد", value: feature.code },
-              { label: "الگو آدرس", value: feature?.urlPattern?.join(", ") },
+              { label: "الگو آدرس", value: feature?.urlPattern?.join?.(", ") },
               { label: "توضیحات", value: feature.description },
             ],
             data: {

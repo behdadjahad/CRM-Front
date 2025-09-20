@@ -1,8 +1,8 @@
+
 import { CustomToast } from "@/components/shared/custome-toast";
 import { config } from "@/config/config";
 import { safeLocalStorage } from "@/lib/generatePageData";
-import { store } from '@/store';
-
+// import { store } from "@/store";
 
 type MehtodType = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
 type HeaderType = Record<string, string | any>;
@@ -16,14 +16,12 @@ export interface FetchServiceType {
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = safeLocalStorage.getItem("token");
   const hashCode = safeLocalStorage.getItem("hash");
-  const state = store.getState();
-  const code = state.access.currentPageCode;
-  
-  
+  // const state = store.getState();
+  const code = undefined;
+
   // const code =localStorage.getItem("currentPageCode");
   // const code = "contract";
 
-  
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
@@ -93,6 +91,7 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
 
 export async function fetchService(
   url: string,
+
   {
     method = "GET",
     body = null,
@@ -112,7 +111,7 @@ export async function fetchService(
   }
   const executeFetch = async () => {
     const headers = makeHeaders(additionalHeaders);
-  
+
     const options: any = {
       method,
       headers,
@@ -127,7 +126,7 @@ export async function fetchService(
         options.body = JSON.stringify(body);
       }
     }
-
+ 
     return await fetch(`${config.ServerAddress}/${version}/${url}`, options);
   };
 
@@ -149,9 +148,8 @@ export async function fetchService(
   }
 
   const result = await response.json();
- 
-  if (result?.meta?.accessChanged) {
 
+  if (result?.meta?.accessChanged) {
     const accessData = await getAccess();
 
     if (accessData?.data) {
@@ -159,9 +157,10 @@ export async function fetchService(
         safeLocalStorage.setItem("hash", accessData.data.hash);
       }
       if (accessData.data.accessJson) {
-
-        safeLocalStorage.setItem("accessData", JSON.stringify(accessData?.data?.accessJson)
-);
+        safeLocalStorage.setItem(
+          "accessData",
+          JSON.stringify(accessData?.data?.accessJson)
+        );
       }
     }
   }

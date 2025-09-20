@@ -1,4 +1,4 @@
-import {  fetchService } from "@/boot/fetch-service";
+import { fetchService } from "@/boot/fetch-service";
 
 export async function addPackage(data: any) {
   try {
@@ -74,7 +74,6 @@ export async function getPackageCategory() {
 }
 
 export async function addCategorytoPackage(id: number, items: any) {
-
   try {
     const result = await fetchService(`package-category/add-to-package/${id}`, {
       method: "POST",
@@ -243,7 +242,7 @@ export async function getPage() {
     return result;
   } catch {}
 }
-export async function getSinglePageFeature(pageId:number) {
+export async function getSinglePageFeature(pageId: number) {
   try {
     const result = await fetchService(`page-feature/page/${pageId}?limit=50`);
 
@@ -346,22 +345,34 @@ export async function deletePermissionFromRole(roleId: number, data: any) {
     return result;
   } catch {}
 }
-export async function addPermissionToPackageUnit(packageUnitId: number, data: any) {
+export async function addPermissionToPackageUnit(
+  packageUnitId: number,
+  data: any
+) {
   try {
-    const result = await fetchService(`permission/add-to-unit/${packageUnitId}`, {
-      method: "POST",
-      body: data,
-    });
+    const result = await fetchService(
+      `permission/add-to-unit/${packageUnitId}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     return result;
   } catch {}
 }
-export async function deletePermissionFromPackageUnit(packageUnitId: number, data: any) {
+export async function deletePermissionFromPackageUnit(
+  packageUnitId: number,
+  data: any
+) {
   try {
-    const result = await fetchService(`permission/remove-from-unit/${packageUnitId}`, {
-      method: "POST",
-      body: data,
-    });
+    const result = await fetchService(
+      `permission/remove-from-unit/${packageUnitId}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     return result;
   } catch {}
@@ -392,3 +403,67 @@ export async function getPermission() {
     return result;
   } catch {}
 }
+export async function getLabel() {
+  try {
+    const result = await fetchService("package-unit-label");
+
+    return result;
+  } catch {}
+}
+export async function addLabel(data: any) {
+  try {
+    const result = await fetchService("package-unit-label", {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function editLabel(id: number, data: any) {
+  try {
+    const result = await fetchService(`package-unit-label/${id}`, {
+      method: "PUT",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function deleteLabel(id: number) {
+  try {
+    const result = await fetchService(`package-unit-label/${id}`, {
+      method: "DELETE",
+    });
+
+    return result;
+  } catch {}
+}
+
+export async function addPackageUnitToLabel(labelId: number, data: any) {
+  try {
+    const result = await fetchService(`package-unit-label/add-package-units/${labelId}`, {
+      method: "POST",
+      body: data,
+    });
+
+    return result;
+  } catch {}
+}
+export async function removePackageUnitFromLabel(
+  labelId: number,
+  data: any
+) {
+  try {
+    const result = await fetchService(
+      `package-unit-label/remove-package-units/${labelId}`,
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    return result;
+  } catch {}
+}
+
