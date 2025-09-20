@@ -49,9 +49,10 @@ export const safeLocalStorage = {
 // };
 
 //
-export function generateFeatureAccess(features: any, code: string) {
-  // const state: RootState = store.getState();
-  const roles:string[] = [];
+export function generateFeatureAccess(features: any, code: string, userRoles?: any[]) {
+  // Get roles from localStorage to avoid circular dependencies
+  const storedRoles = safeLocalStorage.getItem("userRoles");
+  const roles: any[] = userRoles || (storedRoles ? JSON.parse(storedRoles) : []);
 
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
   if (!isSuperAdmin) {

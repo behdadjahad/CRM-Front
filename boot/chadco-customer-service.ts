@@ -16,18 +16,18 @@ export interface FetchServiceType {
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = safeLocalStorage.getItem("token");
   const hashCode = safeLocalStorage.getItem("hash");
-  // const state = store.getState();
-  const code = undefined;
-
-  // const code =localStorage.getItem("currentPageCode");
-  // const code = "contract";
+  // Get page code from localStorage
+  const currentPageCode = safeLocalStorage.getItem("currentPageCode");
+  // Get user roles from localStorage
+  const userRoles = safeLocalStorage.getItem("userRoles");
 
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
-    ...(code ? { "x-page-code": code } : {}),
+    ...(currentPageCode ? { "x-page-code": currentPageCode } : {}),
     ...(hashCode ? { "x-access-hash": hashCode } : {}),
+    ...(userRoles ? { "x-user-roles": userRoles } : {}),
   };
 }
 
@@ -89,7 +89,7 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
 // }
 export async function fetchService(
   url: string,
- {
+  {
     method = "GET",
     body = null,
     additionalHeaders = {},

@@ -9,7 +9,7 @@ import PackageIcon from './package-icons';
 import { getColorValue } from './package-icons';
 import PurchaseFlowModal from './purchase-flow-modal';
 import { selectPackage } from '@/api/packages/package-api';
-import { useUserData } from '@/hooks/useUserData';
+
 
 // Helper function to get border color class
 const getBorderColorClass = (color: string): string => {
@@ -78,7 +78,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
     chadcoCustomerId,
     onPackageSelect
 }) => {
-    const { pageCode } = useUserData();
+
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
@@ -107,7 +107,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
                 packageId: data.id,
                 requestMessage: description,
                 chadcoCustomerId: chadcoCustomerId!,
-                pageCode: pageCode
+
             });
             if (result?.status === "success") {
 

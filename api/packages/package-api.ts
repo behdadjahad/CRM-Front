@@ -2,14 +2,14 @@ import { fetchService as fetchServiceChadcoCustomer } from "@/boot/chadco-custom
 import { fetchService as fetchServiceFetchService } from "@/boot/fetch-service";
 
 
-export async function getPackages( ){
+export async function getPackages() {
   try {
     const result = await fetchServiceFetchService(`package/package-list`, {
       method: "GET",
       additionalHeaders: {
         "Cache-Control": "no-cache"
       },
- 
+
     });
 
     return result;
@@ -24,7 +24,6 @@ export async function getPackageCategories() {
   try {
     const result = await fetchServiceFetchService(`packages/categories`, {
       method: "GET",
-    
     });
 
     return result;
@@ -37,7 +36,6 @@ export async function getPackageUnits() {
   try {
     const result = await fetchServiceFetchService(`packages/units`, {
       method: "GET",
-    
     });
 
     return result;
@@ -56,7 +54,7 @@ export async function selectPackage({
   packageId: number;
   requestMessage: string;
   chadcoCustomerId: number;
- 
+
 }) {
   try {
     console.log('🔍 API: Starting selectPackage call', {
@@ -72,7 +70,6 @@ export async function selectPackage({
         packageId,
         requestMessage,
       },
-   
     });
 
     console.log('✅ API: selectPackage succeeded:', result);
