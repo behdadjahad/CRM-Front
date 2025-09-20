@@ -3,10 +3,17 @@ import InvoiceCard from "./InvoiceCard";
 export interface InvoiceListInterface {
   data: {
     id: number;
-    title: string;
-    description: string;
+    title: {label: string; value: string};
+    invoiceNumber: {
+      label: string;
+      value: string;
+    };
+    description: {
+      label: string;
+      value: string;
+    };
     paymentDates: { label: string; value: string }[];
-    status: { label: string, className?: string };
+    status: { label: string; className?: string };
     price: { amount: string; currency: string };
     actions: { label: string; icon: string }[];
   }[];

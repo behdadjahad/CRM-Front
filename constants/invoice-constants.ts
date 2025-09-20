@@ -108,4 +108,45 @@
 //         className: 'bg-gray-100 text-gray-600'
 //     }
 // ] as const;
-export type paymantStatus = "PENDING" | "FAILED" | "CANCELED"| "PAYMENT_PENDING";
+export const invoiceHeaderLabels = [
+  "ردیف",
+  "شماره فاکتور",
+  "وضعیت",
+  "مبلغ",
+  "تاریخ سفارش",
+  "مهلت پرداخت",
+  "تاریخ پرداخت",
+  "توضیحات سفارش",
+];
+export type paymantStatus =
+  | "PENDING"
+  | "FAILED"
+  | "CANCELED"
+  | "PAYMENT_PENDING"
+  | "PAID";
+export const paymantStatusOptions = [
+  {
+    label: "همه",
+    value: "",
+  },
+  {
+    label: "درانتظار تایید",
+    value: "PENDING",
+  },
+  {
+    label: "رد شده",
+    value: "FAILED",
+  },
+  {
+    label: "پرداخت نشده",
+    value: "CANCELED",
+  },
+  {
+    label: "درانتظار پرداخت",
+    value: "PAYMENT_PENDING",
+  },
+  {
+    label: "پرداخت شده",
+    value: "PAID",
+  },
+];

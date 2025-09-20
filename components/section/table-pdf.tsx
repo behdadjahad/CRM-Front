@@ -125,7 +125,7 @@ export function TablePDF({
       <Text style={{ fontSize: 10, color: "#555" }}>
         تاریخ گزارش: {reportDate}
         </Text>
-        { (dateTimeRange.start && dateTimeRange.end )&& <Text style={{ fontSize: 10, color: "#555" }}>
+        { (dateTimeRange?.start && dateTimeRange?.end )&& <Text style={{ fontSize: 10, color: "#555" }}>
          از {convertDate(dateTimeRange.start,dateType)} تا {convertDate(dateTimeRange.end,dateType)}
       </Text>}
       
@@ -175,7 +175,7 @@ export function TablePDF({
                     style={{ ...styles.tableCol, width: colWidth }}
                   >
                     <Text style={styles.tableCell}>
-                      {item[header] !== undefined
+                      {(item[header] !== undefined &&  item[header] !== null)
                         ? item[header].toString()
                         : ""}
                     </Text>
