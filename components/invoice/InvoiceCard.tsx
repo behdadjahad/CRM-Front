@@ -2,6 +2,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import InvoicePreview from "./InvoicePreview";
+import InvoicePreviewModal from "./invoice-preview-modal";
 export interface InvoiceCardInterface {
   id: number;
   title: {
