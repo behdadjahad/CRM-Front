@@ -1,13 +1,15 @@
-import { fetchService } from "@/boot/fetch-service";
+import { fetchService as fetchServiceChadcoCustomer } from "@/boot/chadco-customer-service";
+import { fetchService as fetchServiceFetchService } from "@/boot/fetch-service";
 
 
-export async function getPackages() {
+export async function getPackages( ){
   try {
-    const result = await fetchService(`package/package-list`, {
+    const result = await fetchServiceFetchService(`package/package-list`, {
       method: "GET",
       additionalHeaders: {
         "Cache-Control": "no-cache"
       },
+ 
     });
 
     return result;
@@ -20,9 +22,9 @@ export async function getPackages() {
 
 export async function getPackageCategories() {
   try {
-    const result = await fetchService(`packages/categories`, {
+    const result = await fetchServiceFetchService(`packages/categories`, {
       method: "GET",
-
+    
     });
 
     return result;
@@ -33,9 +35,9 @@ export async function getPackageCategories() {
 
 export async function getPackageUnits() {
   try {
-    const result = await fetchService(`packages/units`, {
+    const result = await fetchServiceFetchService(`packages/units`, {
       method: "GET",
-
+    
     });
 
     return result;
@@ -46,24 +48,37 @@ export async function getPackageUnits() {
 
 
 export async function selectPackage({
-  packages,
-  categories,
-  units,
+  packageId,
+  requestMessage,
+  chadcoCustomerId,
+
 }: {
-  packages?: number[];
-  categories?: number[];
-  units?: { unitId: number }[];
-}, chadcoCustomerId: number) {
+  packageId: number;
+  requestMessage: string;
+  chadcoCustomerId: number;
+ 
+}) {
   try {
-    const result = await fetchService(`packages/select/${chadcoCustomerId}`, {
-      method: "POST",
-      body: {
-        packages,
-        categories,
-        units,
-      },
+    console.log('🔍 API: Starting selectPackage call', {
+      packageId,
+      requestMessage,
+      chadcoCustomerId,
+      endpoint: `packages/buy/${chadcoCustomerId}`
     });
 
+    const result = await fetchServiceChadcoCustomer(`packages/buy/${chadcoCustomerId}`, {
+      method: "POST",
+      body: {
+        packageId,
+        requestMessage,
+      },
+   
+    });
+
+    console.log('✅ API: selectPackage succeeded:', result);
     return result;
-  } catch { }
+  } catch (error) {
+    console.error('❌ Error selecting package:', error);
+    throw error;
+  }
 }

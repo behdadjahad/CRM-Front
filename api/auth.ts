@@ -108,11 +108,11 @@ export interface LoginOutput {
 }
 
 const loginStaticOutput: LoginOutput = {
-  status:"",
+  status: "",
   accessToken: "",
   data: {
     accessToken: "",
-    refreshToken:""
+    refreshToken: ""
   },
   success: false,
 };

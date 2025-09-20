@@ -14,20 +14,37 @@ interface PurchaseFlowModalProps {
     onComplete: (description: string) => void;
     packageName?: string;
     data: Package;
+    status: "error" | "success" | "loading" | "order-details";
 }
 
-type ModalStep = 'order-details' | 'success';
+type ModalStep = 'order-details' | 'loading' | 'success' | 'error';
 
 const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
     isOpen,
     onClose,
     data,
     onComplete,
-    packageName
+
+    status
 }) => {
     const [currentStep, setCurrentStep] = useState<ModalStep>('order-details');
     const [description, setDescription] = useState('');
     const [isMobile, setIsMobile] = useState(false);
+
+    // Update currentStep based on status prop
+    useEffect(() => {
+        console.log('🔄 Modal: Status changed to:', status);
+        if (status === 'loading') {
+            setCurrentStep('loading');
+        } else if (status === 'success') {
+            setCurrentStep('success');
+        } else if (status === 'error') {
+            setCurrentStep('error');
+        } else {
+            setCurrentStep('order-details');
+        }
+    }, [status]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Check if device is mobile
     useEffect(() => {
@@ -44,6 +61,17 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
         return () => window.removeEventListener('resize', checkIsMobile);
     }, []);
 
+
+    const handleOrderSubmit = async () => {
+
+        if (isSubmitting) return; // Prevent multiple calls
+
+        setIsSubmitting(true);
+        await onComplete(description);
+        setIsSubmitting(false);
+    }
+
+
     // Prevent body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
@@ -58,23 +86,57 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
     }, [isOpen]);
 
     const handleClose = () => {
-      
+
         console.log('Purchase Flow Modal data:', data);
         setDescription('');
         setCurrentStep('order-details');
         onClose();
     };
 
-    const handleOrderSubmit = () => {
-        onComplete(description);
-        setCurrentStep('success');
-    };
+
 
     const handleSuccessComplete = () => {
         setDescription('');
         setCurrentStep('order-details');
         onClose();
     };
+    const renderLoadingStep = () => (
+        <>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-gray-900">
+                    در حال ارسال درخواست...
+                </h2>
+            </div>
+            <div className="flex flex-col items-center text-center mb-6">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
+                <p className="text-gray-600">لطفا صبر کنید...</p>
+            </div>
+        </>
+    );
+    const renderErrorStep = () => (
+        <>
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold text-red-600">
+                    خطا در ارسال درخواست
+                </h2>
+            </div>
+            <div className="flex flex-col items-center text-center mb-6">
+                <X className="w-16 h-16 text-red-500 mb-4" />
+                <p className="text-gray-600">
+                    متاسفانه خطایی رخ داد. لطفا دوباره تلاش کنید.
+                </p>
+            </div>
+            <div className="flex gap-3 justify-center">
+                <Button onClick={() => setCurrentStep('order-details')}>
+                    تلاش مجدد
+                </Button>
+                <Button variant="outline" onClick={handleClose}>
+                    بستن
+                </Button>
+            </div>
+        </>
+    );
+
 
     const renderOrderDetailsStep = () => (
         <>
@@ -116,8 +178,9 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                     variant={"info"}
                     onClick={handleOrderSubmit}
                     className="px-6 py-2"
+                    disabled={isSubmitting}
                 >
-                    ارسال
+                    {isSubmitting ? 'در حال ارسال...' : 'ارسال'}
                 </Button>
             </div>
         </>
@@ -186,6 +249,8 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                                 }}
                             >
                                 {currentStep === 'order-details' && renderOrderDetailsStep()}
+                                {currentStep === 'loading' && renderLoadingStep()}
+                                {currentStep === 'error' && renderErrorStep()}
                                 {currentStep === 'success' && renderSuccessStep()}
                             </div>
                         </div>
@@ -209,7 +274,9 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                             className="fixed inset-0 bg-black/50"
                             onClick={handleClose}
                         />
-
+                        {currentStep === 'loading' && renderLoadingStep()}
+                        {currentStep === 'error' && renderErrorStep()}
+                        {currentStep === 'success' && renderSuccessStep()}
                         {/* Modal Content */}
                         <div
                             className="fixed left-1/2 top-1/2 w-full max-w-md bg-white rounded-lg p-6 shadow-lg"
@@ -222,6 +289,8 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                             }}
                         >
                             {currentStep === 'order-details' && renderOrderDetailsStep()}
+                            {currentStep === 'loading' && renderLoadingStep()}
+                            {currentStep === 'error' && renderErrorStep()}
                             {currentStep === 'success' && renderSuccessStep()}
                         </div>
                     </div>

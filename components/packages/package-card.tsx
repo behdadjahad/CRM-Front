@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Package, PackageCardProp, PackageItem } from '@/types/packages';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import PackageIcon from './package-icons';
 import { getColorValue } from './package-icons';
 import PurchaseFlowModal from './purchase-flow-modal';
 import { selectPackage } from '@/api/packages/package-api';
+import { useUserData } from '@/hooks/useUserData';
 
 // Helper function to get border color class
 const getBorderColorClass = (color: string): string => {
@@ -77,65 +78,74 @@ const PackageCard: React.FC<PackageCardProp> = ({
     chadcoCustomerId,
     onPackageSelect
 }) => {
+    const { pageCode } = useUserData();
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
+    const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
 
-    // const handleCardClick = () => {
-    //     onSelect(data.id);
-    // };
-
-    const handlePurchaseClick = async (e: React.MouseEvent) => {
+    const handlePurchaseClick = (e: React.MouseEvent) => {
         e.stopPropagation();
 
+        if (isPurchaseModalOpen) return; // Prevent multiple modals
         if (!chadcoCustomerId) {
-            console.error('Customer ID is required for package selection');
+            // Show toast error instead of console
             return;
         }
 
+        setStatus('order-details');
+        setIsPurchaseModalOpen(true);
+    };
+
+    const handlePurchaseComplete = async (description: string) => {
+
         setIsSelecting(true);
+        setStatus('loading');
+
 
         try {
-            // Extract package categories and units for the API call
-            const categories = data.packageCategories.map(cat => cat.id);
-            const units = data.packageCategories.flatMap(cat =>
-                cat.units.flatMap(unitLabel =>
-                    unitLabel.units.map(unit => ({ unitId: unit.id }))
-                )
-            );
-
             const result = await selectPackage({
-                packages: [data.id],
-                categories,
-                units
-            }, chadcoCustomerId);
+                packageId: data.id,
+                requestMessage: description,
+                chadcoCustomerId: chadcoCustomerId!,
+                pageCode: pageCode
+            });
+            if (result?.status === "success") {
 
-            console.log('Package selected successfully:', result);
+                setStatus('success');
+            }
+            else {
+                setStatus('error');
+            }
+
 
             // Call the callback if provided
             if (onPackageSelect) {
                 onPackageSelect(data.id, result);
             }
 
-            // Open purchase modal after successful selection
-            setIsPurchaseModalOpen(true);
-
         } catch (error) {
-            console.error('Error selecting package:', error);
-            // You can add toast notification here for error feedback
+            setStatus('error');
+
+            // Re-throw error so modal can handle it
+            throw error;
         } finally {
             setIsSelecting(false);
         }
     };
 
-    // const handlePurchaseComplete = (description: string) => {
-    //     // Here you can add logic to submit the order with description
-    //     console.log('Order submitted:', { packageId: data.id, description });
-    //     onPurchase(data.id); // Call the original onPurchase after success
-    // };
 
     const handleModalClose = () => {
         setIsPurchaseModalOpen(false);
+        setStatus('order-details');
     };
+
+    useEffect(() => {
+        return () => {
+
+            setIsPurchaseModalOpen(false);
+            setStatus('order-details');
+        };
+    }, []);
 
     return (
         <div
@@ -202,13 +212,15 @@ const PackageCard: React.FC<PackageCardProp> = ({
             </Button>
 
             {/* Purchase Flow Modal */}
-            {/* <PurchaseFlowModal
+
+            <PurchaseFlowModal
                 isOpen={isPurchaseModalOpen}
                 onClose={handleModalClose}
                 data={data}
-                // onComplete={handlePurchaseComplete}
+                status={status}
+                onComplete={handlePurchaseComplete} // This handles the API call
                 packageName={data.title}
-            /> */}
+            />
         </div>
     );
 };

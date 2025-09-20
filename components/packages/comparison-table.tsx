@@ -45,7 +45,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
         return Boolean(unit);
     };
 
-    // Enhanced feature cell renderer with existing logic
+    // Enhanced feature cell renderer with unitModel logic
     const renderFeatureCell = (featureId: number, packageId: number) => {
         const packageData = data.packages.find(p => p.id === packageId);
         if (!packageData) return null;
@@ -59,22 +59,13 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
         return (
             <div className="flex justify-center">
                 {isAvailable ? (
-                    <div className="flex flex-col items-center">
-                        {/* <Check className="w-4 h-4 text-green-500 mb-1" /> */}
-                        {unit?.countUnit && unit.countUnit > 0 && (
-                            <span className="text-gray-500 text-xs">
-                                تعداد: {unit.countUnit}
-                            </span>
-                        )}
-                        {unit?.enabledDurationInDays && (
-                            <span className="text-gray-500 text-xs">
-                                مدت: {unit.enabledDurationInDays} روز
-                            </span>
-                        )}
-                    </div>
+                    unit?.unitModel === "flat" ? (
+                        <span className="text-[#1C68DA] text-base">نامحدود</span>
+                    ) : (
+                        <Check className="w-4 h-4 text-green-500" />
+                    )
                 ) : (
-                    // to-do
-                    <span className="text-[#1C68DA] text-base">نامحدود</span>
+                    <span className="text-gray-400">-</span>
                 )}
             </div>
         );

@@ -21,7 +21,7 @@ const PackageComparisonContainer: React.FC<ComparisonData> = ({
   );
 
   // Get customer ID from Redux store
-  const chadcoCustomerId = useSelector((state: RootState) => state.login.chadcoCustomerId);
+  const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
 
   const handlePackageSelect = (packageId: number, result?: any) => {
     setSelectedPackageId(packageId.toString());
@@ -81,17 +81,7 @@ const PackageComparisonContainer: React.FC<ComparisonData> = ({
         </div>
       )}
 
-      {/* Package comparison info */}
-      {selectedPackageId && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="flex items-center space-x-2 space-x-reverse">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span className="text-blue-800 font-medium">
-              {/* پکیج انتخاب شده: {packages.find(p => p.id === selectedPackageId)?.title} */}
-            </span>
-          </div>
-        </div>
-      )}
+    
     </div>
   );
 };

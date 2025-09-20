@@ -126,7 +126,8 @@ export interface Package {
           }[];
         };
         unitType?: string | null;
-        unitModel?: string | null;
+        unitModel?: "perCount" | "perDuration"
+        | "flat"
         enabledDurationInDays?: number;
         showDurationInDays?: number;
         countUnit?: number;

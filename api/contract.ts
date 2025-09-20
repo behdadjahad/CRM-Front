@@ -5,7 +5,7 @@ export async function getContractTypes(): Promise<ServiceOutput> {
     const result: ServiceOutput = await fetchService("contract-type");
 
     return result;
-    
+
   } catch {
     return {
       success: false,
@@ -112,8 +112,8 @@ export interface ContractCreationInput {
   description: string;
   userSubmitterId: number;
   userResponsibleId: number;
-  destinationCityId:number;
-  destinationCountryId:number;
+  destinationCityId: number;
+  destinationCountryId: number;
 }
 
 export interface ContractCreationOutput {
@@ -141,13 +141,13 @@ export interface ContractCreationOutput {
   };
 }
 
-export async function getContracts({ data }: { data?: any}): Promise<ContractInformationOutput> {
+export async function getContracts({ data }: { data?: any }): Promise<ContractInformationOutput> {
   try {
     const result: ContractInformationOutput = await fetchService(
       "contract-chadco-customer/filter-contracts", {
-        method: "POST",
-        body:data ? data : {}
-      }
+      method: "POST",
+      body: data ? data : {}
+    }
     );
 
     return result;
@@ -172,7 +172,7 @@ export interface ContractInformationOutput {
   inProgressCount: number;
 }
 
-export async function getContractById(id: number): Promise<any > {
+export async function getContractById(id: number): Promise<any> {
 
   try {
     const result = await fetchService(
@@ -190,8 +190,8 @@ export interface ContractOutput {
   contractNo: string;
   avServices: any;
   state: string;
-  destinationCity: {id:number,name:string};
-  destinationCountry: {id:number,name:string};
+  destinationCity: { id: number, name: string };
+  destinationCountry: { id: number, name: string };
   userResponsible: {
     id: number;
     firstName: string;

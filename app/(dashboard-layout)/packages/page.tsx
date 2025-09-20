@@ -11,12 +11,14 @@ import { fetchCurrencies } from "@/store/currency-slice";
 import { useQuery } from "@tanstack/react-query";
 import { getPackages, getPackageUnits } from "@/api/packages/package-api";
 import { buildComparisonData } from "@/hooks/usePackageComparison";
+import { useUserData } from "@/hooks/useUserData";
 
 export default function PackagesPage() {
+  const { pageCode } = useUserData();
 
   const { data: packageData } = useQuery({
-    queryKey: ["packageData"],
-    queryFn: () => getPackages(),
+    queryKey: ["packageData", pageCode],
+    queryFn: () => getPackages(pageCode),
   });
 
   console?.log(packageData, "--------------------------------")
@@ -64,10 +66,10 @@ export default function PackagesPage() {
         <PackageComparisonContainer
           packages={comparisonData.packages}
           categories={comparisonData.categories}
-          // onPackageSelect={handlePackageSelect}
-          // onPackagePurchase={handlePackagePurchase}
+        // onPackageSelect={handlePackageSelect}
+        // onPackagePurchase={handlePackagePurchase}
         />
-      </section> 
+      </section>
 
       {/* Feature Comparison Table */}
       <section className="bg-white p-8">
