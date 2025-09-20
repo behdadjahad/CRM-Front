@@ -1,6 +1,7 @@
 "use client";
 
-import { fetchService } from "@/boot/fetch-service";
+
+import { fetchService } from "@/boot/chadco-customer-service";
 import { limitForAdminInvoices } from "@/lib/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -59,7 +60,6 @@ export const fetchInvoice = createAsyncThunk<any, any>(
     try {
       const result = await fetchService(
         `invoice?page=${page}&limit=${limit}`,
-        true
       );
       console.log(result);
       return result;

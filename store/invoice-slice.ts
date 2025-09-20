@@ -1,6 +1,6 @@
 "use client";
 
-import { fetchService } from "@/boot/fetch-service";
+import { fetchService } from "@/boot/chadco-customer-service";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export interface InvoiceList {
   id: number;
@@ -42,8 +42,7 @@ export const fetchInvoice = createAsyncThunk<any, any>(
   async ({ chadcoCustomerId }) => {
     try {
       const result = await fetchService(
-        `invoice/chadco-customer/${chadcoCustomerId}`
-      ,true);
+        `invoice/chadco-customer/${chadcoCustomerId}`);
       console.log(result);
       return result;
     } catch {

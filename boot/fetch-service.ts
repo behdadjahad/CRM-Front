@@ -89,7 +89,7 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
 // }
 export async function fetchService(
   url: string,
-  subServer = false,
+
   {
     method = "GET",
     body = null,
@@ -124,8 +124,7 @@ export async function fetchService(
         options.body = JSON.stringify(body);
       }
     }
-    if (subServer) return await fetch(`${config.subServerAddress}/${version}/${url}`, options);
-    else
+ 
     return await fetch(`${config.ServerAddress}/${version}/${url}`, options);
   };
 

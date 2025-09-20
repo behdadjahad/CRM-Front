@@ -108,4 +108,4 @@
 //         className: 'bg-gray-100 text-gray-600'
 //     }
 // ] as const;
-export type paymantStatus = "pending" | "pending request" | "failed" | "success";
+export type paymantStatus = "PENDING" | "FAILED" | "CANCELED"| "PAYMENT_PENDING";
