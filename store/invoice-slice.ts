@@ -12,6 +12,19 @@ import {
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 export interface InvoiceList {
   id: number;
+  title: { label: string; value: string };
+  invoiceNumber: {
+    label: string;
+    value: string;
+  };
+  description: {
+    label: string;
+    value: string;
+  };
+  paymentDates: { label: string; value: string }[];
+  status: { label: string; className?: string };
+  price: { amount: string; currency: string };
+  actions: { label: string; icon: string }[];
 }
 export interface InvoiceState {
   items: InvoiceList[];
@@ -78,8 +91,7 @@ const invoiceSlice = createSlice({
         description: { label: "توضیحات سفارش", value: item?.requestMessage },
         status: {
           label: getPaymentStatus(item?.paymentStatus)?.label,
-          className:getPaymentStatus(item?.paymentStatus)?.className
-    
+          className: getPaymentStatus(item?.paymentStatus)?.className,
         },
       }));
       const totalItems = action?.payload?.pagination?.total;
