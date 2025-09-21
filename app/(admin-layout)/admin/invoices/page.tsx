@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, {  useEffect } from "react";
 
 import AdminRequestsContainer from "@/components/admin/requests/admin-requests-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
@@ -12,6 +12,11 @@ import { fetchInvoice } from "@/store/admin-invoice-slice";
 export interface requestInterface {
   id: number;
   list: { label: string; value: string }[];
+  data: RequestDataInterface;
+}
+export interface RequestDataInterface {
+  id: number;
+  price: string;
 }
 export default function AdminInvoices() {
   const dispatch = useDispatch<any>();

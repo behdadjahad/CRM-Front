@@ -3,16 +3,28 @@ import { fetchService as fetchServiceChadcoCustomer } from "@/boot/chadco-custom
 //invoices for chadco customer
 export async function getUserInvoices(chadcoCustomerId: number) {
   try {
-    const result = await fetchService(`invoice/chadco-customer/${chadcoCustomerId}`);
+    const result = await fetchService(`invoice/${invoiceId}/accept`, {
+      method: "PATCH",
+    });
 
     return result;
   } catch { }
 }
-
-//invoices for admin
-export async function getAllInvoices() {
+export async function rejectInvoice(invoiceId: number) {
   try {
-    const result = await fetchService('invoice');
+    const result = await fetchService(`invoice/${invoiceId}/reject`, {
+      method: "PATCH",
+    });
+
+    return result;
+  } catch {}
+}
+export async function discountInvoice(invoiceId: number,data:any) {
+  try {
+    const result = await fetchService(`invoice/${invoiceId}/discount`, {
+      method: "PATCH",
+      body:data
+    });
 
     return result;
   } catch { }

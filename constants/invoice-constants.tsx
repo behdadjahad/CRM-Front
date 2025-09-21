@@ -157,12 +157,11 @@ export const paymantStatusOptions = [
     className:
       "bg-[#FEF0C7] text-[#DC6803] px-2 py-1 rounded-lg text-sm font-medium border border-[#DC6803]",
   },
-  {
-    label: "رد شده",
-    value: "FAILED",
+  { label: "پرداخت نشده",
+   value: "FAILED",
   },
   {
-    label: "پرداخت نشده",
+    label: "رد شده",
     value: "CANCELED",
     className:
       "bg-[#FEE4E2] text-[#D92D20] px-2 py-1 rounded-lg text-sm font-medium border border-[#D92D20]",

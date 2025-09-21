@@ -70,7 +70,12 @@ const adminInvoiceSlice = createSlice({
             label: "مبلغ سفارش",
             value: item?.finalTotal ? formatPrice(item?.finalTotal) : "" + item?.currency?.name ?  item?.currency?.name : "",
           },
+          { label: "توضیحات سفارش", value: item?.requestMessage },
         ],
+        data: {
+          id: item?.id,
+          price:item?.finalTotal
+        }
       }));
       const totalItems = action?.payload?.pagination?.total;
       const limit = action?.payload?.pagination?.limit;
