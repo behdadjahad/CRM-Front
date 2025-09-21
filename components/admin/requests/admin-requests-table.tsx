@@ -107,17 +107,23 @@ export default function AdminRequestsTable({
     requestId: number,
     discount?: number
   ) {
+    console.log(actionType, requestId, discount);
     switch (actionType) {
       case "Accept":
+        console.log("accept");
         acceptInvoiceHandler(requestId);
+        break;
       case "Reject":
+        console.log("reject");
         rejectInvoiceHandler(requestId);
+        break;
       case "Discount":
         if (discount)
           discountInvoiceHandler({
             invoiceId: requestId,
             data: { discountPercent: Number(discount) },
           });
+        break;
       default:
         return;
     }
