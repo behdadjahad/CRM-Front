@@ -4,13 +4,13 @@ import { formatPrice } from "@/lib/utils";
 import { useFormik } from "formik";
 
 export interface DiscountActionContentInterface {
-    price: string;
-    onSubmit: (discount: number) => void;
+  price: string;
+  onSubmit: (discount: number) => void;
 }
 
 export default function DiscountActionContent({
-    price,
-    onSubmit
+  price,
+  onSubmit,
 }: DiscountActionContentInterface) {
   const formik = useFormik({
     initialValues: { discount: 0 },
@@ -27,20 +27,25 @@ export default function DiscountActionContent({
             component: "input",
             placeholder: "قیمت فعلی",
             type: "text",
+            floating: true,
+            labelClassName: "w-full",
             className: "w-full md:w-1/2",
-            defaultValue: formatPrice(price),
+            defaultValue: formatPrice(Number(price))
           },
+
           {
             key: "discount",
             component: "input",
             placeholder: "درصد تخفیف",
             type: "number",
+            floating: true,
+            labelClassName: "w-full",
             className: "w-full md:w-1/2",
           },
         ]}
         className="flex flex-row w-full"
       />
-
+       
       <div className="flex items-center gap-2">
         {" "}
         <Button

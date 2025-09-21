@@ -57,7 +57,7 @@ const invoiceSlice = createSlice({
       console.log(data);
       state.items = data?.map((item: any) => ({
         id: item.id,
-        title: { label: "عنوان سفارش", value: "پکیج طلایی" },
+        title: { label: "عنوان سفارش", value: "" },
         invoiceNumber: { label: "شماره فاکتور", value: item.invoiceNumber },
         paymentDates: [
           {

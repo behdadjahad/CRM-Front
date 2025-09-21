@@ -89,8 +89,8 @@ export default function AdminRequestsTable({
     },
   });
   const { mutate: discountInvoiceHandler } = useMutation({
-    mutationFn: ({ invoiceId,data}:{ invoiceId: number, data: any }) => {
-      return discountInvoice(invoiceId,data);
+    mutationFn: ({ invoiceId, data }: { invoiceId: number; data: any }) => {
+      return discountInvoice(invoiceId, data);
     },
     onSuccess: () => {
       // dispatch(
@@ -102,14 +102,22 @@ export default function AdminRequestsTable({
       // );
     },
   });
-  function actionHandler(actionType: ActionType, requestId: number,discount?:number) {
+  function actionHandler(
+    actionType: ActionType,
+    requestId: number,
+    discount?: number
+  ) {
     switch (actionType) {
       case "Accept":
         acceptInvoiceHandler(requestId);
       case "Reject":
         rejectInvoiceHandler(requestId);
       case "Discount":
-        if (discount) discountInvoiceHandler({ invoiceId: requestId, data:{ discountPercent: Number(discount) } });
+        if (discount)
+          discountInvoiceHandler({
+            invoiceId: requestId,
+            data: { discountPercent: Number(discount) },
+          });
       default:
         return;
     }
@@ -157,16 +165,19 @@ export default function AdminRequestsTable({
                 </TableCell>
               ))}
               <TableCell className="text-center text-xs border">
-                <>
+                <div className="flex justify-center items-center">
                   {" "}
                   <ActionDropDown
                     list={adminInvoiceActionList}
-                    onActionHandler={(actionType: ActionType,discount?:number) => {
-                      actionHandler(actionType, request.id,discount);
+                    onActionHandler={(
+                      actionType: ActionType,
+                      discount?: number
+                    ) => {
+                      actionHandler(actionType, request.id, discount);
                     }}
                     requestData={request.data}
                   />
-                </>
+                </div>{" "}
               </TableCell>
             </TableRow>
           </Fragment>
