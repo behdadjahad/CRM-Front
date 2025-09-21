@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 
 import {
   Table,
@@ -11,6 +11,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { requestInterface } from "@/app/(admin-layout)/admin/invoices/page";
+import { Button } from "@/components/ui/button";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { fetchInvoice } from "@/store/admin-invoice-slice";
+import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getSortFieldFromLabel } from "@/lib/utils";
 
 interface AdminRequestsTableInterface {
   requestList: requestInterface[];
@@ -21,6 +27,36 @@ interface AdminRequestsTableInterface {
 export default function AdminRequestsTable({
   requestList,
 }: AdminRequestsTableInterface) {
+  const dispatch = useDispatch<any>();
+  type SortType = "asc" | "desc";
+  const [sortStates, setSortStates] = useState<Record<string, SortType>>({});
+  const limit = useSelector((state: RootState) => state.adminInvoice.limit);
+  const currentPage = useSelector(
+    (state: RootState) => state.adminInvoice.currentPage
+  );
+  const filters = useSelector((state: RootState) => state.adminInvoice.filters);
+  const toggleSort = (label: string) => {
+    setSortStates((prev) => {
+      const newSort = prev[label] === "desc" ? "asc" : "desc";
+
+      dispatch(
+        fetchInvoice({
+          page: currentPage,
+          limit: limit,
+          filters: {
+            ...filters,
+            sortBy: getSortFieldFromLabel(label),
+            order: newSort,
+          },
+        })
+      );
+
+      return {
+        ...prev,
+        [label]: newSort,
+      };
+    });
+  };
   return (
     <Table>
       <TableHeader>
@@ -30,7 +66,20 @@ export default function AdminRequestsTable({
               key={idx}
               className="text-center text-xs bg-card border font-bold"
             >
-              {col.label}
+              <div className="flex items-center gap-2 w-full justify-center">
+                <span>{col.label}</span>
+
+                <Button
+                  variant={"transparent"}
+                  onClick={() => toggleSort(col.label)}
+                >
+                  {sortStates[col.label] === "desc" ? (
+                    <FaChevronDown />
+                  ) : (
+                    <FaChevronUp />
+                  )}
+                </Button>
+              </div>
             </TableHead>
           ))}
           <TableHead className="text-center text-xs bg-card border font-bold">

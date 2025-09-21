@@ -6,13 +6,17 @@ import AdminRequestsTable from "./admin-requests-table";
 import FilterContainer from "@/components/section/filter-container";
 import FormMaker from "@/components/shared/form-maker";
 import { useFormik } from "formik";
-import { invoiceHeaderLabels } from "@/constants/invoice-constants";
+import {
+  filterPaymantStatusOptions,
+  invoiceHeaderLabels,
+} from "@/constants/invoice-constants";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { fetchAllInvoices, fetchInvoice } from "@/store/admin-invoice-slice";
 import ReactPaginate from "react-paginate";
 import { buildRowOptions } from "@/lib/utils";
 import ExportDataContainer from "@/components/shared/export-data-container";
+import { convertToGregorian } from "@/lib/date";
 
 interface AdminRequestsContainerInterface {
   requestList: any[];
@@ -38,6 +42,8 @@ export default function AdminRequestsContainer({
       amountTo: "",
       dateFrom: "",
       dateTo: "",
+      dateFromType: "",
+      dateToType: "",
     },
     onSubmit: async () => {},
   });
@@ -65,13 +71,7 @@ export default function AdminRequestsContainer({
 
               type: "text",
               className: "flex flex-col  items-start",
-              options: [
-                { label: "در انتظار تایید", value: "pending" },
-                { label: "در انتظار پرداخت", value: "waiting-for-payment" },
-                { label: "پرداخت نشده", value: "not-paid" },
-                { label: "پرداخت شده", value: "paid" },
-                { label: "رد شده", value: "rejected" },
-              ],
+              options: filterPaymantStatusOptions,
             },
           ]}
           className="w-full"
@@ -79,21 +79,44 @@ export default function AdminRequestsContainer({
       ),
     },
   ];
-  // const rangeItems = RANGE_ITEMS.map((item) => ({
-  //   ...item,
-  //   component: (
-  //     <FormMaker
-  //       form={formik}
-  //       fields={item.component(formik)}
-  //       className="flex flex-row w-full"
-  //     />
-  //   ),
-  // }));
+  const rangeItems = [
+    {
+      title: "محدوده تاریخ سفارش",
+      component: (
+        <FormMaker
+          form={formik}
+          fields={[
+            {
+              key: "dateFrom",
+              dependantKey: "dateFromtype",
+              component: "date",
+              placeholder: "از تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full px-0",
+            },
+            {
+              key: "dateTo",
+              dependantKey: "dateToType",
+              component: "date",
+              placeholder: "تا تاریخ",
+              type: "text",
+              floating: true,
+              className: "w-full items-start p-0",
+            },
+          ]}
+          className="flex flex-row w-full"
+        />
+      ),
+    },
+  ];
 
   const submitFilter = () => {
     const filterData = {
       ...filters,
       paymentStatus: formik.values.paymentStatus,
+      dateTo: convertToGregorian(formik.values.dateTo, formik.values.dateToType),
+      dateFrom: convertToGregorian(formik.values.dateFrom,formik.values.dateToType)
     };
     dispatch(
       fetchInvoice({
@@ -106,6 +129,13 @@ export default function AdminRequestsContainer({
 
   const cancelFilter = () => {
     formik.resetForm();
+    dispatch(
+      fetchInvoice({
+        page: 1,
+        limit: limit,
+        filters: {},
+      })
+    );
   };
 
   const submitSort = (itemValue: string, type?: string) => {
@@ -158,15 +188,19 @@ export default function AdminRequestsContainer({
     }
   };
   const allItems = useSelector((state: any) => state.adminInvoice.allItems);
-  const checkedItems = useSelector((state: any) => state.adminInvoice.checkedItems);
-  const dateTimeRange = useSelector((state: any) => state.adminInvoice.dateTimeRange);
+  const checkedItems = useSelector(
+    (state: any) => state.adminInvoice.checkedItems
+  );
+  const dateTimeRange = useSelector(
+    (state: any) => state.adminInvoice.dateTimeRange
+  );
   return (
     <div className="bg-card rounded-lg p-6">
       <div className="gap-4 flex flex-col">
         <div className="flex flex-row items-center justify-between">
           <FilterContainer
             onFilterHandler={submitFilter}
-            rangeItems={[]}
+            rangeItems={rangeItems}
             filterItems={filterItems}
             sortList={[]}
             onCancleHandler={cancelFilter}
