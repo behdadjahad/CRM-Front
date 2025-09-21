@@ -17,12 +17,15 @@ import { fetchInvoice } from "@/store/admin-invoice-slice";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getSortFieldFromLabel } from "@/lib/utils";
+import ActionDropDown from "@/components/shared/ActionDropDown";
+import { useMutation } from "@tanstack/react-query";
+import { acceptInvoice, discountInvoice, rejectInvoice } from "@/api/invoices";
+import { adminInvoiceActionList } from "@/constants/admin-invoice-actions";
 
 interface AdminRequestsTableInterface {
   requestList: requestInterface[];
 }
-
-// Transform requests to follow existing admin table pattern
+export type ActionType = "Accept" | "Reject" | "Discount";
 
 export default function AdminRequestsTable({
   requestList,
@@ -57,6 +60,60 @@ export default function AdminRequestsTable({
       };
     });
   };
+  const { mutate: acceptInvoiceHandler } = useMutation({
+    mutationFn: (invoiceId: number) => {
+      return acceptInvoice(invoiceId);
+    },
+    onSuccess: () => {
+      // dispatch(
+      //   fetchDrawerNotifications({
+      //     page: 1,
+      //     limit: limitForDrawerNotifications,
+      //     filters: filters,
+      //   })
+      // );
+    },
+  });
+  const { mutate: rejectInvoiceHandler } = useMutation({
+    mutationFn: (invoiceId: number) => {
+      return rejectInvoice(invoiceId);
+    },
+    onSuccess: () => {
+      // dispatch(
+      //   fetchDrawerNotifications({
+      //     page: 1,
+      //     limit: limitForDrawerNotifications,
+      //     filters: filters,
+      //   })
+      // );
+    },
+  });
+  const { mutate: discountInvoiceHandler } = useMutation({
+    mutationFn: ({ invoiceId,discount}:{ invoiceId: number, discount: number }) => {
+      return discountInvoice(invoiceId,discount);
+    },
+    onSuccess: () => {
+      // dispatch(
+      //   fetchDrawerNotifications({
+      //     page: 1,
+      //     limit: limitForDrawerNotifications,
+      //     filters: filters,
+      //   })
+      // );
+    },
+  });
+  function actionHandler(actionType: ActionType, requestId: number,discount?:number) {
+    switch (actionType) {
+      case "Accept":
+        acceptInvoiceHandler(requestId);
+      case "Reject":
+        rejectInvoiceHandler(requestId);
+      case "Discount":
+        if( discount)discountInvoiceHandler({ invoiceId:requestId, discount:discount });
+      default:
+        return;
+    }
+  }
   return (
     <Table>
       <TableHeader>
@@ -100,11 +157,16 @@ export default function AdminRequestsTable({
                 </TableCell>
               ))}
               <TableCell className="text-center text-xs border">
-                {/* <RequestActions
-                                    request={request.data}
-                                    onStatusChange={onStatusChange}
-                                    onViewDetails={onViewDetails}
-                                /> */}
+                <>
+                  {" "}
+                  <ActionDropDown
+                    list={adminInvoiceActionList}
+                    onActionHandler={(actionType: ActionType,discount?:number) => {
+                      actionHandler(actionType, request.id,discount);
+                    }}
+                    requestData={request.data}
+                  />
+                </>
               </TableCell>
             </TableRow>
           </Fragment>
