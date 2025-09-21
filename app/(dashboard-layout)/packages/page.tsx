@@ -10,22 +10,25 @@ import ComparisonTable from "@/components/packages/comparison-table";
 import { useQuery } from "@tanstack/react-query";
 import { getPackages,  } from "@/api/packages/package-api";
 import { buildComparisonData } from "@/hooks/usePackageComparison";
+import { ApiResponse } from "@/types/billing";
+import { Package } from "@/types/packages";
 
 export default function PackagesPage() {
 
-  const { data: packageData } = useQuery({
+  const { data: packageData, isLoading, error } = useQuery<ApiResponse<Package[]>>({
     queryKey: ["packageData"],
     queryFn: () => getPackages(),
   });
 
-  
+  console.log("packageData", error);
 
   
 
   if (!packageData) return <p>No data</p>;
 
 
-  const comparisonData = buildComparisonData(packageData?.data);
+  const comparisonData = buildComparisonData(packageData?.data || []);
+  console.log("comparisonData", comparisonData);
   return (
     <main className="space-y-8">
       {/* Page Header */}

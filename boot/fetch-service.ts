@@ -21,13 +21,29 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
   // Get user roles from localStorage
   const userRoles = safeLocalStorage.getItem("userRoles");
 
+  // Helper function to safely encode header values
+  const safeEncode = (value: string | null | undefined): string => {
+    if (!value) return "";
+    // Check if the string contains non-ASCII characters
+    if (/[^\x00-\x7F]/.test(value)) {
+      // If it contains non-ASCII characters, encode it as base64
+      try {
+        return btoa(unescape(encodeURIComponent(value)));
+      } catch (error) {
+        console.warn("Failed to encode header value:", value);
+        return "";
+      }
+    }
+    return value;
+  };
+
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
-    ...(currentPageCode ? { "x-page-code": currentPageCode } : {}),
-    ...(hashCode ? { "x-access-hash": hashCode } : {}),
-    ...(userRoles ? { "x-user-roles": userRoles } : {}),
+    ...(currentPageCode ? { "x-page-code": safeEncode(currentPageCode) } : {}),
+    ...(hashCode ? { "x-access-hash": safeEncode(hashCode) } : {}),
+    ...(userRoles ? { "x-user-roles": safeEncode(userRoles) } : {}),
   };
 }
 
