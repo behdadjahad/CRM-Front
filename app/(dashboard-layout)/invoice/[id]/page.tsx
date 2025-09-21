@@ -7,7 +7,9 @@ import { BillingPageData, FeatureCategory } from "@/types/billing";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 
-export default function TestPage() {
+
+export default function InvoiceDetailPage() {
+
     const [billingData, setBillingData] = useState<BillingPageData>(mockBillingData);
 
     const handleDurationChange = (durationId: string) => {

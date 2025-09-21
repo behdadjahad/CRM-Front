@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { FeaturesListCardProps } from "@/types/billing";
+import { ApiResponse, FeaturesListCardProps } from "@/types/billing";
 import { ChevronDownIcon, ChevronUpIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getPackagesByInvoice } from "@/api/packages/package-api";
+import { Package } from "@/types/packages";
 
 const scrollbarStyles = `
   .custom-scrollbar::-webkit-scrollbar {
@@ -44,6 +48,18 @@ export default function FeaturesListCard({
     onLoadMore,
     onCloseAll,
 }: FeaturesListCardProps) {
+
+    const { id } = useParams();
+    console.log("id", id);
+
+    // Fetch packages by invoice ID with proper generic typing
+    const { data: packagesResponse, isLoading, error } = useQuery<ApiResponse<Package[]>>({
+        queryKey: ["packages-by-invoice", id],
+        queryFn: () => getPackagesByInvoice(Number(id)),
+        enabled: !!id,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+        gcTime: 10 * 60 * 1000, // 10 minutes
+    });
     // Local state for individual feature expansion (showing description box)
     const [expandedFeatures, setExpandedFeatures] = useState<Set<string>>(new Set());
 
@@ -54,7 +70,7 @@ export default function FeaturesListCard({
     const hasExpandedCategories = expandedCategories.size > 0;
     const hasExpandedFeatures = expandedFeatures.size > 0;
     const hasAnyExpanded = hasExpandedCategories || hasExpandedFeatures;
-
+    2
     // Toggle individual feature description box
     const toggleFeatureDescription = (featureId: string) => {
         setExpandedFeatures(prev => {
@@ -200,10 +216,10 @@ export default function FeaturesListCard({
                                                     </div>
                                                     {/* to-do: check if item have cont or duration  */}
                                                     <div className="bg-white text-[10px] text-secondary rounded-[10px] px-2.5 py-1 border border-[#D5D7DA]">
-                                                    3 ماه
+                                                        3 ماه
                                                     </div>
                                                     <div className="bg-white text-[10px] text-secondary rounded-[10px] px-5 py-1 border border-[#D5D7DA]">
-                                                   15
+                                                        15
                                                     </div>
                                                 </button>
 

@@ -79,3 +79,23 @@ export async function selectPackage({
     throw error;
   }
 }
+
+// Get packages by invoice ID
+export async function getPackagesByInvoice(invoiceId: number) {
+  try {
+    console.log('🔍 API: Starting getPackagesByInvoice call', {
+      invoiceId,
+      endpoint: `packages/by-invoice/${invoiceId}`
+    });
+
+    const result = await fetchServiceChadcoCustomer(`packages/by-invoice/${invoiceId}`, {
+      method: "GET",
+    });
+
+
+    return result;
+  } catch (error) {
+ 
+    throw error;
+  }
+}
