@@ -9,6 +9,7 @@ import PackageIcon from './package-icons';
 import { getColorValue } from './package-icons';
 import PurchaseFlowModal from './purchase-flow-modal';
 import { selectPackage } from '@/api/packages/package-api';
+import { CustomToast } from '../shared/custome-toast';
 
 
 // Helper function to get border color class
@@ -97,11 +98,17 @@ const PackageCard: React.FC<PackageCardProp> = ({
     };
 
     const handlePurchaseComplete = async (description: string) => {
-
         setIsSelecting(true);
         setStatus('loading');
-
-
+        if (description === '') {
+            CustomToast({
+                type: 'error',
+                message: 'لطفا توضیحات را وارد کنید',
+              });
+              setStatus('error');
+              return;
+    
+        }
         try {
             const result = await selectPackage({
                 packageId: data.id,
@@ -132,7 +139,6 @@ const PackageCard: React.FC<PackageCardProp> = ({
             setIsSelecting(false);
         }
     };
-
 
     const handleModalClose = () => {
         setIsPurchaseModalOpen(false);

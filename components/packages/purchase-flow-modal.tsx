@@ -115,8 +115,8 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
     );
     const renderErrorStep = () => (
         <>
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-bold text-red-600">
+            <div className="flex items-center justify-center mb-6">
+                <h2 className="text-base font-bold text-red-600">
                     خطا در ارسال درخواست
                 </h2>
             </div>
@@ -126,11 +126,11 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                     متاسفانه خطایی رخ داد. لطفا دوباره تلاش کنید.
                 </p>
             </div>
-            <div className="flex gap-3 justify-center">
+            <div className="flex gap-3  justify-center">
                 <Button onClick={() => setCurrentStep('order-details')}>
                     تلاش مجدد
                 </Button>
-                <Button variant="outline" onClick={handleClose}>
+                <Button variant="outline" className='text-black border-black px-7' onClick={handleClose}>
                     بستن
                 </Button>
             </div>
@@ -274,10 +274,6 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
                             className="fixed inset-0 bg-black/50"
                             onClick={handleClose}
                         />
-                        {currentStep === 'loading' && renderLoadingStep()}
-                        {currentStep === 'error' && renderErrorStep()}
-                        {currentStep === 'success' && renderSuccessStep()}
-                        {/* Modal Content */}
                         <div
                             className="fixed left-1/2 top-1/2 w-full max-w-md bg-white rounded-lg p-6 shadow-lg"
                             style={{
