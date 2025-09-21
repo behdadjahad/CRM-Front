@@ -89,8 +89,8 @@ export default function AdminRequestsTable({
     },
   });
   const { mutate: discountInvoiceHandler } = useMutation({
-    mutationFn: ({ invoiceId,discount}:{ invoiceId: number, discount: number }) => {
-      return discountInvoice(invoiceId,discount);
+    mutationFn: ({ invoiceId,data}:{ invoiceId: number, data: any }) => {
+      return discountInvoice(invoiceId,data);
     },
     onSuccess: () => {
       // dispatch(
@@ -109,7 +109,7 @@ export default function AdminRequestsTable({
       case "Reject":
         rejectInvoiceHandler(requestId);
       case "Discount":
-        if( discount)discountInvoiceHandler({ invoiceId:requestId, discount:discount });
+        if (discount) discountInvoiceHandler({ invoiceId: requestId, data:{ discountPercent: Number(discount) } });
       default:
         return;
     }

@@ -3,7 +3,6 @@
 import { fetchService } from "@/boot/chadco-customer-service";
 import { getPaymentStatus } from "@/constants/invoice-constants";
 
-
 import { convertDate } from "@/lib/date";
 import {
   buildQueryString,
@@ -27,6 +26,7 @@ export interface InvoiceList {
   status: { label: string; className?: string };
   price: { amount: string; currency: string };
   actions: { label: string; icon: string }[];
+  detailData: { label: string; value: string }[];
 }
 export interface InvoiceState {
   items: InvoiceList[];
@@ -95,6 +95,41 @@ const invoiceSlice = createSlice({
           label: getPaymentStatus(item?.paymentStatus)?.label,
           className: getPaymentStatus(item?.paymentStatus)?.className,
         },
+        detailData: [
+          {
+            label: "مهلت پرداخت",
+            value: item?.dueAt ? convertDate(item?.dueAt, dateType) : "",
+            isHighlighted: true,
+          },
+          {
+            label: "شماره فاکتور",
+            value: item.invoiceNumber,
+          },
+          {
+            label: "تاریخ سفارش",
+
+            value: item?.issuedAt ? convertDate(item?.issuedAt, dateType) : "",
+          },
+      
+          {
+            label: "تاریخ پرداخت",
+
+            value: item?.paidAt ? convertDate(item?.dueAt, dateType) : "",
+          },
+          {
+            label: "وضعیت سفارش",
+            value: getPaymentStatus(item?.paymentStatus)?.label,
+          },
+          {
+            label: "مبلغ سفارش",
+            value: item?.finalTotal
+              ? formatPrice(item?.finalTotal)
+              : "" + item?.currency?.name
+              ? item?.currency?.name
+              : "",
+          },
+          { label: "توضیحات سفارش", value: item?.requestMessage },
+        ],
       }));
       const totalItems = action?.payload?.pagination?.total;
       const limit = action?.payload?.pagination?.limit;

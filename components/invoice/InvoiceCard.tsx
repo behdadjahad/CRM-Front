@@ -20,6 +20,7 @@ export interface InvoiceCardInterface {
   status: { label: string; className?: string };
   price: { amount: string; currency: string };
   actions: { label: string; icon: string }[];
+  detailData: { label: string; value: string }[];
 }
 
 export default function InvoiceCard({
@@ -31,6 +32,7 @@ export default function InvoiceCard({
   price,
   actions,
   invoiceNumber,
+  detailData
 }: InvoiceCardInterface) {
   return (
     <Link href={`invoice-detail/${id}`}>
@@ -83,7 +85,7 @@ export default function InvoiceCard({
                   <span>{action?.label}</span>
                 </Button>
               ))} */}
-              <InvoicePreview />
+              <InvoicePreview invoiceData={detailData}/>
             </div>
           </div>
         </div>
