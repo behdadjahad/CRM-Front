@@ -12,21 +12,24 @@ interface ComparisonTableProps {
 }
 
 const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) => {
-    // تابع کمکی برای گرفتن یونیت مربوطه
-    const getUnitForFeature = (
+
+    const getUnitsForFeature = (
         pkg: Package,
         categoryId: number,
         featureId: number
-    ): Unit | null => {
+    ): Unit[] => {
         const category = pkg.packageCategories.find((c) => c.id === categoryId);
-        if (!category) return null;
-
-        const unitLabel = category.units.find((u) => u.label.id === featureId);
-        if (!unitLabel) return null;
-
-        return unitLabel.units[0] ?? null; // اولین یونیت
+        if (!category) return [];
+    
+        for (const unitLabel of category.units) {
+            const unit = unitLabel.units.find((u) => u.id === featureId);
+            if (unit) {
+                return [unit]; // Return array with single unit since each unit is now a feature
+            }
+        }
+    
+        return [];
     };
-
     // Memoize expanded categories for better performance
     const expandedCategories = useMemo(
         () => data.categories.map(cat => cat.id.toString()),
@@ -38,7 +41,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
         const packageData = data.packages.find(p => p.id === packageId);
         if (!packageData) return false;
 
-        const unit = getUnitForFeature(packageData,
+        const unit = getUnitsForFeature(packageData,
             data.categories.find(c => c.features.some(f => f.id === featureId))?.id || 0,
             featureId
         );
@@ -49,21 +52,36 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
     const renderFeatureCell = (featureId: number, packageId: number) => {
         const packageData = data.packages.find(p => p.id === packageId);
         if (!packageData) return null;
-
+    
         const category = data.categories.find(c => c.features.some(f => f.id === featureId));
         if (!category) return null;
-
-        const unit = getUnitForFeature(packageData, category.id, featureId);
-        const isAvailable = Boolean(unit);
-
+    
+        const units = getUnitsForFeature(packageData, category.id, featureId);
+        const isAvailable = units.length > 0;
+    
         return (
             <div className="flex justify-center">
                 {isAvailable ? (
-                    unit?.unitModel === "flat" ? (
-                        <span className="text-[#1C68DA] text-base">نامحدود</span>
-                    ) : (
-                        <Check className="w-4 h-4 text-green-500" />
-                    )
+                    <div className="text-center">
+                        {units[0]?.unitModel === "flat" ? (
+                            <span className="text-[#1C68DA] text-sm">نامحدود</span>
+                        ) : units[0]?.unitModel === "perCount" ? (
+                            <div className="">
+  <Check className="w-4 h-4 text-green-500 mx-auto" />
+                            </div>
+                        ) : units[0]?.unitModel === "perDuration" ? (
+                            <div className="">
+                                <Check className="w-4 h-4 text-green-500 mx-auto" />
+                            </div>
+                        ) : (
+                            <Check className="w-4 h-4 text-green-500 mx-auto" />
+                        )}
+                        {units[0]?.price && (
+                           <>
+                             <Check className="w-4 h-4 text-green-500 mx-auto" />
+                           </>
+                        )}
+                    </div>
                 ) : (
                     <span className="text-gray-400">-</span>
                 )}

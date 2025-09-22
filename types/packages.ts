@@ -80,7 +80,6 @@ export interface Package {
   title: string;
   description?: string | null;
   price?: number;
-
   createdAt: string,
   updatedAt: string,
   deletedAt: string,
@@ -132,6 +131,8 @@ export interface Package {
         price?: number;
         currencyId?: number;
         packageUnitLabel?: { id: number; name: string } | null;
+        updatedAt?:string
+
       }[];
     }[];
   }[];

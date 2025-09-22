@@ -20,7 +20,7 @@ export default function PackagesPage() {
     queryFn: () => getPackages(),
   });
 
-  console.log("packageData", error);
+  console.log("packageData", packageData);
 
   
 

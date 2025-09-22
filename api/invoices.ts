@@ -27,6 +27,7 @@ export async function rejectInvoice(invoiceId: number) {
     return result;
   } catch {}
 }
+
 export async function discountInvoice(invoiceId: number, data: any) {
 
   try {
