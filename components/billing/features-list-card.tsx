@@ -87,7 +87,7 @@ export default function FeaturesListCard({
     const hasExpandedCategories = expandedCategories.size > 0;
     const hasExpandedFeatures = expandedFeatures.size > 0;
     const hasAnyExpanded = hasExpandedCategories || hasExpandedFeatures;
-    2
+ 
     // Toggle individual feature description box
     const toggleFeatureDescription = (featureId: string) => {
         setExpandedFeatures(prev => {

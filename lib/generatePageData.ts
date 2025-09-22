@@ -55,7 +55,7 @@ export function generateFeatureAccess(features: any, code: string, userRoles?: a
   const roles: any[] = userRoles || (storedRoles ? JSON.parse(storedRoles) : []);
 
   const isSuperAdmin = roles?.some((role: any) => role.name === "superAdmin");
-  if (!isSuperAdmin) {
+  if (isSuperAdmin) {
     return {
       enable: true,
       show: true,
