@@ -1,5 +1,5 @@
-import { fetchService } from "@/boot/fetch-service";
-import { fetchService as fetchServiceChadcoCustomer } from "@/boot/chadco-customer-service";
+import { fetchService } from "@/boot/chadco-customer-service";
+
 //invoices for chadco customer
 export async function getUserInvoices(chadcoCustomerId: number) {
   try {
@@ -43,7 +43,7 @@ export async function discountInvoice(invoiceId: number, data: any) {
 //invoice details
 export async function getSingleInvoice(id: number) {
   try {
-    const result = await fetchServiceChadcoCustomer(`invoice/${id}`);
+    const result = await fetchService(`invoice/${id}`);
 
     return result;
   } catch { }
@@ -52,7 +52,7 @@ export async function getSingleInvoice(id: number) {
 //pay invoice
 export async function payInvoice(invoiceId: number, chadcoCustomerId: number) {
   try {
-    const result = await fetchServiceChadcoCustomer(`payment/pay/${invoiceId}?chadcoCustomerId=${chadcoCustomerId}`, {
+    const result = await fetchService(`payment/pay/${invoiceId}?chadcoCustomerId=${chadcoCustomerId}`, {
       method: "PATCH",
 
     });
