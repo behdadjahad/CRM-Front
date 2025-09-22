@@ -8,7 +8,7 @@ id?:number ;
   activeClassName?: string;
   onActiveItem: (label: string, value: string ,id?:number) => void;
   icon?: string;
-  activeItem: { value: string; label: string };
+  activeItem?: { value: string; label: string };
 }
 
 export default function LeadContactTypeCard({
@@ -29,7 +29,7 @@ export default function LeadContactTypeCard({
         activeItem?.value === value ? activeClassName : ""
       )}
       onClick={() => {
-        onActiveItem(label, value ,id);
+      onActiveItem(label, value ,id);
       }}
     >
     {icon && <Image

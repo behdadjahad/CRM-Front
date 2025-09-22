@@ -49,7 +49,7 @@ import CalendarDetailSideBar from "./CalendarDetailSidebar";
 import DeleteConfirmation from "../admin/delete-confirmation";
 import { Button } from "../ui/button";
 import EventEditionContainer from "./EventEditionContainer";
-
+import GridDailyCalendar from "./GridDailyCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -62,7 +62,6 @@ export default function CalendarContainer({
   data,
   onFilter,
 }: CalendarContainerInterface) {
- 
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -83,7 +82,7 @@ export default function CalendarContainer({
     "jalali" | "hijri" | "gregory"
   >("jalali");
   const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
-  const [filteredEvents,setFilteredEvents]= useState<any[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const { calendarData } = generateCalendarData(
     calendarRangeType,
     calendarType
@@ -95,7 +94,6 @@ export default function CalendarContainer({
   const { LeadContactTypeList } = getData();
   useEffect(() => {
     if (leadFollowUpTypeData) {
-     
       const updatedList = LeadContactTypeList.map((item: any) => {
         const match = leadFollowUpTypeData?.data?.find(
           (d: any) => d.type === item.value
@@ -403,7 +401,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-  
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -418,7 +415,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-    
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -436,7 +432,8 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = [
-          { id:data?.data?.id,
+          {
+            id: data?.data?.id,
             title: data?.data?.subject,
             start: data?.data?.eventAt,
           },
@@ -450,11 +447,8 @@ export default function CalendarContainer({
     mutationFn: (id: number) => {
       return deleteEvent(id);
     },
-    onSuccess: (data) => {
-      
-    },
+    onSuccess: (data) => {},
   });
-
 
   function getDateDataHandler(date: string) {
     const data = {
@@ -579,15 +573,19 @@ export default function CalendarContainer({
                 }}
               />
             ) : calendarRangeType === "daily" ? (
-              <DailyCalendar
-                currentDate={currentDate}
+              // <DailyCalendar
+              //   currentDate={currentDate}
+              //   events={data}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              //     />
+              <GridDailyCalendar
                 events={data}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
-                  setViewDetail(true);
-                  setIsSingleEventData(true);
-                }}
+                followUpTypeList={followUpTypeList}
               />
             ) : (
               <></>
@@ -607,7 +605,9 @@ export default function CalendarContainer({
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 isSingleEventData={isSingleEventData}
-                onDeleteEvent={(id)=>{deleteEventHandler(id)}}
+                onDeleteEvent={(id) => {
+                  deleteEventHandler(id);
+                }}
               />
             </div>
           )}
@@ -622,11 +622,11 @@ export default function CalendarContainer({
   ) {
     let calendarData;
     const date = convertDateWithTimeZone(currentDate, calendarType);
-   
+
     switch (calendarRangeType) {
       case "monthly":
         const calendarInfo = getCalendarInfo(currentDate, calendarType);
-      
+
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
