@@ -1,20 +1,24 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ComparisonData, PackageCardProp } from '@/types/packages';
+import { PackageComparisonData, PackageCardProp } from '@/types/packages';
 import PackageCard from './package-card';
 import { cn } from '@/lib/utils';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 
+interface PackageComparisonContainerProps {
+  data: PackageComparisonData;
+  onPackageSelect?: (packageId: number, result?: any) => void;
+  onPackagePurchase?: (packageId: number) => void;
+}
 
-
-const PackageComparisonContainer: React.FC<ComparisonData> = ({
-  packages,
-  categories,
-  // onPackageSelect,
-
+const PackageComparisonContainer: React.FC<PackageComparisonContainerProps> = ({
+  data,
+  onPackageSelect,
+  onPackagePurchase,
 }) => {
+  const { packages, categories } = data;
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPackageId, setSelectedPackageId] = useState<string | null>(
     // packages[0].id || null
@@ -26,7 +30,10 @@ const PackageComparisonContainer: React.FC<ComparisonData> = ({
   const handlePackageSelect = (packageId: number, result?: any) => {
     setSelectedPackageId(packageId.toString());
     console.log('Package selected:', packageId, result);
-    // You can add additional logic here for handling the selection
+    // Call the parent callback if provided
+    if (onPackageSelect) {
+      onPackageSelect(packageId, result);
+    }
   };
 
   // const handlePackageSelect = (packageId: string) => {
@@ -81,7 +88,7 @@ const PackageComparisonContainer: React.FC<ComparisonData> = ({
         </div>
       )}
 
-    
+
     </div>
   );
 };
