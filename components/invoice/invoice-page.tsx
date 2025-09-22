@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Search, Filter, Download, FileText, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { mockInvoices } from '@/data/invoice-mock-data';
+
 
 interface InvoicePageProps {
     chadcoCustomerId?: number;
@@ -66,12 +66,7 @@ const InvoicePage: React.FC<InvoicePageProps> = ({
         // Implement view logic here
     };
 
-    // Test function to open preview with mock data
-    const handleTestPreview = () => {
-        setSelectedInvoice(mockInvoices[0]); // Use first mock invoice
-        setIsPreviewOpen(true);
-    };
-
+  
     const handleClosePreview = () => {
         setIsPreviewOpen(false);
         setSelectedInvoice(null);
@@ -122,7 +117,7 @@ const InvoicePage: React.FC<InvoicePageProps> = ({
                     <Button
                         variant="default"
                         size="sm"
-                        onClick={handleTestPreview}
+                        // onClick={handleTestPreview}
                         className="bg-blue-600 hover:bg-blue-700 text-white"
                     >
                         <Eye className="w-4 h-4 ml-2" />

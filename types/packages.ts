@@ -75,8 +75,6 @@ export interface ComparisonData {
 }
 
 
-
-
 export interface Package {
   id: number;
   title: string;

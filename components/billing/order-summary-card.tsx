@@ -31,7 +31,7 @@ export default function OrderSummaryCard({
     const { mutate: payInvoiceMutation } = useMutation({
         mutationFn: (id: number) => payInvoice(id, invoiceData?.chadcoCustomerId || 0),
         onSuccess: () => {
-            alert("پرداخت با موفقیت انجام شد");
+            // alert("پرداخت با موفقیت انجام شد");
         },
     });
 
@@ -170,14 +170,18 @@ export default function OrderSummaryCard({
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >تخفیف:</span>
-
-                        <div className=" text-[10px] text-[#1C68DA] whitespace-nowrap bg-white border-[#1C68DA] rounded-lg border  py-1 px-2">
-                            {invoiceData?.discountPercent || 0}% تخفیف
-                        </div>
+                        {
+                            invoiceData?.discountPercent && invoiceData?.discountPercent > 0 && (<div className=" text-[10px] text-[#1C68DA] whitespace-nowrap bg-white border-[#1C68DA] rounded-lg border  py-1 px-2">
+                                {invoiceData?.discountPercent || 0}% تخفیف
+                            </div>)
+                        }
+                    
 
                     </div>
                     <span className="font-medium text[#414651] whitespace-nowrap">
-                        {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"} تومان
+                        {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"} 
+                        {invoiceData?.discountPercent && invoiceData?.discountPercent > 0 ? ` ${invoiceData?.currency}` : "-"}
+                       
                     </span>
                 </div>
 
