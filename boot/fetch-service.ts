@@ -16,18 +16,34 @@ export interface FetchServiceType {
 function makeHeaders(additionalHeaders: HeaderType = {}) {
   const token = safeLocalStorage.getItem("token");
   const hashCode = safeLocalStorage.getItem("hash");
-  // const state = store.getState();
-  const code = undefined;
+  // Get page code from localStorage
+  const currentPageCode = safeLocalStorage.getItem("currentPageCode");
+  // Get user roles from localStorage
+  const userRoles = safeLocalStorage.getItem("userRoles");
 
-  // const code =localStorage.getItem("currentPageCode");
-  // const code = "contract";
+  // Helper function to safely encode header values
+  const safeEncode = (value: string | null | undefined): string => {
+    if (!value) return "";
+    // Check if the string contains non-ASCII characters
+    if (/[^\x00-\x7F]/.test(value)) {
+      // If it contains non-ASCII characters, encode it as base64
+      try {
+        return btoa(unescape(encodeURIComponent(value)));
+      } catch (error) {
+        console.warn("Failed to encode header value:", value);
+        return "";
+      }
+    }
+    return value;
+  };
 
   return {
     "Content-Type": additionalHeaders["Content-Type"] || "application/json",
     ...additionalHeaders,
     Authorization: `Bearer ${token}`,
-    ...(code ? { "x-page-code": code } : {}),
-    ...(hashCode ? { "x-access-hash": hashCode } : {}),
+    ...(currentPageCode ? { "x-page-code": safeEncode(currentPageCode) } : {}),
+    ...(hashCode ? { "x-access-hash": safeEncode(hashCode) } : {}),
+    ...(userRoles ? { "x-user-roles": safeEncode(userRoles) } : {}),
   };
 }
 
@@ -87,9 +103,10 @@ function makeHeaders(additionalHeaders: HeaderType = {}) {
 
 //   return result;
 // }
+
+
 export async function fetchService(
   url: string,
-
   {
     method = "GET",
     body = null,
@@ -124,7 +141,7 @@ export async function fetchService(
         options.body = JSON.stringify(body);
       }
     }
- 
+
     return await fetch(`${config.ServerAddress}/${version}/${url}`, options);
   };
 

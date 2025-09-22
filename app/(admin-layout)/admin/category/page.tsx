@@ -136,7 +136,7 @@ function getData(categoryData: any) {
           countUnit: unit.countUnit,
           description: unit.description,
           currency: unit?.currency?.id,
-          categories: unit?.packageCategories.map((ctgry: any) => ({
+          categories: unit?.packageCategories?.map((ctgry: any) => ({
             label: ctgry?.name,
             value: ctgry?.id,
           })),

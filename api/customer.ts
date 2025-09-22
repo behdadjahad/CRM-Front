@@ -25,7 +25,7 @@ export async function getAllCustomers({
       `customer/filter?page=${page}&limit=${limit}&keyword=${keyword}&firstName=${firstName}&lastName=${lastName}&idNumber=${idNumber}&email=${email}&phone=${phone}`
     );
 
-    
+
     return result;
   } catch {
     return {};

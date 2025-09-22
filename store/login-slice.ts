@@ -1,6 +1,7 @@
 import { fetchService } from "@/boot/fetch-service";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { string } from "yup";
+import { safeLocalStorage } from "@/lib/generatePageData";
 
 export interface Permissions {
   id: string | number;
@@ -62,26 +63,32 @@ const loginSlice = createSlice({
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchLogin.fulfilled, (state, action) => {
+    builder.addCase(fetchLogin.fulfilled, (state, action: any) => {
       const data = action?.payload?.data;
       state.fullName = data?.fullName;
+
       state.id = data?.id;
-      state.roles = data.roles || [];
-      state.avatar = data.avatar;
-      state.birthdate = data.birthdate;
-      state.cityId = data.cityId;
-      state.deletedAt = data.deletedAt;
-      state.email = data.email;
-      state.firstName = data.firstName;
-      state.lastName = data.lastName;
-      state.middleName = data.middleName;
-      state.gender = data.gender;
-      state.idNumber = data.idNumber;
-      state.phoneNumber = data.phoneNumber;
-      state.uniqueId = data.uniqueId;
-      state.userName = data.userName;
-      state._count = data._count;
-      state.chadcoCustomerId = data.chadcoCustomerId;
+      state.roles = data?.roles || [];
+      state.avatar = data?.avatar;
+      state.birthdate = data?.birthdate;
+      state.cityId = data?.cityId;
+      state.deletedAt = data?.deletedAt;
+      state.email = data?.email;
+      state.firstName = data?.firstName;
+      state.lastName = data?.lastName;
+      state.middleName = data?.middleName;
+      state.gender = data?.gender;
+      state.idNumber = data?.idNumber;
+      state.phoneNumber = data?.phoneNumber;
+      state.uniqueId = data?.uniqueId;
+      state.userName = data?.userName;
+      state._count = data?._count;
+      state.chadcoCustomerId = data?.chadcoCustomerId;
+
+      // Sync roles to localStorage
+      if (state?.roles && state?.roles?.length > 0) {
+        safeLocalStorage?.setItem('userRoles', JSON.stringify(state?.roles));
+      }
     });
   },
 });

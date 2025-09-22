@@ -2,6 +2,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import InvoicePreview from "./InvoicePreview";
+import InvoicePreviewModal from "./invoice-preview-modal";
 export interface InvoiceCardInterface {
   id: number;
   title: {
@@ -34,8 +35,9 @@ export default function InvoiceCard({
   invoiceNumber,
   detailData
 }: InvoiceCardInterface) {
+  console.log("invoiceid",id);
   return (
-    <Link href={`invoice-detail/${id}`}>
+    <Link href={`invoice/${id}`}>
       <div className="custom-shadow p-4 w-full bg-card rounded-lg">
         <div className="flex justify-between flex-row-reverse">
           <div className="flex flex-col gap-2">

@@ -1,23 +1,23 @@
 import React from 'react';
 
 interface PackageIconProps {
-    type?: 'gold' | 'silver' | 'bronze' | 'blue' | 'white'; // Kept for backward compatibility
-    color: 'gold' | 'silver' | 'bronze' | 'blue' | 'white';
+    type?: 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید'; // Kept for backward compatibility
+    color: 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید';
     className?: string;
 }
 
 // Helper function for color values
 export const getColorValue = (color: PackageIconProps['color']): string => {
     switch (color) {
-        case 'gold':
+        case 'طلایی':
             return '#F8AC3F'; // amber-500
-        case 'silver':
+        case 'نقره ای':
             return '#B6BCC2'; // gray-400
-        case 'bronze':
+        case 'برنزی':
             return '#BF8970'; // amber-600
-        case 'blue':
+        case 'آبی':
             return '#2949A4'; // blue-500
-        case 'white':
+        case 'سفید':
             return '#6B7280'; // gray-500
         default:
             return '#2949A4'; // original blue

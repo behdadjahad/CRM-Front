@@ -1,0 +1,301 @@
+{
+    "database_schema": {
+        "tables": {
+            "ChadcoCustomer": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                    "updated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                },
+                "description": "Central customer entity"
+            },
+            "ChadcoCustomerPackage": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "packageId": "Package(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "packageId": "INTEGER NOT NULL",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Customer-package associations"
+            },
+            "ChadcoCustomerPackageCategory": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "packageCategoryId": "PackageCategory(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "packageCategoryId": "INTEGER NOT NULL",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Customer-package category associations"
+            },
+            "ChadcoCustomerPackageUnit": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "packageUnitId": "PackageUnit(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "packageUnitId": "INTEGER NOT NULL",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Customer-package unit associations"
+            },
+            "Package": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "title": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "price": "DECIMAL(10,2) NOT NULL",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Main package definitions"
+            },
+            "PackageCategory": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "packageId": "Package(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "packageId": "INTEGER NOT NULL",
+                    "title": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "price": "DECIMAL(10,2) NOT NULL",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Package categories"
+            },
+            "PackageUnit": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "packageUnitLabelId": "PackageUnitLabel(id)",
+                    "currencyId": "Currency(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "title": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "packageUnitLabelId": "INTEGER",
+                    "accessesJson": "JSON",
+                    "unitType": "ENUM('rent', 'sale') NOT NULL",
+                    "unitModel": "ENUM('perDuration', 'perCount', 'flat') NOT NULL",
+                    "enabledDurationInDays": "INTEGER",
+                    "showDurationInDays": "INTEGER",
+                    "countUnit": "INTEGER",
+                    "price": "DECIMAL(10,2) NOT NULL",
+                    "currencyId": "INTEGER",
+                    "deletedAt": "TIMESTAMP NULL"
+                },
+                "description": "Package units with pricing models"
+            },
+            "PackageUnitLabel": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "label": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "code": "VARCHAR(50) UNIQUE"
+                },
+                "description": "Package unit labels"
+            },
+            "PackageUnitSnapshot": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "title": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "accessesJson": "JSON",
+                    "unitType": "ENUM('rent', 'sale') NOT NULL",
+                    "unitModel": "ENUM('perDuration', 'perCount', 'flat') NOT NULL",
+                    "enabledDurationInDays": "INTEGER",
+                    "showDurationInDays": "INTEGER",
+                    "countUnit": "INTEGER",
+                    "price": "DECIMAL(10,2) NOT NULL"
+                },
+                "description": "Historical snapshots of package units"
+            },
+            "ChadcoInvoice": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "customerId": "INTEGER NOT NULL",
+                    "totalAmount": "DECIMAL(10,2) NOT NULL",
+                    "status": "ENUM('draft', 'sent', 'paid', 'cancelled') NOT NULL",
+                    "createdAt": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+                    "dueDate": "DATE"
+                },
+                "description": "Customer invoices"
+            },
+            "User": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "username": "VARCHAR(255) UNIQUE NOT NULL",
+                    "email": "VARCHAR(255) UNIQUE NOT NULL",
+                    "createdAt": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+                },
+                "description": "System users"
+            },
+            "Role": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "name": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "inheritedRoles": "JSON",
+                    "accessesJson": "JSON"
+                },
+                "description": "Customer-specific roles"
+            },
+            "Permission": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "name": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "resource": "VARCHAR(255) NOT NULL",
+                    "action": "VARCHAR(255) NOT NULL"
+                },
+                "description": "System permissions"
+            },
+            "ChadcoCustomerPermission": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "userId": "User(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "userId": "INTEGER NOT NULL"
+                },
+                "description": "Customer-user permission associations"
+            },
+            "ChadcoCustomerAccess": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "packageUnitId": "PackageUnit(id)",
+                    "pageId": "Page(id)",
+                    "pageFeatureId": "PageFeatures(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "packageUnitId": "INTEGER NOT NULL",
+                    "pageId": "INTEGER NOT NULL",
+                    "pageFeatureId": "INTEGER NOT NULL",
+                    "packageUnitCostId": "INTEGER",
+                    "unitModel": "ENUM('perDuration', 'perCount', 'flat') NOT NULL",
+                    "enabledDate": "TIMESTAMP NOT NULL",
+                    "showDate": "TIMESTAMP NOT NULL",
+                    "counter": "INTEGER DEFAULT 0"
+                },
+                "description": "Customer access rights to features"
+            },
+            "ChadcoCustomerAccessLog": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "chadcoCustomerId": "ChadcoCustomer(id)",
+                    "unitId": "PackageUnit(id)",
+                    "pageId": "Page(id)",
+                    "pageFeatureId": "PageFeatures(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "chadcoCustomerId": "INTEGER NOT NULL",
+                    "unitId": "INTEGER NOT NULL",
+                    "pageId": "INTEGER NOT NULL",
+                    "pageFeatureId": "INTEGER NOT NULL",
+                    "unitCostModel": "VARCHAR(255)",
+                    "submitDate": "TIMESTAMP NOT NULL",
+                    "entityId": "INTEGER",
+                    "action": "VARCHAR(255) NOT NULL"
+                },
+                "description": "Customer access activity logs"
+            },
+            "Page": {
+                "primary_key": "id",
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "name": "VARCHAR(255) NOT NULL",
+                    "path": "VARCHAR(500) NOT NULL",
+                    "description": "TEXT"
+                },
+                "description": "System pages"
+            },
+            "PageFeatures": {
+                "primary_key": "id",
+                "foreign_keys": {
+                    "pageId": "Page(id)"
+                },
+                "columns": {
+                    "id": "INTEGER PRIMARY KEY",
+                    "pageId": "INTEGER NOT NULL",
+                    "name": "VARCHAR(255) NOT NULL",
+                    "description": "TEXT",
+                    "featureType": "ENUM('read', 'write', 'delete', 'admin') NOT NULL"
+                },
+                "description": "Page-specific features"
+            }
+        },
+        "relationships": {
+            "one_to_many": [
+                "ChadcoCustomer → ChadcoCustomerPackage",
+                "ChadcoCustomer → ChadcoCustomerPackageCategory",
+                "ChadcoCustomer → ChadcoCustomerPackageUnit",
+                "ChadcoCustomer → ChadcoCustomerPermission",
+                "ChadcoCustomer → ChadcoCustomerAccess",
+                "ChadcoCustomer → ChadcoCustomerAccessLog",
+                "ChadcoCustomer → Role",
+                "ChadcoCustomer → PackageUnitSnapshot",
+                "Package → PackageCategory",
+                "PackageUnit → PackageUnitLabel",
+                "User → ChadcoCustomerPermission",
+                "Role → Permission",
+                "Page → PageFeatures",
+                "PackageUnit → ChadcoCustomerAccess",
+                "Page → ChadcoCustomerAccess",
+                "PageFeatures → ChadcoCustomerAccess",
+                "Page → ChadcoCustomerAccessLog",
+                "PageFeatures → ChadcoCustomerAccessLog"
+            ],
+            "many_to_many": [
+                "User ↔ Role (through ChadcoCustomerPermission)",
+                "ChadcoCustomer ↔ Package (through ChadcoCustomerPackage)",
+                "ChadcoCustomer ↔ PackageCategory (through ChadcoCustomerPackageCategory)",
+                "ChadcoCustomer ↔ PackageUnit (through ChadcoCustomerPackageUnit)"
+            ]
+        },
+        "assumptions": [
+            "Currency table exists but not shown in diagrams",
+            "PackageUnitCost table exists but not shown in diagrams",
+            "ChadcoCustomer table has standard fields (id, name, email, etc.)",
+            "User table has standard authentication fields",
+            "All timestamp fields use UTC timezone",
+            "JSON fields store structured data for flexible access control",
+            "Soft delete pattern using deletedAt field for data retention"
+        ]
+    }
+}

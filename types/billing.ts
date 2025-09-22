@@ -1,3 +1,5 @@
+import { Package } from "./packages";
+
 export interface Discount {
     percentage: number;
     amount: number;
@@ -78,3 +80,50 @@ export interface DurationSelectionCardProps {
     onDurationChange: (durationId: string) => void;
     onLoadMore: () => void;
 }
+
+
+export interface UiMessage {
+    type: string | null;
+    color: string | null;
+}
+
+export interface SingleInvoice {
+    id: number;
+    chadcoCustomerId: number;
+    currencyId: number | null;
+    invoiceNumber: string;
+    issuedAt: string | null;
+    dueAt: string | null;
+    originalTotal: number;
+    discountAmount: number;
+    discountPercent: number;
+    taxAmount: number;
+    taxPercent: number;
+    finalTotal: number;
+    paymentStatus: "PAID" | "PENDING" | "FAILED" | string; // extend if API supports more
+    paymentMethod: "GATEWAY" | "CASH" | "BANK_TRANSFER" | string;
+    paidAt: string | null;
+    requestMessage: string | null;
+    updatedAt: string;
+    currency: string | null;
+}
+
+export interface InvoiceResponse {
+    status: "success" | "error" | string;
+    message: string;
+    httpStatus: number;
+    redirectURL: string | null;
+    ui: UiMessage;
+    data: SingleInvoice;
+}
+
+export interface ApiResponse<T> {
+    status: "success" | "error" | string;
+    message: string;
+    httpStatus: number;
+    redirectURL: string | null;
+    ui: UiMessage;
+    data: T;
+}
+
+export type PackageResponse = ApiResponse<Package[]>;

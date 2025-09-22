@@ -1,9 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, ReactNode } from 'react';
+import React, { createContext, useContext, useMemo, ReactNode, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store';
 import { setCurrentPageCode } from '@/store/access-slice';
+import { safeLocalStorage } from '@/lib/generatePageData';
 
 interface PageAccess {
   url: string;
@@ -26,16 +27,16 @@ interface AccessContextType {
   getPageFeatures: (pageCode: string) => string[];
   isPageEnabled: (pageCode: string) => boolean;
   isPageVisible: (pageCode: string) => boolean;
-  
+
   // Current page management
   setCurrentPage: (pageCode: string) => void;
   currentPageCode: string;
-  
+
   // Access data
   accessJson: AccessJson | null;
   hash: string;
   isLoading: boolean;
-  
+
   // Helper functions
   getAllowedPages: () => PageAccess[];
   getVisiblePages: () => PageAccess[];
@@ -52,13 +53,28 @@ export function AccessProvider({ children }: AccessProviderProps) {
   const { accessJson, currentPageCode, hash, isLoading } = useSelector(
     (state: RootState) => state.access
   );
+  const { roles } = useSelector((state: RootState) => state.login);
+
+  // Sync currentPageCode to localStorage whenever it changes
+  useEffect(() => {
+    if (currentPageCode) {
+      safeLocalStorage.setItem('currentPageCode', currentPageCode);
+    }
+  }, [currentPageCode]);
+
+  // Sync roles to localStorage whenever they change
+  useEffect(() => {
+    if (roles && roles.length > 0) {
+      safeLocalStorage.setItem('userRoles', JSON.stringify(roles));
+    }
+  }, [roles]);
 
   // Memoized permission checking functions
   const contextValue = useMemo(() => {
     // Find page by code
     const findPage = (pageCode: string): PageAccess | null => {
       if (!accessJson?.pages) return null;
-      
+
       for (const pageObj of accessJson.pages) {
         if (pageObj[pageCode]) {
           return pageObj[pageCode];
@@ -101,7 +117,7 @@ export function AccessProvider({ children }: AccessProviderProps) {
     // Get all pages user has access to
     const getAllowedPages = (): PageAccess[] => {
       if (!accessJson?.pages) return [];
-      
+
       const allowedPages: PageAccess[] = [];
       accessJson.pages.forEach(pageObj => {
         Object.values(pageObj).forEach(page => {
@@ -116,7 +132,7 @@ export function AccessProvider({ children }: AccessProviderProps) {
     // Get all pages that should be visible in navigation
     const getVisiblePages = (): PageAccess[] => {
       if (!accessJson?.pages) return [];
-      
+
       const visiblePages: PageAccess[] = [];
       accessJson.pages.forEach(pageObj => {
         Object.values(pageObj).forEach(page => {
@@ -131,6 +147,8 @@ export function AccessProvider({ children }: AccessProviderProps) {
     // Set current page code
     const setCurrentPage = (pageCode: string) => {
       dispatch(setCurrentPageCode(pageCode));
+      // Also save to localStorage immediately
+      safeLocalStorage.setItem('currentPageCode', pageCode);
     };
 
     return {
