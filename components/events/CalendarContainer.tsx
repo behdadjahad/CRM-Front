@@ -62,6 +62,7 @@ export default function CalendarContainer({
   data,
   onFilter,
 }: CalendarContainerInterface) {
+  console.log(data);
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -504,7 +505,15 @@ export default function CalendarContainer({
   //     };
   //   }),
   // };
-
+  function returnDetailEventData(eventData: any) {
+    console.log(eventData);
+    const eventOptions = eventData?.map((event: any) => ({
+      id: event?.id,
+      title: event?.title,
+      start: event?.start,
+    }));
+    setSingleDateEvents(eventOptions);
+  }
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -584,8 +593,20 @@ export default function CalendarContainer({
               //   }}
               //     />
               <GridDailyCalendar
+                currentDate={currentDate}
                 events={data}
                 followUpTypeList={followUpTypeList}
+                onGetFollowUpTypeData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
+                }}
+                onGetHourData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                }}
               />
             ) : (
               <></>
