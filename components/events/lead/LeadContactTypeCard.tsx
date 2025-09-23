@@ -10,6 +10,7 @@ export interface LeadContactTypeCardInterface {
   icon?: string;
   activeItem?: { value: string; label: string };
   eventOrder?: number;
+  orderClassName?: string;
 }
 
 export default function LeadContactTypeCard({
@@ -22,11 +23,12 @@ export default function LeadContactTypeCard({
   activeItem,
   activeClassName,
   eventOrder,
+  orderClassName
 }: LeadContactTypeCardInterface) {
   return (
     <div
       className={cn(
-        "cursor-pointer rounded-lg  h-7 min-w-14 text-xs flex items-center justify-center gap-2 px-2",
+        "cursor-pointer rounded-lg  h-7 min-w-16 max-w-fit text-xs flex items-center justify-center gap-2 px-2",
         className,
         activeItem?.value === value ? activeClassName : ""
       )}
@@ -35,7 +37,7 @@ export default function LeadContactTypeCard({
       }}
     >
       <div className="flex gap-1 items-center">
-        {eventOrder && <span>{eventOrder}</span>}
+        {eventOrder != undefined && <span className={cn(orderClassName)}>{eventOrder}</span>}
         <div className="flex gap-1 items-center">
           {" "}
           {icon && (

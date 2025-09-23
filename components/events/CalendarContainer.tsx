@@ -781,6 +781,7 @@ export default function CalendarContainer({
         icon: "/icons/colored-phone-icon.png",
         activeClassName: "border border-[#EF26B2]",
         className: "text-[#C11574] bg-[#FDF2FA]",
+        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#C11574] bg-opacity-20",
       },
       {
         label: "پیامک",
@@ -788,6 +789,7 @@ export default function CalendarContainer({
         icon: "/icons/colored-sms-icon.png",
         activeClassName: "border border-[#039855]",
         className: "text-[#087443] bg-[#EDFCF2]",
+        orderClassName: "flex w-4 h-4 items-center justify-center rounded-full rounded-full bg-[#087443] bg-opacity-20",
       },
       {
         label: "ایمیل",
@@ -795,6 +797,7 @@ export default function CalendarContainer({
         icon: "/icons/colored-email-icon.png",
         activeClassName: "border border-[#1C68DA]",
         className: "text-[#175CD3] bg-[#EFF8FF]",
+        orderClassName: "flex w-4 h-4 items-center justify-center rounded-full bg-[#175CD3] bg-opacity-20",
       },
       {
         label: "جلسه",
@@ -802,6 +805,7 @@ export default function CalendarContainer({
         icon: "/icons/colored-meeting-icon.png",
         activeClassName: "border border-[#7500FE]",
         className: "text-[#6941C6] bg-[#F9F5FF]",
+        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#6941C6] bg-opacity-20",
       },
       {
         label: "VOIP",
@@ -809,6 +813,7 @@ export default function CalendarContainer({
         icon: "/icons/colored-voip-icon.png",
         activeClassName: "border border-[#D92D20]",
         className: "text-[#B93815] bg-[#FEF6EE]",
+        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#B93815] bg-opacity-20",
       },
     ];
 
