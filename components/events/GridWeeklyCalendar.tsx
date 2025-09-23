@@ -80,7 +80,9 @@ export function GridWeeklyCalendar({
               >
                 {day}
               </span>{" "}
-              <span className={`${isLtr ? "custom-font" : ""}`}>{weekLabel}</span>
+              <span className={`${isLtr ? "custom-font" : ""}`}>
+                {weekLabel}
+              </span>
             </div>
 
             <div className="flex flex-col p-4 gap-2" dir="rtl">
@@ -99,7 +101,8 @@ export function GridWeeklyCalendar({
                       {...contactType}
                       key={contactType.value}
                       onActiveItem={(label, value, id) => {
-                       if(id) getFollowUpTypeEventList(id, date);
+                        if (id) getFollowUpTypeEventList(id, date);
+                        
                       }}
                       eventOrder={FollowUpTypeHourEvents?.length}
                     />

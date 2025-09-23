@@ -49,6 +49,7 @@ export default function GridDailyCalendar({
           className="flex items-center justify-between  border border-[#E9EAEB] bg-card text-[#535862] h-64 flex-col p-4 cursor-pointer"
           onClick={() => {
             getHourEventList(getHourStringFromIndex(index))
+        
           }}
         >
           <div>{getHourStringFromIndex(index)}</div>

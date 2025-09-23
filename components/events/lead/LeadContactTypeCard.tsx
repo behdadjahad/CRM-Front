@@ -32,8 +32,9 @@ export default function LeadContactTypeCard({
         className,
         activeItem?.value === value ? activeClassName : ""
       )}
-      onClick={() => {
+      onClick={(e) => {
         onActiveItem(label, value, id);
+        e.stopPropagation();
       }}
     >
       <div className="flex gap-1 items-center">
