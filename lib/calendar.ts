@@ -487,6 +487,7 @@ export function generateVisibleRange(
 //     };
 //   } else return { start: new Date(), end: new Date() };
 // }
+
 export function generateWeekVisibleRange(
   dateStr: string, // "YYYY-MM-DD"
   calendarType: "jalali" | "hijri" | "gregory"
@@ -619,7 +620,7 @@ function getMonthName(date: Date, calendarType: string) {
   }
 }
 
-const weekdaysMap: Record<string, string[]> = {
+export const weekdaysMap: Record<string, string[]> = {
   jalali: [
     "شنبه",
     "یکشنبه",
@@ -779,3 +780,28 @@ export function getHourFromISOString(isoString: string): string {
   const hour = timePart.substring(0, 2);
   return `${hour}:00`;
 }
+
+
+export function getDatesBetween(startDateStr: string, endDateStr: string): string[] {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+  const dates: string[] = [];
+
+  // Validate date order
+  if (startDate > endDate) return [];
+
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    dates.push(`${year}-${month}-${day}`);
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+}
+
+

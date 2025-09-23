@@ -50,6 +50,7 @@ import DeleteConfirmation from "../admin/delete-confirmation";
 import { Button } from "../ui/button";
 import EventEditionContainer from "./EventEditionContainer";
 import GridDailyCalendar from "./GridDailyCalendar";
+import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -562,23 +563,41 @@ export default function CalendarContainer({
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
-              <WeeklyCalendar
-                currentDate={currentDate}
+              // <WeeklyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridWeeklyCalendar
+                events={data}
+                followUpTypeList={followUpTypeList}
                 visibleRange={calendarData.visibleRange}
                 calendarType={calendarType}
-                events={data}
-                onSelectDate={(date: string) => {
-                  getDateDataHandler(date);
-                  setSelectedDate(date);
-                  setCurrentDate(date);
+                currentDate={currentDate}
+                onGetDayData={(eventData: any) => {
                   setViewDetail(true);
                   setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
                 }}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
+                onGetFollowUpTypeData={(eventData: any) => {
                   setViewDetail(true);
-                  setIsSingleEventData(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
                 }}
               />
             ) : calendarRangeType === "daily" ? (
@@ -678,6 +697,7 @@ export default function CalendarContainer({
           currentDate,
           calendarType
         );
+
         const selectedDateRange = {
           start: convertDateWithTimeZone(
             convertToGregorianYMD(weeklyVisibleRange.start),
@@ -781,7 +801,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-phone-icon.png",
         activeClassName: "border border-[#EF26B2]",
         className: "text-[#C11574] bg-[#FDF2FA]",
-        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#C11574] bg-opacity-20",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#C11574] bg-opacity-20",
       },
       {
         label: "پیامک",
@@ -789,7 +810,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-sms-icon.png",
         activeClassName: "border border-[#039855]",
         className: "text-[#087443] bg-[#EDFCF2]",
-        orderClassName: "flex w-4 h-4 items-center justify-center rounded-full rounded-full bg-[#087443] bg-opacity-20",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full rounded-full bg-[#087443] bg-opacity-20",
       },
       {
         label: "ایمیل",
@@ -797,7 +819,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-email-icon.png",
         activeClassName: "border border-[#1C68DA]",
         className: "text-[#175CD3] bg-[#EFF8FF]",
-        orderClassName: "flex w-4 h-4 items-center justify-center rounded-full bg-[#175CD3] bg-opacity-20",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full bg-[#175CD3] bg-opacity-20",
       },
       {
         label: "جلسه",
@@ -805,7 +828,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-meeting-icon.png",
         activeClassName: "border border-[#7500FE]",
         className: "text-[#6941C6] bg-[#F9F5FF]",
-        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#6941C6] bg-opacity-20",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#6941C6] bg-opacity-20",
       },
       {
         label: "VOIP",
@@ -813,7 +837,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-voip-icon.png",
         activeClassName: "border border-[#D92D20]",
         className: "text-[#B93815] bg-[#FEF6EE]",
-        orderClassName: "flex items-center justify-center w-4 h-4 rounded-full bg-[#B93815] bg-opacity-20",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#B93815] bg-opacity-20",
       },
     ];
 
