@@ -10,7 +10,6 @@ export default function EventEditionContainer({
   const formik = useFormik({
     initialValues: {
       id: eventData?.id,
-      
     },
     onSubmit: async () => {},
     enableReinitialize: true,

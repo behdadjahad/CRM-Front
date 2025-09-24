@@ -8,6 +8,7 @@ export interface EventDetailCardInterface {
   timeLabel: string;
   time: string;
   title: string;
+  onViewEditForm: (viewEditForm:boolean) => void;
 }
 
 export default function EventDetailCard({
@@ -17,6 +18,7 @@ export default function EventDetailCard({
   timeLabel,
   time,
   title,
+  onViewEditForm
 }: EventDetailCardInterface) {
   return (
     <div className="flex flex-col gap-1">
@@ -38,7 +40,7 @@ export default function EventDetailCard({
           <Button
             className="border-none p-0 text-[#212B36]"
             onClick={() => {
-              // setViewEditForm(true);
+              onViewEditForm(true);
             }}
           >
             <Image
