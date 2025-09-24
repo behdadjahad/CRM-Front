@@ -1,10 +1,19 @@
 import { useFormik } from "formik";
-
-export default function EventEditionContainer() {
+export interface EventEditionContainerInterface {
+  eventData: {
+    id: number;
+  };
+}
+export default function EventEditionContainer({
+  eventData,
+}: EventEditionContainerInterface) {
   const formik = useFormik({
-    initialValues: {},
+    initialValues: {
+      id: eventData?.id,
+      
+    },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
-  return <> </>;
+  return <div>ویرایش رویداد</div>;
 }

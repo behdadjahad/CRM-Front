@@ -672,7 +672,7 @@ export default function CalendarContainer({
           visibleRange: generateVisibleRange(currentDate, calendarType),
           selectedDaysRange: [
             {
-              day: date.day,
+              // day: date.day,
               monthName: date.monthName,
               year: date.year,
             },
