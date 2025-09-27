@@ -95,7 +95,7 @@ export async function getPackagesByInvoice(invoiceId: number) {
 
     return result;
   } catch (error) {
- 
+
     throw error;
   }
 }
