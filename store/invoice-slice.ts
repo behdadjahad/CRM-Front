@@ -37,6 +37,7 @@ export interface InvoiceState {
   filters: any;
   total: number;
 }
+
 const initialState: InvoiceState = {
   items: [],
   allItems: [],

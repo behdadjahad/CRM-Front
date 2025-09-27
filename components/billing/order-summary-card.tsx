@@ -178,7 +178,7 @@ export default function OrderSummaryCard({
                     
 
                     </div>
-                    <span className="font-medium text[#414651] whitespace-nowrap">
+                    <span className="font-medium text-[#414651] whitespace-nowrap">
                         {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"} 
                         {invoiceData?.discountPercent && invoiceData?.discountPercent > 0 ? ` ${invoiceData?.currency}` : "-"}
                        

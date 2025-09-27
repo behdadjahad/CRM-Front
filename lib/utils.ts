@@ -20,6 +20,7 @@ export function cleanFormatPrice(priceString: any) {
 export const totalVotes = 10;
 export const limitForCustomers = 6;
 export const limitForContracts = 6;
+export const limitForSingleFeatures = 9;
 export const dateType = "Solar";
 export const customerSatisfactionTarget = 10;
 export const limitForCustomerDetailContracts = 6;
@@ -197,7 +198,7 @@ export const getSortFieldFromLabel = (label: string): string | undefined => {
     "نوع درخواست": "leadType.title",
     "علاقه مندی": "temperature",
     وضعیت: "status",
-   "وضعیت سفارش": "paymentStatus",
+    "وضعیت سفارش": "paymentStatus",
   };
 
   return labelToFieldMap[label.trim()];

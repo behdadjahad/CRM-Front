@@ -18,6 +18,7 @@ import accessReducer from "./access-slice";
 import loginReducer from "./login-slice";
 import invoiceReducer from "./invoice-slice";
 import adminInvoiceReducer from "./admin-invoice-slice";
+import singleFeaturesReducer from "./single-features-slice";
 
 
 
@@ -38,9 +39,11 @@ export const store = configureStore({
     lead: leadReducer,
     allUsers: allUsersReducer,
     access: accessReducer,
-    login:loginReducer,
-    invoice:invoiceReducer,
-    adminInvoice:adminInvoiceReducer,},
+    login: loginReducer,
+    invoice: invoiceReducer,
+    adminInvoice: adminInvoiceReducer,
+    singleFeatures: singleFeaturesReducer,
+  },
 });
 
 // Infer the RootState and AppDispatch types from the store

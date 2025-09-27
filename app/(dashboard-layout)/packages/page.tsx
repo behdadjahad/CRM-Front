@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import PackageComparisonContainer from "@/components/packages/package-comparison-container";
@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPackages, } from "@/api/packages/package-api";
 import { buildComparisonData } from "@/hooks/usePackageComparison";
 import { PackagesApiResponse } from "@/types/packages-api";
-import { Package } from "@/types/packages";
+
 
 export default function PackagesPage() {
 
@@ -20,15 +20,10 @@ export default function PackagesPage() {
     queryFn: () => getPackages(),
   });
 
-  console.log("packageData", error);
-
-
-
   if (!packageData) return <p>No data</p>;
 
-
   const comparisonData = buildComparisonData(packageData?.data?.packages || [], packageData?.data?.labels || []);
-  console.log("comparisonData", comparisonData);
+
   return (
     <main className="space-y-8">
       {/* Page Header */}
