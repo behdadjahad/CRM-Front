@@ -50,6 +50,7 @@ import CalendarDetailSideBar from "./CalendarDetailSidebar";
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import Popup from "../ui/popup";
+import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
 
 export interface CalendarContainerInterface {
   data: {
@@ -527,16 +528,7 @@ export default function CalendarContainer({
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        <Popup>
-          <h2 className="text-xl font-bold">Hello Popup</h2>
-          <p>This visually overlays the whole page.</p>
-          <button
-            onClick={() => {}}
-            className="mt-4 px-3 py-2 bg-red-500 text-white rounded"
-          >
-            Close
-          </button>
-        </Popup>
+        <CustomRangeDatePicker onClose={() => {}} />
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
