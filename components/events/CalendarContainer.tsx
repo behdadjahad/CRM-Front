@@ -40,15 +40,14 @@ import jalaali from "jalaali-js";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "./lead/LeadContactTypeContainer";
-import EventDetailContainer from "./EventDetailContainer";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 import CalendarDetailSideBar from "./CalendarDetailSidebar";
-import DeleteConfirmation from "../admin/delete-confirmation";
-import { Button } from "../ui/button";
-import EventEditionContainer from "./EventEditionContainer";
+
+
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 
@@ -244,7 +243,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
-
+console.log(calendarRangeType)
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
