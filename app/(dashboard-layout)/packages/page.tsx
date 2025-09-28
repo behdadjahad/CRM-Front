@@ -20,6 +20,10 @@ export default function PackagesPage() {
     queryFn: () => getPackages(),
   });
 
+  console.log("packageData", packageData);
+
+  
+
   if (!packageData) return <p>No data</p>;
 
   const comparisonData = buildComparisonData(packageData?.data?.packages || [], packageData?.data?.labels || []);

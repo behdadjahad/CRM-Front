@@ -40,16 +40,16 @@ import jalaali from "jalaali-js";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "./lead/LeadContactTypeContainer";
-import EventDetailContainer from "./EventDetailContainer";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 import CalendarDetailSideBar from "./CalendarDetailSidebar";
-import DeleteConfirmation from "../admin/delete-confirmation";
-import { Button } from "../ui/button";
-import EventEditionContainer from "./EventEditionContainer";
 
+
+import GridDailyCalendar from "./GridDailyCalendar";
+import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -62,7 +62,7 @@ export default function CalendarContainer({
   data,
   onFilter,
 }: CalendarContainerInterface) {
- 
+  console.log(data);
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -83,7 +83,7 @@ export default function CalendarContainer({
     "jalali" | "hijri" | "gregory"
   >("jalali");
   const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
-  const [filteredEvents,setFilteredEvents]= useState<any[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const { calendarData } = generateCalendarData(
     calendarRangeType,
     calendarType
@@ -95,7 +95,6 @@ export default function CalendarContainer({
   const { LeadContactTypeList } = getData();
   useEffect(() => {
     if (leadFollowUpTypeData) {
-     
       const updatedList = LeadContactTypeList.map((item: any) => {
         const match = leadFollowUpTypeData?.data?.find(
           (d: any) => d.type === item.value
@@ -244,7 +243,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
-
+console.log(calendarRangeType)
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -403,7 +402,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-  
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -418,7 +416,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-    
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -436,7 +433,8 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = [
-          { id:data?.data?.id,
+          {
+            id: data?.data?.id,
             title: data?.data?.subject,
             start: data?.data?.eventAt,
           },
@@ -450,11 +448,8 @@ export default function CalendarContainer({
     mutationFn: (id: number) => {
       return deleteEvent(id);
     },
-    onSuccess: (data) => {
-      
-    },
+    onSuccess: (data) => {},
   });
-
 
   function getDateDataHandler(date: string) {
     const data = {
@@ -510,7 +505,15 @@ export default function CalendarContainer({
   //     };
   //   }),
   // };
-
+  function returnDetailEventData(eventData: any) {
+    console.log(eventData);
+    const eventOptions = eventData?.map((event: any) => ({
+      id: event?.id,
+      title: event?.title,
+      start: event?.start,
+    }));
+    setSingleDateEvents(eventOptions);
+  }
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -559,34 +562,68 @@ export default function CalendarContainer({
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
-              <WeeklyCalendar
-                currentDate={currentDate}
+              // <WeeklyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridWeeklyCalendar
+                events={data}
+                followUpTypeList={followUpTypeList}
                 visibleRange={calendarData.visibleRange}
                 calendarType={calendarType}
-                events={data}
-                onSelectDate={(date: string) => {
-                  getDateDataHandler(date);
-                  setSelectedDate(date);
-                  setCurrentDate(date);
+                currentDate={currentDate}
+                onGetDayData={(eventData: any) => {
                   setViewDetail(true);
                   setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
                 }}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
+                onGetFollowUpTypeData={(eventData: any) => {
                   setViewDetail(true);
-                  setIsSingleEventData(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
                 }}
               />
             ) : calendarRangeType === "daily" ? (
-              <DailyCalendar
+              // <DailyCalendar
+              //   currentDate={currentDate}
+              //   events={data}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              //     />
+              <GridDailyCalendar
                 currentDate={currentDate}
                 events={data}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
+                followUpTypeList={followUpTypeList}
+                onGetFollowUpTypeData={(eventData: any) => {
                   setViewDetail(true);
-                  setIsSingleEventData(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
+                }}
+                onGetHourData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
                 }}
               />
             ) : (
@@ -607,7 +644,9 @@ export default function CalendarContainer({
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 isSingleEventData={isSingleEventData}
-                onDeleteEvent={(id)=>{deleteEventHandler(id)}}
+                onDeleteEvent={(id) => {
+                  deleteEventHandler(id);
+                }}
               />
             </div>
           )}
@@ -622,17 +661,17 @@ export default function CalendarContainer({
   ) {
     let calendarData;
     const date = convertDateWithTimeZone(currentDate, calendarType);
-   
+
     switch (calendarRangeType) {
       case "monthly":
         const calendarInfo = getCalendarInfo(currentDate, calendarType);
-      
+
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
           selectedDaysRange: [
             {
-              day: date.day,
+              // day: date.day,
               monthName: date.monthName,
               year: date.year,
             },
@@ -657,6 +696,7 @@ export default function CalendarContainer({
           currentDate,
           calendarType
         );
+
         const selectedDateRange = {
           start: convertDateWithTimeZone(
             convertToGregorianYMD(weeklyVisibleRange.start),
@@ -760,6 +800,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-phone-icon.png",
         activeClassName: "border border-[#EF26B2]",
         className: "text-[#C11574] bg-[#FDF2FA]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#C11574] bg-opacity-20",
       },
       {
         label: "پیامک",
@@ -767,6 +809,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-sms-icon.png",
         activeClassName: "border border-[#039855]",
         className: "text-[#087443] bg-[#EDFCF2]",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full rounded-full bg-[#087443] bg-opacity-20",
       },
       {
         label: "ایمیل",
@@ -774,6 +818,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-email-icon.png",
         activeClassName: "border border-[#1C68DA]",
         className: "text-[#175CD3] bg-[#EFF8FF]",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full bg-[#175CD3] bg-opacity-20",
       },
       {
         label: "جلسه",
@@ -781,6 +827,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-meeting-icon.png",
         activeClassName: "border border-[#7500FE]",
         className: "text-[#6941C6] bg-[#F9F5FF]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#6941C6] bg-opacity-20",
       },
       {
         label: "VOIP",
@@ -788,6 +836,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-voip-icon.png",
         activeClassName: "border border-[#D92D20]",
         className: "text-[#B93815] bg-[#FEF6EE]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#B93815] bg-opacity-20",
       },
     ];
 

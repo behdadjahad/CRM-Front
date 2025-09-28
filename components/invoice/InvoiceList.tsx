@@ -16,6 +16,7 @@ export interface InvoiceListInterface {
     status: { label: string; className?: string };
     price: { amount: string; currency: string };
     actions: { label: string; icon: string }[];
+    detailData: { label: string; value: string }[];
   }[];
 }
 

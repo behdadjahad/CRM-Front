@@ -187,7 +187,8 @@ export default function EventCreationContainer({
           افزودن رویداد
         </Button>
       ) : (
-        <Button
+          <Button
+            
           variant={"transparent"}
           onClick={() => {
             setOpenModal(true);

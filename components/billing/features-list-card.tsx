@@ -76,6 +76,7 @@ export default function FeaturesListCard({
         staleTime: 5 * 60 * 1000, // 5 minutes
         gcTime: 10 * 60 * 1000, // 10 minutes
     });
+
     // Local state for individual feature expansion (showing description box)
     const [expandedFeatures, setExpandedFeatures] = useState<Set<string>>(new Set());
 
@@ -86,7 +87,7 @@ export default function FeaturesListCard({
     const hasExpandedCategories = expandedCategories.size > 0;
     const hasExpandedFeatures = expandedFeatures.size > 0;
     const hasAnyExpanded = hasExpandedCategories || hasExpandedFeatures;
-    2
+ 
     // Toggle individual feature description box
     const toggleFeatureDescription = (featureId: string) => {
         setExpandedFeatures(prev => {

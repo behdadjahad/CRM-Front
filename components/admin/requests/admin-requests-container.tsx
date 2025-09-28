@@ -14,7 +14,10 @@ import ReactPaginate from "react-paginate";
 import { buildRowOptions } from "@/lib/utils";
 import ExportDataContainer from "@/components/shared/export-data-container";
 import { convertToGregorian } from "@/lib/date";
-import { filterPaymantStatusOptions, invoiceHeaderLabels } from "@/constants/invoice-constants";
+import {
+  filterPaymantStatusOptions,
+  invoiceHeaderLabels,
+} from "@/constants/invoice-constants";
 
 interface AdminRequestsContainerInterface {
   requestList: any[];
@@ -113,8 +116,14 @@ export default function AdminRequestsContainer({
     const filterData = {
       ...filters,
       paymentStatus: formik.values.paymentStatus,
-      dateTo: convertToGregorian(formik.values.dateTo, formik.values.dateToType),
-      dateFrom: convertToGregorian(formik.values.dateFrom,formik.values.dateToType)
+      dateTo: convertToGregorian(
+        formik.values.dateTo,
+        formik.values.dateToType
+      ),
+      dateFrom: convertToGregorian(
+        formik.values.dateFrom,
+        formik.values.dateToType
+      ),
     };
     dispatch(
       fetchInvoice({

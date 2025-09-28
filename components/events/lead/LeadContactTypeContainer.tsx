@@ -8,6 +8,7 @@ export interface LeadContactTypeContainerInterface {
     icon: string;
     className?: string;
     activeClassName?: string;
+    orderClassName?: string;
   }[];
   // activeItem?: { value: string; label: string
   activeItem: {

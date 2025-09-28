@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+
 interface CalendarTimeFilteringInterface {
   list: {
     label: string;
@@ -8,7 +8,7 @@ interface CalendarTimeFilteringInterface {
   onActiveTime: (value: CalendarRangeTimeType) => void;
   calendarRangeType: CalendarRangeTimeType;
 }
-export type CalendarRangeTimeType = "weekly" | "monthly" | "daily";
+export type CalendarRangeTimeType = "weekly" | "monthly" | "daily" | "custom-range-day";
 
 export default function CalendarTimeFiltering({
   list,

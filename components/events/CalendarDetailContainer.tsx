@@ -17,19 +17,20 @@ interface CalendarDetailContainerInterface {
   //   };
   eventList: any[];
   calendarType: "jalali" | "hijri" | "gregory";
-    isSingleEventData: boolean;
-    onDeleteEvent: (id: number) => void;
+  isSingleEventData: boolean;
+  onDeleteEvent: (id: number) => void;
 }
 
 export default function CalendarDetailContainer({
   eventList,
   calendarType,
-    isSingleEventData,
-  onDeleteEvent
+  isSingleEventData,
+  onDeleteEvent,
 }: CalendarDetailContainerInterface) {
   const [viewEditForm, setViewEditForm] = useState<boolean>(false);
   const { data } = generateEventsDetailData();
   return (
+
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <h2>{data.title}</h2>
@@ -37,7 +38,14 @@ export default function CalendarDetailContainer({
       </div>
       <div className="flex flex-col gap-4">
         {data.list.map((event, index) => (
-          <EventDetailCard key={`event-detail-${index}`} {...event} />
+          <EventDetailCard
+            key={`event-detail-${index}`}
+            {...event}
+            onViewEditForm={(viewEditForm) => {
+              setViewEditForm(viewEditForm);
+              console.log(viewEditForm);
+            }}
+          />
         ))}
       </div>
     </div>
@@ -63,7 +71,11 @@ export default function CalendarDetailContainer({
             />
           </Button>
 
-          <DeleteConfirmation onDelete={() => {onDeleteEvent(eventList?.[0]?.id)}} />
+          <DeleteConfirmation
+            onDelete={() => {
+              onDeleteEvent(eventList?.[0]?.id);
+            }}
+          />
         </>
       ) : (
         <EventCreationContainer useForDetail={true} />

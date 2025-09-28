@@ -7,7 +7,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { FaEllipsisH } from "react-icons/fa";
-
+import { FaEllipsisV } from "react-icons/fa";
 import { ActionType } from "../admin/requests/admin-requests-table";
 import { MdClose } from "react-icons/md";
 import CustomModal from "./custom-modal";
@@ -42,7 +42,7 @@ export default function ActionDropDown({
           )}
         >
           <div className="flex flex-row items-center gap-2 text-sm">
-            <FaEllipsisH />
+            <FaEllipsisV />
           </div>
         </DropdownMenuTrigger>
 
@@ -83,10 +83,10 @@ export default function ActionDropDown({
             className="cursor-pointer flex justify-end"
           />
         </div>
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center gap-6">
           {actionType === "Discount" ? <DiscountActionContent {...requestData} onSubmit={(discount:number)=>{onActionHandler(actionType,discount)}}/> :    
           <>
-          <span className="text-lg font-bold mb-4">
+          <span className="text-[#637381] text-sm">
             آیا از انجام این عملیات مطمئن هستید؟
           </span>
           <div className="flex items-center gap-2">
