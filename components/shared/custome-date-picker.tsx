@@ -8,6 +8,10 @@ import persian_fa from "react-date-object/locales/persian_fa";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import { cn } from "@/lib/utils";
 
+//used library 
+//shamsi , ghamri , gregorian
+//get idea
+
 import DateObject from "react-date-object";
 export type DateCalendar = "Lunar" | "Solar" | "Gregorian";
 
@@ -66,9 +70,8 @@ export default function CustomeDateTimePicker({
     const calendarLabel = calendars[calendarType].label;
     buttons.forEach((button: any) => {
       const isActive = button.innerText === calendarLabel;
-      button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${
-        isActive ? "bg-primary-muted text-primary-hover font-bold" : ""
-      }`;
+      button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${isActive ? "bg-primary-muted text-primary-hover font-bold" : ""
+        }`;
     });
   };
 
@@ -119,11 +122,10 @@ export default function CustomeDateTimePicker({
           const button = document.createElement("button");
           button.innerText = calendars[key as DateCalendar].label;
           button.onclick = () => handleCalendarChange(key as DateCalendar);
-          button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${
-            calendar === key
-              ? "bg-primary-muted text-primary-hover font-bold"
-              : ""
-          }`;
+          button.className = `px-4 py-2 border-none cursor-pointer flex-1 text-primary text-sm ${calendar === key
+            ? "bg-primary-muted text-primary-hover font-bold"
+            : ""
+            }`;
           buttonContainer.appendChild(button);
         });
 

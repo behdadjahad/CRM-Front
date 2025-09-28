@@ -31,7 +31,7 @@ const CalendarTimeFilteringList: {
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },
-  { label: "شخصی سازی", value: "ce-dayustom-rang" },
+  { label: "شخصی سازی", value: "custom-range-day" },
 ];
 const CalendarTypeFilteringList: {
   label: string;

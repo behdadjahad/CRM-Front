@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
@@ -28,6 +28,8 @@ import DailyCalendar from "./DailyCalendar";
 import CalendarHeader from "./CalendarHeader";
 
 import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
+import DateSelectorModal from "./calendar/DateSelectorModal";
+import { calculateWeekRange, getLastDayOfMonth } from "@/lib/calendar-modal-utils";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -50,6 +52,8 @@ import CalendarDetailSideBar from "./CalendarDetailSidebar";
 
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
+import DateSelector from "./calendar/DateSelector";
+import DateSelectorExample from "./calendar/DateSelectorExample";
 
 export interface CalendarContainerInterface {
   data: {
@@ -72,11 +76,11 @@ export default function CalendarContainer({
   }>(followUpTypeList?.[0]);
 
   const today = getTodayInGregorianYMD();
-  const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const [isSingleEventData, setIsSingleEventData] = useState<boolean>(false);
 
   const [currentDate, setCurrentDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(today); // New state for modal selections
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
   const [calendarType, setCalendarType] = useState<
@@ -84,10 +88,22 @@ export default function CalendarContainer({
   >("jalali");
   const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
-  const { calendarData } = generateCalendarData(
-    calendarRangeType,
-    calendarType
-  );
+
+  // Modal state for date selection
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    rangeType: CalendarRangeTimeType | null;
+    pendingDate: string;
+  }>({
+    isOpen: false,
+    rangeType: null,
+    pendingDate: currentDate
+  });
+  const calendarData = useMemo(() => {
+    console.log('Regenerating calendar data with:', { currentDate, calendarRangeType, calendarType });
+    const { calendarData } = generateCalendarData(calendarRangeType, calendarType);
+    return calendarData;
+  }, [currentDate, calendarRangeType, calendarType]);
   const { data: leadFollowUpTypeData } = useQuery({
     queryKey: ["leadFollowUpTypeData"],
     queryFn: async () => await getLaedfollowUpTypes(),
@@ -136,13 +152,13 @@ export default function CalendarContainer({
               targetMonth === 12
                 ? { year: targetYear + 1, month: 1, day: targetday }
                 : {
-                    year: targetYear,
-                    month: targetMonth + 1,
-                    day:
-                      targetMonth === 11 && !isLeapYear && targetday === 30
-                        ? targetday - 1
-                        : targetday,
-                  };
+                  year: targetYear,
+                  month: targetMonth + 1,
+                  day:
+                    targetMonth === 11 && !isLeapYear && targetday === 30
+                      ? targetday - 1
+                      : targetday,
+                };
             const nextTargetDate = revertDateWithTimeZone(
               nextTarget,
               calendarType
@@ -243,7 +259,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
-console.log(calendarRangeType)
+  console.log(calendarRangeType)
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -284,13 +300,13 @@ console.log(calendarRangeType)
             const prevTarget =
               targetMonth === 1
                 ? {
-                    year: targetYear - 1,
-                    month: 12,
-                    day:
-                      !isLeapYear && targetday === 30
-                        ? targetday - 1
-                        : targetday,
-                  }
+                  year: targetYear - 1,
+                  month: 12,
+                  day:
+                    !isLeapYear && targetday === 30
+                      ? targetday - 1
+                      : targetday,
+                }
                 : { year: targetYear, month: targetMonth - 1, day: targetday };
             const prevTargetDate = revertDateWithTimeZone(
               prevTarget,
@@ -448,7 +464,7 @@ console.log(calendarRangeType)
     mutationFn: (id: number) => {
       return deleteEvent(id);
     },
-    onSuccess: (data) => {},
+    onSuccess: (data) => { },
   });
 
   function getDateDataHandler(date: string) {
@@ -514,6 +530,86 @@ console.log(calendarRangeType)
     }));
     setSingleDateEvents(eventOptions);
   }
+
+  // Modal handlers
+  const openDateModal = (rangeType: CalendarRangeTimeType) => {
+    console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
+    setModalState({
+      isOpen: true,
+      rangeType,
+      pendingDate: currentDate
+    });
+  };
+
+  const handleModalConfirm = (modalSelectedDate: string) => {
+    const { rangeType } = modalState;
+
+    console.log('Calendar receiving modal confirmation:', { modalSelectedDate, rangeType, calendarType });
+    console.log('Current calendar state before update:', { currentDate, selectedDate });
+
+    // Update selectedDate state (separate from currentDate)
+    setSelectedDate(modalSelectedDate);
+
+    let targetDate = modalSelectedDate;
+
+    if (rangeType === 'weekly') {
+      // Calculate week range for the selected date
+      const weekRange = calculateWeekRange(modalSelectedDate, calendarType);
+      targetDate = weekRange.start;
+      setCurrentDate(weekRange.start);
+    } else {
+      // For monthly and daily, use the selected date directly
+      setCurrentDate(modalSelectedDate);
+    }
+
+    // Set the range type after confirming the date
+    setCalendarRangeType(rangeType!);
+
+    // Fetch new data for the selected date/range
+    if (rangeType === 'monthly') {
+      // Get the full month range for the selected date
+      const selectedDateObj = convertDateWithTimeZone(modalSelectedDate, calendarType);
+      const monthStart = revertDateWithTimeZone({
+        year: selectedDateObj.year,
+        month: selectedDateObj.month,
+        day: 1
+      }, calendarType);
+
+      // Calculate last day of month using calendar-aware utility
+      const monthEnd = getLastDayOfMonth(selectedDateObj.year, selectedDateObj.month, calendarType);
+
+      console.log('Monthly range:', { monthStart, monthEnd, selectedDateObj });
+
+      onFilter({
+        startDateRange: monthStart + "T00:00:00Z",
+        endDateRange: monthEnd + "T23:59:59Z"
+      });
+    } else if (rangeType === 'weekly') {
+      const weekRange = calculateWeekRange(modalSelectedDate, calendarType);
+      onFilter({
+        startDateRange: weekRange.start + "T00:00:00Z",
+        endDateRange: weekRange.end + "T23:59:59Z"
+      });
+    } else { // daily
+      onFilter({
+        startDateRange: modalSelectedDate + "T00:00:00Z",
+        endDateRange: modalSelectedDate + "T23:59:59Z"
+      });
+    }
+
+    // Close modal
+    setModalState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+
+    console.log('Calendar state after modal confirmation:', {
+      newCurrentDate: targetDate,
+      newSelectedDate: modalSelectedDate,
+      newCalendarRangeType: rangeType
+    });
+  };
+
+  const handleModalClose = () => {
+    setModalState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+  };
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -524,9 +620,12 @@ console.log(calendarRangeType)
           onPrev={goToPrev}
           onNext={goToNext}
           onToday={goToToday}
-          onActiveTime={(value) => setCalendarRangeType(value)}
+          onActiveTime={openDateModal}
           calendarRangeType={calendarRangeType}
         />
+              <DateSelectorExample
+   />
+
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
@@ -630,6 +729,7 @@ console.log(calendarRangeType)
               <></>
             )}
           </div>
+
           {viewDetail && (
             <div className="col-span-1 bg-card p-6">
               {/* <EventDetailContainer
@@ -652,6 +752,17 @@ console.log(calendarRangeType)
           )}
         </div>
       </div>
+
+      {/* Date Selector Modal */}
+      {/* <DateSelectorModal
+        isOpen={modalState.isOpen}
+        onClose={handleModalClose}
+        onConfirm={handleModalConfirm}
+        currentDate={currentDate}
+        calendarType={calendarType}
+        rangeType={(modalState.rangeType && modalState.rangeType !== 'custom-range-day') ? modalState.rangeType as 'monthly' | 'weekly' | 'daily' : 'monthly'}
+      /> */}
+
     </div>
   );
 

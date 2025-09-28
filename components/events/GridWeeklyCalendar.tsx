@@ -74,7 +74,7 @@ export function GridWeeklyCalendar({
               <span
                 className={`${
                   isCurrentDay
-                    ? "flex items-center justify-center rounded-full bg-[#1C68DA] text-card w-6 h-6"
+                    ? "flex items-center justify-center rounded-full bg-[#5a0e47] text-card w-6 h-6"
                     : ""
                 } ${isLtr ? "custom-font" : ""}`}
               >
