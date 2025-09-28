@@ -47,9 +47,9 @@ import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 import CalendarDetailSideBar from "./CalendarDetailSidebar";
 
-
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
+import Popup from "../ui/popup";
 
 export interface CalendarContainerInterface {
   data: {
@@ -243,7 +243,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
-console.log(calendarRangeType)
+  console.log(calendarRangeType);
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -527,6 +527,16 @@ console.log(calendarRangeType)
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
+        <Popup>
+          <h2 className="text-xl font-bold">Hello Popup</h2>
+          <p>This visually overlays the whole page.</p>
+          <button
+            onClick={() => {}}
+            className="mt-4 px-3 py-2 bg-red-500 text-white rounded"
+          >
+            Close
+          </button>
+        </Popup>
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
