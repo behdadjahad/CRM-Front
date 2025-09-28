@@ -50,7 +50,8 @@ export default function CustomRangeDatePicker({
             setDate();
           }}
           calendar={getCalendar()}
-          locale={getLocale()}
+                  locale={getLocale()}
+                  className="bg-red-300"
         />
         <div className="flex items-center gap-2">
           <Button className="" variant={"info"}>
