@@ -327,7 +327,7 @@ export function generateVisibleRange(
       .clone()
       .calendar("jalali")
       .year(year)
-      .month(month-1)
+      .month(month - 1)
       .date(1);
     // // Go back to Saturday
     while (start.day() !== 6) {
@@ -338,7 +338,7 @@ export function generateVisibleRange(
       .clone()
       .calendar("jalali")
       .year(year)
-      .month(month-1)
+      .month(month - 1)
       .endOf("month");
     // Go forward to Friday
     while (end.day() !== 5) {
@@ -587,13 +587,13 @@ export function generateWeekVisibleRange(
 //   return { start: startOfWeek, end: endOfWeek };
 // }
 export function getDayNumber(date: Date, calendarType: string) {
- 
+
 
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
     case "hijri":
-    
+
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":

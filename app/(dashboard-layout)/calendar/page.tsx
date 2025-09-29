@@ -19,8 +19,8 @@ export default function Calendar() {
 
   useEffect(() => {
     if (calendar && calendar?.data && calendar?.data?.length > 0) {
-      const calendarDataList = calendar?.data?.map((item:any) => ({
-        id:item?.id,
+      const calendarDataList = calendar?.data?.map((item: any) => ({
+        id: item?.id,
         title: item?.subject,
         start: item?.occurenceDate,
         followUpTypeId: item?.extraInformation?.followUpTypeId
@@ -35,14 +35,14 @@ export default function Calendar() {
     },
     onSuccess: (response) => {
       if (response && response?.data && response?.data?.length > 0) {
-      const calendarDataList = response?.data?.map((item:any) => ({
-        id:item?.id,
-        title: item?.subject,
-        start: item?.occurenceDate,
-        type:"CALL",
-      }));
-      setCalendarData(calendarDataList);
-    }
+        const calendarDataList = response?.data?.map((item: any) => ({
+          id: item?.id,
+          title: item?.subject,
+          start: item?.occurenceDate,
+          type: "CALL",
+        }));
+        setCalendarData(calendarDataList);
+      }
     },
   });
   return (
@@ -65,7 +65,7 @@ export default function Calendar() {
         </div>
         <EventCreationContainer />
       </div>
-      <CalendarContainer data={calendarData} onFilter={(data:any)=>getCalendarDataHandler(data)}/>
+      <CalendarContainer data={calendarData} onFilter={(data: any) => getCalendarDataHandler(data)} />
     </main>
   );
 }
