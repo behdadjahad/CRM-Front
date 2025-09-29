@@ -55,6 +55,8 @@ import DateSelector from "./calendar/DateSelector";
 import DateSelectorExample from "./calendar/DateSelectorExample";
 import Popup from "../ui/popup";
 import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
+import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepper";
+import { set } from "lodash";
 
 export interface CalendarContainerInterface {
   data: {
@@ -91,7 +93,7 @@ export default function CalendarContainer({
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
 
   // Modal state for date selection
-  const [modalState, setModalState] = useState<{
+  const [selectorState, setSelectorState] = useState<{
     isOpen: boolean;
     rangeType: CalendarRangeTimeType | null;
     pendingDate: string;
@@ -536,32 +538,41 @@ export default function CalendarContainer({
   // Modal handlers
   const openDateModal = (rangeType: CalendarRangeTimeType) => {
     console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
-    setModalState({
+    setSelectorState({
       isOpen: true,
       rangeType,
       pendingDate: currentDate
     });
   };
+//           onActiveTime={(value) => setCalendarRangeType(value)}
 
-  const handleModalConfirm = (modalSelectedDate: string) => {
-    const { rangeType } = modalState;
+  const handleDateSelectorConfirm = (result: DateSelectorResult) => {
+    const { rangeType } = selectorState;
 
-    console.log('Calendar receiving modal confirmation:', { modalSelectedDate, rangeType, calendarType });
-    console.log('Current calendar state before update:', { currentDate, selectedDate });
+    console.log('Calendar receiving confirmation:', { result, rangeType, calendarType });
+    console.log('Current calendar state before update:', { currentDate, result });
 
+    // Extract the start date from the result for backward compatibility
+    let selectedDate = result.start;
+    
     // Update selectedDate state (separate from currentDate)
-    setSelectedDate(modalSelectedDate);
+    setSelectedDate(selectedDate);
 
-    let targetDate = modalSelectedDate;
+    let targetDate = selectedDate;
 
-    if (rangeType === 'weekly') {
-      // Calculate week range for the selected date
-      const weekRange = calculateWeekRange(modalSelectedDate, calendarType);
+    if (rangeType === 'weekly' && result.type === 'weekly') {
+      // Use the week range directly from the DateSelectorResult
+      targetDate = result.start;
+      setCurrentDate(result.start);
+      console.log('Using week range from DateSelectorResult:', { start: result.start, end: result.end });
+    } else if (rangeType === 'weekly') {
+      // Fallback: Calculate week range for the selected date
+      const weekRange = calculateWeekRange(selectedDate, calendarType);
       targetDate = weekRange.start;
       setCurrentDate(weekRange.start);
     } else {
       // For monthly and daily, use the selected date directly
-      setCurrentDate(modalSelectedDate);
+      setCurrentDate(selectedDate);
     }
 
     // Set the range type after confirming the date
@@ -570,7 +581,8 @@ export default function CalendarContainer({
     // Fetch new data for the selected date/range
     if (rangeType === 'monthly') {
       // Get the full month range for the selected date
-      const selectedDateObj = convertDateWithTimeZone(modalSelectedDate, calendarType);
+      const selectedDateObj = convertDateWithTimeZone(selectedDate, calendarType);
+      console.log("selectedDateObj", selectedDateObj);
       const monthStart = revertDateWithTimeZone({
         year: selectedDateObj.year,
         month: selectedDateObj.month,
@@ -587,31 +599,42 @@ export default function CalendarContainer({
         endDateRange: monthEnd + "T23:59:59Z"
       });
     } else if (rangeType === 'weekly') {
-      const weekRange = calculateWeekRange(modalSelectedDate, calendarType);
+      const weekRange = calculateWeekRange(selectedDate, calendarType);
       onFilter({
         startDateRange: weekRange.start + "T00:00:00Z",
         endDateRange: weekRange.end + "T23:59:59Z"
       });
     } else { // daily
       onFilter({
-        startDateRange: modalSelectedDate + "T00:00:00Z",
-        endDateRange: modalSelectedDate + "T23:59:59Z"
+        startDateRange: selectedDate + "T00:00:00Z",
+        endDateRange: selectedDate + "T23:59:59Z"
       });
     }
 
     // Close modal
-    setModalState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+    setSelectorState({ isOpen: false, rangeType: null, pendingDate: currentDate });
 
-    console.log('Calendar state after modal confirmation:', {
+    console.log('Calendar state after confirmation:', {
       newCurrentDate: targetDate,
-      newSelectedDate: modalSelectedDate,
+      newSelectedDate: selectedDate,
       newCalendarRangeType: rangeType
     });
   };
 
-  const handleModalClose = () => {
-    setModalState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+  const handleCloseSelector = () => {
+    setSelectorState({ isOpen: false, rangeType: null, pendingDate: currentDate });
   };
+    const openDateSelector = (rangeType:  "monthly" | "weekly" | "daily"|CalendarRangeTimeType) => {
+    console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
+    setSelectorState({
+      isOpen: true,
+      rangeType,
+      pendingDate: currentDate
+    });
+    setCalendarRangeType(rangeType);
+  };
+  //           onActiveTime={(value) => setCalendarRangeType(value)}
+
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -622,11 +645,18 @@ export default function CalendarContainer({
           onPrev={goToPrev}
           onNext={goToNext}
           onToday={goToToday}
-          onActiveTime={openDateModal}
+          // onActiveTime={openDateModal}
+          onActiveTime={openDateSelector}
           calendarRangeType={calendarRangeType}
         />
-              <DateSelectorExample
-   />
+              <DateSelectorStepper
+              currentDate={currentDate}
+              calendarType={calendarType}
+              rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
+              isOpen={selectorState.isOpen}
+              onCancel={handleCloseSelector}
+              onConfirm={handleDateSelectorConfirm}
+            />
 
         <CustomRangeDatePicker onClose={() => {}} />
         <div className="bg-[#FCFCFD] p-3">
