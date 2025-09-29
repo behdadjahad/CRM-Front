@@ -49,11 +49,12 @@ import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 import CalendarDetailSideBar from "./CalendarDetailSidebar";
 
-
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import DateSelector from "./calendar/DateSelector";
 import DateSelectorExample from "./calendar/DateSelectorExample";
+import Popup from "../ui/popup";
+import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
 
 export interface CalendarContainerInterface {
   data: {
@@ -260,6 +261,7 @@ export default function CalendarContainer({
   //   });
   // };
   console.log(calendarRangeType)
+
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
       const FMT = "YYYY-MM-DD";
@@ -626,6 +628,7 @@ export default function CalendarContainer({
               <DateSelectorExample
    />
 
+        <CustomRangeDatePicker onClose={() => {}} />
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
