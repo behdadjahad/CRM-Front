@@ -528,7 +528,7 @@ export default function CalendarContainer({
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        <CustomRangeDatePicker onClose={() => {}} />
+        <CustomRangeDatePicker onClose={() => { }} calendarType={calendarType} />
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
