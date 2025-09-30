@@ -51,7 +51,7 @@ import CalendarDetailSideBar from "./CalendarDetailSidebar";
 
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
-import DateSelectorStepper from "./calendar/DateSelectorStepperClean";
+import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepperClean";
 
 // import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepper";
 
@@ -541,7 +541,7 @@ export default function CalendarContainer({
   }
 
   // Modal handlers
-  const openDateModal = (rangeType: CalendarRangeTimeType) => {
+  const openda = (rangeType: CalendarRangeTimeType) => {
     console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
     setSelectorState({
       isOpen: true,
@@ -552,15 +552,17 @@ export default function CalendarContainer({
   //           onActiveTime={(value) => setCalendarRangeType(value)}
 
   const handleDateSelectorConfirm = (result: DateSelectorResult) => {
-    console.log('Date selector confirmed with result:', result);
+    console.log('CalendarContainer - handleDateSelectorConfirm received:', result);
 
     // Update the current date based on the result type
     switch (result.type) {
       case 'monthly':
+        console.log('Setting monthly - currentDate to:', result.start);
         setCurrentDate(result.start);
         setCalendarRangeType('monthly');
         break;
       case 'weekly':
+        console.log('Setting weekly - currentDate to:', result.start);
         setCurrentDate(result.start);
         setCalendarRangeType('weekly');
         break;
@@ -577,7 +579,15 @@ export default function CalendarContainer({
   };
 
   const handleCloseSelector = () => {
-    setSelectorState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+    // Reset the selector state and close the popup
+    setSelectorState({
+      isOpen: false,
+      rangeType: null,
+      pendingDate: currentDate
+    });
+
+    // Reset the DateSelectorStepper internal state by re-initializing
+    // This will be handled by the useDateSelector hook when isOpen becomes false
   };
   const openDateSelector = (rangeType: "monthly" | "weekly" | "daily" | CalendarRangeTimeType) => {
     console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
@@ -600,23 +610,27 @@ export default function CalendarContainer({
           onPrev={goToPrev}
           onNext={goToNext}
           onToday={goToToday}
-          // onActiveTime={openDateModal}
-          onActiveTime={openDateSelector}
+          onOpenDateSelector={openDateSelector}
+          // onActiveTime={openDateSelector}
+          onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
-        
-        <DateSelectorStepper
-          currentDate={currentDate}
-          setCurrentDate={setCurrentDate}
-          calendarType={calendarType}
-          rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
-          isOpen={selectorState.isOpen}
-          onCancel={handleCloseSelector}
-          onConfirm={handleDateSelectorConfirm}
-        />
 
-
-
+        {
+          selectorState.isOpen && selectorState.rangeType !== "custom-range-day" ? (<DateSelectorStepper
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            calendarType={calendarType}
+            rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
+            isOpen={selectorState.isOpen}
+            onCancel={handleCloseSelector}
+            onConfirm={handleDateSelectorConfirm}
+            onReset={() => {
+              // Reset any internal state if needed
+              console.log('DateSelectorStepper reset');
+            }}
+          />) : (<></>)
+        }
         {/* <CustomRangeDatePicker onClose={() => {}} /> */}
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer

@@ -188,7 +188,28 @@ export const navigateMonth = (
         day: newDay
     };
 };
+export const navigateYear = (
+    year: number,
+    month: number,
+    direction: 'prev' | 'next',
+    calendarType: CalendarType
+): DateInfo => {
+    let newYear = year;
+    let newMonth = month;
 
+    if (direction === 'prev') {
+        newYear = year - 1;
+    } else {
+        newYear = year + 1;
+    }
+
+    // Keep the same month, just change the year
+    return {
+        year: newYear,
+        month: newMonth,
+        day: 1 // Default day
+    };
+};
 /**
  * Get today's date info in the specified calendar type
  */

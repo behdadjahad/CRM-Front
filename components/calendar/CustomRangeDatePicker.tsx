@@ -46,9 +46,9 @@ export default function CustomRangeDatePicker({
       <div className="flex flex-col gap-4 p-3 items-center">
         <DatePicker
           value={date}
-          onChange={() => {
-            setDate();
-          }}
+          // onChange={() => {
+          //   setDate();
+          // }}
           calendar={getCalendar()}
                   locale={getLocale()}
                   className="bg-red-300"

@@ -7,7 +7,8 @@ import {
     DateInfo,
     safeCurrentDateString,
     getTodayYear,
-    navigateMonth
+    navigateMonth,
+    navigateYear
 } from '@/lib/date-selector-utils';
 
 export interface DateSelectorState {
@@ -28,6 +29,7 @@ export interface DateSelectorActions {
     handleMonthSelect: (month: number) => void;
     handleDaySelect: (day: number) => void;
     handleMonthNavigate: (direction: 'prev' | 'next') => void;
+    handleYearNavigate: (direction: 'prev' | 'next') => void;
     handleYearRangeChange: (offset: number) => void;
     resetToCurrentDate: () => void;
 }
@@ -92,8 +94,13 @@ export const useDateSelector = (
     };
 
     const handleDaySelect = (day: number) => {
+        console.log('handleDaySelect input day:', day)
         setSelectedDay(day);
+        console.log('setSelectedDay called with:', day)
     };
+    useEffect(() => {
+        console.log('selectedDay state actually changed to:', selectedDay);
+    }, [selectedDay]);
 
     const handleMonthNavigate = (direction: 'prev' | 'next') => {
         if (!selectedYear || !selectedMonth) return;
@@ -105,6 +112,13 @@ export const useDateSelector = (
             calendarType
         );
 
+        setSelectedYear(newDateInfo.year);
+        setSelectedMonth(newDateInfo.month);
+        setSelectedDay(newDateInfo.day);
+    };
+    const handleYearNavigate = (direction: 'prev' | 'next') => {
+        if (!selectedYear) return;
+        const newDateInfo = navigateYear(selectedYear, selectedMonth!, direction, calendarType);
         setSelectedYear(newDateInfo.year);
         setSelectedMonth(newDateInfo.month);
         setSelectedDay(newDateInfo.day);
@@ -145,6 +159,7 @@ export const useDateSelector = (
         handleMonthSelect,
         handleDaySelect,
         handleMonthNavigate,
+        handleYearNavigate,
         handleYearRangeChange,
         resetToCurrentDate
     };
