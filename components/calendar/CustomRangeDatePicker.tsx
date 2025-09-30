@@ -49,6 +49,7 @@ export default function CustomRangeDatePicker({
     }
   };
   const [dates, setDates] = useState<[any, any]>([null, null]);
+  const [switchRange, setSwitchRange] = useState<string>();
   function submitDateRange() {
     const updatedDatesObj = dates.map((date) => date.toDate());
     const updatedDatesStr = updatedDatesObj.map((date) =>
@@ -63,24 +64,34 @@ export default function CustomRangeDatePicker({
   }
   return (
     <Popup>
-      <div className="w-[545px] py-3 px-6 flex flex-col gap-4">
+      <div className="w-[376px] h-[472px] py-3 px-6 flex flex-col justify-between gap-4">
         <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-2 items-center">
-            <span className="text-[#2949A4] text-sm font-primary-medium">شروع</span>
+          <div className="flex flex-col gap-2 items-start">
+            <span className="text-[#2949A4] text-sm font-primary-medium">
+              شروع
+            </span>
             <span className="text-[#545973]">
               {" "}
               {dates[0] ? dates[0].format("YYYY/MM/DD") : "-"}
             </span>
           </div>
-          <div className="flex flex-col gap-2 items-center">
-            <span className="text-[#2949A4] text-sm font-primary-medium">پایان</span>
+          <div className="flex flex-col gap-2 items-start">
+            <span className="text-[#2949A4] text-sm font-primary-medium">
+              پایان
+            </span>
             <span className="text-[#545973]">
               {" "}
               {dates[1] ? dates[1].format("YYYY/MM/DD") : "-"}
             </span>
           </div>
         </div>
-
+        <div>
+          <div className="flex items-center gap-4 justify-around w-full text-sm text-[#414651]">
+            <div className="cursor-pointer">امروز</div>
+            <div className="cursor-pointer">این ماه</div>
+            <div className="cursor-pointer"> این هفته</div>
+          </div>
+        </div>
         <div className="w-full">
           <Calendar
             value={dates}
@@ -97,7 +108,7 @@ export default function CustomRangeDatePicker({
             className="text-sm w-40"
             onClick={() => {
               submitDateRange();
-              onClose()
+              onClose();
             }}
           >
             تایید
@@ -105,7 +116,9 @@ export default function CustomRangeDatePicker({
           <Button
             variant={"foreground"}
             className="text-sm w-40"
-            onClick={()=>{onClose()}}
+            onClick={() => {
+              onClose();
+            }}
           >
             لغو
           </Button>
