@@ -11,6 +11,7 @@ import Image from "next/image";
 import {
   convertDateWithTimeZone,
   convertToGregorianYMD,
+  generateCustomVisibleRange,
   generateVisibleRange,
   generateWeekVisibleRange,
   getCalendarInfo,
@@ -51,6 +52,7 @@ import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import Popup from "../ui/popup";
 import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
+import CustomRangeCalendar from "./CustomRangeCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -76,7 +78,8 @@ export default function CalendarContainer({
   const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const [isSingleEventData, setIsSingleEventData] = useState<boolean>(false);
-
+  const [isCustomRangeShow, setIsCustomRangeShow] = useState<boolean>(false);
+  const [selectedRange, setSelectedRange] = useState<any>();
   const [currentDate, setCurrentDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
@@ -515,6 +518,7 @@ export default function CalendarContainer({
     }));
     setSingleDateEvents(eventOptions);
   }
+  console.log(calendarRangeType);
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
       <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
@@ -525,10 +529,27 @@ export default function CalendarContainer({
           onPrev={goToPrev}
           onNext={goToNext}
           onToday={goToToday}
-          onActiveTime={(value) => setCalendarRangeType(value)}
+          onActiveTime={(value) => {
+            setCalendarRangeType(value);
+            if (value === "custom-range-day") {
+              setIsCustomRangeShow(true);
+            }
+          }}
           calendarRangeType={calendarRangeType}
         />
-        <CustomRangeDatePicker onClose={() => { }} calendarType={calendarType} />
+        {isCustomRangeShow && calendarRangeType === "custom-range-day" && (
+          <CustomRangeDatePicker
+            onClose={() => {
+              setIsCustomRangeShow(false);
+            }}
+            calendarType={calendarType}
+            onSendDateRange={(dates: any) => {
+              setSelectedRange(dates);
+              setCurrentDate(dates.start);
+              setIsCustomRangeShow(true);
+            }}
+          />
+        )}
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
@@ -562,6 +583,14 @@ export default function CalendarContainer({
                   setViewDetail(true);
                   setIsSingleEventData(true);
                 }}
+              />
+            ) : calendarRangeType === "custom-range-day" ? (
+              <CustomRangeCalendar
+                currentDate={currentDate}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                events={data}
+                selectedRange={selectedRange}
               />
             ) : calendarRangeType === "weekly" ? (
               // <WeeklyCalendar
@@ -763,6 +792,47 @@ export default function CalendarContainer({
               year: date.year,
             },
           ],
+        };
+        return { calendarData };
+      case "custom-range-day":
+        const customDateRange = {
+          start: convertDateWithTimeZone(
+            convertToGregorianYMD(selectedRange?.start),
+            calendarType
+          ),
+          end: convertDateWithTimeZone(
+            convertToGregorianYMD(selectedRange?.end),
+            calendarType
+          ),
+        };
+        calendarData = {
+          date: date,
+          visibleRange: selectedRange
+            ? generateCustomVisibleRange(
+                convertToGregorianYMD(selectedRange?.start),
+                convertToGregorianYMD(selectedRange?.end)
+              )
+            : generateVisibleRange(currentDate, calendarType),
+          selectedDaysRange: selectedRange
+            ? [
+                {
+                  day: customDateRange.start.day,
+                  monthName: customDateRange.start.monthName,
+                  year: customDateRange.start.year,
+                },
+                {
+                  day: customDateRange.end.day,
+                  monthName: customDateRange.end.monthName,
+                  year: customDateRange.end.year,
+                },
+              ]
+            : [
+                {
+                  // day: date.day,
+                  monthName: date.monthName,
+                  year: date.year,
+                },
+              ],
         };
         return { calendarData };
       default:

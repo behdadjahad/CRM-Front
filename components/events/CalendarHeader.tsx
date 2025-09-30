@@ -31,7 +31,7 @@ const CalendarTimeFilteringList: {
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },
-  { label: "شخصی سازی", value: "ce-dayustom-rang" },
+  { label: "شخصی سازی", value: "custom-range-day" },
 ];
 const CalendarTypeFilteringList: {
   label: string;
@@ -59,10 +59,10 @@ export default function CalendarHeader({
       <div className="flex items-stretch gap-4">
         <div className={`h-16 w-16 border rounded-lg flex flex-col items-center justify-between `}>
           <span className="bg-[#FCFCFD] text-xs w-full text-center p-1 rounded-t-lg text-[#717680]">
-            {date.monthName}
+            {date?.monthName}
           </span>
           <span className={`flex items-center justify-center flex-1 text-[#1C68DA] font-primary-bold ${isLtr ? "custom-font":""}`}>
-            {date.day}
+            {date?.day}
           </span>
         </div>
 
@@ -70,15 +70,15 @@ export default function CalendarHeader({
           <div className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
             {" "}
             <span className=" text-[#181D27] font-primary-bold">
-              {date.monthName}
+              {date?.monthName}
             </span>
             <span className={`text-[#181D27] font-primary-bold ${isLtr ? "custom-font":""}`}>
-              {date.year}
+              {date?.year}
             </span>
           </div>
           <div className="text-xs text-[#535862] flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
             {fullRange &&
-              fullRange.length > 0 &&
+              fullRange?.length > 0 &&
               fullRange?.map((item, index) => (
                 <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
                   <span className={`${isLtr ? "custom-font":""}`}>{item.day}</span>

@@ -1,6 +1,8 @@
+"use client";
+
 import { Button } from "../ui/button";
 import Popup from "../ui/popup";
-import React from "react";
+import React, { useState } from "react";
 
 import { Calendar } from "react-multi-date-picker";
 import gregorian from "react-date-object/calendars/gregorian";
@@ -10,17 +12,19 @@ import gregorian_en from "react-date-object/locales/gregorian_en";
 import persian_fa from "react-date-object/locales/persian_fa";
 import arabic_ar from "react-date-object/locales/arabic_ar";
 import "@/styles/range-date-picker.css";
+import { convertToGregorianYMD } from "@/lib/calendar";
 export interface CustomRangeDatePickerInterface {
   onClose: () => void;
   calendarType: CalenderType;
+  onSendDateRange: (dates: any) => void;
 }
 export type CalenderType = "gregory" | "jalali" | "hijri";
 
 export default function CustomRangeDatePicker({
   onClose,
+  onSendDateRange,
   calendarType,
 }: CustomRangeDatePickerInterface) {
-  console.log(calendarType);
   const getCalendar = () => {
     switch (calendarType) {
       case "jalali":
@@ -44,24 +48,43 @@ export default function CustomRangeDatePicker({
         return gregorian_en;
     }
   };
+  const [dates, setDates] = useState<[any, any]>([null, null]);
+  function submitDateRange() {
+    const updatedDatesObj = dates.map((date) => date.toDate());
+    const updatedDatesStr = updatedDatesObj.map((date) =>
+      convertToGregorianYMD(date)
+    );
+    console.log(updatedDatesObj);
+    console.log(updatedDatesStr);
+    onSendDateRange({
+      start: updatedDatesStr?.[0],
+      end: updatedDatesStr?.[1],
+    });
+  }
   return (
     <Popup>
       <div className="w-[545px] py-3 px-6 flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-2">
-            <span className="text-[#4573FE] text-sm">شروع</span>
-            <span className="text-[#545973]">1404/05/11</span>
+          <div className="flex flex-col gap-2 items-center">
+            <span className="text-[#2949A4] text-sm font-primary-medium">شروع</span>
+            <span className="text-[#545973]">
+              {" "}
+              {dates[0] ? dates[0].format("YYYY/MM/DD") : "-"}
+            </span>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-[#4573FE] text-sm">پایان</span>
-            <span className="text-[#545973]">1404/05/11</span>
+          <div className="flex flex-col gap-2 items-center">
+            <span className="text-[#2949A4] text-sm font-primary-medium">پایان</span>
+            <span className="text-[#545973]">
+              {" "}
+              {dates[1] ? dates[1].format("YYYY/MM/DD") : "-"}
+            </span>
           </div>
         </div>
 
         <div className="w-full">
           <Calendar
-            // value={dates}
-            // onChange={(value) => setDates([value[0] ?? null, value[1] ?? null])}
+            value={dates}
+            onChange={(value) => setDates([value[0] ?? null, value[1] ?? null])}
             locale={getLocale()}
             range
             calendar={getCalendar()}
@@ -70,14 +93,19 @@ export default function CustomRangeDatePicker({
         </div>
         <div className="flex items-center justify-center w-full gap-4">
           <Button
-            variant={"transparent"}
-            className="bg-[#4573FE] text-card text-sm w-44"
+            variant={"info"}
+            className="text-sm w-40"
+            onClick={() => {
+              submitDateRange();
+              onClose()
+            }}
           >
             تایید
           </Button>
           <Button
-            variant={"transparent"}
-            className="bg-[#B6BCC2] text-card text-sm w-44"
+            variant={"foreground"}
+            className="text-sm w-40"
+            onClick={()=>{onClose()}}
           >
             لغو
           </Button>
