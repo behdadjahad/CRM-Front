@@ -562,108 +562,107 @@ export default function CalendarContainer({
           />
         </div>
 
-        <div className={`w-full ${viewDetail ? "grid grid-cols-4" : ""}`}>
-          <div className="col-span-3">
-            {calendarRangeType === "monthly" ? (
-              <MonthlyCalendar
-                currentDate={currentDate}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                events={data}
-                onSelectDate={(date: string) => {
-                  getDateDataHandler(date);
-                  setSelectedDate(date);
-                  setCurrentDate(date);
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                }}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
-                  setViewDetail(true);
-                  setIsSingleEventData(true);
-                }}
-              />
-            ) : calendarRangeType === "custom-range-day" ? (
-              <CustomRangeCalendar
-                currentDate={currentDate}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                events={data}
-                selectedRange={selectedRange}
-              />
-            ) : calendarRangeType === "weekly" ? (
-              // <WeeklyCalendar
-              //   currentDate={currentDate}
-              //   visibleRange={calendarData.visibleRange}
-              //   calendarType={calendarType}
-              //   events={data}
-              //   onSelectDate={(date: string) => {
-              //     getDateDataHandler(date);
-              //     setSelectedDate(date);
-              //     setCurrentDate(date);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(false);
-              //   }}
-              //   onSelectEvent={(id: number) => {
-              //     setSelectedEvent(id);
-              //     getSingleEventHandler(id);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(true);
-              //   }}
-              // />
-              <GridWeeklyCalendar
-                events={data}
-                followUpTypeList={followUpTypeList}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                currentDate={currentDate}
-                onGetDayData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                }}
-                onGetFollowUpTypeData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                  console.log(eventData, 593);
-                }}
-              />
-            ) : calendarRangeType === "daily" ? (
-              // <DailyCalendar
-              //   currentDate={currentDate}
-              //   events={data}
-              //   onSelectEvent={(id: number) => {
-              //     setSelectedEvent(id);
-              //     getSingleEventHandler(id);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(true);
-              //   }}
-              //     />
-              <GridDailyCalendar
-                currentDate={currentDate}
-                events={data}
-                followUpTypeList={followUpTypeList}
-                onGetFollowUpTypeData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                  console.log(eventData, 593);
-                }}
-                onGetHourData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                }}
-              />
-            ) : (
-              <></>
-            )}
-          </div>
-          {viewDetail && (
-            <div className="col-span-1 bg-card p-6">
-              {/* <EventDetailContainer
+        <div className={`w-full`}>
+          {calendarRangeType === "monthly" ? (
+            <MonthlyCalendar
+              currentDate={currentDate}
+              visibleRange={calendarData.visibleRange}
+              calendarType={calendarType}
+              events={data}
+              onSelectDate={(date: string) => {
+                getDateDataHandler(date);
+                setSelectedDate(date);
+                setCurrentDate(date);
+                setViewDetail(true);
+                setIsSingleEventData(false);
+              }}
+              onSelectEvent={(id: number) => {
+                setSelectedEvent(id);
+                getSingleEventHandler(id);
+                setViewDetail(true);
+                setIsSingleEventData(true);
+              }}
+            />
+          ) : calendarRangeType === "custom-range-day" ? (
+            <CustomRangeCalendar
+              currentDate={currentDate}
+              visibleRange={calendarData.visibleRange}
+              calendarType={calendarType}
+              events={data}
+              selectedRange={selectedRange}
+            />
+          ) : calendarRangeType === "weekly" ? (
+            // <WeeklyCalendar
+            //   currentDate={currentDate}
+            //   visibleRange={calendarData.visibleRange}
+            //   calendarType={calendarType}
+            //   events={data}
+            //   onSelectDate={(date: string) => {
+            //     getDateDataHandler(date);
+            //     setSelectedDate(date);
+            //     setCurrentDate(date);
+            //     setViewDetail(true);
+            //     setIsSingleEventData(false);
+            //   }}
+            //   onSelectEvent={(id: number) => {
+            //     setSelectedEvent(id);
+            //     getSingleEventHandler(id);
+            //     setViewDetail(true);
+            //     setIsSingleEventData(true);
+            //   }}
+            // />
+            <GridWeeklyCalendar
+              events={data}
+              followUpTypeList={followUpTypeList}
+              visibleRange={calendarData.visibleRange}
+              calendarType={calendarType}
+              currentDate={currentDate}
+              onGetDayData={(eventData: any) => {
+                setViewDetail(true);
+                setIsSingleEventData(false);
+                returnDetailEventData(eventData);
+              }}
+              onGetFollowUpTypeData={(eventData: any) => {
+                setViewDetail(true);
+                setIsSingleEventData(false);
+                returnDetailEventData(eventData);
+                console.log(eventData, 593);
+              }}
+            />
+          ) : calendarRangeType === "daily" ? (
+            // <DailyCalendar
+            //   currentDate={currentDate}
+            //   events={data}
+            //   onSelectEvent={(id: number) => {
+            //     setSelectedEvent(id);
+            //     getSingleEventHandler(id);
+            //     setViewDetail(true);
+            //     setIsSingleEventData(true);
+            //   }}
+            //     />
+            <GridDailyCalendar
+              currentDate={currentDate}
+              events={data}
+              followUpTypeList={followUpTypeList}
+              onGetFollowUpTypeData={(eventData: any) => {
+                setViewDetail(true);
+                setIsSingleEventData(false);
+                returnDetailEventData(eventData);
+                console.log(eventData, 593);
+              }}
+              onGetHourData={(eventData: any) => {
+                setViewDetail(true);
+                setIsSingleEventData(false);
+                returnDetailEventData(eventData);
+              }}
+            />
+          ) : (
+            <></>
+          )}
+
+          {/* {viewDetail && (
+            <div className="col-span-1 bg-card p-6"> */}
+          {/* <EventDetailContainer
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 multiEvent={multiEvent}
@@ -671,16 +670,16 @@ export default function CalendarContainer({
                   deleteEventHandler(id);
                 }}
               /> */}
-              <CalendarDetailSideBar
+          {/* <CalendarDetailSideBar
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 isSingleEventData={isSingleEventData}
                 onDeleteEvent={(id) => {
                   deleteEventHandler(id);
                 }}
-              />
-            </div>
-          )}
+              /> */}
+          {/* </div>
+          )} */}
         </div>
       </div>
     </div>
