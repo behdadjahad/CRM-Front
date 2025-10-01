@@ -19,7 +19,6 @@ export const YearPicker: React.FC<YearPickerProps> = ({
     visibleStartYear,
     calendarType,
     onYearSelect,
-    onYearRangeChange,
     onCancel,
     onConfirm
 }) => {
@@ -35,7 +34,7 @@ export const YearPicker: React.FC<YearPickerProps> = ({
 
 
 
-            {/* Year Grid */}
+          
             <div className="grid grid-cols-3 gap-3 p-4">
                 {years.map(year => (
                     <div className="w-full flex justify-center items-center">
@@ -57,7 +56,7 @@ export const YearPicker: React.FC<YearPickerProps> = ({
                 ))}
             </div>
 
-            {/* Action Buttons */}
+           
             <div className="flex justify-center gap-3 px-4 pt-8 ">
                 <Button
                     variant="foreground"

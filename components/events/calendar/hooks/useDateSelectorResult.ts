@@ -54,7 +54,7 @@ export const useDateSelectorResult = (
             };
         }
 
-        // daily
+     
         return { type: 'daily', start: gregorianDate };
     }, [calendarType, rangeType]);
 

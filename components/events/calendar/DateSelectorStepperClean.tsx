@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpNarrowWide, ChevronLeft, ChevronRight } from 'lucide-react';
+import {  ChevronLeft, ChevronRight } from 'lucide-react';
 import PopUp from '@/components/ui/popup';
 import { YearPicker } from './pickers/YearPicker';
 import { MonthPicker } from './pickers/MonthPicker';
@@ -9,11 +9,11 @@ import { useDateSelector } from './hooks/useDateSelector';
 import { useDateSelectorResult } from './hooks/useDateSelectorResult';
 import { CalendarType, RangeType, getMonthNames, getTodayDateInfo } from '@/lib/date-selector-utils';
 
-// Required result format for the stepper
+
 export type DateSelectorResult =
-    | { type: 'monthly', start: string }                    // start = first day of selected month
-    | { type: 'weekly', start: string, end: string }        // week range (both strings)
-    | { type: 'daily', start: string }                      // exact day (start of day)
+    | { type: 'monthly', start: string }                  
+    | { type: 'weekly', start: string, end: string }       
+    | { type: 'daily', start: string }                     
 
 interface DateSelectorStepperProps {
     rangeType: RangeType;
@@ -33,21 +33,19 @@ export default function DateSelectorStepper({
     onCancel,
     onConfirm,
     isOpen,
-    setCurrentDate,
     onReset
 }: DateSelectorStepperProps) {
-    // Use custom hooks for state management
+
     const [state, actions] = useDateSelector(currentDate, calendarType, rangeType, isOpen || false);
     const { generateResult } = useDateSelectorResult(calendarType, rangeType);
 
-    // Handle reset when modal is closed
     React.useEffect(() => {
         if (!isOpen && onReset) {
             onReset();
         }
     }, [isOpen, onReset]);
 
-    // Handle confirmation
+  
     const handleConfirm = () => {
         if (!state.selectedYear || !state.selectedMonth) return;
 
@@ -63,7 +61,6 @@ export default function DateSelectorStepper({
         console.log('dayToUse for generateResult:', dayToUse);
         const hookResult = generateResult(state.selectedYear, state.selectedMonth, dayToUse);
 
-        // Convert hook result to stepper result format
         let result: DateSelectorResult;
 
         if (hookResult.type === 'weekly') {
@@ -236,7 +233,7 @@ export default function DateSelectorStepper({
         }
     };
 
-    // Render current step based on state
+ 
     const renderCurrentStep = () => {
         switch (state.step) {
             case 'year':
@@ -287,14 +284,14 @@ export default function DateSelectorStepper({
     return (
         <PopUp>
             <div className="w-[376px] p-5   flex flex-col">
-                {/* <div className="bg-white custom-shadow rounded-3xl"> */}
+               
 
                 {renderNavigationHeader()}
                 <div className="flex-1">
                     {renderCurrentStep()}
                 </div>
                 </div>
-            {/* </div> */}
+   
         </PopUp>
     );
 }

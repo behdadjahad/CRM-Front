@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CalendarType, RangeType, getMonthNames, getTodayDateInfo } from '@/lib/date-selector-utils';
+import { CalendarType, RangeType, getMonthNames, } from '@/lib/date-selector-utils';
 import { Button } from '@/components/ui/button';
 
 interface MonthPickerProps {
@@ -29,21 +29,11 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
 }) => {
     const monthNames = getMonthNames(selectedYear, calendarType);
 
-    const handleQuickSelect = (type: 'today' | 'thisMonth' | 'thisWeek') => {
-        const todayInfo = getTodayDateInfo(calendarType);
-        onMonthSelect(todayInfo.month);
-
-        if (rangeType === 'monthly') {
-            onConfirm();
-        } else if (onContinue) {
-            onContinue();
-        }
-    };
 
     return (
         <div className="bg-white  rounded-b-3xl">
 
-            {/* Month Grid */}
+            
             <div className="grid grid-cols-3 gap-3 p-4">
                 {monthNames.map((name, index) => (
                     <div className="w-full flex justify-center items-center">
@@ -64,7 +54,7 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
                 ))}
             </div>
 
-            {/* Action Buttons */}
+      
             <div className="flex justify-center gap-3 px-4 pt-8 ">
                 <Button
                     variant="foreground"
@@ -82,7 +72,6 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
                 </Button>
             </div>
 
-            {/* Quick Select Options */}
 
         </div>
     );

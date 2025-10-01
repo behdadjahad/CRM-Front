@@ -18,23 +18,20 @@ import {
   getTimeOfDate,
   getToday,
   getTodayInGregorianYMD,
-  getWeekdayLabel,
+
   revertDateWithTimeZone,
 } from "@/lib/calendar";
 import MonthlyCalendar from "./MonthlyCalendar";
-import WeeklyCalendar from "./WeeklyCalendar";
-import DailyCalendar from "./DailyCalendar";
 
 import CalendarHeader from "./CalendarHeader";
 
 import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
 
-// import { generateWeekVisibleRange, getLastDayOfMonth } from "@/lib/calendar-modal-utils";
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(jalaliday);
-dayjs.locale("fa"); // Set
+dayjs.locale("fa"); 
 
 dayjs.extend(timezone);
 import jalaali from "jalaali-js";
@@ -53,7 +50,6 @@ import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepperClean";
 
-// import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepper";
 
 export interface CalendarContainerInterface {
   data: {
@@ -80,7 +76,7 @@ export default function CalendarContainer({
   const [isSingleEventData, setIsSingleEventData] = useState<boolean>(false);
 
   const [currentDate, setCurrentDate] = useState(today);
-  const [selectedDate, setSelectedDate] = useState(today); // New state for modal selections
+  const [selectedDate, setSelectedDate] = useState(today); 
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
   const [calendarType, setCalendarType] = useState<
@@ -122,7 +118,7 @@ export default function CalendarContainer({
         );
         return {
           ...item,
-          id: match ? match.id : null, // add id if match found
+          id: match ? match.id : null, 
         };
       });
 
@@ -133,10 +129,10 @@ export default function CalendarContainer({
   useEffect(() => {
     console.log("currentDate", currentDate);
   }, [currentDate]);
-  // Go to previous day/week/month
+
   const goToNext = () => {
     setCurrentDate((prevDate) => {
-      // prevDate is string like "2025-08-18"
+
       switch (calendarRangeType) {
         case "daily":
           return dayjs(prevDate, "YYYY-MM-DD")
@@ -540,21 +536,13 @@ export default function CalendarContainer({
     setSingleDateEvents(eventOptions);
   }
 
-  // Modal handlers
-  const openda = (rangeType: CalendarRangeTimeType) => {
-    console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
-    setSelectorState({
-      isOpen: true,
-      rangeType,
-      pendingDate: currentDate
-    });
-  };
+
   //           onActiveTime={(value) => setCalendarRangeType(value)}
 
   const handleDateSelectorConfirm = (result: DateSelectorResult) => {
     console.log('CalendarContainer - handleDateSelectorConfirm received:', result);
 
-    // Update the current date based on the result type
+
     switch (result.type) {
       case 'monthly':
         console.log('Setting monthly - currentDate to:', result.start);
@@ -574,20 +562,19 @@ export default function CalendarContainer({
         console.warn('Unknown date selector result type:', result);
     }
 
-    // Close the selector modal
+
     setSelectorState({ isOpen: false, rangeType: null, pendingDate: currentDate });
   };
 
   const handleCloseSelector = () => {
-    // Reset the selector state and close the popup
+
     setSelectorState({
       isOpen: false,
       rangeType: null,
       pendingDate: currentDate
     });
 
-    // Reset the DateSelectorStepper internal state by re-initializing
-    // This will be handled by the useDateSelector hook when isOpen becomes false
+   
   };
   const openDateSelector = (rangeType: "monthly" | "weekly" | "daily" | CalendarRangeTimeType) => {
     console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
