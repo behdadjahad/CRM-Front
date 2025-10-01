@@ -46,7 +46,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
-import CalendarDetailSideBar from "./CalendarDetailSidebar";
+
 
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
@@ -423,6 +423,7 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
+          id:item?.id,
           title: item?.subject,
           start: item?.occurenceDate,
         }));

@@ -20,6 +20,16 @@ export async function deleteEvent(id: number) {
     return result;
   } catch {}
 }
+export async function editEvent(id: number,data:any) {
+  try {
+    const result = await fetchService(`event/${id}`, {
+      method: "PUT",
+      body:data
+    });
+
+    return result;
+  } catch {}
+}
 export async function getEvent() {
   try {
     const result = await fetchService("event");

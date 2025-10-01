@@ -8,6 +8,8 @@ import {
   getWeekdayLabel,
 } from "@/lib/calendar";
 import EventEditForm from "./EventEditForm";
+import { useMutation } from "@tanstack/react-query";
+import { editEvent } from "@/api/event";
 
 export interface EventDetailSidebarInterface {
   state: boolean;
@@ -24,6 +26,14 @@ export default function EventDetailSidebar({
 }: EventDetailSidebarInterface) {
   const { data } = generateEventsDetailData();
   const [editForms, setEditForms] = useState<number[]>([]);
+  const { mutate: editEventHandler } = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: any }) => {
+      return editEvent(id, data);
+    },
+    onSuccess: () => {
+      
+    },
+  });
   return (
     <div
       className={cn("h-0 w-0 overflow-hidden top-0 left-0 z-50 fixed", {
@@ -54,10 +64,13 @@ export default function EventDetailSidebar({
               return isEditForm ? (
                 <EventEditForm
                   key={`event-edit-${event.id}`}
-                  // {...event}
-                  // onClose={() =>
-                  //   setEditForms((prev) => prev.filter((id) => id !== event.id))
-                  // }
+                  {...event.editData}
+                  onClose={() =>
+                    setEditForms((prev) => prev.filter((id) => id !== event.id))
+                  }
+                  onSubmitForm={(id, data) => {
+                    editEventHandler({ id: id, data: data });
+                  }}
                 />
               ) : (
                 <EventDetailCard
@@ -83,13 +96,17 @@ export default function EventDetailSidebar({
         const date = convertDateWithTimeZone(item.start, calendarType); // pass event date to your util
         const weekLabel = getWeekdayLabel(new Date(item?.start), calendarType);
         return {
-          id: item.id,
-          time: getTimeOfDate(item.start), // e.g., "10:30 AM"
+          id: item?.id,
+          time: getTimeOfDate(item?.start), // e.g., "10:30 AM"
           weekLabel: weekLabel, // e.g., "Mon"
           title: item?.title || "",
           monthName: date.monthName, // e.g., "Aug"
           day: date.day,
           timeLabel: "ساعت",
+          editData: {
+            id: item?.id,
+            title: item?.title,
+          },
           // e.g., "26"
         };
       }),
