@@ -10,7 +10,6 @@ export function formatEventDate(dateStr: string): string {
   return date.toISOString().slice(0, 19);
 }
 
-
 dayjs.extend(utc);
 dayjs.extend(timezone);
 const gregoryMonthNames = [
@@ -292,7 +291,6 @@ export function generateVisibleRange(
   dateString: string,
   calendarType: "jalali" | "hijri" | "gregory"
 ): { start: Date; end: Date } {
-
   // if (calendarType === "jalali") {
   //   const date = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
   //   const year = date.year();
@@ -318,7 +316,10 @@ export function generateVisibleRange(
   // }
   if (calendarType === "jalali") {
     const input = dayjs(dateString, "YYYY-MM-DD").calendar("jalali");
-    const { year: year, month: month } = convertDateWithTimeZone(dateString, calendarType);
+    const { year: year, month: month } = convertDateWithTimeZone(
+      dateString,
+      calendarType
+    );
 
     // const year = input.year();
     // const month = input.month();
@@ -487,7 +488,28 @@ export function generateVisibleRange(
 //     };
 //   } else return { start: new Date(), end: new Date() };
 // }
+export function generateCustomVisibleRange(
+  startStr: string,
+  endStr: string
+): { start: Date; end: Date } {  
+  const startDate = new Date(startStr);
+  const endDate = new Date(endStr);
 
+  // Start of the week: Saturday
+  const start = new Date(startDate);
+  const dayOfWeekStart = start.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const diffToSaturday = (dayOfWeekStart + 1) % 7; // days back to Saturday
+  start.setDate(start.getDate() - diffToSaturday);
+  start.setHours(0, 0, 0, 0);
+
+  // End of the week: Friday
+  const end = new Date(endDate);
+  const dayOfWeekEnd = end.getDay();
+  const diffToFriday = (5 - dayOfWeekEnd + 7) % 7; // days forward to Friday
+  end.setDate(end.getDate() + diffToFriday);
+  end.setHours(23, 59, 59, 999);
+
+  return { start, end };}
 export function generateWeekVisibleRange(
   dateStr: string, // "YYYY-MM-DD"
   calendarType: "jalali" | "hijri" | "gregory"
@@ -760,17 +782,15 @@ export function getDatePartFromISOString(isoString: string): string {
   }
 
   // Use toISOString to ensure proper formatting, then split at 'T'
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
 export function getHourStringFromIndex(index: number): string {
-
-
-  const hour = index.toString().padStart(2, '0');
+  const hour = index.toString().padStart(2, "0");
   return `${hour}:00`;
 }
 export function getHourFromISOString(isoString: string): string {
   // Split the ISO string at 'T' to get the time part
-  const timePart = isoString.split('T')[1];
+  const timePart = isoString.split("T")[1];
 
   if (!timePart) {
     throw new Error("Invalid ISO date string");
@@ -781,8 +801,10 @@ export function getHourFromISOString(isoString: string): string {
   return `${hour}:00`;
 }
 
-
-export function getDatesBetween(startDateStr: string, endDateStr: string): string[] {
+export function getDatesBetween(
+  startDateStr: string,
+  endDateStr: string
+): string[] {
   const startDate = new Date(startDateStr);
   const endDate = new Date(endDateStr);
   const dates: string[] = [];
@@ -794,8 +816,8 @@ export function getDatesBetween(startDateStr: string, endDateStr: string): strin
 
   while (currentDate <= endDate) {
     const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
     dates.push(`${year}-${month}-${day}`);
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -803,5 +825,3 @@ export function getDatesBetween(startDateStr: string, endDateStr: string): strin
 
   return dates;
 }
-
-
