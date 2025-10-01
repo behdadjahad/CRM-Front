@@ -609,13 +609,10 @@ export function generateWeekVisibleRange(
 //   return { start: startOfWeek, end: endOfWeek };
 // }
 export function getDayNumber(date: Date, calendarType: string) {
-
-
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
     case "hijri":
-
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":
@@ -644,31 +641,31 @@ function getMonthName(date: Date, calendarType: string) {
 
 export const weekdaysMap: Record<string, string[]> = {
   jalali: [
-    "ش",
-    "ی",
-    "د",
-    "س",
-    "چ",
-    "پ",
-    "ج",
+    "شنبه",
+    "یکشنبه",
+    "دوشنبه",
+    "سه‌شنبه",
+    "چهارشنبه",
+    "پنجشنبه",
+    "جمعه",
   ],
   hijri: [
-    "الس",
-    "الأ",
-    "الاث",
-    "الثلاث",
-    "الأرب",
-    "الخم",
-    "الجم",
+    "السبت",
+    "الأحد",
+    "الاثنين",
+    "الثلاثاء",
+    "الأربعاء",
+    "الخميس",
+    "الجمعة",
   ],
   gregory: [
-    "S",
-    "Su",
-    "M",
-    "Tu",
-    "W",
-    "Th",
-    "F",
+    "Saturday",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
   ],
 };
 

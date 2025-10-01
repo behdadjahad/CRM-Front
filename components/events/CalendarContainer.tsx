@@ -32,7 +32,7 @@ import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(jalaliday);
-dayjs.locale("fa"); 
+dayjs.locale("fa");
 
 dayjs.extend(timezone);
 import jalaali from "jalaali-js";
@@ -82,7 +82,7 @@ export default function CalendarContainer({
   const [isCustomRangeShow, setIsCustomRangeShow] = useState<boolean>(false);
   const [selectedRange, setSelectedRange] = useState<any>();
   const [currentDate, setCurrentDate] = useState(today);
-  const [selectedDate, setSelectedDate] = useState(today); 
+  const [selectedDate, setSelectedDate] = useState(today);
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
   const [calendarType, setCalendarType] = useState<
@@ -124,7 +124,7 @@ export default function CalendarContainer({
         );
         return {
           ...item,
-          id: match ? match.id : null, 
+          id: match ? match.id : null,
         };
       });
 
@@ -445,7 +445,7 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
-          id:item?.id,
+          id: item?.id,
           title: item?.subject,
           start: item?.occurenceDate,
         }));
@@ -581,8 +581,9 @@ export default function CalendarContainer({
       pendingDate: currentDate
     });
 
-   
+
   };
+
   const openDateSelector = (rangeType: "monthly" | "weekly" | "daily" | CalendarRangeTimeType) => {
     console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
     setSelectorState({
@@ -596,55 +597,12 @@ export default function CalendarContainer({
 
   return (
     <>
-        <EventDetailSidebar
-          setState={setViewDetail}
-          state={viewDetail}
-          eventList={singleDateEvents}
-          calendarType={calendarType}
-        />
-    <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
-      <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
-        <CalendarHeader
-          onActiveCalendarType={(value) => setCalendarType(value)}
-          calendarType={calendarType}
-          {...calendarData}
-          onPrev={goToPrev}
-          onNext={goToNext}
-          onToday={goToToday}
-          onOpenDateSelector={openDateSelector}
-          // onActiveTime={openDateSelector}
-          onActiveTime={(value) => setCalendarRangeType(value)}
-          calendarRangeType={calendarRangeType}
-        />
-
-        {
-          selectorState.isOpen && selectorState.rangeType !== "custom-range-day" ? (<DateSelectorStepper
-            currentDate={currentDate}
-            setCurrentDate={setCurrentDate}
-            calendarType={calendarType}
-            rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
-            isOpen={selectorState.isOpen}
-            onCancel={handleCloseSelector}
-            onConfirm={handleDateSelectorConfirm}
-            onReset={() => {
-              // Reset any internal state if needed
-              console.log('DateSelectorStepper reset');
-            }}
-          />) : (<></>)
-        }
-        {/* <CustomRangeDatePicker onClose={() => {}} /> */}
-        <div className="bg-[#FCFCFD] p-3">
-          <LeadContactTypeContainer
-            list={followUpTypeList}
-            onActiveItem={(label: string, value: string, id?: number) => {
-              setActiveLeadContactType({ label, value, id });
-              onFilter({ followUpTypeId: id });
-              getFollowupTypeEvents(id);
-            }}
-            activeItem={activeLeadContactType}
-          />
-        </div>
-      </div>
+      <EventDetailSidebar
+        setState={setViewDetail}
+        state={viewDetail}
+        eventList={singleDateEvents}
+        calendarType={calendarType}
+      />
       <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
         <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
           <CalendarHeader
@@ -654,27 +612,46 @@ export default function CalendarContainer({
             onPrev={goToPrev}
             onNext={goToNext}
             onToday={goToToday}
-            onActiveTime={(value) => {
-              setCalendarRangeType(value);
-              if (value === "custom-range-day") {
-                setIsCustomRangeShow(true);
+            onOpenDateSelector={openDateSelector}
+            // onActiveTime={openDateSelector}
+            onActiveTime={(value) => {setCalendarRangeType(value) 
+              if(value === "custom-range-day"){
+                setIsCustomRangeShow(true); 
               }
             }}
             calendarRangeType={calendarRangeType}
           />
-          {isCustomRangeShow && calendarRangeType === "custom-range-day" && (
-            <CustomRangeDatePicker
-              onClose={() => {
-                setIsCustomRangeShow(false);
-              }}
+
+          {
+            selectorState.isOpen && selectorState.rangeType !== "custom-range-day" && (<DateSelectorStepper
+              currentDate={currentDate}
+              setCurrentDate={setCurrentDate}
               calendarType={calendarType}
-              onSendDateRange={(dates: any) => {
-                setSelectedRange(dates);
-                setCurrentDate(dates.start);
-                setIsCustomRangeShow(true);
+              rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
+              isOpen={selectorState.isOpen}
+              onCancel={handleCloseSelector}
+              onConfirm={handleDateSelectorConfirm}
+              onReset={() => {
+                // Reset any internal state if needed
+                console.log('DateSelectorStepper reset');
               }}
-            />
-          )}
+            />) 
+}
+              {isCustomRangeShow && calendarRangeType === "custom-range-day" && (
+                <CustomRangeDatePicker
+                  onClose={() => {
+                    setIsCustomRangeShow(false);
+                  }}
+                  calendarType={calendarType}
+                  onSendDateRange={(dates: any) => {
+                    setSelectedRange(dates);
+                    setCurrentDate(dates.start);
+                    setIsCustomRangeShow(false);
+                  }}
+                />
+              )}
+          
+
           <div className="bg-[#FCFCFD] p-3">
             <LeadContactTypeContainer
               list={followUpTypeList}
@@ -686,108 +663,114 @@ export default function CalendarContainer({
               activeItem={activeLeadContactType}
             />
           </div>
+        </div>
+        <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
+          <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
 
-          <div className={`w-full`}>
-            {calendarRangeType === "monthly" ? (
-              <MonthlyCalendar
-                currentDate={currentDate}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                events={data}
-                onSelectDate={(date: string) => {
-                  getDateDataHandler(date);
-                  setSelectedDate(date);
-                  setCurrentDate(date);
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                }}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
-                  setViewDetail(true);
-                  setIsSingleEventData(true);
-                }}
-              />
-            ) : calendarRangeType === "custom-range-day" ? (
-              <CustomRangeCalendar
-                currentDate={currentDate}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                events={data}
-                selectedRange={selectedRange}
-              />
-            ) : calendarRangeType === "weekly" ? (
-              // <WeeklyCalendar
-              //   currentDate={currentDate}
-              //   visibleRange={calendarData.visibleRange}
-              //   calendarType={calendarType}
-              //   events={data}
-              //   onSelectDate={(date: string) => {
-              //     getDateDataHandler(date);
-              //     setSelectedDate(date);
-              //     setCurrentDate(date);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(false);
-              //   }}
-              //   onSelectEvent={(id: number) => {
-              //     setSelectedEvent(id);
-              //     getSingleEventHandler(id);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(true);
-              //   }}
-              // />
-              <GridWeeklyCalendar
-                events={data}
-                followUpTypeList={followUpTypeList}
-                visibleRange={calendarData.visibleRange}
-                calendarType={calendarType}
-                currentDate={currentDate}
-                onGetDayData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                }}
-                onGetFollowUpTypeData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                  console.log(eventData, 593);
-                }}
-              />
-            ) : calendarRangeType === "daily" ? (
-              // <DailyCalendar
-              //   currentDate={currentDate}
-              //   events={data}
-              //   onSelectEvent={(id: number) => {
-              //     setSelectedEvent(id);
-              //     getSingleEventHandler(id);
-              //     setViewDetail(true);
-              //     setIsSingleEventData(true);
-              //   }}
-              //     />
-              <GridDailyCalendar
-                currentDate={currentDate}
-                events={data}
-                followUpTypeList={followUpTypeList}
-                onGetFollowUpTypeData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                  console.log(eventData, 593);
-                }}
-                onGetHourData={(eventData: any) => {
-                  setViewDetail(true);
-                  setIsSingleEventData(false);
-                  returnDetailEventData(eventData);
-                }}
-              />
-            ) : (
-              <></>
-            )}
 
-            {/* {viewDetail && (
+
+
+            <div className={`w-full`}>
+              {calendarRangeType === "monthly" ? (
+                <MonthlyCalendar
+                  currentDate={currentDate}
+                  visibleRange={calendarData.visibleRange}
+                  calendarType={calendarType}
+                  events={data}
+                  onSelectDate={(date: string) => {
+                    getDateDataHandler(date);
+                    setSelectedDate(date);
+                    setCurrentDate(date);
+                    setViewDetail(true);
+                    setIsSingleEventData(false);
+                  }}
+                  onSelectEvent={(id: number) => {
+                    setSelectedEvent(id);
+                    getSingleEventHandler(id);
+                    setViewDetail(true);
+                    setIsSingleEventData(true);
+                  }}
+                />
+              ) : calendarRangeType === "custom-range-day" ? (
+                <CustomRangeCalendar
+                  currentDate={currentDate}
+                  visibleRange={calendarData.visibleRange}
+                  calendarType={calendarType}
+                  events={data}
+                  selectedRange={selectedRange}
+                />
+              ) : calendarRangeType === "weekly" ? (
+                // <WeeklyCalendar
+                //   currentDate={currentDate}
+                //   visibleRange={calendarData.visibleRange}
+                //   calendarType={calendarType}
+                //   events={data}
+                //   onSelectDate={(date: string) => {
+                //     getDateDataHandler(date);
+                //     setSelectedDate(date);
+                //     setCurrentDate(date);
+                //     setViewDetail(true);
+                //     setIsSingleEventData(false);
+                //   }}
+                //   onSelectEvent={(id: number) => {
+                //     setSelectedEvent(id);
+                //     getSingleEventHandler(id);
+                //     setViewDetail(true);
+                //     setIsSingleEventData(true);
+                //   }}
+                // />
+                <GridWeeklyCalendar
+                  events={data}
+                  followUpTypeList={followUpTypeList}
+                  visibleRange={calendarData.visibleRange}
+                  calendarType={calendarType}
+                  currentDate={currentDate}
+                  onGetDayData={(eventData: any) => {
+                    setViewDetail(true);
+                    setIsSingleEventData(false);
+                    returnDetailEventData(eventData);
+                  }}
+                  onGetFollowUpTypeData={(eventData: any) => {
+                    setViewDetail(true);
+                    setIsSingleEventData(false);
+                    returnDetailEventData(eventData);
+                    console.log(eventData, 593);
+                  }}
+                />
+              ) : calendarRangeType === "daily" ? (
+                // <DailyCalendar
+                //   currentDate={currentDate}
+                //   events={data}
+                //   onSelectEvent={(id: number) => {
+                //     setSelectedEvent(id);
+                //     getSingleEventHandler(id);
+                //     setViewDetail(true);
+                //     setIsSingleEventData(true);
+                //   }}
+                //     />
+                <GridDailyCalendar
+                  currentDate={currentDate}
+                  events={data}
+                  followUpTypeList={followUpTypeList}
+                  onGetFollowUpTypeData={(eventData: any) => {
+                    setViewDetail(true);
+                    setIsSingleEventData(false);
+                    returnDetailEventData(eventData);
+                    console.log(eventData, 593);
+                  }}
+                  onGetHourData={(eventData: any) => {
+                    setViewDetail(true);
+                    setIsSingleEventData(false);
+                    returnDetailEventData(eventData);
+                  }}
+                />
+              ) : (
+                <></>
+              )}
+
+              {/* {viewDetail && (
             <div className="col-span-1 bg-card p-6"> */}
-            {/* <EventDetailContainer
+              {/* <EventDetailContainer
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 multiEvent={multiEvent}
@@ -795,7 +778,7 @@ export default function CalendarContainer({
                   deleteEventHandler(id);
                 }}
               /> */}
-            {/* <CalendarDetailSideBar
+              {/* <CalendarDetailSideBar
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 isSingleEventData={isSingleEventData}
@@ -803,12 +786,12 @@ export default function CalendarContainer({
                   deleteEventHandler(id);
                 }}
               /> */}
-            {/* </div>
+              {/* </div>
           )} */}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 
@@ -935,30 +918,30 @@ export default function CalendarContainer({
           date: date,
           visibleRange: selectedRange
             ? generateCustomVisibleRange(
-                convertToGregorianYMD(selectedRange?.start),
-                convertToGregorianYMD(selectedRange?.end)
-              )
+              convertToGregorianYMD(selectedRange?.start),
+              convertToGregorianYMD(selectedRange?.end)
+            )
             : generateVisibleRange(currentDate, calendarType),
           selectedDaysRange: selectedRange
             ? [
-                {
-                  day: customDateRange.start.day,
-                  monthName: customDateRange.start.monthName,
-                  year: customDateRange.start.year,
-                },
-                {
-                  day: customDateRange.end.day,
-                  monthName: customDateRange.end.monthName,
-                  year: customDateRange.end.year,
-                },
-              ]
+              {
+                day: customDateRange.start.day,
+                monthName: customDateRange.start.monthName,
+                year: customDateRange.start.year,
+              },
+              {
+                day: customDateRange.end.day,
+                monthName: customDateRange.end.monthName,
+                year: customDateRange.end.year,
+              },
+            ]
             : [
-                {
-                  // day: date.day,
-                  monthName: date.monthName,
-                  year: date.year,
-                },
-              ],
+              {
+                // day: date.day,
+                monthName: date.monthName,
+                year: date.year,
+              },
+            ],
         };
         return { calendarData };
       default:

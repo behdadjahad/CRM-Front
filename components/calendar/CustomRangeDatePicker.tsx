@@ -61,6 +61,7 @@ export default function CustomRangeDatePicker({
       start: updatedDatesStr?.[0],
       end: updatedDatesStr?.[1],
     });
+    console.log("hiiiiii")
   }
   return (
     <Popup>
