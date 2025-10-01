@@ -6,12 +6,14 @@ import PackageContainer from "@/components/admin/package-container";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { useQuery } from "@tanstack/react-query";
-import { CategoryDataInterface, CategoryInterface } from "../category/page";
+import {  CategoryInterface } from "../category/page";
 import { formatPrice } from "@/lib/utils";
 import { fetchCurrencies } from "@/store/currency-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { getPackages } from "@/api/packages/package-api";
+
+import { getPackage } from "@/api/admin";
+
 export interface PackageDataInterface {
   id: number;
   title: string;
@@ -32,7 +34,7 @@ export interface PackageInterface {
 export default function Package() {
   const { data: packageData } = useQuery({
     queryKey: ["packageData"],
-    queryFn: async () => await getPackages(),
+    queryFn: async () => await getPackage(),
   });
   const { packageList } = getData(packageData);
   const dispatch = useDispatch<any>();

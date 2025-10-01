@@ -32,15 +32,57 @@ export async function getPackageCategories() {
   }
 }
 
-export async function getPackageUnits() {
+export async function getPackageUnits(params?: {
+  page?: number;
+  limit?: number;
+  offset?: number;
+  filters?: Record<string, any>;
+}): Promise<import('@/types/single-features-api').SingleFeaturesApiResponse> {
   try {
-    const result = await fetchServiceFetchService(`packages/units`, {
+    const queryParams = new URLSearchParams();
+
+    // Add pagination parameters
+    if (params?.page) {
+      queryParams.append('page', params.page.toString());
+    }
+
+    if (params?.limit) {
+      queryParams.append('limit', params.limit.toString());
+    }
+
+    if (params?.offset) {
+      queryParams.append('offset', params.offset.toString());
+    }
+
+    // Add filter parameters
+    if (params?.filters) {
+      Object.entries(params.filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '' && value !== 'all') {
+          // Handle array values (for checkboxes)
+          if (Array.isArray(value) && value.length > 0) {
+            value.forEach(v => queryParams.append(`${key}[]`, v.toString()));
+          } else if (!Array.isArray(value)) {
+            queryParams.append(key, value.toString());
+          }
+        }
+      });
+    }
+
+    const endpoint = `package-unit${queryParams?.toString() ? '?' + queryParams.toString() : ''}`;
+    console.log('🔍 API: Fetching package units from:', endpoint);
+
+    const result = await fetchServiceFetchService(endpoint, {
       method: "GET",
+      additionalHeaders: {
+        "Cache-Control": "no-cache"
+      },
     });
 
+    console.log('✅ API: getPackageUnits succeeded:', result);
     return result;
-  } catch {
-    return {};
+  } catch (error) {
+    console.error('❌ Error fetching package units:', error);
+    throw error;
   }
 }
 
@@ -76,6 +118,40 @@ export async function selectPackage({
     return result;
   } catch (error) {
     console.error('❌ Error selecting package:', error);
+    throw error;
+  }
+}
+
+// Select individual unit (for single features purchase)
+export async function selectUnit({
+  unitId,
+  requestMessage,
+  chadcoCustomerId,
+}: {
+  unitId: number;
+  requestMessage: string;
+  chadcoCustomerId: number;
+}) {
+  try {
+    console.log('🔍 API: Starting selectUnit call', {
+      unitId,
+      requestMessage,
+      chadcoCustomerId,
+      endpoint: `units/buy/${chadcoCustomerId}`
+    });
+
+    const result = await fetchServiceChadcoCustomer(`units/buy/${chadcoCustomerId}`, {
+      method: "POST",
+      body: {
+        unitId,
+        requestMessage,
+      },
+    });
+
+    console.log('✅ API: selectUnit succeeded:', result);
+    return result;
+  } catch (error) {
+    console.error('❌ Error selecting unit:', error);
     throw error;
   }
 }

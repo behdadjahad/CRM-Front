@@ -1,14 +1,16 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 export interface LeadContactTypeCardInterface {
-id?:number ;
+  id?: number;
   label: string;
   value: string;
   className?: string;
   activeClassName?: string;
-  onActiveItem: (label: string, value: string ,id?:number) => void;
+  onActiveItem: (label: string, value: string, id?: number) => void;
   icon?: string;
-  activeItem: { value: string; label: string };
+  activeItem?: { value: string; label: string };
+  eventOrder?: number;
+  orderClassName?: string;
 }
 
 export default function LeadContactTypeCard({
@@ -20,26 +22,37 @@ export default function LeadContactTypeCard({
   icon,
   activeItem,
   activeClassName,
+  eventOrder,
+  orderClassName
 }: LeadContactTypeCardInterface) {
   return (
     <div
       className={cn(
-        "cursor-pointer rounded-lg  h-7 min-w-14 text-xs flex items-center justify-center gap-2 px-2",
+        "cursor-pointer rounded-lg  h-7 min-w-16 max-w-fit text-xs flex items-center justify-center gap-2 px-2",
         className,
         activeItem?.value === value ? activeClassName : ""
       )}
-      onClick={() => {
-        onActiveItem(label, value ,id);
+      onClick={(e) => {
+        onActiveItem(label, value, id);
+        e.stopPropagation();
       }}
     >
-    {icon && <Image
-        src={icon}
-        alt={"تصویر"}
-        width={1024}
-        height={1024}
-        className="h-3 w-3"
-      />}
-      <div>{label}</div>
+      <div className="flex gap-1 items-center">
+        {eventOrder != undefined && <span className={cn(orderClassName)}>{eventOrder}</span>}
+        <div className="flex gap-1 items-center">
+          {" "}
+          {icon && (
+            <Image
+              src={icon}
+              alt={"تصویر"}
+              width={1024}
+              height={1024}
+              className="h-3 w-3"
+            />
+          )}
+          <span>{label}</span>
+        </div>
+      </div>
     </div>
   );
 }

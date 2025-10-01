@@ -327,7 +327,7 @@ export function generateVisibleRange(
       .clone()
       .calendar("jalali")
       .year(year)
-      .month(month-1)
+      .month(month - 1)
       .date(1);
     // // Go back to Saturday
     while (start.day() !== 6) {
@@ -338,7 +338,7 @@ export function generateVisibleRange(
       .clone()
       .calendar("jalali")
       .year(year)
-      .month(month-1)
+      .month(month - 1)
       .endOf("month");
     // Go forward to Friday
     while (end.day() !== 5) {
@@ -487,6 +487,7 @@ export function generateVisibleRange(
 //     };
 //   } else return { start: new Date(), end: new Date() };
 // }
+
 export function generateWeekVisibleRange(
   dateStr: string, // "YYYY-MM-DD"
   calendarType: "jalali" | "hijri" | "gregory"
@@ -586,13 +587,13 @@ export function generateWeekVisibleRange(
 //   return { start: startOfWeek, end: endOfWeek };
 // }
 export function getDayNumber(date: Date, calendarType: string) {
- 
+
 
   switch (calendarType) {
     case "jalali":
       return dayjs.utc(date).calendar("jalali").date();
     case "hijri":
-    
+
       return moment(date).format("iD");
     // iD gives Hijri day number
     case "gregory":
@@ -619,33 +620,33 @@ function getMonthName(date: Date, calendarType: string) {
   }
 }
 
-const weekdaysMap: Record<string, string[]> = {
+export const weekdaysMap: Record<string, string[]> = {
   jalali: [
-    "شنبه",
-    "یکشنبه",
-    "دوشنبه",
-    "سه‌شنبه",
-    "چهارشنبه",
-    "پنجشنبه",
-    "جمعه",
+    "ش",
+    "ی",
+    "د",
+    "س",
+    "چ",
+    "پ",
+    "ج",
   ],
   hijri: [
-    "السبت",
-    "الأحد",
-    "الاثنين",
-    "الثلاثاء",
-    "الأربعاء",
-    "الخميس",
-    "الجمعة",
+    "الس",
+    "الأ",
+    "الاث",
+    "الثلاث",
+    "الأرب",
+    "الخم",
+    "الجم",
   ],
   gregory: [
-    "Saturday",
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
+    "S",
+    "Su",
+    "M",
+    "Tu",
+    "W",
+    "Th",
+    "F",
   ],
 };
 
@@ -750,3 +751,57 @@ export function getTimeOfDate(isoStr: string): string {
   // Take only HH:mm
   return time.substring(0, 5);
 }
+export function getDatePartFromISOString(isoString: string): string {
+  // Validate and parse the date
+  const date = new Date(isoString);
+
+  if (isNaN(date.getTime())) {
+    throw new Error("Invalid ISO date string");
+  }
+
+  // Use toISOString to ensure proper formatting, then split at 'T'
+  return date.toISOString().split('T')[0];
+}
+export function getHourStringFromIndex(index: number): string {
+
+
+  const hour = index.toString().padStart(2, '0');
+  return `${hour}:00`;
+}
+export function getHourFromISOString(isoString: string): string {
+  // Split the ISO string at 'T' to get the time part
+  const timePart = isoString.split('T')[1];
+
+  if (!timePart) {
+    throw new Error("Invalid ISO date string");
+  }
+
+  // Get the hour from the time part
+  const hour = timePart.substring(0, 2);
+  return `${hour}:00`;
+}
+
+
+export function getDatesBetween(startDateStr: string, endDateStr: string): string[] {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+  const dates: string[] = [];
+
+  // Validate date order
+  if (startDate > endDate) return [];
+
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    dates.push(`${year}-${month}-${day}`);
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+}
+
+

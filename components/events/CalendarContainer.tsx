@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import dayjs from "dayjs";
 import jalaliday from "jalaliday";
@@ -18,21 +18,20 @@ import {
   getTimeOfDate,
   getToday,
   getTodayInGregorianYMD,
-  getWeekdayLabel,
+
   revertDateWithTimeZone,
 } from "@/lib/calendar";
 import MonthlyCalendar from "./MonthlyCalendar";
-import WeeklyCalendar from "./WeeklyCalendar";
-import DailyCalendar from "./DailyCalendar";
 
 import CalendarHeader from "./CalendarHeader";
 
 import { CalendarRangeTimeType } from "./calendar/calendar-time-filtering";
 
+
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
 dayjs.extend(jalaliday);
-dayjs.locale("fa"); // Set
+dayjs.locale("fa"); 
 
 dayjs.extend(timezone);
 import jalaali from "jalaali-js";
@@ -40,15 +39,16 @@ import jalaali from "jalaali-js";
 import LeadContactTypeContainer, {
   LeadContactTypeContainerInterface,
 } from "./lead/LeadContactTypeContainer";
-import EventDetailContainer from "./EventDetailContainer";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 import CalendarDetailSideBar from "./CalendarDetailSidebar";
-import DeleteConfirmation from "../admin/delete-confirmation";
-import { Button } from "../ui/button";
-import EventEditionContainer from "./EventEditionContainer";
+
+import GridDailyCalendar from "./GridDailyCalendar";
+import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
+import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepperClean";
 
 
 export interface CalendarContainerInterface {
@@ -62,7 +62,7 @@ export default function CalendarContainer({
   data,
   onFilter,
 }: CalendarContainerInterface) {
- 
+  console.log(data);
   const [viewDetail, setViewDetail] = useState<boolean>(false);
   const [followUpTypeList, setFollowUpTypeList] = useState<any[]>([]);
   const [activeLeadContactType, setActiveLeadContactType] = useState<{
@@ -72,37 +72,53 @@ export default function CalendarContainer({
   }>(followUpTypeList?.[0]);
 
   const today = getTodayInGregorianYMD();
-  const [selectedDate, setSelectedDate] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<number>();
   const [isSingleEventData, setIsSingleEventData] = useState<boolean>(false);
 
   const [currentDate, setCurrentDate] = useState(today);
+  const [selectedDate, setSelectedDate] = useState(today); 
   const [calendarRangeType, setCalendarRangeType] =
     useState<CalendarRangeTimeType>("monthly");
   const [calendarType, setCalendarType] = useState<
     "jalali" | "hijri" | "gregory"
   >("jalali");
   const [singleDateEvents, setSingleDateEvents] = useState<any[]>([]);
-  const [filteredEvents,setFilteredEvents]= useState<any[]>([]);
-  const { calendarData } = generateCalendarData(
-    calendarRangeType,
-    calendarType
-  );
+  const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
+
+  // Modal state for date selection
+  const [selectorState, setSelectorState] = useState<{
+    isOpen: boolean;
+    rangeType: CalendarRangeTimeType | null;
+    pendingDate: string;
+  }>({
+    isOpen: false,
+    rangeType: null,
+    pendingDate: currentDate
+  });
+  const calendarData = useMemo(() => {
+    console.log('Regenerating calendar data with:', { currentDate, calendarRangeType, calendarType });
+    const { calendarData } = generateCalendarData(calendarRangeType, calendarType);
+    return calendarData;
+  }, [currentDate, calendarRangeType, calendarType, selectorState]);
+
+
+
   const { data: leadFollowUpTypeData } = useQuery({
     queryKey: ["leadFollowUpTypeData"],
     queryFn: async () => await getLaedfollowUpTypes(),
   });
+
+
   const { LeadContactTypeList } = getData();
   useEffect(() => {
     if (leadFollowUpTypeData) {
-     
       const updatedList = LeadContactTypeList.map((item: any) => {
         const match = leadFollowUpTypeData?.data?.find(
           (d: any) => d.type === item.value
         );
         return {
           ...item,
-          id: match ? match.id : null, // add id if match found
+          id: match ? match.id : null, 
         };
       });
 
@@ -110,10 +126,13 @@ export default function CalendarContainer({
     }
   }, [leadFollowUpTypeData]);
 
-  // Go to previous day/week/month
+  useEffect(() => {
+    console.log("currentDate", currentDate);
+  }, [currentDate]);
+
   const goToNext = () => {
     setCurrentDate((prevDate) => {
-      // prevDate is string like "2025-08-18"
+
       switch (calendarRangeType) {
         case "daily":
           return dayjs(prevDate, "YYYY-MM-DD")
@@ -137,13 +156,13 @@ export default function CalendarContainer({
               targetMonth === 12
                 ? { year: targetYear + 1, month: 1, day: targetday }
                 : {
-                    year: targetYear,
-                    month: targetMonth + 1,
-                    day:
-                      targetMonth === 11 && !isLeapYear && targetday === 30
-                        ? targetday - 1
-                        : targetday,
-                  };
+                  year: targetYear,
+                  month: targetMonth + 1,
+                  day:
+                    targetMonth === 11 && !isLeapYear && targetday === 30
+                      ? targetday - 1
+                      : targetday,
+                };
             const nextTargetDate = revertDateWithTimeZone(
               nextTarget,
               calendarType
@@ -244,6 +263,7 @@ export default function CalendarContainer({
   //     }
   //   });
   // };
+  console.log(calendarRangeType)
 
   const goToPrev = () => {
     setCurrentDate((prevDateStr) => {
@@ -285,13 +305,13 @@ export default function CalendarContainer({
             const prevTarget =
               targetMonth === 1
                 ? {
-                    year: targetYear - 1,
-                    month: 12,
-                    day:
-                      !isLeapYear && targetday === 30
-                        ? targetday - 1
-                        : targetday,
-                  }
+                  year: targetYear - 1,
+                  month: 12,
+                  day:
+                    !isLeapYear && targetday === 30
+                      ? targetday - 1
+                      : targetday,
+                }
                 : { year: targetYear, month: targetMonth - 1, day: targetday };
             const prevTargetDate = revertDateWithTimeZone(
               prevTarget,
@@ -403,7 +423,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-  
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -418,7 +437,6 @@ export default function CalendarContainer({
       return getCalendarData(data);
     },
     onSuccess: (data) => {
-    
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
           title: item?.subject,
@@ -436,7 +454,8 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = [
-          { id:data?.data?.id,
+          {
+            id: data?.data?.id,
             title: data?.data?.subject,
             start: data?.data?.eventAt,
           },
@@ -450,11 +469,8 @@ export default function CalendarContainer({
     mutationFn: (id: number) => {
       return deleteEvent(id);
     },
-    onSuccess: (data) => {
-      
-    },
+    onSuccess: (data) => { },
   });
-
 
   function getDateDataHandler(date: string) {
     const data = {
@@ -510,6 +526,66 @@ export default function CalendarContainer({
   //     };
   //   }),
   // };
+  function returnDetailEventData(eventData: any) {
+    console.log(eventData);
+    const eventOptions = eventData?.map((event: any) => ({
+      id: event?.id,
+      title: event?.title,
+      start: event?.start,
+    }));
+    setSingleDateEvents(eventOptions);
+  }
+
+
+  //           onActiveTime={(value) => setCalendarRangeType(value)}
+
+  const handleDateSelectorConfirm = (result: DateSelectorResult) => {
+    console.log('CalendarContainer - handleDateSelectorConfirm received:', result);
+
+
+    switch (result.type) {
+      case 'monthly':
+        console.log('Setting monthly - currentDate to:', result.start);
+        setCurrentDate(result.start);
+        setCalendarRangeType('monthly');
+        break;
+      case 'weekly':
+        console.log('Setting weekly - currentDate to:', result.start);
+        setCurrentDate(result.start);
+        setCalendarRangeType('weekly');
+        break;
+      case 'daily':
+        setCurrentDate(result.start);
+        setCalendarRangeType('daily');
+        break;
+      default:
+        console.warn('Unknown date selector result type:', result);
+    }
+
+
+    setSelectorState({ isOpen: false, rangeType: null, pendingDate: currentDate });
+  };
+
+  const handleCloseSelector = () => {
+
+    setSelectorState({
+      isOpen: false,
+      rangeType: null,
+      pendingDate: currentDate
+    });
+
+   
+  };
+  const openDateSelector = (rangeType: "monthly" | "weekly" | "daily" | CalendarRangeTimeType) => {
+    console.log('Opening modal with current date:', currentDate, 'for range type:', rangeType);
+    setSelectorState({
+      isOpen: true,
+      rangeType,
+      pendingDate: currentDate
+    });
+    setCalendarRangeType(rangeType);
+  };
+  //           onActiveTime={(value) => setCalendarRangeType(value)}
 
   return (
     <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
@@ -521,9 +597,28 @@ export default function CalendarContainer({
           onPrev={goToPrev}
           onNext={goToNext}
           onToday={goToToday}
+          onOpenDateSelector={openDateSelector}
+          // onActiveTime={openDateSelector}
           onActiveTime={(value) => setCalendarRangeType(value)}
           calendarRangeType={calendarRangeType}
         />
+
+        {
+          selectorState.isOpen && selectorState.rangeType !== "custom-range-day" ? (<DateSelectorStepper
+            currentDate={currentDate}
+            setCurrentDate={setCurrentDate}
+            calendarType={calendarType}
+            rangeType={calendarRangeType as "weekly" | "monthly" | "daily"}
+            isOpen={selectorState.isOpen}
+            onCancel={handleCloseSelector}
+            onConfirm={handleDateSelectorConfirm}
+            onReset={() => {
+              // Reset any internal state if needed
+              console.log('DateSelectorStepper reset');
+            }}
+          />) : (<></>)
+        }
+        {/* <CustomRangeDatePicker onClose={() => {}} /> */}
         <div className="bg-[#FCFCFD] p-3">
           <LeadContactTypeContainer
             list={followUpTypeList}
@@ -559,40 +654,75 @@ export default function CalendarContainer({
                 }}
               />
             ) : calendarRangeType === "weekly" ? (
-              <WeeklyCalendar
-                currentDate={currentDate}
+              // <WeeklyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridWeeklyCalendar
+                events={data}
+                followUpTypeList={followUpTypeList}
                 visibleRange={calendarData.visibleRange}
                 calendarType={calendarType}
-                events={data}
-                onSelectDate={(date: string) => {
-                  getDateDataHandler(date);
-                  setSelectedDate(date);
-                  setCurrentDate(date);
+                currentDate={currentDate}
+                onGetDayData={(eventData: any) => {
                   setViewDetail(true);
                   setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
                 }}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
+                onGetFollowUpTypeData={(eventData: any) => {
                   setViewDetail(true);
-                  setIsSingleEventData(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
                 }}
               />
             ) : calendarRangeType === "daily" ? (
-              <DailyCalendar
+              // <DailyCalendar
+              //   currentDate={currentDate}
+              //   events={data}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              //     />
+              <GridDailyCalendar
                 currentDate={currentDate}
                 events={data}
-                onSelectEvent={(id: number) => {
-                  setSelectedEvent(id);
-                  getSingleEventHandler(id);
+                followUpTypeList={followUpTypeList}
+                onGetFollowUpTypeData={(eventData: any) => {
                   setViewDetail(true);
-                  setIsSingleEventData(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
+                }}
+                onGetHourData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
                 }}
               />
             ) : (
               <></>
             )}
           </div>
+
           {viewDetail && (
             <div className="col-span-1 bg-card p-6">
               {/* <EventDetailContainer
@@ -607,12 +737,25 @@ export default function CalendarContainer({
                 eventList={singleDateEvents}
                 calendarType={calendarType}
                 isSingleEventData={isSingleEventData}
-                onDeleteEvent={(id)=>{deleteEventHandler(id)}}
+                onDeleteEvent={(id) => {
+                  deleteEventHandler(id);
+                }}
               />
             </div>
           )}
         </div>
       </div>
+
+      {/* Date Selector Modal */}
+      {/* <DateSelectorModal
+        isOpen={modalState.isOpen}
+        onClose={handleModalClose}
+        onConfirm={handleModalConfirm}
+        currentDate={currentDate}
+        calendarType={calendarType}
+        rangeType={(modalState.rangeType && modalState.rangeType !== 'custom-range-day') ? modalState.rangeType as 'monthly' | 'weekly' | 'daily' : 'monthly'}
+      /> */}
+
     </div>
   );
 
@@ -622,17 +765,17 @@ export default function CalendarContainer({
   ) {
     let calendarData;
     const date = convertDateWithTimeZone(currentDate, calendarType);
-   
+
     switch (calendarRangeType) {
       case "monthly":
         const calendarInfo = getCalendarInfo(currentDate, calendarType);
-      
+
         calendarData = {
           date: date,
           visibleRange: generateVisibleRange(currentDate, calendarType),
           selectedDaysRange: [
             {
-              day: date.day,
+              // day: date.day,
               monthName: date.monthName,
               year: date.year,
             },
@@ -657,6 +800,7 @@ export default function CalendarContainer({
           currentDate,
           calendarType
         );
+
         const selectedDateRange = {
           start: convertDateWithTimeZone(
             convertToGregorianYMD(weeklyVisibleRange.start),
@@ -760,6 +904,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-phone-icon.png",
         activeClassName: "border border-[#EF26B2]",
         className: "text-[#C11574] bg-[#FDF2FA]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#C11574] bg-opacity-20",
       },
       {
         label: "پیامک",
@@ -767,6 +913,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-sms-icon.png",
         activeClassName: "border border-[#039855]",
         className: "text-[#087443] bg-[#EDFCF2]",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full rounded-full bg-[#087443] bg-opacity-20",
       },
       {
         label: "ایمیل",
@@ -774,6 +922,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-email-icon.png",
         activeClassName: "border border-[#1C68DA]",
         className: "text-[#175CD3] bg-[#EFF8FF]",
+        orderClassName:
+          "flex w-4 h-4 items-center justify-center rounded-full bg-[#175CD3] bg-opacity-20",
       },
       {
         label: "جلسه",
@@ -781,6 +931,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-meeting-icon.png",
         activeClassName: "border border-[#7500FE]",
         className: "text-[#6941C6] bg-[#F9F5FF]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#6941C6] bg-opacity-20",
       },
       {
         label: "VOIP",
@@ -788,6 +940,8 @@ export default function CalendarContainer({
         icon: "/icons/colored-voip-icon.png",
         activeClassName: "border border-[#D92D20]",
         className: "text-[#B93815] bg-[#FEF6EE]",
+        orderClassName:
+          "flex items-center justify-center w-4 h-4 rounded-full bg-[#B93815] bg-opacity-20",
       },
     ];
 

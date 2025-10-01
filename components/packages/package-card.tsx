@@ -40,18 +40,7 @@ const PriceDisplay: React.FC<{
         return price.toLocaleString('fa-IR');
     };
 
-    // const getDurationText = () => {
-    //     switch (durationUnit) {
-    //         case 'month':
-    //             return 'در ماه';
-    //         case 'year':
-    //             return 'در سال';
-    //         case 'day':
-    //             return 'در روز';
-    //         default:
-    //             return 'در ماه';
-    //     }
-    // };
+
 
     return (
         <div className="flex flex-col items-center space-y-2">

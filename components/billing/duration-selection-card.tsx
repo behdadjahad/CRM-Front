@@ -52,7 +52,14 @@ export default function DurationSelectionCard({
     return (
         <>
             <style dangerouslySetInnerHTML={{ __html: scrollbarStyles }} />
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 relative">
+                {/* Coming Soon Overlay */}
+                <div className="absolute inset-0 bg-white/30 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+                    <div className="text-center">
+                        <div className="text-2xl font-bold text-gray-700 mb-2">به زودی</div>
+                        <div className="text-sm text-gray-500">این بخش در حال توسعه است</div>
+                    </div>
+                </div>
 
                 <h2 className="text-base font-medium leading-snug text-black mb-6 flex  items-center gap-2">
                     <Image src="/icons/durations-icon.svg" alt="order-summary-card-icon" width={20} height={20} />

@@ -22,6 +22,7 @@ export interface CalendarHeaderInterface {
   calendarRangeType: CalendarRangeTimeType;
   fullRange?: any[];
   onActiveCalendarType: (value: CalendarType) => void;
+  onOpenDateSelector: (value: CalendarRangeTimeType) => void;
   calendarType: CalendarType;
 }
 const CalendarTimeFilteringList: {
@@ -31,6 +32,7 @@ const CalendarTimeFilteringList: {
   { label: "ماهانه", value: "monthly" },
   { label: "هفتگی", value: "weekly" },
   { label: "روزانه", value: "daily" },
+  { label: "شخصی سازی", value: "custom-range-day" },
 ];
 const CalendarTypeFilteringList: {
   label: string;
@@ -50,6 +52,7 @@ export default function CalendarHeader({
   onActiveTime,
   calendarRangeType,
   onActiveCalendarType,
+  onOpenDateSelector,
   calendarType,
 }: CalendarHeaderInterface) {
   const isLtr = calendarType === "gregory";
@@ -106,7 +109,7 @@ export default function CalendarHeader({
             <FaArrowRight />
           </Button>
 
-          <div className="px-4 py-1 border rounded text-sm text-[#414651] flex items-center justify-center" dir={isLtr ? "ltr" : "rtl"}>
+          <div onClick={() => onOpenDateSelector(calendarRangeType)} className="px-4 py-1 border rounded text-sm cursor-pointer text-[#414651] flex items-center justify-center" dir={isLtr ? "ltr" : "rtl"}>
             {selectedDaysRange &&
               selectedDaysRange.length > 0 &&
               selectedDaysRange?.map((item, index) => (
