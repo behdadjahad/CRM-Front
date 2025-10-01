@@ -106,6 +106,7 @@ export default function EventDetailSidebar({
           editData: {
             id: item?.id,
             title: item?.title,
+            start:item?.start
           },
           // e.g., "26"
         };
