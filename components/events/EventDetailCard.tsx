@@ -52,11 +52,11 @@ export default function EventDetailCard({
               onClick={() => {}}
             />
           </Button>
-          <DeleteConfirmation
+          {/* <DeleteConfirmation
             onDelete={() => {
               // onDeleteEvent(eventList?.[0]?.id);
             }}
-          />
+          /> */}
         </div>
       </div>
 
