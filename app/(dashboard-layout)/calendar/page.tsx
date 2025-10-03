@@ -39,7 +39,7 @@ export default function Calendar() {
         id:item?.id,
         title: item?.subject,
         start: item?.occurenceDate,
-        type:"CALL",
+       followUpTypeId: item?.extraInformation?.followUpTypeId
       }));
       setCalendarData(calendarDataList);
     }

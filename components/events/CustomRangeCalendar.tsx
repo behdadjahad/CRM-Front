@@ -44,7 +44,7 @@ export default function CustomRangeCalendar({
           return (
             <div
               key={index}
-              className="w-full p-3 border-b border-[#E9EAEB] flex gap-2 items-center justify-center"
+              className="w-full p-3 border border-[#E9EAEB] flex gap-2 items-center justify-center"
             >
               {weekLabel}
             </div>

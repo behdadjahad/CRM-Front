@@ -47,13 +47,14 @@ import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 
-
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import Popup from "../ui/popup";
 import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
 import CustomRangeCalendar from "./CustomRangeCalendar";
 import EventDetailSidebar from "./EventDetailSidebar";
+import RefactoreMonthlyCalendar from "./GridMonthlyCalendar";
+import GridMonthlyCalendar from "./GridMonthlyCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -423,7 +424,7 @@ export default function CalendarContainer({
     onSuccess: (data) => {
       if (data && data?.data) {
         const eventsOptions = data?.data?.map((item: any) => ({
-          id:item?.id,
+          id: item?.id,
           title: item?.subject,
           start: item?.occurenceDate,
         }));
@@ -573,7 +574,26 @@ export default function CalendarContainer({
 
           <div className={`w-full`}>
             {calendarRangeType === "monthly" ? (
-              <MonthlyCalendar
+              // <MonthlyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridMonthlyCalendar
                 currentDate={currentDate}
                 visibleRange={calendarData.visibleRange}
                 calendarType={calendarType}
