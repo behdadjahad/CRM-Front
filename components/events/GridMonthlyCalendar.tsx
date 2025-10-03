@@ -31,7 +31,7 @@ export default function GridMonthlyCalendar({
   const end = convertToGregorianYMD(visibleRange?.end);
   const visibleDaysArray = getDatesBetween(start, end);
   const weekdays = weekdaysMap[calendarType];
-  events = [{ title: "جلسه آنلاین", start: "2025-10-03T19:27:13Z" }];
+ 
 
   return (
     <div>
