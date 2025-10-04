@@ -174,3 +174,38 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
     ],
   },
 ];
+
+// Cart-specific navigation links (minimal, no authentication required)
+export const cartDrawerLinks: { category: string; links: NavLinkInterface[] }[] = [
+  {
+    category: "خرید",
+    links: [
+      {
+        label: "بازگشت به فیچرها",
+        link: "/single-features",
+        icon: (
+          <Image
+            src={"/icons/menu-package-icon.svg"}
+            alt="فیچرها"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
+      {
+        label: "سبد خرید",
+        link: "/cart",
+        icon: (
+          <Image
+            src={"/icons/menu-invoice-icon.svg"}
+            alt="سبد خرید"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
+    ],
+  },
+];
