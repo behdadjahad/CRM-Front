@@ -46,7 +46,6 @@ import { getCalendarData } from "@/api/calendar";
 import { getLaedfollowUpTypes } from "@/api/follow-up";
 import { deleteEvent, getSingleEvent } from "@/api/event";
 
-
 import GridDailyCalendar from "./GridDailyCalendar";
 import { GridWeeklyCalendar } from "./GridWeeklyCalendar";
 import DateSelectorStepper, { DateSelectorResult } from "./calendar/DateSelectorStepperClean";
@@ -55,6 +54,8 @@ import Popup from "../ui/popup";
 import CustomRangeDatePicker from "../calendar/CustomRangeDatePicker";
 import CustomRangeCalendar from "./CustomRangeCalendar";
 import EventDetailSidebar from "./EventDetailSidebar";
+import RefactoreMonthlyCalendar from "./GridMonthlyCalendar";
+import GridMonthlyCalendar from "./GridMonthlyCalendar";
 
 export interface CalendarContainerInterface {
   data: {
@@ -667,6 +668,122 @@ export default function CalendarContainer({
         <div className="bg-card border border-[#DEEBFB] rounded-xl custom-shadow p-6 w-full">
           <div className="border border-[#E9EAEB] rounded-lg flex flex-col  w-full">
 
+          {/* <div className={`w-full`}> */}
+            {calendarRangeType === "monthly" ? (
+              // <MonthlyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridMonthlyCalendar
+                currentDate={currentDate}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                events={data}
+                onSelectDate={(date: string) => {
+                  getDateDataHandler(date);
+                  setSelectedDate(date);
+                  setCurrentDate(date);
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                }}
+                onSelectEvent={(id: number) => {
+                  setSelectedEvent(id);
+                  getSingleEventHandler(id);
+                  setViewDetail(true);
+                  setIsSingleEventData(true);
+                }}
+              />
+            ) : calendarRangeType === "custom-range-day" ? (
+              <CustomRangeCalendar
+                currentDate={currentDate}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                events={data}
+                selectedRange={selectedRange}
+              />
+            ) : calendarRangeType === "weekly" ? (
+              // <WeeklyCalendar
+              //   currentDate={currentDate}
+              //   visibleRange={calendarData.visibleRange}
+              //   calendarType={calendarType}
+              //   events={data}
+              //   onSelectDate={(date: string) => {
+              //     getDateDataHandler(date);
+              //     setSelectedDate(date);
+              //     setCurrentDate(date);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(false);
+              //   }}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              // />
+              <GridWeeklyCalendar
+                events={data}
+                followUpTypeList={followUpTypeList}
+                visibleRange={calendarData.visibleRange}
+                calendarType={calendarType}
+                currentDate={currentDate}
+                onGetDayData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                }}
+                onGetFollowUpTypeData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
+                }}
+              />
+            ) : calendarRangeType === "daily" ? (
+              // <DailyCalendar
+              //   currentDate={currentDate}
+              //   events={data}
+              //   onSelectEvent={(id: number) => {
+              //     setSelectedEvent(id);
+              //     getSingleEventHandler(id);
+              //     setViewDetail(true);
+              //     setIsSingleEventData(true);
+              //   }}
+              //     />
+              <GridDailyCalendar
+                currentDate={currentDate}
+                events={data}
+                followUpTypeList={followUpTypeList}
+                onGetFollowUpTypeData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                  console.log(eventData, 593);
+                }}
+                onGetHourData={(eventData: any) => {
+                  setViewDetail(true);
+                  setIsSingleEventData(false);
+                  returnDetailEventData(eventData);
+                }}
+              />
+            ) : (
+              <></>
+            )}
 
 
 

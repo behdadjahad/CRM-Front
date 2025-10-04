@@ -1,23 +1,28 @@
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
 import { Button } from "../ui/button";
+import { dateType } from "@/lib/utils";
+import { convertDateTime, convertDateTimeToGregorian } from "@/lib/date";
 export interface EventEditFormInterface {
   onClose: () => void;
   onSubmitForm: (id: number, data: any) => void;
   id: number;
   title: string;
+  start: string;
 }
 export default function EventEditForm({
   onClose,
   onSubmitForm,
   id,
   title,
+  start,
 }: EventEditFormInterface) {
+  console.log(start);
   const formik = useFormik({
     initialValues: {
       subject: title,
-      dateTime: "",
-      dateTimeType: "",
+      dateTime: convertDateTime(start, dateType),
+      dateTimeType: dateType,
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -25,7 +30,10 @@ export default function EventEditForm({
   function submitForm() {
     const data = {
       subject: formik.values.subject,
-      eventAt: formik.values.dateTime,
+      eventAt: convertDateTimeToGregorian(
+        formik.values.dateTime,
+        formik.values.dateTimeType
+      ),
     };
     onSubmitForm(id, data);
   }
@@ -38,7 +46,7 @@ export default function EventEditForm({
           {
             key: "subject",
             component: "input",
-            placeholder: "موضوع",
+
             type: "text",
             className: "w-full",
             labelClassName: "border placeholder:text-sm",
@@ -47,7 +55,7 @@ export default function EventEditForm({
             key: "dateTime",
             component: "date-time",
             dependantKey: "dateTimeType",
-            placeholder: "تاریخ و زمان",
+
             type: "text",
             className: "w-full",
             labelClassName: "border placeholder:text-sm",

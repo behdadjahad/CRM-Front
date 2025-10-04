@@ -30,12 +30,12 @@ export default function CustomRangeCalendar({
   const selectedDaysArray = getDatesBetween(
     selectedRange?.start,
     selectedRange?.end
-    );
-    console.log(selectedRange)
+  );
+  console.log(selectedRange);
   console.log(selectedDaysArray);
   console.log(rangeDaysArray);
   const weekdays = weekdaysMap[calendarType];
-
+  console.log(selectedDaysArray);
   return (
     <div>
       <div className="grid grid-cols-7">
@@ -44,7 +44,7 @@ export default function CustomRangeCalendar({
           return (
             <div
               key={index}
-              className="w-full p-3 border-b border-[#E9EAEB] flex gap-2 items-center justify-center"
+              className="w-full p-3 border border-[#E9EAEB] flex gap-2 items-center justify-center"
             >
               {weekLabel}
             </div>
@@ -58,9 +58,22 @@ export default function CustomRangeCalendar({
             date,
             calendarType
           );
-            const outOfRange = !selectedDaysArray.includes(date);
-            console.log(outOfRange)
-            console.log(date)
+          const {
+            day: cellDay,
+            month: cellMonth,
+            year: cellYear,
+          } = convertDateWithTimeZone(date, calendarType);
+          const {
+            day: currentDay,
+            month: currentMonth,
+            year: currentYear,
+          } = convertDateWithTimeZone(currentDate, calendarType);
+          const isCurrentMonth =
+            cellYear === currentYear && cellMonth === currentMonth;
+          const outOfRange = selectedRange
+            ? !selectedDaysArray.includes(date)
+            : !isCurrentMonth;
+
           return (
             <div
               key={index}
