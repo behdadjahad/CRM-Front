@@ -1,7 +1,10 @@
+import { Button } from "../ui/button";
+
 export default function AddLeadToPipe() {
     return (
         <>
-            Add Lead To Pipe
+            <Button variant={"foreground"}>Add</Button>
+            
         </>
       
  );

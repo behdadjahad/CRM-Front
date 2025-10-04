@@ -1,3 +1,4 @@
+import AddLeadToPipe from "./AddLeadToPipe";
 import LeadCard from "./LeadCard";
 
 export interface LeadPipeInterface {
@@ -19,12 +20,14 @@ export default function LeadPipe({
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center text-center w-full text-primary-foreground border">
         {title}
       </div>
-      <div className="p-3 flex flex-col">
+      <div className="p-3 flex flex-col gap-2">
         {" "}
         {leadList?.map((lead, index) => (
           <LeadCard key={`lead-${index}`} {...lead} />
         ))}
+        <AddLeadToPipe />
       </div>
+
       <div className="border border-t bg-[#F8FAFF] p-3">
         <div className="flex flex-col gap-2">
           {overal?.map((item, index) => (
