@@ -98,6 +98,7 @@ export default function GridMonthlyCalendar({
                 {cellDayEvents.map((event) => {
                   return (
                     <div
+                      key={`event-day-${index}`}
                       className="flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA] cursor-pointer text-xs"
                       onClick={() => {
                         onSelectEvent(event?.id);
