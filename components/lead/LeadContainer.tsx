@@ -19,6 +19,7 @@ import { CustomerDataInterface } from "../service/customer-infinite-card";
 import { AccessDenied } from "../shared/AccessDenied";
 import { generateFeatureAccess } from "@/lib/generatePageData";
 import Image from "next/image";
+import ViewToggleGroup from "../shared/ViewToggleGroup";
 export interface LeadContainerInterface {
   className?: string;
 }
@@ -360,7 +361,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
     <div className="flex flex-col bg-card border rounded-xl p-6 gap-4">
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button
+          {/* <Button
             variant={"foreground"}
             onClick={() => {
               setView("table");
@@ -375,8 +376,18 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
             }}
           >
             pipe
-          </Button>{" "}
-   
+          </Button>{" "} */}
+          <ViewToggleGroup
+            onActive={(item: LeadViewType) => {
+              setView(item);
+            }}
+            defaultValue={"table"}
+            options={[
+              { label: "pipe", icon: "/icons/pipe-icon.svg" },
+              { label: "table", icon: "/icons/table-icon.svg" },
+            ]}
+            activeItem={view}
+          />
           {generateFeatureAccess(pageFeatures, "filter-lead")?.show &&
             generateFeatureAccess(pageFeatures, "filter-lead")?.enable && (
               <FilterContainer
