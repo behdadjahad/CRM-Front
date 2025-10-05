@@ -69,7 +69,7 @@ export default function TextInput({
         onChange={handleChange}
         // onChange={(e: any) => form.setFieldValue(item.key, e.target.value)}
         className={cn(
-          "text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right",
+          "text-sm h-11 w-full placeholder:text-xs placeholder:text-subtitle/80 outline-none p-3 rounded-lg text-right border",
           //item.className,
           item.labelClassName,
           {

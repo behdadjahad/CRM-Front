@@ -21,10 +21,7 @@ import { AccessDenied } from "../shared/AccessDenied";
 import Image from "next/image";
 
 export default function LeadCreationContainer() {
-
-  const pageFeatures=usePageData()
-
-
+  const pageFeatures = usePageData();
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch<any>();
@@ -132,43 +129,37 @@ export default function LeadCreationContainer() {
 
   return (
     <>
-    {
-      generateFeatureAccess(pageFeatures,"code")?.show && generateFeatureAccess(pagesData,"")?.enable &&(
- <Button
-        variant={"info"}
-        onClick={() => {
-          setOpenModal(true);
-        }}
-        // className={cn("text-aqua-foreground flex justify-end w-full")}
-      >
-        درخواست جدید
-      </Button>
-      )
+      {generateFeatureAccess(pageFeatures, "code")?.show &&
+        generateFeatureAccess(pagesData, "")?.enable && (
+          <Button
+            variant={"info"}
+            onClick={() => {
+              setOpenModal(true);
+            }}
+            // className={cn("text-aqua-foreground flex justify-end w-full")}
+          >
+            درخواست جدید
+          </Button>
+        )}
 
+      {!generateFeatureAccess(pageFeatures, "export-lead")?.show &&
+        !generateFeatureAccess(pagesData, "export-lead")?.enable && (
+          <AccessDenied
+            variant={""}
+            title=" درخواست جدید "
+            message="شما به این بخش دسترسی ندارید"
+            icon={
+              <Image
+                src={"/icons/disable-download.png"}
+                alt="edit"
+                width={1024}
+                height={1024}
+                className="w-4 h-4"
+              />
+            }
+          />
+        )}
 
-
-}
-
-        {
-      !generateFeatureAccess(pageFeatures,"export-lead")?.show && !generateFeatureAccess(pagesData,"export-lead")?.enable &&(
-<AccessDenied
-                            variant={""}
-                            title=" درخواست جدید "
-                            message="شما به این بخش دسترسی ندارید"
-                            icon={(  <Image
-                                            src={"/icons/disable-download.png"}
-                                            alt="edit"
-                                            width={1024}
-                                            height={1024}
-                                            className="w-4 h-4"
-                                          />)}
-                          />
-      )
-
-
-
-}
-     
       <CustomModal
         minWidth="0"
         maxWidth="700px"
@@ -270,7 +261,6 @@ export default function LeadCreationContainer() {
         />
         <AddCustomerToLeadContainer
           onSendSelectedCustomer={(selectedCustomer: CustomerDataInterface) => {
-           
             setCustomer(selectedCustomer);
           }}
           onSendCustomerData={(customerData: CustomerDataInterface) => {
@@ -279,7 +269,7 @@ export default function LeadCreationContainer() {
         />
         {customer && (
           <div className="p-2">
-            <CustomerCard {...customer}/>
+            <CustomerCard {...customer} />
           </div>
         )}
 

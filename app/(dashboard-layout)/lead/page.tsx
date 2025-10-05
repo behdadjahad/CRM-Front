@@ -1,6 +1,5 @@
 "use client";
-
-import LeadContainer from "@/components/lead/lead-container";
+import LeadContainer from "@/components/lead/LeadContainer";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import { fetchLeads } from "@/store/lead-slice";
@@ -22,7 +21,6 @@ export default function Lead() {
       })
     );
   }, [dispatch]);
-
   return (
     <main className="flex flex-col">
       <Title label="درخواست ها" />
