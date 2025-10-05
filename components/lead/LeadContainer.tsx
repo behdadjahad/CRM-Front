@@ -20,6 +20,7 @@ import { AccessDenied } from "../shared/AccessDenied";
 import { generateFeatureAccess } from "@/lib/generatePageData";
 import Image from "next/image";
 import ViewToggleGroup from "../shared/ViewToggleGroup";
+import { leadViewOptions } from "@/constants/lead";
 export interface LeadContainerInterface {
   className?: string;
 }
@@ -381,11 +382,8 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
             onActive={(item: LeadViewType) => {
               setView(item);
             }}
-            defaultValue={"table"}
-            options={[
-              { label: "pipe", icon: "/icons/pipe-icon.svg" },
-              { label: "table", icon: "/icons/table-icon.svg" },
-            ]}
+            defaultValue={leadViewOptions?.[0].label}
+            options={leadViewOptions}
             activeItem={view}
           />
           {generateFeatureAccess(pageFeatures, "filter-lead")?.show &&
