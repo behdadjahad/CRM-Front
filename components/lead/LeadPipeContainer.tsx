@@ -1,5 +1,6 @@
 import { PipeInterface } from "./LeadContainer";
 import LeadPipe from "./LeadPipe";
+import LeadPipeCreation from "./LeadPipeCreation";
 
 export interface LeadPipeContainerInterface {
   pipeList: PipeInterface[];
@@ -9,12 +10,16 @@ export default function LeadPipeContainer({
   pipeList,
 }: LeadPipeContainerInterface) {
   return (
-    <div className="">
-      {" "}
-      <div className="flex items-center gap-2">
-        {pipeList?.map((pipe, index) => (
-          <LeadPipe key={`lead-pipe-${index}`} {...pipe} />
-        ))}
+    <div className="grid grid-cols-10 gap-2">
+      <div className="grid col-span-9">
+        <div className="flex items-center gap-2">
+          {pipeList?.map((pipe, index) => (
+            <LeadPipe key={`lead-pipe-${index}`} {...pipe} />
+          ))}
+        </div>
+      </div>{" "}
+      <div className="grid col-span-1"> 
+         <LeadPipeCreation />
       </div>
     </div>
   );
