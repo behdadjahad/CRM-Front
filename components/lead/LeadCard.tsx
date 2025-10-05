@@ -1,11 +1,14 @@
+import { leadFollowUpTypeList } from "@/constants/lead";
+import { AddEventToLead } from "./AddEventToLead";
+
 export interface LeadCardInterface {
   list: {
     label: string;
     value: string;
   }[];
   main: {
-      owner: string;
-      date: string;
+    owner: string;
+    date: string;
   };
 }
 
@@ -16,7 +19,7 @@ export default function LeadCard({ list, main }: LeadCardInterface) {
         <div className="flex items-center gap-2">
           <div>icon</div>
           <div className="flex flex-col gap-1">
-            <span>{main.owner}</span>
+            <span className="font-semibold">{main.owner}</span>
             <span className="text-xs">{main.date}</span>
           </div>
         </div>
@@ -34,6 +37,7 @@ export default function LeadCard({ list, main }: LeadCardInterface) {
           </div>
         ))}
       </div>
+      <AddEventToLead list={leadFollowUpTypeList} />
     </div>
   );
 }
