@@ -70,10 +70,10 @@ export default function DiscountCodeCard() {
                             placeholder="وارد کردن کد تخفیف"
                             value={inputCode}
                             onChange={(e) => setInputCode(e.target.value)}
-                            className="flex-1 px-3 py-2 text-sm font-normal border border-gray-300 dark:border-gray-600 rounded-lg bg-white placeholder:text-subtitle/80 outline-none"
+                            className="flex-1 px-3 py-2 lg:text-xs text-sm xl:text-sm font-normal border border-gray-300 dark:border-gray-600 rounded-lg bg-white placeholder:text-subtitle/80 outline-none"
                             disabled={isLoading}
                         />
-                        <Button variant="info" disabled={isLoading}>
+                        <Button className='lg:text-xs text-sm xl:text-sm' variant="info" disabled={isLoading}>
                             {isLoading ? 'در حال اعمال...' : 'اعمال کد'}
                         </Button>
                     </div>

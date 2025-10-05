@@ -33,28 +33,28 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({
     return (
         <div className="bg-white  rounded-b-3xl">
 
-            
+
             <div className="grid grid-cols-3 gap-3 p-4">
                 {monthNames.map((name, index) => (
                     <div className="w-full flex justify-center items-center">
-                        
-                    <button
-                        key={index}
-                        onClick={() => onMonthSelect(index + 1)}
-                        className={cn(
-                            "py-1 px-4 rounded-full text-sm font-medium transition-colors",
-                            index + 1 === selectedMonth
-                                ? "border-[#2949A4] border text-[#2949A4]"
-                                : "bg-white text-gray-800 hover:bg-gray-50"
-                        )}
-                    >
-                        {name}
-                    </button>
+
+                        <button
+                            key={index}
+                            onClick={() => onMonthSelect(index + 1)}
+                            className={cn(
+                                "py-1 px-4 rounded-full text-sm font-medium transition-colors",
+                                index + 1 === selectedMonth
+                                    ? "border-static-primary-blue-dark border text-static-primary-blue-dark"
+                                    : "bg-white text-gray-800 hover:bg-gray-50"
+                            )}
+                        >
+                            {name}
+                        </button>
                     </div>
                 ))}
             </div>
 
-      
+
             <div className="flex justify-center gap-3 px-4 pt-8 ">
                 <Button
                     variant="foreground"

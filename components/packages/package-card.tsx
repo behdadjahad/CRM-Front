@@ -16,17 +16,17 @@ import { CustomToast } from '../shared/custome-toast';
 const getBorderColorClass = (color: string): string => {
     switch (color) {
         case 'طلایی':
-            return 'border-t-[#F8AC3F]';
+            return 'border-t-static-package-gold';
         case 'نقره ای':
-            return 'border-t-[#B6BCC2]';
+            return 'border-t-static-package-silver';
         case 'برنزی':
-            return 'border-t-[#BF8970]';
+            return 'border-t-static-package-bronze';
         case 'آبی':
-            return 'border-t-[#2949A4]';
+            return 'border-t-static-primary-blue-dark';
         case 'سفید':
-            return 'border-t-[#6B7280]';
+            return 'border-t-static-package-white';
         default:
-            return 'border-t-[#2949A4]';
+            return 'border-t-static-primary-blue-dark';
     }
 };
 // Price display component
@@ -45,7 +45,7 @@ const PriceDisplay: React.FC<{
     return (
         <div className="flex flex-col items-center space-y-2">
             {originalPrice && originalPrice > currentPrice && (
-                <div className="text-xs text-[#637381] line-through">
+                <div className="text-xs text-static-secondary-gray-light line-through">
                     {formatPrice(originalPrice)} {currency}
                 </div>
             )}
@@ -54,7 +54,7 @@ const PriceDisplay: React.FC<{
                 {currentPrice === 0 ? 'رایگان' : `${formatPrice(currentPrice)} ${currency}`}
             </div>
             {currentPrice > 0 && (
-                <div className="text-sm whitespace-nowrap font-normal text-[#637381] ">
+                <div className="text-sm whitespace-nowrap font-normal text-static-secondary-gray-light ">
                     در ماه
                 </div>
             )}
@@ -93,10 +93,10 @@ const PackageCard: React.FC<PackageCardProp> = ({
             CustomToast({
                 type: 'error',
                 message: 'لطفا توضیحات را وارد کنید',
-              });
-              setStatus('error');
-              return;
-    
+            });
+            setStatus('error');
+            return;
+
         }
         try {
             const result = await selectPackage({

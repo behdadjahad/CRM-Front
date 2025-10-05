@@ -10,17 +10,17 @@ interface PackageIconProps {
 export const getColorValue = (color: PackageIconProps['color']): string => {
     switch (color) {
         case 'طلایی':
-            return '#F8AC3F'; // amber-500
+            return '#F8AC3F'; // package-gold
         case 'نقره ای':
-            return '#B6BCC2'; // gray-400
+            return '#B6BCC2'; // package-silver
         case 'برنزی':
-            return '#BF8970'; // amber-600
+            return '#BF8970'; // package-bronze
         case 'آبی':
-            return '#2949A4'; // blue-500
+            return '#2949A4'; // primary-blue-dark
         case 'سفید':
-            return '#6B7280'; // gray-500
+            return '#6B7280'; // package-white
         default:
-            return '#2949A4'; // original blue
+            return '#2949A4'; // primary-blue-dark
     }
 };
 

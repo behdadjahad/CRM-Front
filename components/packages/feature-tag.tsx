@@ -52,7 +52,7 @@ const FeatureTag: React.FC<FeatureTagProps> = ({
     return (
         <div
             onClick={onClick}
-            className={`text-sm flex-nowrap flex justify-between items-center text-[#1C68DA] whitespace-nowrap bg-white border-[#1C68DA] rounded-full border py-1 px-2 ${onClick ? 'cursor-pointer hover:bg-[#1C68DA] hover:text-white transition-colors' : ''} ${className}`}
+            className={`text-sm flex-nowrap flex justify-between items-center text-static-info-primary whitespace-nowrap bg-white border-static-info-primary rounded-full border py-1 px-2 ${onClick ? 'cursor-pointer hover:bg-static-info-primary hover:text-white transition-colors' : ''} ${className}`}
         >
             {/* Optional icon */}
             {icon && (
@@ -70,10 +70,10 @@ const FeatureTag: React.FC<FeatureTagProps> = ({
                         e.stopPropagation();
                         onClose();
                     }}
-                    className="flex items-center justify-center w-3 h-3 border border-[#1C68DA] rounded-full text-[#1C68DA] hover:text-[#1C68DA] transition-colors mr-1"
+                    className="flex items-center justify-center w-3 h-3 border border-static-info-primary rounded-full text-static-info-primary hover:text-static-info-primary transition-colors mr-1"
                     aria-label="Close"
                 >
-                    <X className="w-2 h-2 text-[#1C68DA]" />
+                    <X className="w-2 h-2 text-static-info-primary" />
                 </button>
             )}
         </div>

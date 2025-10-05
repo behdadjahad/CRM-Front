@@ -56,7 +56,7 @@ export default function CalendarDetailContainer({
       actions: isSingleEventData ? (
         <>
           <Button
-            className="border-none p-0 text-[#212B36]"
+            className="border-none p-0 text-static-text-secondary"
             onClick={() => {
               setViewEditForm(true);
             }}
@@ -67,7 +67,7 @@ export default function CalendarDetailContainer({
               width={1024}
               height={1024}
               className="w-4 h-4"
-              onClick={() => {}}
+              onClick={() => { }}
             />
           </Button>
 

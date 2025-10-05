@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export interface InvoicePreviewInterface { 
-  invoiceData: { label: string; value: string;[key: string]: any;}[];
+export interface InvoicePreviewInterface {
+  invoiceData: { label: string; value: string;[key: string]: any; }[];
 }
-export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) {
+export default function InvoicePreview({ invoiceData }: InvoicePreviewInterface) {
   const [isOpen, setIsOpen] = useState(false);
 
   // const invoiceData = [
@@ -86,7 +86,7 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
       }}
     >
       <Button
-        className="border border-[#212B36] text-[#212B36] rounded-xl font-thin px-2 py-1"
+        className="border border-static-text-secondary text-static-text-secondary rounded-xl font-thin px-2 py-1"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -127,7 +127,7 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
         </div>
         <div>
           <div className="px-6 pt-4 pb-0">
-            <div className="border border-dashed border-[#E4E7EC] rounded-lg p-6">
+            <div className="border border-dashed border-static-border-neutral rounded-lg p-6">
               <div className="space-y-6">
                 {invoiceData.map((item, index) => (
                   <div key={index}>
@@ -136,7 +136,7 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
                       className={cn(
                         "flex items-start justify-between",
                         item?.isHighlighted &&
-                          "bg-[#FECDCA] rounded-[8px]  py-2 px-3",
+                        "bg-static-error-light rounded-[8px]  py-2 px-3",
                         item?.label === "توضیحات سفارش"
                           ? "flex-col"
                           : "flex-row"
@@ -146,8 +146,8 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
                       <div className="flex items-center gap-3">
                         <p
                           className={cn(
-                            "text-[#717680] text-sm font-medium leading-[140%] tracking-normal",
-                            item.isHighlighted && "text-[#D92D20]"
+                            "text-static-secondary-gray text-sm font-medium leading-[140%] tracking-normal",
+                            item.isHighlighted && "text-static-error-dark"
                           )}
                         >
                           {item.label}
@@ -161,7 +161,7 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
                           )}
                         {item.hasManagerDiscountBadge &&
                           item.managerDiscountPercentage > 0 && (
-                            <span className="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium text-[#D92D20] border border-[#D92D20]">
+                            <span className="inline-flex items-center px-2 py-1 rounded-lg text-xs font-medium text-static-error-dark border border-static-error-dark">
                               {item.managerDiscountPercentage}% تخفیف
                             </span>
                           )}
@@ -170,19 +170,16 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
                       {/* Left side - Value */}
                       <div className=" max-w-md">
                         <p
-                          className={` text-sm font-medium text-[#414651] text-right ${
-                            item.label == "مدت زمان اعتبار"
+                          className={` text-sm font-medium text-static-secondary-gray-dark text-right ${item.label == "مدت زمان اعتبار"
                               ? "text-blue-800 font-bold"
-                              : "text-[#414651] "
-                          } ${
-                            item.isHighlighted
-                              ? "text-[#D92D20] font-bold"
+                              : "text-static-secondary-gray-dark "
+                            } ${item.isHighlighted
+                              ? "text-static-error-dark font-bold"
                               : "text-gray-900"
-                          } ${
-                            item?.label === "توضیحات سفارش"
-                              ? "text-right text-[#A4A7AE] pt-3 text-sm"
+                            } ${item?.label === "توضیحات سفارش"
+                              ? "text-right text-static-text-disabled pt-3 text-sm"
                               : "text-left"
-                          }`}
+                            }`}
                         >
                           {item.value}
                         </p>
@@ -211,7 +208,7 @@ export default function InvoicePreview({ invoiceData }:InvoicePreviewInterface) 
                 e.stopPropagation();
                 setIsOpen(false);
               }}
-              className="px-6 py-2 text-black border border-[#D5D7DA]"
+              className="px-6 py-2 text-black border border-static-border-neutral"
             >
               بستن
             </Button>

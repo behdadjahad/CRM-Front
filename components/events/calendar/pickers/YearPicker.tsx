@@ -34,7 +34,7 @@ export const YearPicker: React.FC<YearPickerProps> = ({
 
 
 
-          
+
             <div className="grid grid-cols-3 gap-3 p-4">
                 {years.map(year => (
                     <div className="w-full flex justify-center items-center">
@@ -46,7 +46,7 @@ export const YearPicker: React.FC<YearPickerProps> = ({
                             className={cn(
                                 "py-1 px-4  rounded-full text-sm font-medium transition-colors",
                                 year === selectedYear
-                                    ? "border-[#2949A4] border text-[#2949A4]"
+                                    ? "border-static-primary-blue-dark border text-static-primary-blue-dark"
                                     : "hover:bg-gray-100 "
                             )}
                         >
@@ -56,7 +56,7 @@ export const YearPicker: React.FC<YearPickerProps> = ({
                 ))}
             </div>
 
-           
+
             <div className="flex justify-center gap-3 px-4 pt-8 ">
                 <Button
                     variant="foreground"

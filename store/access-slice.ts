@@ -23,7 +23,7 @@ export interface AccessState {
 
 const initialState: AccessState = {
   accessJson: null,
-  currentPageCode: "contract", // default page code
+  currentPageCode: "", // default page code
   hash: "",
   isLoading: false,
 };
@@ -47,7 +47,7 @@ const accessSlice = createSlice({
     clearAccessData: (state) => {
       state.accessJson = null;
       state.hash = "";
-      state.currentPageCode = "contract";
+      state.currentPageCode = "";
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;

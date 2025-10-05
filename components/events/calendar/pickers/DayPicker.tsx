@@ -37,42 +37,42 @@ export const DayPicker: React.FC<DayPickerProps> = ({
         month: selectedMonth,
         day: 1
     }, calendarType));
-    const firstDayWeekday = (firstDayDate.getDay() + 1) % 7; 
+    const firstDayWeekday = (firstDayDate.getDay() + 1) % 7;
 
 
 
 
     const handleQuickSelect = (type: 'today' | 'thisMonth' | 'thisWeek') => {
         const todayInfo = getTodayDateInfo(calendarType);
-     
+
         if (type === 'today') {
             onDaySelect(todayInfo.day);
         }
     };
 
-    
+
     const isInSelectedWeek = (day: number) => {
         if (rangeType !== 'weekly' || !selectedDay) return false;
 
         try {
-          
+
             const selectedDateStr = revertDateWithTimeZone({
                 year: selectedYear,
                 month: selectedMonth,
                 day: selectedDay
             }, calendarType);
 
-           
+
             const selectedWeekRange = generateWeekVisibleRange(selectedDateStr, calendarType);
 
-         
+
             const currentDateStr = revertDateWithTimeZone({
                 year: selectedYear,
                 month: selectedMonth,
                 day: day
             }, calendarType);
 
-           
+
             const currentDate = new Date(currentDateStr);
             return currentDate >= selectedWeekRange.start && currentDate <= selectedWeekRange.end;
         } catch (error) {
@@ -83,33 +83,33 @@ export const DayPicker: React.FC<DayPickerProps> = ({
 
     return (
         <div className="bg-white  rounded-b-3xl">
-           
+
 
 
             <div className="grid grid-cols-7 gap-1 px-4 py-2 ">
 
                 {daysOfWeek.map((day, index) => (
-                    <div key={index} className="text-center text-sm font-medium text-[#72777C]">
+                    <div key={index} className="text-center text-sm font-medium text-static-text-calendar">
                         {day}
                     </div>
                 ))}
             </div>
 
-    
+
             <div className="grid grid-cols-7 gap-1 p-4">
-               
+
                 {(() => {
-                    const totalCells = 42; 
+                    const totalCells = 42;
                     const cells = [];
 
-                
+
                     for (let i = 0; i < firstDayWeekday; i++) {
                         cells.push(
                             <div key={`empty-${i}`} className="w-8 h-8"></div>
                         );
                     }
 
-                  
+
                     days.forEach(day => {
                         const isSelected = day === selectedDay;
                         const isInWeek = isInSelectedWeek(day);
@@ -121,7 +121,7 @@ export const DayPicker: React.FC<DayPickerProps> = ({
                                 className={cn(
                                     "w-8 h-8 rounded-full text-sm font-medium transition-colors",
                                     isSelected
-                                        ? "border-[#2949A4] border text-[#2949A4]"
+                                        ? "border-static-primary-blue-dark border text-static-primary-blue-dark"
                                         : isInWeek
                                             ? "bg-blue-100 text-blue-700 "
                                             : "hover:bg-gray-100"
@@ -136,7 +136,7 @@ export const DayPicker: React.FC<DayPickerProps> = ({
                 })()}
             </div>
 
-        
+
 
             <div className="flex justify-center gap-3 px-4 pt-8 ">
                 <Button

@@ -42,7 +42,7 @@ export default function OrderSummaryCard({
     // Show skeleton while loading
     if (isLoading) {
         return (
-            <div className="bg-white border border-[#D3D3D3] p-6 text-right font-primary-medium text-sm leading-[140%] tracking-normal rounded-[12px]">
+            <div className="bg-white border border-static-border-light p-6 text-right font-primary-medium text-sm leading-[140%] tracking-normal rounded-[12px]">
                 {/* Header Skeleton */}
                 <div className="flex items-center gap-2 mb-6">
                     <Skeleton className="w-5 h-5" />
@@ -131,7 +131,7 @@ export default function OrderSummaryCard({
 
 
     return (
-        <div className="bg-white border border-[#D3D3D3] p-6 text-right font-primary-medium text-sm leading-[140%] tracking-normal rounded-[12px]" >
+        <div className="bg-white border border-static-border-light p-6 text-right font-primary-medium text-sm leading-[140%] tracking-normal rounded-[12px]" >
             <h2 className="text-base font-medium leading-snug text-black mb-6 flex  items-center gap-2">
                 <Image src="/icons/payment-icon.svg" alt="order-summary-card-icon" width={20} height={20} />
                 خلاصه سفارش
@@ -140,28 +140,28 @@ export default function OrderSummaryCard({
             <div className="w-full flex flex-col gap-6">
                 {/* Package Name */}
                 <div className="flex justify-between items-center">
-                    <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >نام پکیج:</span>
-                    <span className="font-medium text[#414651]">{invoiceData?.invoiceNumber?.slice(0, 5) || "-"}</span>
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >نام پکیج:</span>
+                    <span className="font-medium text-static-secondary-gray-dark">{invoiceData?.invoiceNumber?.slice(0, 5) || "-"}</span>
                 </div>
 
                 {/* Package Type */}
                 {/* <div className="flex justify-between items-center">
-                    <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >بر اساس تعداد/زمان:</span>
-                    <span className="font-medium text[#414651]">
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >بر اساس تعداد/زمان:</span>
+                    <span className="font-medium text-static-secondary-gray-dark">
                         {displayData.type === 'rental' ? 'اجاره ای' : displayData.type === 'purchase' ? 'خریداری' : displayData.type || "-"}
                     </span>
                 </div> */}
 
                 {/* Purchase Type / Duration */}
                 <div className="flex justify-between items-center">
-                    <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >نوع خرید:</span>
-                    <span className="font-medium text[#414651]">{invoiceData?.paymentMethod === "GATEWAY" ? "درگاه پرداخت" : invoiceData?.paymentMethod === "CASH" ? "نقدی" : invoiceData?.paymentMethod === "BANK_TRANSFER" ? "حواله بانکی" : "-"}</span>
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >نوع خرید:</span>
+                    <span className="font-medium text-static-secondary-gray-dark">{invoiceData?.paymentMethod === "GATEWAY" ? "درگاه پرداخت" : invoiceData?.paymentMethod === "CASH" ? "نقدی" : invoiceData?.paymentMethod === "BANK_TRANSFER" ? "حواله بانکی" : "-"}</span>
                 </div>
 
                 {/* Base Price */}
                 <div className="flex justify-between items-center">
-                    <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >قیمت پایه:</span>
-                    <span className="font-medium text[#414651]">
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >قیمت پایه:</span>
+                    <span className="font-medium text-static-secondary-gray-dark">
                         {invoiceData?.originalTotal ? formatPrice(invoiceData.originalTotal) : "-"} تومان
                     </span>
                 </div>
@@ -169,34 +169,34 @@ export default function OrderSummaryCard({
                 {/* Discount */}
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                        <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >تخفیف:</span>
+                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >تخفیف:</span>
                         {
-                            invoiceData?.discountPercent && invoiceData?.discountPercent > 0 && (<div className=" text-[10px] text-[#1C68DA] whitespace-nowrap bg-white border-[#1C68DA] rounded-lg border  py-1 px-2">
+                            invoiceData?.discountPercent && invoiceData?.discountPercent > 0 && (<div className=" text-[10px] text-static-info-primary whitespace-nowrap bg-white border-static-info-primary rounded-lg border  py-1 px-2">
                                 {invoiceData?.discountPercent || 0}% تخفیف
                             </div>)
                         }
-                    
+
 
                     </div>
-                    <span className="font-medium text-[#414651] whitespace-nowrap">
-                        {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"} 
+                    <span className="font-medium text-static-secondary-gray-dark whitespace-nowrap">
+                        {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"}
                         {invoiceData?.discountPercent && invoiceData?.discountPercent > 0 ? ` ${invoiceData?.currency}` : "-"}
-                       
+
                     </span>
                 </div>
 
                 {/* Validity Period */}
                 <div className="flex justify-between items-center">
-                    <span className="text-[#717680] text-sm font-primary-medium leading-[140%] tracking-normal" >مدت زمان اعتبار:</span>
-                    <span className="font-medium text-[#1C68DA]">{getValidityPeriod(invoiceData?.issuedAt || null, invoiceData?.dueAt || null) || "-"}</span>
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >مدت زمان اعتبار:</span>
+                    <span className="font-medium text-static-info-primary">{getValidityPeriod(invoiceData?.issuedAt || null, invoiceData?.dueAt || null) || "-"}</span>
                 </div>
 
 
 
                 {/* Total Amount */}
                 <div className="flex justify-between items-center">
-                    <span className="text-base font-normal text-[#535862]">جمع کل:</span>
-                    <span className="text-base font-medium text-[#535862] ">
+                    <span className="text-base font-normal text-static-text-summary">جمع کل:</span>
+                    <span className="text-base font-medium text-static-text-summary ">
                         {invoiceData?.finalTotal ? formatPrice(invoiceData.finalTotal) : "-"} تومان
                     </span>
                 </div>

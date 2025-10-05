@@ -22,7 +22,7 @@ export interface ActionDropDownInterface {
     actionType: ActionType;
     content?: ReactNode;
   }[];
-  onActionHandler: (actionType: ActionType,discount?:number) => void;
+  onActionHandler: (actionType: ActionType, discount?: number) => void;
   requestData: RequestDataInterface;
 }
 
@@ -52,7 +52,7 @@ export default function ActionDropDown({
             list.map((item, index) => (
               <div
                 key={`action-content-${index}`}
-                className="text-xs cursor-pointer hover:bg-[#D5D7DA] p-2 rounded-sm bg-card text-right"
+                className="text-xs cursor-pointer hover:bg-static-border-neutral p-2 rounded-sm bg-card text-right"
                 onClick={() => {
                   setIsOpen(true);
                   setActionType(item.actionType);
@@ -84,34 +84,34 @@ export default function ActionDropDown({
           />
         </div>
         <div className="flex flex-col items-center gap-6">
-          {actionType === "Discount" ? <DiscountActionContent {...requestData} onSubmit={(discount:number)=>{onActionHandler(actionType,discount)}}/> :    
-          <>
-          <span className="text-[#637381] text-sm">
-            آیا از انجام این عملیات مطمئن هستید؟
-          </span>
-          <div className="flex items-center gap-2">
-            {" "}
-            <Button
-              variant={"info"}
-              onClick={() => {
-                onActionHandler(actionType);
-                setIsOpen(false);
-              }}
-            >
-              بله مطمئنم
-            </Button>
-            <Button
-              variant={"foreground"}
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              لغو
-            </Button>
+          {actionType === "Discount" ? <DiscountActionContent {...requestData} onSubmit={(discount: number) => { onActionHandler(actionType, discount) }} /> :
+            <>
+              <span className="text-static-secondary-gray-light text-sm">
+                آیا از انجام این عملیات مطمئن هستید؟
+              </span>
+              <div className="flex items-center gap-2">
+                {" "}
+                <Button
+                  variant={"info"}
+                  onClick={() => {
+                    onActionHandler(actionType);
+                    setIsOpen(false);
+                  }}
+                >
+                  بله مطمئنم
+                </Button>
+                <Button
+                  variant={"foreground"}
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                >
+                  لغو
+                </Button>
               </div>
-          </>}
+            </>}
 
-  
+
         </div>
       </CustomModal>
     </>

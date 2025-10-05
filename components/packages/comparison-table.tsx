@@ -103,7 +103,7 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
                 {categoryGroups.map((group) => (
                     <AccordionItem key={group.category.id} value={group.category.id.toString()} className="border-0 mb-4">
                         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                            <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 bg-[#E9EAEB] border-0 rounded-t-lg">
+                            <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 bg-static-border-card border-0 rounded-t-lg">
                                 <div className="grid grid-cols-5 w-full">
                                     <div className="text-right whitespace-nowrap font-bold text-zinc-900 text-[20px]">
                                         {group.category.name}

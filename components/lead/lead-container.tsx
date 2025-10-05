@@ -41,6 +41,7 @@ export interface LeadContainerInterface {
 export default function LeadContainer({ leadList }: LeadContainerInterface) {
 
   const pageFeatures = usePageData()
+  console.log("pageFeatures", pageFeatures)
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasReset, setHasReset] = useState<boolean>(false);
