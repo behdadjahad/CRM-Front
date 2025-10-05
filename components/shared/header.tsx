@@ -4,6 +4,7 @@ import Notification from "./notification";
 import Search from "./search";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import Calendar from "./Calendar";
 
 export interface HeaderInterface {
   state: boolean;
@@ -28,9 +29,9 @@ export default function Header({ setState }: HeaderInterface) {
 
       <ProfileDropDown className="hidden lg:flex" />
 
-      <Notification unread={true} className="mr-auto lg:mr-0 lg:ml-auto" />
-      
+      <Notification unread={true} className="mr-auto lg:mr-0" />
 
+      <Calendar className="lg:ml-auto" />
       <Search />
     </header>
   );
