@@ -16,15 +16,18 @@ export default function LeadPipe({
   overal,
 }: LeadPipeInterface) {
   return (
-    <div className="flex flex-col w-full bg-card rounded-2xl overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F] border h-full">
-      <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center text-center w-full text-primary-foreground border">
+    <div className="flex flex-col w-full bg-card rounded-2xl overflow-hidden shadow-[0px_12px_24px_-4px_#919EAB1F] border">
+      <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-center w-full text-primary-foreground border">
         {title}
       </div>
-      <div className="p-3 flex flex-col gap-2">
+      <div className="p-3 flex flex-col gap-4">
         {" "}
-        {leadList?.map((lead, index) => (
-          <LeadCard key={`lead-${index}`} {...lead} />
-        ))}
+        <div className="px-2 h-[546px] overflow-y-auto flex flex-col gap-4">
+          {" "}
+          {leadList?.map((lead, index) => (
+            <LeadCard key={`lead-${index}`} {...lead} />
+          ))}
+        </div>
         <AddLeadToPipe />
       </div>
 
