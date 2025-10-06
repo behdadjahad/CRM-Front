@@ -1,10 +1,12 @@
 import { leadFollowUpTypeList } from "@/constants/lead";
 import { AddEventToLead } from "./AddEventToLead";
+import LeadStatus from "./LeadStatus";
 
 export interface LeadCardInterface {
   list: {
     label: string;
     value: string;
+    status?: string;
   }[];
   main: {
     owner: string;
@@ -32,8 +34,11 @@ export default function LeadCard({ list, main }: LeadCardInterface) {
             className="flex items-center justify-between text-xs"
             key={`lead-info-${index}`}
           >
-            <span>{item.label}:</span>
-            <span>{item.value}</span>
+            <div>{item.label}:</div>
+            <div className="flex items-center gap-1">
+              {item?.status && (<LeadStatus />)}
+              <span>{item.value}</span>
+            </div>
           </div>
         ))}
       </div>

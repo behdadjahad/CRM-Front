@@ -42,7 +42,7 @@ export const leadPipeList = [
           { label: "نوع درخواست", value: "ویزا" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
-          { label: "آخرین پیگیری", value: "1404/02/17" },
+          { label: "آخرین پیگیری", value: "1404/02/17" , status: "delay" },
           { label: "تخمین درآمد", value: "132,528,000,000 تومان" },
         ],
       },
