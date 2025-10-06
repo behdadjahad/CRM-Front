@@ -25,6 +25,7 @@ export default function TextEditorInput({
   };
   return (
     <ReactQuill
+ 
       theme="snow"
       value={form.values[item.key]}
       onChange={(value) => {

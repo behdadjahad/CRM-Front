@@ -25,7 +25,7 @@ export default function LeadCreationContainer() {
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch<any>();
-  const userData = useSelector((state: RootState) => state.user);
+  const userData = useSelector((state: RootState) => state.login);
   const limit = useSelector((state: any) => state.lead.limit);
   const filters = useSelector((state: any) => state.lead.limit);
   const [openModal, setOpenModal] = useState<boolean>(false);

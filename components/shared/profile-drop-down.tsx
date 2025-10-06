@@ -51,7 +51,7 @@ export default function ProfileDropDown({
     },
     onError: (response: any) => {
       if (response.status === 403) {
-        router.push("/login");
+        // router.push("/login");
       }
     },
   });
@@ -63,7 +63,7 @@ export default function ProfileDropDown({
     onSuccess: () => {
       safeLocalStorage.removeItem("token");
       safeLocalStorage.removeItem("refreshToken");
-      router.push("/login");
+      // router.push("/login");
       // Cookies.remove('accessToken', { path: '/' });
       // Cookies.remove('refreshToken', { path: '/' });
     },
@@ -79,7 +79,7 @@ export default function ProfileDropDown({
     const token = safeLocalStorage.getItem("token");
     const refreshToken = safeLocalStorage.getItem("refreshToken");
     if (!token && !refreshToken) {
-      router.push("/login");
+      // router.push("/login");
     }
   }, []);
 

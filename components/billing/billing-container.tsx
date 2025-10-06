@@ -6,7 +6,7 @@ import OrderSummaryCard from "./order-summary-card";
 import FeaturesListCard from "./features-list-card";
 import DurationSelectionCard from "./duration-selection-card";
 import Breadcrumb from "../shared/breadcrumb";
-import Title from "../shared/title";
+
 
 export default function BillingContainer({
     data,

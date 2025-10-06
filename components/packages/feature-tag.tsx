@@ -28,7 +28,7 @@ const FeatureTag: React.FC<FeatureTagProps> = ({
     className = ""
 }) => {
 
-    // Get text based on feature data and tag type
+  
     const getTagText = (): string => {
         if (customText) return customText;
 

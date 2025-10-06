@@ -180,7 +180,7 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                         {unit.description || 'توضیحات در دسترس نیست'}
                     </p>
 
-                 
+
                 </div>
 
                 <div className="flex border border-[#D5D7DA] border-dashed rounded-full w-fit px-2.5 py-1 justify-between items-center">
@@ -198,7 +198,7 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                 />
 
 
-           
+
                 <Button
                     variant="info"
                     onClick={handlePurchaseClick}

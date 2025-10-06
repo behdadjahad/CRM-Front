@@ -1,4 +1,5 @@
-"use client";
+ 
+ "use client";
 
 import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
@@ -21,6 +22,7 @@ import { generateFeatureAccess } from "@/lib/generatePageData";
 import Image from "next/image";
 import ViewToggleGroup from "../shared/ViewToggleGroup";
 import { leadViewOptions } from "@/constants/lead";
+import LeadDetailsOverlay from "./lead-details/lead-detail-overlay";
 export interface LeadContainerInterface {
   className?: string;
 }
@@ -147,6 +149,17 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
   const [view, setView] = useState<LeadViewType>("table");
   const [leadTagOptions, setLeadTagOptions] = useState<OptionType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const [isDetailsOverlayOpen, setIsDetailsOverlayOpen] = useState(true);
+  const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
+  const handlerowClick = (id: string) => {
+    setIsDetailsOverlayOpen(true);
+    setSelectedLeadId(id);
+  };
+  const handleCloseOverlay = () => {
+    setIsDetailsOverlayOpen(false);
+    setSelectedLeadId(null);
+  };
 
   const { data: leadTagData } = useQuery({
     queryKey: ["leadTagData"],
@@ -359,7 +372,17 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
   }
 
   return (
-    <div className="flex flex-col bg-card border rounded-xl p-6 gap-4">
+    <div className="flex flex-col relative bg-card border rounded-xl p-6 gap-4">
+      <Button onClick={() => handlerowClick("1")}>
+
+        open details
+      </Button>
+      {isDetailsOverlayOpen && (
+       <LeadDetailsOverlay
+          leadId={selectedLeadId ?? ""}
+          onClose={handleCloseOverlay}
+        />
+      )} 
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           {/* <Button

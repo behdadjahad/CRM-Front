@@ -55,7 +55,7 @@ export default function Sale() {
   useEffect(() => {
     const token = safeLocalStorage.getItem("token");
     if (!token) {
-      router.push("/login");
+      // router.push("/login");
     } else {
       router.push("/sale");
     }
