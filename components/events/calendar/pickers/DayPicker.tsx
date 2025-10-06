@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { CalendarType, getDaysInMonth, getMonthNames, getTodayDateInfo, RangeType } from '@/lib/date-selector-utils';
-import { revertDateWithTimeZone, weekdaysMap, generateWeekVisibleRange } from '@/lib/calendar';
+import { CalendarType, getDaysInMonth, getMonthNames, getTodayDateInfo, RangeType, weekdaysMapShort } from '@/lib/date-selector-utils';
+import { revertDateWithTimeZone, generateWeekVisibleRange } from '@/lib/calendar';
 import { Button } from '@/components/ui/button';
 
 interface DayPickerProps {
@@ -31,7 +31,7 @@ export const DayPicker: React.FC<DayPickerProps> = ({
     const days = getDaysInMonth(selectedYear, selectedMonth, calendarType);
     const monthNames = getMonthNames(selectedYear, calendarType);
     const currentMonthName = selectedMonth ? monthNames[selectedMonth - 1] : '';
-    const daysOfWeek = weekdaysMap[calendarType] || weekdaysMap.jalali;
+    const daysOfWeek = weekdaysMapShort[calendarType] || weekdaysMapShort.jalali;
     const firstDayDate = new Date(revertDateWithTimeZone({
         year: selectedYear,
         month: selectedMonth,

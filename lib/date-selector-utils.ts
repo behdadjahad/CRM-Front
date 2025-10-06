@@ -30,7 +30,35 @@ export interface DateInfo {
     day: number;
     monthName?: string;
 }
-
+export const weekdaysMapShort: Record<string, string[]> = {
+  jalali: [
+    "ش",
+    "ی",
+    "د",
+    "س",
+    "چ",
+    "پ",
+    "ج",
+  ],
+  hijri: [
+    "الس",
+    "الأ",
+    "الاث",
+    "الثلاث",
+    "الأرب",
+    "الخم",
+    "الجم",
+  ],
+  gregory: [
+    "S",
+    "Su",
+    "M",
+    "Tu",
+    "W",
+    "Th",
+    "F",
+  ],
+};
 export const convertPersianToEnglish = (str: string): string => {
     const persianNumbers = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     const arabicNumbers = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];

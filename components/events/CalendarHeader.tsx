@@ -29,11 +29,12 @@ const CalendarTimeFilteringList: {
   label: string;
   value: CalendarRangeTimeType;
 }[] = [
-    { label: "ماهانه", value: "monthly" },
-    { label: "هفتگی", value: "weekly" },
-    { label: "روزانه", value: "daily" },
-    { label: "شخصی سازی", value: "custom-range-day" },
-  ];
+  { label: "ماهانه", value: "monthly" },
+  { label: "هفتگی", value: "weekly" },
+  { label: "روزانه", value: "daily" },
+ 
+  { label: "شخصی سازی", value: "custom-range-day" },
+];
 const CalendarTypeFilteringList: {
   label: string;
   value: CalendarType;
@@ -59,28 +60,41 @@ export default function CalendarHeader({
   return (
     <div className={`bg-card p-6 rounded-lg flex justify-between items-center`}>
       <div className="flex items-stretch gap-4">
-        <div className={`h-16 w-16 border rounded-lg flex flex-col items-center justify-between `}>
-          <span className="bg-static-background-card text-xs w-full text-center p-1 rounded-t-lg text-static-secondary-gray">
-            {date.monthName}
+        <div
+          className={`h-16 w-16 border rounded-lg flex flex-col items-center justify-between `}
+        >
+          <span className="bg-[#FCFCFD] text-xs w-full text-center p-1 rounded-t-lg text-[#717680]">
+            {date?.monthName}
           </span>
-          <span className={`flex items-center justify-center flex-1 text-static-info-primary font-primary-bold ${isLtr ? "custom-font" : ""}`}>
-            {date.day}
+          <span
+            className={`flex items-center justify-center flex-1 text-[#1C68DA] font-primary-bold ${
+              isLtr ? "custom-font" : ""
+            }`}
+          >
+            {date?.day}
           </span>
         </div>
 
         <div className="flex flex-col items-start justify-between">
           <div className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
             {" "}
-            <span className=" text-static-text-muted font-primary-bold">
-              {date.monthName}
+            <span className=" text-[#181D27] font-primary-bold">
+              {date?.monthName}
             </span>
-            <span className={`text-static-text-muted font-primary-bold ${isLtr ? "custom-font" : ""}`}>
-              {date.year}
+            <span
+              className={`text-[#181D27] font-primary-bold ${
+                isLtr ? "custom-font" : ""
+              }`}
+            >
+              {date?.year}
             </span>
           </div>
-          <div className="text-xs text-static-text-summary flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
-            {fullRange &&
-              fullRange.length > 0 &&
+          <div
+            className="text-xs text-[#535862] flex items-center gap-1"
+            dir={isLtr ? "ltr" : "rtl"}
+          >
+            {/* {fullRange &&
+              fullRange?.length > 0 &&
               fullRange?.map((item, index) => (
                 <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
                   <span className={`${isLtr ? "custom-font" : ""}`}>{item.day}</span>
@@ -88,7 +102,14 @@ export default function CalendarHeader({
                   <span className={`${isLtr ? "custom-font" : ""}`}>{item.year}</span>
                   <span>{index < fullRange.length - 1 && fullRange.length > 1 ? "-" : ""}</span>
                 </div>
-              ))}
+              ))} */}
+            <Button
+              onClick={onToday}
+              className="border-[#1C68DA] rounded px-3 py-1 bg-[#1C68DA] text-card"
+              variant={"transparent"}
+            >
+              امروز
+            </Button>
           </div>
         </div>
       </div>
@@ -105,7 +126,11 @@ export default function CalendarHeader({
       />
       <div className="flex items-stretch justify-center gap-4 text-static-secondary-gray-dark">
         <div className="flex items-stretch justify-center">
-          <Button onClick={isLtr ? onNext : onPrev} className="border rounded" variant={"ghost"}>
+          <Button
+            onClick={isLtr ? onNext : onPrev}
+            className="border rounded"
+            variant={"ghost"}
+          >
             <FaArrowRight />
           </Button>
 
@@ -113,26 +138,36 @@ export default function CalendarHeader({
             {selectedDaysRange &&
               selectedDaysRange.length > 0 &&
               selectedDaysRange?.map((item, index) => (
-                <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
-                  <span className={`${isLtr ? "custom-font" : ""}`}>{item.day}</span>
+                <div
+                  key={"" + index}
+                  className="flex items-center gap-1"
+                  dir={isLtr ? "ltr" : "rtl"}
+                >
+                  <span className={`${isLtr ? "custom-font" : ""}`}>
+                    {item.day}
+                  </span>
                   <span>{item.monthName}</span>
-                  <span className={`${isLtr ? "custom-font" : ""}`}>{item.year}</span>
-                  <span>{index < selectedDaysRange.length - 1 && selectedDaysRange.length > 1 ? "-" : ""}</span>
+                  <span className={`${isLtr ? "custom-font" : ""}`}>
+                    {item.year}
+                  </span>
+                  <span>
+                    {index < selectedDaysRange.length - 1 &&
+                    selectedDaysRange.length > 1
+                      ? "-"
+                      : ""}
+                  </span>
                 </div>
               ))}
           </div>
 
-          <Button onClick={isLtr ? onPrev : onNext} className="border rounded" variant={"ghost"}>
+          <Button
+            onClick={isLtr ? onPrev : onNext}
+            className="border rounded"
+            variant={"ghost"}
+          >
             <FaArrowLeft />
           </Button>
         </div>
-        <Button
-          onClick={onToday}
-          className="border-static-info-primary rounded px-3 py-1 bg-static-info-primary text-card"
-          variant={"ghost"}
-        >
-          امروز
-        </Button>
       </div>
     </div>
   );

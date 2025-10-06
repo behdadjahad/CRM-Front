@@ -35,14 +35,14 @@ export default function Calendar() {
     },
     onSuccess: (response) => {
       if (response && response?.data && response?.data?.length > 0) {
-        const calendarDataList = response?.data?.map((item: any) => ({
-          id: item?.id,
-          title: item?.subject,
-          start: item?.occurenceDate,
-          type: "CALL",
-        }));
-        setCalendarData(calendarDataList);
-      }
+      const calendarDataList = response?.data?.map((item:any) => ({
+        id:item?.id,
+        title: item?.subject,
+        start: item?.occurenceDate,
+       followUpTypeId: item?.extraInformation?.followUpTypeId
+      }));
+      setCalendarData(calendarDataList);
+    }
     },
   });
   return (

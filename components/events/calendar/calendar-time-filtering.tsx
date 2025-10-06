@@ -15,6 +15,7 @@ export default function CalendarTimeFiltering({
   onActiveTime,
   calendarRangeType,
 }: CalendarTimeFilteringInterface) {
+  console.log(list)
   return (
     <div className="flex items-center justify-center border border-static-border-neutral rounded-lg">
       {list.map((item, index) => (

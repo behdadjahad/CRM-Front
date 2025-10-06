@@ -1,4 +1,4 @@
-import DeleteConfirmation from "../admin/delete-confirmation";
+
 import { Button } from "../ui/button";
 import Image from "next/image";
 export interface EventDetailCardInterface {
@@ -52,11 +52,11 @@ export default function EventDetailCard({
               onClick={() => { }}
             />
           </Button>
-          <DeleteConfirmation
+          {/* <DeleteConfirmation
             onDelete={() => {
               // onDeleteEvent(eventList?.[0]?.id);
             }}
-          />
+          /> */}
         </div>
       </div>
 
