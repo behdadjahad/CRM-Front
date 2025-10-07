@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
@@ -25,6 +25,7 @@ export interface LeadContainerInterface {
   className?: string;
 }
 export interface PipeInterface {
+  id: string;
   title: string;
   leadList: any[];
   overal: {
@@ -33,23 +34,23 @@ export interface PipeInterface {
   }[];
 }
 export const leadPipeList = [
-  {
+  {id:`pipe-${1}`,
     title: "ایجاد شده",
     leadList: [
-      {
+      {id:`lead-${1}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا 1" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" , status: "delay" },
           { label: "تخمین درآمد", value: "132,528,000,000 تومان" },
         ],
       },
-      {
+      {id:`lead-${2}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا 2" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" },
@@ -62,23 +63,23 @@ export const leadPipeList = [
       { label: "مجموع پیشبینی ارزش:", value: "7,073,721 تومان" },
     ],
   },
-  {
+  {id:`pipe-${2}`,
     title: "درجریان",
     leadList: [
-      {
+      {id:`lead-${3}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا 3" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" },
           { label: "تخمین درآمد", value: "132,528,000,000 تومان" },
         ],
       },
-      {
+      {id:`lead-${4}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا4" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" },
@@ -91,25 +92,25 @@ export const leadPipeList = [
       { label: "مجموع پیشبینی ارزش:", value: "7,073,721 تومان" },
     ],
   },
-  {
+  {id:`pipe-${3}`,
     title: "پیگیری",
     leadList: [
-      {
+      {id:`lead-${5}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
 
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا5" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" },
           { label: "تخمین درآمد", value: "132,528,000,000 تومان" },
         ],
       },
-      {
+      {id:`lead-${6}`,
         main: { owner: "مهدی میرزایی", date: "1404/02/17" },
 
         list: [
-          { label: "نوع درخواست", value: "ویزا" },
+          { label: "نوع درخواست", value: "ویزا6" },
           { label: "منبع ", value: "ایمیل" },
           { label: "مسئول پیگیری", value: "سیما احمدی" },
           { label: "آخرین پیگیری", value: "1404/02/17" },

@@ -1,3 +1,5 @@
+'use client'
+
 import { leadFollowUpTypeList } from "@/constants/lead";
 import { AddEventToLead } from "./AddEventToLead";
 import LeadStatus from "./LeadStatus";

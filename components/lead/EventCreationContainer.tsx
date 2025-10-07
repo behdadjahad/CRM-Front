@@ -69,14 +69,14 @@ export default function EventCreationContainer({
                     />
                   </div>
                 ),
-                className: "grid col-span-2 justify-end",
+                className: "grid col-span-1 justify-center items-center",
               },
               {
                 key: "startDateTime",
                 component: "date-time",
                 placeholder: "تاریخ و زمان شروع",
                 type: "text",
-                className: "grid col-span-5",
+                className: "grid col-span-4",
                 labelClassName: "text-sm placeholder:text-sm",
                 dependantKey: "startDateTimeType",
               },
@@ -85,7 +85,7 @@ export default function EventCreationContainer({
                 component: "date-time",
                 placeholder: "تاریخ و زمان پایان",
                 type: "text",
-                className: "grid col-span-5",
+                className: "grid col-span-4",
                 labelClassName: "text-sm placeholder:text-sm",
                 dependantKey: "endDateTimeType",
               },
@@ -93,7 +93,7 @@ export default function EventCreationContainer({
                 key: "date-sample",
                 component: "non-field",
                 children: <div className="w-4 h-4"></div>,
-                className: "grid col-span-2",
+                className: "grid col-span-1",
               },
               {
                 key: "temperature",
@@ -101,22 +101,22 @@ export default function EventCreationContainer({
                 placeholder: "میزان علاقه مندی",
                 labelClassName: "text-sm placeholder:text-sm",
                 type: "text",
-                className: "grid col-span-10",
+                className: "grid col-span-8",
               },
               {
                 key: "date-sample",
                 component: "non-field",
                 children: <div className="w-4 h-4"></div>,
-                className: "grid col-span-2",
+                className: "grid col-span-1",
               },
               {
                 key: "location",
                 component: "input",
                 type: "text",
-                className: "grid col-span-10",
+                className: "grid col-span-8",
               },
             ]}
-            className="grid grid-cols-12 items-center"
+            className="grid grid-cols-9 items-center"
           />
         </div>
       </CustomModal>
