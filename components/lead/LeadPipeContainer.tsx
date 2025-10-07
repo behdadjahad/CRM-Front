@@ -1,7 +1,8 @@
-'use client'
+"use client";
 import { PipeInterface } from "./LeadContainer";
 import LeadPipe from "./LeadPipe";
 import LeadPipeCreation from "./LeadPipeCreation";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 // import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 export interface LeadPipeContainerInterface {
@@ -13,6 +14,7 @@ export default function LeadPipeContainer({
 }: LeadPipeContainerInterface) {
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
+    console.log(source, destination);
 
   };
   return (
@@ -29,6 +31,41 @@ export default function LeadPipeContainer({
           <LeadPipeCreation />
         </div>
       </div>
+      <div className="flex items-center w-full justify-center fixed bottom-24 gap-4">
+        <Droppable droppableId="success-box">
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={`flex items-center justify-center bg-card w-[312px] h-[76px] custom-shadow rounded-lg overflow-hidden transition-all ${
+                snapshot.isDraggingOver
+                  ? "border-2 border-dashed border-green-500"
+                  : ""
+              }`}
+            >
+              موفق
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+
+        <Droppable droppableId="failure-box">
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className={`flex items-center justify-center bg-card w-[312px] h-[76px] custom-shadow rounded-lg overflow-hidden transition-all ${
+                snapshot.isDraggingOver
+                  ? "border-2 border-dashed border-red-500"
+                  : ""
+              }`}
+            >
+              ناموفق
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div> 
     </DragDropContext>
   );
 }

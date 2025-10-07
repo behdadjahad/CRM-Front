@@ -26,7 +26,7 @@ export default function LeadPipe({
       <div className="bg-[linear-gradient(180deg,#0475B5_-65.62%,#253159_100%)] py-2.5 px-3.5 flex items-center justify-center w-full text-primary-foreground border">
         {title}
       </div>
-      <div className="px-2 h-[546px] overflow-y-auto">
+      <div className="px-2 py-2 h-[546px] overflow-y-auto">
         {/* Droppable Zone */}
         <Droppable droppableId={id}>
           {(provided, snapshot) => (
