@@ -2,7 +2,8 @@
 import { PipeInterface } from "./LeadContainer";
 import LeadPipe from "./LeadPipe";
 import LeadPipeCreation from "./LeadPipeCreation";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
+// import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 export interface LeadPipeContainerInterface {
   pipeList: PipeInterface[];
 }
@@ -12,7 +13,7 @@ export default function LeadPipeContainer({
 }: LeadPipeContainerInterface) {
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    
+
   };
   return (
     <DragDropContext onDragEnd={onDragEnd}>

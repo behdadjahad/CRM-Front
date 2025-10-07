@@ -2,8 +2,8 @@
 
 import AddLeadToPipe from "./AddLeadToPipe";
 import LeadCard from "./LeadCard";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-
+// import { Droppable, Draggable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "@hello-pangea/dnd";
 export interface LeadPipeInterface {
   id: string;
   title: string;
@@ -39,7 +39,7 @@ export default function LeadPipe({
             >
               {leadList?.map((lead, index) => (
                 <Draggable
-                  key={lead.id} // Make sure lead.id is unique
+                  key={lead.id}// Make sure lead.id is unique
                   draggableId={lead.id}
                   index={index}
                 >
