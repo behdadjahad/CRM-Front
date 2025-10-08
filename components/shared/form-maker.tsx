@@ -24,6 +24,7 @@ import SingleFilePreview from "./single-file-preview";
 import TagPreview from "./tag-preview";
 import SelectableTagInput from "../form/inputs/SelectableTagInput";
 import TextEditorInput from "./input/TextEditorInput - Copy";
+import LocationInput from "./location-input";
 
 export interface OptionType {
   label: string;
@@ -59,7 +60,7 @@ export interface FieldType {
     | "range-input"
     | "time"
     | "selectable-tag-input"
-    | "search-input"
+    | "location-input"
     | "non-field";
   floating?: boolean;
   placeholder?: string;
@@ -179,6 +180,8 @@ export default function FormMaker({
           return <SingleFilePreview item={item} form={form} />;
         case "list-preview":
           return <ListPreview item={item} form={form} />;
+        case "location-input":
+          return <LocationInput item={item} form={form} />;
 
         default:
           return null;

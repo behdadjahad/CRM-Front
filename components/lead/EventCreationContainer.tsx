@@ -35,7 +35,10 @@ export default function EventCreationContainer({
 }: EventCreationContainerInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const formik = useFormik({
-    initialValues: {},
+    initialValues: {
+      personSearch: "",
+      personSearchPreview:""
+    },
     onSubmit: async () => {},
     enableReinitialize: true,
   });
@@ -120,7 +123,7 @@ export default function EventCreationContainer({
                   <FaMapMarkerAlt className="w-5 h-5 text-[#B6BCC2]" />
                 ),
                 key: "location",
-                component: "input",
+                component: "location-input",
                 placeholder: "مکان",
                 type: "text",
                 floating: true,
@@ -151,16 +154,16 @@ export default function EventCreationContainer({
               {
                 dependantKey: "personSearchPreview",
                 key: "personSearch",
-                component: "search-input",
+                component: "multi-select",
                 placeholder: "جستجوی شخص",
                 type: "text",
                 floating: true,
                 labelClassName: "w-full",
                 className: "w-full mr-8",
+                options:[{label:"شخص 1",value:"1"}]
               },
               {
                 key: "personSearchPreview",
-                dependantKey: "person",
                 component: "tag-preview",
                 className: "w-full",
               },
