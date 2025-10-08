@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { FormMakerInterface } from "./form-maker";
 import Image from "next/image";
 import { useState } from "react";
+import Map from "./map";
 export default function LocationInput({
   form,
   item,
@@ -55,7 +56,12 @@ export default function LocationInput({
           setViewMap((prev) => !prev);
         }}
       />
-      {viewMap && <div className="w-full border">نقشه</div>}
+      <Map
+        onSelectLocation={(lat, lng) => {
+          console.log("Selected:", lat, lng);
+          form.setFieldValue(item.key, `${lat},${lng}`);
+        }}
+      />
     </div>
   );
 }

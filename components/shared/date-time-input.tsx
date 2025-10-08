@@ -45,7 +45,7 @@ export default function DateTimeInput({
         <></>
       )}
 
-      <div className="absolute left-2.5 top-2.5 cursor-pointer">
+      <div className="absolute left-2.5 top-2.5 cursor-pointer z-[10000]">
         <CustomeDateTimePicker
           onCalenderTypeChange={handleCalendarTypeChange}
           value={form.values[item.key]}
