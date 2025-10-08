@@ -24,7 +24,6 @@ import SingleFilePreview from "./single-file-preview";
 import TagPreview from "./tag-preview";
 import SelectableTagInput from "../form/inputs/SelectableTagInput";
 import TextEditorInput from "./input/TextEditorInput - Copy";
-import SearchInput from "./search-input";
 
 export interface OptionType {
   label: string;
@@ -180,8 +179,7 @@ export default function FormMaker({
           return <SingleFilePreview item={item} form={form} />;
         case "list-preview":
           return <ListPreview item={item} form={form} />;
-        case "search-input":
-          return <SearchInput item={item} form={form} />;
+
         default:
           return null;
       }
