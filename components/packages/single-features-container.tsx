@@ -1,9 +1,12 @@
 "use client";
-import { useCart } from '@/hooks/useCart';
 import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { addToCart as addToCartApi, getCartItems, removeFromCart as removeFromCartApi } from '@/api/cart';
+import { CartApiResponse, CartItem } from '@/types/cart';
+import toast from 'react-hot-toast';
 
 import FilterContainer from "@/components/section/filter-container";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
@@ -13,6 +16,7 @@ import { RootState, AppDispatch } from "@/store";
 import { CustomToast } from "@/components/shared/custome-toast";
 import { convertDaysToMonths } from "@/lib/duration-utils";
 import { limitForSingleFeatures } from "@/lib/utils";
+
 import {
     PackageUnit,
     SingleFeaturesFilters,
@@ -38,12 +42,8 @@ export default function SingleFeaturesContainer({
     const [sortBy, setSortBy] = useState<string>("name");
     const [actualSearchTerm, setActualSearchTerm] = useState("");
     const [pageSize, setPageSize] = useState(limitForSingleFeatures); // Items per page
-    const { isItemInCart, addToCart, removeFromCart, addMultipleToCart } = useCart();
-    // Add multi-selection handler (around line 350, after other handlers)
-    const handleAddSelectedToCart = () => {
-        // Just pass the array of selected IDs
-        addMultipleToCart(checkedItems, `Bulk request for ${checkedItems.length} features`);
-    };
+    const [loadingItems, setLoadingItems] = useState<Set<number>>(new Set()); // Track loading per item
+    const queryClient = useQueryClient();
 
     // Get state from Redux store
     const {
@@ -54,12 +54,197 @@ export default function SingleFeaturesContainer({
         total,
         loading,
         error,
-        filters: currentFilters,
-        checkedItems
+        checkedItems,
+        filters,
     } = useSelector((state: RootState) => state.singleFeatures);
 
-    // Get customer ID from Redux store
-    const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
+    const chadcoCustomerId = useSelector(
+        (state: RootState) => state.login.chadcoCustomerId
+    );
+
+    // Fetch cart data using React Query
+    const {
+        data: cartData,
+        isLoading: cartLoading,
+        error: cartError
+    } = useQuery<CartApiResponse | null>({
+        queryKey: ['cart', chadcoCustomerId],
+        queryFn: async () => {
+            if (!chadcoCustomerId) return null;
+            return await getCartItems(chadcoCustomerId);
+        },
+        enabled: !!chadcoCustomerId,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+
+    const cartItems = cartData?.data?.packageUnits || [];
+
+    // Helper function to check if item is in cart
+    const isItemInCart = (itemId: number): boolean => {
+        if (!Array.isArray(cartItems)) {
+            return false;
+        }
+        return cartItems.some((item: CartItem) => item.id === itemId);
+    };
+
+    // Add to cart mutation
+    const addToCartMutation = useMutation({
+        mutationFn: async ({ packageUnitIds, chadcoCustomerId, requestMessage }: { packageUnitIds: number[], chadcoCustomerId: number, requestMessage?: string }) => {
+            return await addToCartApi(packageUnitIds, chadcoCustomerId, requestMessage);
+        },
+        onMutate: async ({ packageUnitIds }) => {
+            // Set loading state for these items
+            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
+
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
+                if (!old?.data?.packageUnits) return old;
+
+                // Find the items being added from the current items list
+                const itemsToAdd = items.filter(item => packageUnitIds.includes(item.id));
+
+                // Recalculate totals
+                const newItems = [...old.data.packageUnits, ...itemsToAdd];
+                const newOriginalTotal = newItems.reduce((sum, item) => sum + item.price, 0);
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        packageUnits: newItems,
+                        originalTotal: newOriginalTotal,
+                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
+                    }
+                };
+            });
+
+            // Return a context object with the snapshotted value
+            return { previousCart, packageUnitIds };
+        },
+        onError: (err: any, variables, context) => {
+            // If the mutation fails, use the context returned from onMutate to roll back
+            if (context?.previousCart) {
+                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
+            }
+            // Remove loading state for these items
+            if (context?.packageUnitIds) {
+                setLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    return newSet;
+                });
+            }
+            const errorMessage = err?.message || 'خطا در افزودن به سبد خرید';
+            toast.error(errorMessage);
+        },
+        onSuccess: (data, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                return newSet;
+            });
+            toast.success('آیتم با موفقیت به سبد خرید اضافه شد');
+
+            // Clear selected items that were just added to cart
+            const remainingSelected = checkedItems.filter(id => !variables.packageUnitIds.includes(id));
+            dispatch(setCheckedItems(remainingSelected));
+        },
+        onSettled: () => {
+            // Always refetch after error or success to ensure server state
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+    // Remove from cart mutation
+    const removeFromCartMutation = useMutation({
+        mutationFn: async ({ packageUnitIds, chadcoCustomerId }: { packageUnitIds: number[], chadcoCustomerId: number }) => {
+            return await removeFromCartApi(packageUnitIds, chadcoCustomerId);
+        },
+        onMutate: async ({ packageUnitIds }) => {
+            // Set loading state for these items
+            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
+
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
+                if (!old?.data?.packageUnits) return old;
+
+                const updatedItems = old.data.packageUnits.filter((item: CartItem) =>
+                    !packageUnitIds.includes(item.id)
+                );
+
+                // Recalculate totals
+                const newOriginalTotal = updatedItems.reduce((sum, item) => sum + item.price, 0);
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        packageUnits: updatedItems,
+                        originalTotal: newOriginalTotal,
+                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
+                    }
+                };
+            });
+
+            return { previousCart, packageUnitIds };
+        },
+        onError: (err: any, variables, context) => {
+            // If the mutation fails, roll back
+            if (context?.previousCart) {
+                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
+            }
+            // Remove loading state for these items
+            if (context?.packageUnitIds) {
+                setLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    return newSet;
+                });
+            }
+            const errorMessage = err?.message || 'خطا در حذف از سبد خرید';
+            toast.error(errorMessage);
+        },
+        onSuccess: (data, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                return newSet;
+            });
+            toast.success('آیتم از سبد خرید حذف شد');
+        },
+        onSettled: () => {
+            // Always refetch after error or success
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+    // Add multi-selection handler (around line 350, after other handlers)
+    const handleAddSelectedToCart = () => {
+        if (chadcoCustomerId) {
+            addToCartMutation.mutate({
+                packageUnitIds: checkedItems,
+                chadcoCustomerId: chadcoCustomerId,
+                requestMessage: `Bulk request for ${checkedItems.length} features`
+            });
+
+            // Clear selected items after adding to cart
+            dispatch(setCheckedItems([]));
+        }
+    };
 
     // Search form using formik (consistent pattern)
     const searchFormik = useFormik({
@@ -410,6 +595,11 @@ export default function SingleFeaturesContainer({
 
     // Handle bulk operations
     const handleCheckItem = (itemId: number, checked: boolean) => {
+        // Don't allow selection if item is already in cart
+        if (isItemInCart(itemId)) {
+            return;
+        }
+
         if (checked) {
             dispatch(setCheckedItems([...checkedItems, itemId]));
         } else {
@@ -419,8 +609,11 @@ export default function SingleFeaturesContainer({
 
     const handleCheckAll = (checked: boolean) => {
         if (checked) {
-            const allIds = items.map(item => item.id);
-            dispatch(setCheckedItems(allIds));
+            // Only select items that are not in cart
+            const selectableIds = items
+                .filter(item => !isItemInCart(item.id))
+                .map(item => item.id);
+            dispatch(setCheckedItems(selectableIds));
         } else {
             dispatch(setCheckedItems([]));
         }
@@ -433,7 +626,8 @@ export default function SingleFeaturesContainer({
 
     // Get selected items count
     const selectedCount = checkedItems.length;
-    const allItemsSelected = items.length > 0 && checkedItems.length === items.length;
+    const selectableItems = items.filter(item => !isItemInCart(item.id));
+    const allItemsSelected = selectableItems.length > 0 && checkedItems.length === selectableItems.length;
 
     // Handle unit purchase
     const handleUnitPurchase = async (unitId: number, description: string) => {
@@ -787,7 +981,18 @@ export default function SingleFeaturesContainer({
 
             {/* Results Summary */}
             <div className="flex justify-between items-center">
-
+                {/* Select All Checkbox */}
+                <div className="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={allItemsSelected}
+                        onChange={(e) => handleCheckAll(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">
+                        {selectedCount > 0 ? `${selectedCount} مورد انتخاب شده` : `انتخاب همه (${selectableItems.length} مورد قابل انتخاب)`}
+                    </span>
+                </div>
 
                 <div className="flex items-center gap-2">
                     {/* Page Size Selector */}
@@ -814,13 +1019,28 @@ export default function SingleFeaturesContainer({
                 </div>
             </div>
             {checkedItems.length > 0 && (
-                <div className="fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg border">
-                    <Button
-                        onClick={handleAddSelectedToCart}
-                        variant="info"
-                    >
-                        `Add ${checkedItems.length} Selected to Cart`
-                    </Button>
+                <div className="fixed top-3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-xl shadow-2xl border-2 border-blue-500 z-50 animate-in slide-in-from-bottom-5">
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-gray-700">
+                            {checkedItems.length} مورد انتخاب شده
+                        </span>
+                        <Button
+                            onClick={handleAddSelectedToCart}
+                            variant="info"
+                            size="lg"
+                            className="px-6"
+                            disabled={addToCartMutation.isPending}
+                        >
+                            {addToCartMutation.isPending ? 'در حال افزودن...' : 'افزودن به سبد خرید'}
+                        </Button>
+                        <button
+                            onClick={() => dispatch(setCheckedItems([]))}
+                            className="text-gray-500 hover:text-gray-700 text-sm"
+                            disabled={addToCartMutation.isPending}
+                        >
+                            لغو انتخاب
+                        </button>
+                    </div>
                 </div>
             )}
             {/* Features Grid */}
@@ -840,10 +1060,28 @@ export default function SingleFeaturesContainer({
                                 chadcoCustomerId={chadcoCustomerId}
                                 onPurchase={handleUnitPurchase}
                                 isInCart={isItemInCart(unit.id)}
-                                onAddToCart={addToCart}
-                                onRemoveFromCart={removeFromCart}
+                                onAddToCart={(unitId, requestMessage) => {
+                                    if (chadcoCustomerId) {
+                                        addToCartMutation.mutate({
+                                            packageUnitIds: [unitId],
+                                            chadcoCustomerId: chadcoCustomerId,
+                                            requestMessage: requestMessage
+                                        });
+                                    }
+                                }}
+                                onRemoveFromCart={(itemId) => {
+                                    if (chadcoCustomerId) {
+                                        removeFromCartMutation.mutate({
+                                            packageUnitIds: [parseInt(itemId)],
+                                            chadcoCustomerId: chadcoCustomerId
+                                        });
+                                    }
+                                }}
                                 showCartActions={true}
-
+                                isChecked={isItemChecked(unit.id)}
+                                onCheckChange={handleCheckItem}
+                                cartLoading={loadingItems.has(unit.id)}
+                                isSelectable={!isItemInCart(unit.id)}
                             />
                         ))}
                     </div>

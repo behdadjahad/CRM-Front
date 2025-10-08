@@ -28,6 +28,10 @@ interface SingleFeatureCardProps {
     onRemoveFromCart?: (itemId: string) => void;
     showCartActions?: boolean;
     cartLoading?: boolean;
+    // Add selection props
+    isChecked?: boolean;
+    onCheckChange?: (unitId: number, checked: boolean) => void;
+    isSelectable?: boolean;
 }
 
 
@@ -74,7 +78,10 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     onAddToCart,
     onRemoveFromCart,
     showCartActions,
-    cartLoading
+    cartLoading,
+    isChecked,
+    onCheckChange,
+    isSelectable = true
 }) => {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
@@ -157,7 +164,8 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
         <div
             className={cn(
                 "relative bg-white rounded-lg p-4 transition-all duration-300 cursor-pointer",
-                "border border-gray-200 shadow-sm",
+                "border shadow-sm",
+                isChecked ? "border-blue-500 border-2 shadow-md bg-blue-50/30" : "border-gray-200",
                 !isPurchaseModalOpen && "hover:shadow-md hover:-translate-y-1",
                 "flex flex-col justify-between min-h-[266px]"
             )}
@@ -168,12 +176,13 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
                             <Checkbox
-                                // checked={option.isSelected}
-                                // onCheckedChange={() => onDurationChange(option.id)}
+                                checked={isChecked}
+                                onCheckedChange={(checked) => onCheckChange?.(unit.id, checked as boolean)}
                                 className="border border-[#D5D7DA]"
+                                disabled={!isSelectable}
                             />
                             <Tooltip content={unit.name}>
-                                <p className="text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]" style={{
+                                <p className={`text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px] ${!isSelectable ? 'opacity-60' : ''}`} style={{
                                     display: '-webkit-box',
                                     WebkitLineClamp: 2,
                                     WebkitBoxOrient: 'vertical'
@@ -215,7 +224,6 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                     currency={unit.currency}
 
                 />
-
                 {showCartActions && (
                     <div className="flex gap-2 mt-4">
                         {isInCart ? (
@@ -225,7 +233,7 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                                 disabled={cartLoading}
                                 className="text-red-600 border-red-600 hover:bg-red-50"
                             >
-                                {cartLoading ? 'Removing...' : 'Remove from Cart'}
+                                {cartLoading ? 'آیتم حذف شد...' : 'حذف از سبد خرید'}
                             </Button>
                         ) : (
                             <Button

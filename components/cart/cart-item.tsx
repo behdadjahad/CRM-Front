@@ -9,6 +9,7 @@ interface CartItemProps {
     onQuantityChange: (id: string, quantity: number) => void;
     onRemove: () => void;
     isUpdating: boolean;
+    isRemoving?: boolean;
 }
 
 export default function CartItem({
@@ -16,6 +17,7 @@ export default function CartItem({
     onQuantityChange,
     onRemove,
     isUpdating,
+    isRemoving = false,
 }: CartItemProps) {
     const getTagClasses = (tag?: string) => {
         switch (tag) {
@@ -68,11 +70,12 @@ export default function CartItem({
                     {item.unitModel && (
                         <Badge className={cn("text-xs font-normal px-2.5 py-1 flex items-center justify-center rounded-full border",
                             item.unitModel === 'flat' ? 'bg-static-info-light text-static-info-primary' :
-                                item.unitModel === 'usage' ? 'bg-static-warning-light text-static-warning-primary' :
+                                item.unitModel === 'perCount' ? 'bg-static-warning-light text-static-warning-primary' :
                                     'bg-gray-100 text-gray-800')}>
-                            {item.unitModel === 'flat' ? 'ثابت' :
-                                item.unitModel === 'usage' ? 'استفاده محور' :
-                                    item.unitModel}
+                             {item.unitModel === 'perDuration' ? 'مدت زمانی' :
+                                item.unitModel === 'perCount' ? 'تعدادی' :
+                                    item.unitModel === 'flat' ? 'ثابت' :
+                                        'ثابت'}
                         </Badge>
                     )}
                 </div>
@@ -105,17 +108,17 @@ export default function CartItem({
                 </div>
 
                 <p className="text-sm text-gray-600 font-normal dark:text-gray-400 -mt-1 mb-2">
-                    شناسه: {item.id}
+                    {/* شناسه: {item.id} */}
                 </p>
 
                 <div className="flex items-center justify-between mt-2">
-                    <button
-                        onClick={onRemove}
-                        disabled={isUpdating}
-                        className="text-red-600 text-sm font-medium hover:text-red-700 disabled:opacity-50"
-                    >
-                        حذف از سبد
-                    </button>
+                    <QuantityInput
+                        quantity={quantity}
+                        // onQuantityChange={(quantity: string) => onQuantityChange(item.id, Number(quantity))}
+                        onDecreaseQuantity={handleDecrease}
+                        onIncreaseQuantity={handleIncrease}
+                        isUpdating={isUpdating}
+                    />
                     <div className="sm:text-xl text-base font-bold text-static-info-primary">
                         {item.price.toLocaleString('fa-IR')} تومان
                     </div>

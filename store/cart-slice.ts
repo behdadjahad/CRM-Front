@@ -34,7 +34,7 @@ export const addToCart = createAsyncThunk<CartApiResponse, AddToCartPayload & { 
   'cart/addToCart',
   async ({ packageUnitIds, requestMessage, chadcoCustomerId }) => {
     try {
-      const result = await fetchService(`cart?chadcoCustomerId=${chadcoCustomerId}`, {
+      const result = await fetchService(`cart/add?chadcoCustomerId=${chadcoCustomerId}`, {
         method: 'PATCH',
         body: {
           packageUnitIds,
@@ -50,12 +50,16 @@ export const addToCart = createAsyncThunk<CartApiResponse, AddToCartPayload & { 
 
 
 // Async thunk for removing item from cart
-export const removeFromCart = createAsyncThunk<CartApiResponse, { itemId: string; chadcoCustomerId: number }>(
+export const removeFromCart = createAsyncThunk<CartApiResponse, AddToCartPayload & { chadcoCustomerId: number }>(
   'cart/removeFromCart',
-  async ({ itemId, chadcoCustomerId }) => {
+  async ({ packageUnitIds, requestMessage, chadcoCustomerId }) => {
     try {
-      const result = await fetchService(`cart/remove/${itemId}?chadcoCustomerId=${chadcoCustomerId}`, {
-        method: 'DELETE',
+      const result = await fetchService(`cart/remove/?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'PATCH',
+        body: {
+          packageUnitIds,
+
+        },
       });
       return result;
     } catch (error) {
@@ -86,8 +90,8 @@ export const clearCart = createAsyncThunk<CartApiResponse, number>(
   'cart/clearCart',
   async (chadcoCustomerId) => {
     try {
-      const result = await fetchService(`cart/clear?chadcoCustomerId=${chadcoCustomerId}`, {
-        method: 'DELETE',
+      const result = await fetchService(`cart/remove?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'PATCH',
       });
       return result;
     } catch (error) {

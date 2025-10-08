@@ -2,36 +2,144 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/hooks/useCart';
 import OrderSummaryCard from './order-summary-card';
 import CartItem from './cart-item';
 import { ArrowLeft } from 'lucide-react';
 import DiscountCodeCard from './discount-code-card';
 import EmptyCart from './empty-cart';
 import CartSkeleton from './cart-skeleton';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { removeFromCart, updateCartItemQuantity, getCartItems } from '@/api/cart';
+import { CartApiResponse, CartItem as CartItemType } from '@/types/cart';
+import toast from 'react-hot-toast';
 
 export default function CartContainer() {
     const router = useRouter();
+    const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
+    const queryClient = useQueryClient();
+
+
+    // Fetch cart data using React Query
     const {
-        items,
-        loading,
-        error,
-        removeFromCart,
-        updateQuantity,
-        refreshCart
-    } = useCart();
+        data: cartData,
+        isLoading: loading,
+        error: queryError,
+        refetch: refreshCart
+    } = useQuery<CartApiResponse | null>({
+        queryKey: ['cart', chadcoCustomerId],
+        queryFn: async () => {
+            if (!chadcoCustomerId) return null;
+            return await getCartItems(chadcoCustomerId);
+        },
+        enabled: !!chadcoCustomerId,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+
+    // Extract cart data from API response
+    const items = cartData?.data?.packageUnits || [];
+    const error = queryError?.message || null;
+    const originalTotal = cartData?.data?.originalTotal || 0;
+    const discountAmount = cartData?.data?.discountAmount || 0;
+    const taxAmount = cartData?.data?.taxAmount || 0;
+    const finalTotal = cartData?.data?.finalTotal || 0;
+    const itemCount = items.length;
+
+    // Helper to extract error message
+    const getErrorMessage = (err: any, defaultMessage: string): string => {
+        return err?.message || defaultMessage;
+    };
 
     useEffect(() => {
-        // Refresh cart data when component mounts
         refreshCart();
-    }, []);
+    }, [refreshCart]);
+
+    // Remove item mutation
+    const removeItemMutation = useMutation({
+        mutationFn: async ({ packageUnitIds, chadcoCustomerId }: { packageUnitIds: number[], chadcoCustomerId: number }) => {
+            return await removeFromCart(packageUnitIds, chadcoCustomerId);
+        },
+        onMutate: async ({ packageUnitIds }) => {
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
+                if (!old?.data?.packageUnits) return old;
+
+                const updatedItems = old.data.packageUnits.filter((item: CartItemType) =>
+                    !packageUnitIds.includes(item.id)
+                );
+
+                // Recalculate totals
+                const newOriginalTotal = updatedItems.reduce((sum, item) => sum + item.price, 0);
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        packageUnits: updatedItems,
+                        originalTotal: newOriginalTotal,
+                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
+                    }
+                };
+            });
+
+            // Return a context object with the snapshotted value
+            return { previousCart };
+        },
+        onError: (err: any, _variables, context) => {
+            if (context?.previousCart) {
+                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
+            }
+            const errorMessage = getErrorMessage(err, 'خطا در حذف آیتم');
+            toast.error(errorMessage);
+        },
+        onSuccess: () => {
+            toast.success('آیتم با موفقیت حذف شد');
+        },
+        onSettled: () => {
+            // Always refetch after error or success to ensure server state
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+    // Update quantity mutation
+    const updateQuantityMutation = useMutation({
+        mutationFn: async ({ itemId, quantity, chadcoCustomerId }: { itemId: string, quantity: number, chadcoCustomerId: number }) => {
+            return await updateCartItemQuantity(itemId, quantity, chadcoCustomerId);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+            toast.success('تعداد با موفقیت به‌روزرسانی شد');
+        },
+        onError: (err: any) => {
+            const errorMessage = getErrorMessage(err, 'خطا در به‌روزرسانی تعداد');
+            toast.error(errorMessage);
+        },
+    });
 
     const handleRemoveItem = (id: string) => {
-        removeFromCart(id);
+        if (!chadcoCustomerId) return;
+
+        removeItemMutation.mutate({
+            packageUnitIds: [parseInt(id)],
+            chadcoCustomerId
+        });
     };
 
     const handleQuantityChange = (id: string, newQuantity: number) => {
-        updateQuantity(id, newQuantity);
+        if (!chadcoCustomerId) return;
+
+        updateQuantityMutation.mutate({
+            itemId: id,
+            quantity: newQuantity,
+            chadcoCustomerId
+        });
     };
 
     // Show loading skeleton
@@ -39,8 +147,8 @@ export default function CartContainer() {
         return <CartSkeleton />;
     }
 
-    // Show empty cart
-    if (!loading && items.length === 0) {
+    // Show empty cart only if there's no error and no items
+    if (!loading && items.length === 0 && !error) {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
                 <div className="max-w-7xl mx-auto p-6">
@@ -58,7 +166,15 @@ export default function CartContainer() {
                     <div className="col-span-12 lg:col-span-8  bg-white sm:p-4  rounded-2xl flex flex-col gap-6">
                         {error && (
                             <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg">
-                                خطا در بارگذاری سبد خرید: {error}
+                                <div className="flex justify-between items-center">
+                                    <span>خطا در بارگذاری سبد خرید: {error}</span>
+                                    <button
+                                        onClick={() => refreshCart()}
+                                        className="text-sm bg-red-100 hover:bg-red-200 px-3 py-1 rounded transition-colors"
+                                    >
+                                        تلاش مجدد
+                                    </button>
+                                </div>
                             </div>
                         )}
 
@@ -73,13 +189,14 @@ export default function CartContainer() {
                                 </div>
                             </div>
                             <div className="flex flex-col gap-4">
-                                {items.map(item => (
+                                {items.map((item: any) => (
                                     <CartItem
                                         key={item.id}
                                         item={item}
                                         onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
                                         onRemove={() => handleRemoveItem(item.id.toString())}
-                                        isUpdating={loading}
+                                        isUpdating={updateQuantityMutation.isPending}
+                                        isRemoving={removeItemMutation.isPending}
                                     />
                                 ))}
                             </div>
@@ -89,7 +206,18 @@ export default function CartContainer() {
                     {/* Left side - Discount & Summary */}
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 ">
                         <DiscountCodeCard />
-                        <OrderSummaryCard />
+                        <OrderSummaryCard
+                            cartId={cartData?.data?.id || 0}
+                            itemCount={itemCount}
+                            originalTotal={originalTotal}
+                            discountAmount={discountAmount}
+                            discountPercent={cartData?.data?.discountPercent || 0}
+                            discountAmountByDiscountCode={cartData?.data?.discountAmountByDiscountCode || null}
+                            discountPercentByDiscountCode={cartData?.data?.discountPercentByDiscountCode || null}
+                            taxAmount={taxAmount}
+                            taxPercent={cartData?.data?.taxPercent || 0}
+                            finalTotal={finalTotal}
+                        />
                     </div>
                 </div>
             </div>
