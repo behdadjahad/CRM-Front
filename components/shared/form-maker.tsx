@@ -24,6 +24,7 @@ import SingleFilePreview from "./single-file-preview";
 import TagPreview from "./tag-preview";
 import SelectableTagInput from "../form/inputs/SelectableTagInput";
 import TextEditorInput from "./input/TextEditorInput - Copy";
+import SearchInput from "./search-input";
 
 export interface OptionType {
   label: string;
@@ -32,32 +33,35 @@ export interface OptionType {
 }
 
 export interface FieldType {
+  outerIcon?: React.ReactNode;
+
   component:
-  | "input"
-  | "multi-added-input"
-  | "Select"
-  | "multi-select"
-  | "tag-preview"
-  | "SuggestionInput"
-  | "date"
-  | "date-time"
-  | "phone"
-  | "checkbox"
-  | "radio"
-  | "slider"
-  | "textarea"
-  | "text-editor"
-  | "verification"
-  | "file"
-  | "single-file"
-  | "toggle"
-  | "file-preview"
-  | "single-file-preview"
-  | "list-preview"
-  | "range-input"
-  | "time"
-  | "selectable-tag-input"
-  | "non-field";
+    | "input"
+    | "multi-added-input"
+    | "Select"
+    | "multi-select"
+    | "tag-preview"
+    | "SuggestionInput"
+    | "date"
+    | "date-time"
+    | "phone"
+    | "checkbox"
+    | "radio"
+    | "slider"
+    | "textarea"
+    | "text-editor"
+    | "verification"
+    | "file"
+    | "single-file"
+    | "toggle"
+    | "file-preview"
+    | "single-file-preview"
+    | "list-preview"
+    | "range-input"
+    | "time"
+    | "selectable-tag-input"
+    | "search-input"
+    | "non-field";
   floating?: boolean;
   placeholder?: string;
   labelClassName?: string;
@@ -97,7 +101,6 @@ export interface FieldType {
   resetFunction?: () => void;
   isValidNewOption?: boolean;
   sendValue?: (value: string) => void;
-
 }
 
 export interface FormMakerInterface {
@@ -105,79 +108,85 @@ export interface FormMakerInterface {
   fields: FieldType[];
   className?: string;
   hasAccess?: boolean;
-
-
 }
 
 export default function FormMaker({
   form,
+
   fields,
   className,
-  hasAccess=true
-
+  hasAccess = true,
 }: FormMakerInterface) {
-
-
-
   const renderField = useCallback(
     (item: FormMakerInterface["fields"][0]) => {
-      
       // Use disabled from item first, then fallback to form-level disabled
       // const isDisabled = item?.disabled !== undefined ? item?.disabled : disabled;
 
       switch (item.component) {
         case "Select":
-          return <SelectInput disabled={!hasAccess} form={form} item={{ ...item,}} />;
+          return (
+            <SelectInput disabled={!hasAccess} form={form} item={{ ...item }} />
+          );
         case "multi-select":
-          return <MultiSelectInput disabled={!hasAccess}  form={form} item={item} />;
+          return (
+            <MultiSelectInput disabled={!hasAccess} form={form} item={item} />
+          );
         case "tag-preview":
-          return <TagPreview  form={form} item={item} />;
+          return <TagPreview form={form} item={item} />;
         case "SuggestionInput":
-          return <SuggestionInput  disabled={!hasAccess}  form={form} item={{ ...item,}} />;
+          return (
+            <SuggestionInput
+              disabled={!hasAccess}
+              form={form}
+              item={{ ...item }}
+            />
+          );
         case "input":
-          return <TextInput disabled={!hasAccess}  item={item} form={form} />;
+          return <TextInput disabled={!hasAccess} item={item} form={form} />;
         case "multi-added-input":
-          return <MultiAddedTextInput  item={{ ...item,}} form={form} />;
+          return <MultiAddedTextInput item={{ ...item }} form={form} />;
         case "phone":
-          return <PhoneNumberInput item={{ ...item,}} form={form} />;
+          return <PhoneNumberInput item={{ ...item }} form={form} />;
         case "date":
-          return <DateInput item={{ ...item,}} form={form} />;
+          return <DateInput item={{ ...item }} form={form} />;
         case "date-time":
-          return <DateTimeInput item={{ ...item,}} form={form} />;
+          return <DateTimeInput item={{ ...item }} form={form} />;
         case "time":
-          return <TimeInput item={{ ...item,}} form={form} />;
+          return <TimeInput item={{ ...item }} form={form} />;
         case "selectable-tag-input":
-          return <SelectableTagInput item={{ ...item,}} form={form} />;
+          return <SelectableTagInput item={{ ...item }} form={form} />;
 
         case "checkbox":
-          return <CheckboxInput item={{ ...item,}} form={form} />;
+          return <CheckboxInput item={{ ...item }} form={form} />;
         case "radio":
-          return <RadioInput item={{ ...item,}} form={form} />;
+          return <RadioInput item={{ ...item }} form={form} />;
         case "slider":
-          return <SliderInput item={{ ...item,}} form={form} />;
+          return <SliderInput item={{ ...item }} form={form} />;
         case "textarea":
-          return <TextAreaInput item={{ ...item,}} form={form} />;
+          return <TextAreaInput item={{ ...item }} form={form} />;
         case "text-editor":
-          return <TextEditorInput item={{ ...item,}} form={form} />;
+          return <TextEditorInput item={{ ...item }} form={form} />;
         case "verification":
-          return <VerificationInput item={{ ...item,}} form={form} />;
+          return <VerificationInput item={{ ...item }} form={form} />;
         case "file":
-          return <FileInput item={{ ...item,}} form={form} />;
+          return <FileInput item={{ ...item }} form={form} />;
         case "single-file":
-          return <SingleFileInput item={{ ...item,}} form={form} />;
+          return <SingleFileInput item={{ ...item }} form={form} />;
         case "toggle":
-          return <ToggleInput item={{ ...item,}} form={form} />;
+          return <ToggleInput item={{ ...item }} form={form} />;
         case "file-preview":
           return <FilePreview item={item} form={form} />;
         case "single-file-preview":
           return <SingleFilePreview item={item} form={form} />;
         case "list-preview":
           return <ListPreview item={item} form={form} />;
+        case "search-input":
+          return <SearchInput item={item} form={form} />;
         default:
           return null;
       }
     },
-    [form,hasAccess]
+    [form, hasAccess]
   );
 
   return (
@@ -194,8 +203,14 @@ export default function FormMaker({
           )}
           style={item.style}
         >
-          {renderField(item)}
-
+          {item.outerIcon ? (
+            <div className=" flex w-full items-center justify-center gap-3">
+              {item.outerIcon}
+              {renderField(item)}
+            </div>
+          ) : (
+            renderField(item)
+          )}
           {item.component !== "non-field" ? (
             <small className=" text-destructive mt-2">
               {form.errors[item.key] || form.touched[item.key]

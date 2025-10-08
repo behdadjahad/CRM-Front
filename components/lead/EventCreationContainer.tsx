@@ -4,6 +4,29 @@ import { MdClose } from "react-icons/md";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
 import Image from "next/image";
+import { FaLocationArrow, FaMapMarkerAlt, FaSnapchatGhost, FaTag, FaTags, FaThLarge, FaUser, FaUserAlt, FaUserAltSlash } from 'react-icons/fa';
+import {
+    Calendar,
+    Clock,
+    MapPin,
+    Bell,
+    Search,
+    User,
+    X,
+    Phone,
+    MessageSquare,
+    Mail,
+    Users,
+    Headphones,
+    CheckCircle,
+    AlertCircle,
+    ShieldCloseIcon,
+    SettingsIcon,
+    PersonStanding,
+    PersonStandingIcon,
+    User2,
+    MenuIcon
+} from 'lucide-react';
 export interface EventCreationContainerInterface {
   trigger?: React.ReactElement;
 }
@@ -55,72 +78,97 @@ export default function EventCreationContainer({
             form={formik}
             fields={[
               {
-                key: "date-sample",
-                component: "non-field",
-                children: (
-                  <div className="w-full h-full">
-                    {" "}
-                    <Image
-                      src={"/icons/calendar-time.png"}
-                      alt="edit"
-                      width={1024}
-                      height={1024}
-                      className="w-6 h-6"
-                    />
-                  </div>
-                ),
-                className: "grid col-span-1 justify-center items-center",
-              },
-              {
-                key: "startDateTime",
+                dependantKey: "startTimeType",
+                outerIcon: <Clock className="w-5 h-5 text-[#B6BCC2]" />,
+                key: "startTime",
                 component: "date-time",
                 placeholder: "تاریخ و زمان شروع",
                 type: "text",
-                className: "grid col-span-4",
-                labelClassName: "text-sm placeholder:text-sm",
-                dependantKey: "startDateTimeType",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full md:w-1/2",
               },
               {
-                key: "endDateTime",
+                dependantKey: "endDateType",
+                key: "endDate",
                 component: "date-time",
                 placeholder: "تاریخ و زمان پایان",
                 type: "text",
-                className: "grid col-span-4",
-                labelClassName: "text-sm placeholder:text-sm",
-                dependantKey: "endDateTimeType",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full pl-5  md:w-1/2",
               },
               {
-                key: "date-sample",
-                component: "non-field",
-                children: <div className="w-4 h-4"></div>,
-                className: "grid col-span-1",
-              },
-              {
-                key: "temperature",
+                outerIcon: (
+                  <FaTag stroke="white" className="w-5 h-5 text-[#B6BCC2]" />
+                ),
+                key: "temparetureInput",
+                dependantKey: "temparetureType",
                 component: "Select",
-                placeholder: "میزان علاقه مندی",
-                labelClassName: "text-sm placeholder:text-sm",
+                placeholder: "میزان علاقه‌مندی",
                 type: "text",
-                className: "grid col-span-8",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full",
+                // options: interestLevels.map((level) => ({
+                //   label: level,
+                //   value: level,
+                // })),
               },
               {
-                key: "date-sample",
-                component: "non-field",
-                children: <div className="w-4 h-4"></div>,
-                className: "grid col-span-1",
-              },
-              {
+                outerIcon: (
+                  <FaMapMarkerAlt className="w-5 h-5 text-[#B6BCC2]" />
+                ),
                 key: "location",
                 component: "input",
+                placeholder: "مکان",
                 type: "text",
-                className: "grid col-span-8",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full",
+              },
+              {
+                outerIcon: (
+                  <MenuIcon className="w-5 h-5 self-start text-[#B6BCC2]" />
+                ),
+                key: "description",
+                component: "textarea",
+                placeholder: "متن توضیحات ",
+                type: "text",
+                floating: true,
+                className: "w-full ",
+              },
+              {
+                outerIcon: <User2 className="w-5 h-5 text-[#B6BCC2]" />,
+                key: "followUpResponsible",
+                component: "input",
+                placeholder: "مسئول پیگیری",
+                type: "text",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full",
+              },
+              {
+                dependantKey: "personSearchPreview",
+                key: "personSearch",
+                component: "search-input",
+                placeholder: "جستجوی شخص",
+                type: "text",
+                floating: true,
+                labelClassName: "w-full",
+                className: "w-full mr-8",
+              },
+              {
+                key: "personSearchPreview",
+                dependantKey: "person",
+                component: "tag-preview",
+                className: "w-full",
               },
             ]}
-            className="grid grid-cols-9 items-center"
+            className="flex flex-row w-full"
           />
         </div>
       </CustomModal>
     </>
-    );
-    
+  );
 }
