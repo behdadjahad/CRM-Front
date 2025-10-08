@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
-import { applyDiscount, removeDiscount, setError, setLoading } from '@/store/cart-slice';
+import { setError, setLoading } from '@/store/cart-slice';
 import { RootState } from '@/store';
 import { Button } from '@/components/ui/button';
 import { XCircle } from 'lucide-react';

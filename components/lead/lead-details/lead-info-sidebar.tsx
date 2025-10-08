@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import Tag from '@/components/shared/tag';
+
 import { cn } from '@/lib/utils';
+import Tag from '@/components/shared/Tag';
 
 interface LeadInfoCardProps {
     name: string;

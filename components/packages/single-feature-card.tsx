@@ -17,11 +17,19 @@ import Tooltip from '../ui/tooltip';
 
 
 
+// Update the interface (around line 20-24)
 interface SingleFeatureCardProps {
     unit: SingleFeatureUnit;
     chadcoCustomerId?: number;
     onPurchase?: (unitId: number, description: string) => void;
+    // Add these cart-related props
+    isInCart?: boolean;
+    onAddToCart?: (unitId: number, requestMessage?: string) => void;
+    onRemoveFromCart?: (itemId: string) => void;
+    showCartActions?: boolean;
+    cartLoading?: boolean;
 }
+
 
 
 // Price display component for single features
@@ -34,7 +42,7 @@ const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, sh
         return <p className="text-xs text-gray-500"> {countUnit} محدودیت</p>;
     }
     if (unitModel === "flat") {
-        return <p className="text-xs text-gray-500">-</p>;
+        return <p className="text-xs text-gray-500">بدون محدودیت</p>;
     }
     return "";
 };
@@ -61,7 +69,12 @@ const FeaturePriceDisplay: React.FC<{
 const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     unit,
     chadcoCustomerId,
-    onPurchase
+    onPurchase,
+    isInCart,
+    onAddToCart,
+    onRemoveFromCart,
+    showCartActions,
+    cartLoading
 }) => {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
@@ -133,6 +146,12 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
             setStatus('order-details');
         };
     }, []);
+    const handleAddToCart = () => {
+        if (onAddToCart) {
+            onAddToCart(unit.id, `Request for ${unit.name}`);
+        }
+    };
+
 
     return (
         <div
@@ -144,26 +163,26 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
             )}
         >
             <div className='bg-[#F8F8F8] rounded-[8x] py-2.5 px-4'>
-              
+
                 <div className="mb-4">
                     <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">       
+                        <div className="flex items-center gap-2">
                             <Checkbox
-                            // checked={option.isSelected}
-                            // onCheckedChange={() => onDurationChange(option.id)}
-                            className="border border-[#D5D7DA]"
-                        />
-                        <Tooltip content={unit.name}>
-                            <p className="text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]" style={{
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical'
-                            }}>
-                                {unit.name}
-                            </p>
+                                // checked={option.isSelected}
+                                // onCheckedChange={() => onDurationChange(option.id)}
+                                className="border border-[#D5D7DA]"
+                            />
+                            <Tooltip content={unit.name}>
+                                <p className="text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]" style={{
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical'
+                                }}>
+                                    {unit.name}
+                                </p>
                             </Tooltip>
-                            
-                            </div>
+
+                        </div>
 
                         {unit.category && (
                             <Tag text={unit.category.name} />
@@ -197,18 +216,31 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
 
                 />
 
+                {showCartActions && (
+                    <div className="flex gap-2 mt-4">
+                        {isInCart ? (
+                            <Button
+                                variant="outline"
+                                onClick={() => onRemoveFromCart?.(unit.id.toString())}
+                                disabled={cartLoading}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                            >
+                                {cartLoading ? 'Removing...' : 'Remove from Cart'}
+                            </Button>
+                        ) : (
+                            <Button
+                                className="text-base "
+                                variant="info"
+                                onClick={handleAddToCart}
+                                disabled={!onAddToCart || cartLoading}
+                            >
+                                <Plus size={20} />
+                                {cartLoading ? 'در حال پردازش...' : 'افزودن'}
+                            </Button>
+                        )}
+                    </div>
+                )}
 
-
-                <Button
-                    variant="info"
-                    onClick={handlePurchaseClick}
-                    className="text-base "
-                    disabled={isSelecting}
-
-                >
-                    <Plus size={20} />
-                    {isSelecting ? 'در حال پردازش...' : 'افزودن'}
-                </Button>
             </div>
 
         </div>

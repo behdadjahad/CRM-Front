@@ -48,11 +48,32 @@ export const fetchSingleFeatures = createAsyncThunk<any, any>(
     "singleFeatures/fetchSingleFeatures",
     async ({ page, limit, filters }) => {
         try {
+            // Transform filters to match Swagger API structure
+            const requestBody = {
+                keyword: filters.keyword || undefined,
+                categoryNames: filters.categories || [],
+                unitModels: filters.unitModels || [],
+                unitTypes: filters.featureTypes || [],
+                durationStart: filters.durationStart || undefined,
+                durationEnd: filters.durationEnd || undefined,
+                countUnitstart: filters.countUnitstart || undefined,
+                countUnitEnd: filters.countUnitEnd || undefined,
+                priceStart: filters.minPrice || undefined,
+                priceEnd: filters.maxPrice || undefined,
+            };
+
+            // Remove undefined values
+            Object.keys(requestBody).forEach(key => {
+                if (requestBody[key as keyof typeof requestBody] === undefined) {
+                    delete requestBody[key as keyof typeof requestBody];
+                }
+            });
+
             const result = await fetchService(
-                `package-unit?page=${page}&limit=${limit}`,
+                `package-unit/filter?page=${page}&limit=${limit}`,
                 {
                     method: "POST",
-                    body: filters,
+                    body: requestBody,
                 }
             );
             return result;
@@ -67,11 +88,32 @@ export const fetchAllSingleFeatures = createAsyncThunk<any, any>(
     "singleFeatures/fetchAllSingleFeatures",
     async ({ page, limit, filters }) => {
         try {
+            // Transform filters to match Swagger API structure
+            const requestBody = {
+                keyword: filters.keyword || undefined,
+                categoryNames: filters.categories || [],
+                unitModels: filters.unitModels || [],
+                unitTypes: filters.featureTypes || [],
+                durationStart: filters.durationStart || undefined,
+                durationEnd: filters.durationEnd || undefined,
+                countUnitstart: filters.countUnitstart || undefined,
+                countUnitEnd: filters.countUnitEnd || undefined,
+                priceStart: filters.minPrice || undefined,
+                priceEnd: filters.maxPrice || undefined,
+            };
+
+            // Remove undefined values
+            Object.keys(requestBody).forEach(key => {
+                if (requestBody[key as keyof typeof requestBody] === undefined) {
+                    delete requestBody[key as keyof typeof requestBody];
+                }
+            });
+
             const result = await fetchService(
-                `package-unit?page=${page}&limit=${limit}`,
+                `package-unit/filter?page=${page}&limit=${limit}`,
                 {
                     method: "POST",
-                    body: filters,
+                    body: requestBody,
                 }
             );
             return result;

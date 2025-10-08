@@ -53,6 +53,7 @@ export default function QuillEditor({ value, onChange }: QuillEditorProps) {
       ["bold", "italic", "underline", "strike"],
       [{ list: "ordered" }, { list: "bullet" }],
       ["link", "image"],
+      [{ direction: "rtl" }],
       ["clean"],
     ],
   };
@@ -63,6 +64,7 @@ export default function QuillEditor({ value, onChange }: QuillEditorProps) {
       value={value}
       onChange={onChange}
       modules={modules}
+
     />
   );
 }

@@ -1,100 +1,226 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CartItem, CartState } from '@/types/cart';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { fetchService } from '@/boot/chadco-customer-service';
+import { CartItem, CartState, AddToCartPayload, UpdateCartItemPayload, CartApiResponse } from '@/types/cart';
 
 const initialState: CartState = {
-  items: [
-    {
-      id: '1',
-      name: 'ویرایش اطلاعات قرارداد',
-      category: 'قرارداد',
-      description: 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ',
-      price: 300000,
-      quantity: 2,
-      tag: 'best-selling',
-      usageCount: 15,
-    },
-    {
-      id: '2',
-      name: 'سرویس هتل',
-      category: 'سرویس هتل',
-      description: 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ',
-      price: 320000,
-      quantity: 1,
-      tag: 'special',
-      durationMonths: 3,
-    },
-    {
-      id: '3',
-      name: 'ثبت قرارداد',
-      category: 'درخواست',
-      description: 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ',
-      price: 150000,
-      quantity: 1,
-      tag: 'suggested',
-      usageCount: 15,
-    },
-  ],
+  items: [],
   discountCode: null,
   discountAmount: 0,
-  isLoading: false,
+  loading: false,
   error: null,
+  total: 0,
+  subtotal: 0,
+  lastUpdated: new Date().toISOString(),
 };
+
+// Async thunk for fetching cart items
+export const fetchCartItems = createAsyncThunk<CartApiResponse, { chadcoCustomerId: number }>(
+  'cart/fetchCartItems',
+  async ({ chadcoCustomerId }) => {
+    try {
+      const result = await fetchService(`cart?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'GET',
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+);
+
+// Async thunk for adding item(s) to cart - handles both single and multiple
+
+export const addToCart = createAsyncThunk<CartApiResponse, AddToCartPayload & { chadcoCustomerId: number }>(
+  'cart/addToCart',
+  async ({ packageUnitIds, requestMessage, chadcoCustomerId }) => {
+    try {
+      const result = await fetchService(`cart?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'PATCH',
+        body: {
+          packageUnitIds,
+          requestMessage,
+        },
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
+// Async thunk for removing item from cart
+export const removeFromCart = createAsyncThunk<CartApiResponse, { itemId: string; chadcoCustomerId: number }>(
+  'cart/removeFromCart',
+  async ({ itemId, chadcoCustomerId }) => {
+    try {
+      const result = await fetchService(`cart/remove/${itemId}?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'DELETE',
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+// Async thunk for updating item quantity
+export const updateCartItemQuantity = createAsyncThunk<CartApiResponse, UpdateCartItemPayload & { chadcoCustomerId: number }>(
+  'cart/updateCartItemQuantity',
+  async ({ itemId, quantity, chadcoCustomerId }) => {
+    try {
+      const result = await fetchService(`cart/update/${itemId}?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'PATCH',
+        body: { quantity },
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
+// Async thunk for clearing cart
+export const clearCart = createAsyncThunk<CartApiResponse, number>(
+  'cart/clearCart',
+  async (chadcoCustomerId) => {
+    try {
+      const result = await fetchService(`cart/clear?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'DELETE',
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem: (state, action: PayloadAction<CartItem>) => {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
-      } else {
-        state.items.push(action.payload);
-      }
-    },
-    removeItem: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter(item => item.id !== action.payload);
-    },
-    updateItemQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
-      const item = state.items.find(item => item.id === action.payload.id);
-      if (item) {
-        item.quantity = action.payload.quantity;
-        if (item.quantity <= 0) {
-          state.items = state.items.filter(i => i.id !== action.payload.id);
-        }
-      }
-    },
-    applyDiscount: (state, action: PayloadAction<{ code: string; amount: number }>) => {
-      state.discountCode = action.payload.code;
-      state.discountAmount = action.payload.amount;
-    },
-    removeDiscount: (state) => {
-      state.discountCode = null;
-      state.discountAmount = 0;
-    },
-    clearCart: (state) => {
-      state.items = [];
-      state.discountCode = null;
-      state.discountAmount = 0;
-    },
     setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
+      state.loading = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    clearError: (state) => {
+      state.error = null;
+    },
+    setDiscountCode: (state, action: PayloadAction<string | null>) => {
+      state.discountCode = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    // Fetch cart items
+    builder
+      .addCase(fetchCartItems.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCartItems.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data?.packageUnits || [];
+        state.total = action.payload.data?.packageUnits?.reduce((sum: number, item: any) => sum + item.price, 0) || 0;
+        state.subtotal = state.total;
+        state.discountAmount = 0;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(fetchCartItems.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to fetch cart items';
+      });
+
+    // Add to cart (handles both single and multiple)
+    builder
+      .addCase(addToCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data?.packageUnits || [];
+        state.total = action.payload.data?.packageUnits?.reduce((sum: number, item: any) => sum + item.price, 0) || 0;
+        state.subtotal = state.total;
+        state.discountAmount = 0;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(addToCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to add item(s) to cart';
+      });
+
+    // Remove from cart
+    builder
+      .addCase(removeFromCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(removeFromCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data?.packageUnits || [];
+        state.total = action.payload.data?.packageUnits?.reduce((sum: number, item: any) => sum + item.price, 0) || 0;
+        state.subtotal = state.total;
+        state.discountAmount = 0;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(removeFromCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to remove item from cart';
+      });
+
+
+    builder
+      .addCase(updateCartItemQuantity.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateCartItemQuantity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload.data?.packageUnits || [];
+        state.total = action.payload.data?.packageUnits?.reduce((sum: number, item: any) => sum + item.price, 0) || 0;
+        state.subtotal = state.total;
+        state.discountAmount = 0;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(updateCartItemQuantity.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to update item quantity';
+      });
+
+
+
+    // Clear cart
+    builder
+      .addCase(clearCart.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = [];
+        state.total = 0;
+        state.subtotal = 0;
+        state.discountAmount = 0;
+        state.discountCode = null;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(clearCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || 'Failed to clear cart';
+      });
   },
 });
 
 export const {
-  addItem,
-  removeItem,
-  updateItemQuantity,
-  applyDiscount,
-  removeDiscount,
-  clearCart,
   setLoading,
   setError,
+  clearError,
+  setDiscountCode,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

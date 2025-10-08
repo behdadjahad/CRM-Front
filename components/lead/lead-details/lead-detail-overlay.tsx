@@ -1,9 +1,12 @@
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import React, { useRef } from 'react'
+import LeadInfoCard from './lead-info-card';
+import LeadPersonSection from './lead-person-section';
+import LeadOrganizationSection from './lead-organization-section';
+import LeadDetailsSection from './lead-details-section';
 import LeadWorkflowStepper from './lead-workflow-stepper';
 import LeadInteractionTabs from './lead-intraction-tabs';
-import LeadInfoCard from './lead-info-card';
 
 
 
@@ -46,15 +49,23 @@ export default function LeadDetailsOverlay({ leadId, onClose }: LeadDetailsOverl
                     "w-10/12"
                 )}
             >
-                <div className=" p-4 grid-cols-12 flex justify-center gap-4 w-full">
-                    <div className="col-span-5  bg-danger rounded-lg p-4">
-                        <LeadInfoCard />
+                <div className="p-4 flex gap-4 w-full h-full overflow-x-auto">
+                    {/* Lead Info Card */}
+                    <div className="flex-shrink-0">
+                        <LeadInfoCard
+                            headerData={{
+                                title: "تور داخلی",
+                                date: "۱۴۰۴/۱/۱۶",
+                                userName: "امیر",
+                                userAvatarColor: "bg-blue-500"
+                            }}
+                            status="در جریان"
+                        />
                     </div>
-                    <div className="col-span-7 w-full border border-gray-200 rounded-lg p-4">
+                    <div className="col-span-8 border border-gray-200 rounded-lg p-4">
                         <LeadWorkflowStepper currentStatus={"INPROGRESS"} />
                         <LeadInteractionTabs />
                     </div>
-
                 </div>
 
             </div>

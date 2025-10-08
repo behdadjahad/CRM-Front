@@ -4,32 +4,21 @@ import { RootState } from '@/store';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { formatPrice } from '@/lib/utils';
-import { COLOR_MAPPING } from '@/constants/color-mapping';
 
 export default function OrderSummaryCard() {
-    // const { items, discountAmount } = useSelector((state: RootState) => state.cart);
+    const { items, total, subtotal, discountAmount } = useSelector((state: RootState) => state.cart);
 
-    // const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    // const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-    // const finalPayable = subtotal - discountAmount;
-    const invoiceData = {
-        invoiceNumber: "1234567890",
-        paymentMethod: "GATEWAY",
-        originalTotal: 120000,
-        discountPercent: 10,
-        discountAmount: 10000,
-    }
+    const totalItems = items?.length || 0;
+    const taxRate = 0.09; // 9% tax
+    const taxAmount = subtotal * taxRate;
+    const finalPayable = subtotal + taxAmount - discountAmount;
 
     const handlePayment = () => {
         alert('پرداخت به زودی فعال خواهد شد!');
     };
-    const items = 4;
-    const discountAmount = 10000;
-    const finalPayable = 110000;
-    const totalItems = 4;
-    const subtotal = 120000;
+
     const handleCheckout = () => {
-        console.log('Initiating checkout with:', { items, discountAmount, finalPayable });
+        console.log('Initiating checkout with:', { items, totalItems, subtotal, taxAmount, discountAmount, finalPayable });
         alert('پرداخت به زودی فعال خواهد شد!');
     };
 
@@ -41,47 +30,44 @@ export default function OrderSummaryCard() {
             </h2>
 
             <div className="w-full flex flex-col gap-6">
-                {/* Package Name */}
+                {/* Total Items */}
                 <div className="flex justify-between items-center">
-                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" > تعداد کل ایتم ها:</span>
-                    <span className="font-medium text-static-secondary-gray-dark">{invoiceData?.invoiceNumber?.slice(0, 5) || "-"}</span>
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">تعداد کل ایتم ها:</span>
+                    <span className="font-medium text-static-secondary-gray-dark">{totalItems} مورد</span>
                 </div>
 
-
-                {/* Base Price */}
+                {/* Subtotal */}
                 <div className="flex justify-between items-center">
-                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >مجموع :</span>
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">مجموع:</span>
                     <span className="font-medium text-static-secondary-gray-dark">
-                        {invoiceData?.originalTotal ? formatPrice(invoiceData.originalTotal) : "-"} تومان
+                        {formatPrice(subtotal)} تومان
                     </span>
                 </div>
 
                 {/* Discount */}
-
-
-
-                {/* Total Amount */}
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >مدت زمان اعتبار:</span>
-                        {
-                            invoiceData?.discountPercent && invoiceData?.discountPercent > 0 && (<div className=" text-[10px] text-static-info-primary whitespace-nowrap bg-white border-static-info-primary rounded-lg border  py-1 px-2">
-                                {invoiceData?.discountPercent || 0}% تخفیف
-                            </div>)
-                        }
-
-
+                {discountAmount > 0 && (
+                    <div className="flex justify-between items-center">
+                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">تخفیف:</span>
+                        <span className="font-medium text-green-600">
+                            - {formatPrice(discountAmount)} تومان
+                        </span>
                     </div>
-                    <span className="font-medium text-static-secondary-gray-dark whitespace-nowrap">
-                        {invoiceData?.discountAmount ? formatPrice(invoiceData.discountAmount) : "-"}
-                        {invoiceData?.discountPercent && invoiceData?.discountPercent > 0 ? ` تومان` : "-"}
+                )}
 
+                {/* Tax */}
+                <div className="flex justify-between items-center">
+                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">مالیات (9%):</span>
+                    <span className="font-medium text-static-secondary-gray-dark">
+                        {formatPrice(taxAmount)} تومان
                     </span>
                 </div>
 
-                <div className="flex justify-between items-center">
-                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >  مالیات (9%):</span>
-                    <span className="font-medium text-static-info-primary">time</span>
+                {/* Final Total */}
+                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                    <span className="text-base font-semibold text-gray-900">مبلغ قابل پرداخت:</span>
+                    <span className="text-xl font-bold text-static-info-primary">
+                        {formatPrice(finalPayable)} تومان
+                    </span>
                 </div>
             </div>
 

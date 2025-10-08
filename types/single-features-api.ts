@@ -114,6 +114,12 @@ export interface SingleFeaturesFilters {
     endDate?: string;
     calendarOptions?: string[];
     panelSettings?: string[];
+    priceStart?: number;
+    priceEnd?: number;
+    durationStart?: number;
+    durationEnd?: number;
+    countUnitstart?: number;
+    countUnitEnd?: number;
 }
 
 export interface SingleFeaturesContainerProps {

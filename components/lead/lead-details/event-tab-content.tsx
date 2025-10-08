@@ -19,12 +19,19 @@ import {
     Headphones,
     CheckCircle,
     AlertCircle,
-    ShieldCloseIcon
+    ShieldCloseIcon,
+    SettingsIcon,
+    PersonStanding,
+    PersonStandingIcon,
+    User2,
+    MenuIcon
 } from 'lucide-react';
 import { useFormik } from 'formik';
-import Tag from '@/components/billing/tag';
+
 import FormMaker, { FieldType } from '@/components/shared/form-maker';
-import { FaLocationArrow } from 'react-icons/fa';
+import { FaLocationArrow, FaMapMarkerAlt, FaSnapchatGhost, FaTag, FaTags, FaThLarge, FaUser, FaUserAlt, FaUserAltSlash } from 'react-icons/fa';
+import LeadActionButtons from './lead-action-buttons';
+import { MdLocationCity } from 'react-icons/md';
 
 
 interface EventTabContentProps {
@@ -113,28 +120,47 @@ export default function EventTabContent({ className }: EventTabContentProps) {
 
             {/* Form Fields */}
             <FormMaker
+
                 form={formik}
                 fields={[
                     {
+                        dependantKey: "startTimeType",
+                        outerIcon: <Clock className="w-5 h-5 text-[#B6BCC2]" />,
                         key: "startTime",
                         component: "date-time",
-                        placeholder: "زمان شروع",
+                        placeholder: "تاریخ و زمان شروع",
                         type: "text",
                         floating: true,
                         labelClassName: "w-full",
                         className: "w-full md:w-1/2",
                     },
                     {
+                        dependantKey: "endDateType",
                         key: "endDate",
                         component: "date-time",
-                        placeholder: "تاریخ پایان",
+                        placeholder: "تاریخ و زمان پایان",
                         type: "text",
                         floating: true,
                         labelClassName: "w-full",
-                        className: "w-full md:w-1/2",
+                        className: "w-full pl-5  md:w-1/2",
                     },
-
                     {
+                        outerIcon: <FaTag stroke="white" className="w-5 h-5 text-[#B6BCC2]" />,
+                        key: "temparetureInput",
+                        dependantKey: "temparetureType",
+                        component: "Select",
+                        placeholder: "میزان علاقه‌مندی",
+                        type: "text",
+                        floating: true,
+                        labelClassName: "w-full",
+                        className: "w-full",
+                        options: interestLevels.map(level => ({
+                            label: level,
+                            value: level,
+                        })),
+                    },
+                    {
+                        outerIcon: <FaMapMarkerAlt className="w-5 h-5 text-[#B6BCC2]" />,
                         key: "location",
                         component: "input",
                         placeholder: "مکان",
@@ -144,31 +170,33 @@ export default function EventTabContent({ className }: EventTabContentProps) {
                         className: "w-full",
                     },
                     {
+                        outerIcon: <MenuIcon className="w-5 h-5 self-start text-[#B6BCC2]" />,
                         key: "description",
                         component: "textarea",
-                        placeholder: "توضیحات",
+                        placeholder: "متن توضیحات ",
                         type: "text",
                         floating: true,
-                        className: "w-full",
+                        className: "w-full ",
                     },
                     {
+                        outerIcon: <User2 className="w-5 h-5 text-[#B6BCC2]" />,
                         key: "followUpResponsible",
                         component: "input",
                         placeholder: "مسئول پیگیری",
                         type: "text",
                         floating: true,
                         labelClassName: "w-full",
-                        className: "w-full md:w-1/2",
+                        className: "w-full",
                     },
                     {
-                        dependantKey: "reminderPreview",
-                        key: "reminder",
+                        dependantKey: "personSearchPreview",
+                        key: "personSearch",
                         component: "multi-select",
-                        placeholder: "انتخاب کنید",
+                        placeholder: "جستجوی شخص",
                         type: "text",
                         floating: true,
                         labelClassName: "w-full",
-                        className: "w-full md:w-1/2",
+                        className: "w-full mr-8",
                         options: [
                             {
                                 label: "سرد",
@@ -197,54 +225,24 @@ export default function EventTabContent({ className }: EventTabContentProps) {
                         ],
                     },
                     {
-                        key: "reminderPreview",
-                        dependantKey: "reminder",
+                        key: "personSearchPreview",
+                        dependantKey: "person",
                         component: "tag-preview",
                         className: "w-full",
-                    }
+                    },
+
                 ]}
-                className="flex flex-row w-full"
+                className="flex flex-row-reverse w-full"
             />
 
-            {/* Selected Users Tags */}
-            {selectedUsers.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                    {selectedTags.map((user) => (
-                        <Tag key={user.id} text={user.text} icon={<X className="w-3 h-3 border border-[#717680]  rounded-full mx-1 text-[#717680]" />}
-                            closable={selectedTags.includes(user.id as any)}
-                            onClose={() => handleTagClose(user.id)}
-                            className={selectedTags.includes(user.id as any) ? 'ring-2 ring-[#717680] bg-[#F5F5F5] text-[#717680]' : 'text-[#717680] border bg-[#F5F5F5] border-[#717680]'} />
-                    ))}
-                </div>
-            )}
+            <LeadActionButtons
+                onSubmit={() => formik.handleSubmit()}
+                onCancel={() => formik.resetForm()}
+                isCompleted={isCompleted}
+                setIsCompleted={setIsCompleted}
+            />
 
-            {/* Action Buttons and Checkbox */}
-            <div className="flex items-center justify-between pt-4">
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                    <Button
-                        onClick={() => formik.handleSubmit()}
-                        className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2"
-                    >
-                        ثبت تغییرات
-                    </Button>
-                    <Button variant="outline" className="px-8 py-2">
-                        لغو
-                    </Button>
-                </div>
 
-                {/* Status Toggle */}
-                <div className="flex items-center space-x-2 space-x-reverse">
-                    <Checkbox
-                        id="completed"
-                        checked={isCompleted}
-                        onCheckedChange={(checked) => setIsCompleted(checked === true)}
-                    />
-                    <label htmlFor="completed" className="text-sm font-medium">
-                        انجام شده
-                    </label>
-                </div>
-            </div>
         </div>
     );
 }
