@@ -1,8 +1,14 @@
+'use client'
 import { cn } from "@/lib/utils";
 import { FormMakerInterface } from "./form-maker";
 import Image from "next/image";
 import { useState } from "react";
-import Map from "./map";
+
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import("./map"), {
+  ssr: false,
+});
 export default function LocationInput({
   form,
   item,

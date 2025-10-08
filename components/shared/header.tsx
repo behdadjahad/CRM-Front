@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import ProfileDropDown from "./profile-drop-down";
 import Notification from "./notification";

@@ -2,7 +2,7 @@
 import { PipeInterface } from "./LeadContainer";
 import LeadPipe from "./LeadPipe";
 import LeadPipeCreation from "./LeadPipeCreation";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+
 // import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 export interface LeadPipeContainerInterface {
@@ -31,7 +31,7 @@ export default function LeadPipeContainer({
           <LeadPipeCreation />
         </div>
       </div>
-      <div className="flex items-center w-full justify-center fixed bottom-24 gap-4">
+      {/* <div className="flex items-center w-full justify-center fixed bottom-24 gap-4">
         <Droppable droppableId="success-box">
           {(provided, snapshot) => (
             <div
@@ -65,7 +65,7 @@ export default function LeadPipeContainer({
             </div>
           )}
         </Droppable>
-      </div> 
+      </div>  */}
     </DragDropContext>
   );
 }
