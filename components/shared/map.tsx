@@ -12,8 +12,8 @@ interface MapProps {
 
 // Fix default marker icon (Leaflet bug in Next.js / Vite)
 const DefaultIcon = L.icon({
-  iconUrl: "/marker-icon.png",
-  shadowUrl: "/marker-shadow.png",
+  iconUrl: "/icons/location-icon.svg",
+//   shadowUrl: "/icons/location-icon.svg",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
