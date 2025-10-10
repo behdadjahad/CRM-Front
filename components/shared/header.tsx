@@ -3,6 +3,7 @@ import ProfileDropDown from "./profile-drop-down";
 import Notification from "./notification";
 import Search from "./search";
 import CartIcon from "./cart-icon";
+
 import { Button } from "../ui/button";
 import Image from "next/image";
 
@@ -28,7 +29,6 @@ export default function Header({ setState }: HeaderInterface) {
       </Button>
 
       <ProfileDropDown className="hidden lg:flex" />
-
       <CartIcon className="mr-2" />
 
       <Notification unread={true} className="mr-auto lg:mr-0 lg:ml-auto" />

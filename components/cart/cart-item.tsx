@@ -120,7 +120,7 @@ export default function CartItem({
                         isUpdating={isUpdating}
                     />
                     <div className="sm:text-xl text-base font-bold text-static-info-primary">
-                        {item.price.toLocaleString('fa-IR')} تومان
+                        {item?.price?.toLocaleString('fa-IR')} تومان
                     </div>
                 </div>
             </div>

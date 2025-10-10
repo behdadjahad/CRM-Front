@@ -41,6 +41,7 @@ export const addToCart = createAsyncThunk<CartApiResponse, AddToCartPayload & { 
           requestMessage,
         },
       });
+      
       return result;
     } catch (error) {
       throw error;
@@ -92,6 +93,22 @@ export const clearCart = createAsyncThunk<CartApiResponse, number>(
     try {
       const result = await fetchService(`cart/remove?chadcoCustomerId=${chadcoCustomerId}`, {
         method: 'PATCH',
+      });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+// Async thunk for payment
+export const payFeatures = createAsyncThunk<CartApiResponse, { cartId: number; chadcoCustomerId: number }>(
+  'cart/payFeatures',
+  async ({ cartId, chadcoCustomerId }) => {
+    try {
+      const result = await fetchService(`cart/pay?chadcoCustomerId=${chadcoCustomerId}`, {
+        method: 'POST',
+        body: { cartId },
       });
       return result;
     } catch (error) {

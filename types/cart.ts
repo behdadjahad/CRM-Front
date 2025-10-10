@@ -103,3 +103,28 @@ export interface UpdateCartItemPayload {
   itemId: string;
   quantity: number;
 }
+
+// SSE-related types
+export interface CartSSEConfig {
+  chadcoCustomerId: number;
+  baseUrl?: string;
+  autoReconnect?: boolean;
+  maxRetries?: number;
+  retryDelay?: number;
+  heartbeatTimeout?: number;
+}
+
+export interface CartSSEEvent {
+  type: 'cart_update' | 'heartbeat' | 'connection_established';
+  itemCount?: number;
+  message?: string;
+  timestamp?: number;
+}
+
+export interface CartSSEState {
+  count: number;
+  isConnected: boolean;
+  connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
+  connectionMessage: string;
+  lastUpdated: string | null;
+}
