@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+import DroppableActionContainer from "../shared/DroppableActionContainer";
 import { PipeInterface } from "./LeadContainer";
 import LeadPipe from "./LeadPipe";
 import LeadPipeCreation from "./LeadPipeCreation";
@@ -12,11 +14,16 @@ export interface LeadPipeContainerInterface {
 export default function LeadPipeContainer({
   pipeList,
 }: LeadPipeContainerInterface) {
+  const [view, setView] = useState<boolean>(false);
   const onDragEnd = (result: DropResult) => {
+    setView(true)
     const { source, destination } = result;
     console.log(source, destination);
-
+    // action();
   };
+  function action() {
+    setView(false)
+  }
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="grid grid-cols-10 gap-2">
@@ -31,6 +38,11 @@ export default function LeadPipeContainer({
           <LeadPipeCreation />
         </div>
       </div>
+      {view && (
+        <DroppableActionContainer
+          list={[{ status: { label: "موفق", value: "success" } }]}
+        />
+      )}
       {/* <div className="flex items-center w-full justify-center fixed bottom-24 gap-4">
         <Droppable droppableId="success-box">
           {(provided, snapshot) => (
