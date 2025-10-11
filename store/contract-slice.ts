@@ -9,9 +9,9 @@ import {
 } from "@/lib/utils";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-
 export interface ContractState {
   items: any[];
+  tableData: { id: number; list: { label: string; value: string }[] }[];
   currentPage: number;
   totalPages: number;
   filters: any;
@@ -32,6 +32,7 @@ export interface ContractState {
 
 const initialState: ContractState = {
   items: [],
+  tableData: [],
   currentPage: 1,
   totalPages: 0,
   filters: {},
@@ -89,6 +90,7 @@ const contractSlice = createSlice({
       );
     });
     builder.addCase(fetchContracts.fulfilled, (state, action) => {
+      const data = action?.payload?.data;
       state.items = action?.payload?.data?.map((item: any, index: number) => ({
         id: item.id,
         contract: {
@@ -107,7 +109,9 @@ const contractSlice = createSlice({
                   " " +
                   item?.mainCustomerSoldto?.person?.lastName
                 : "",
-            image:item?.mainCustomerSoldto?.person?.avatar && ServerImageAddress + item?.mainCustomerSoldto?.person?.avatar,
+            image:
+              item?.mainCustomerSoldto?.person?.avatar &&
+              ServerImageAddress + item?.mainCustomerSoldto?.person?.avatar,
           },
         },
         footer: {
@@ -155,6 +159,14 @@ const contractSlice = createSlice({
         exportData: {
           id: item.id,
           ردیف: index + 1,
+          "نام ونام خانوادگی":
+            item?.mainCustomerSoldto?.person?.firstName &&
+            item?.mainCustomerSoldto?.person?.lastName
+              ? item?.mainCustomerSoldto?.person?.firstName +
+                " " +
+                item?.mainCustomerSoldto?.person?.lastName
+              : "",
+
           "تاریخ قرارداد":
             item?.contractDate && item?.dateType
               ? convertDate(item?.contractDate, item?.dateType)
@@ -165,16 +177,23 @@ const contractSlice = createSlice({
             ? item?.contractSatisfaction[0]?.satisfactionScore
             : 0,
           "نوع قرارداد": item?.contractType?.name,
-          مشتری:
-            item?.mainCustomerSoldto?.person?.firstName &&
-            item?.mainCustomerSoldto?.person?.lastName
-              ? item?.mainCustomerSoldto?.person?.firstName +
-                " " +
-                item?.mainCustomerSoldto?.person?.lastName
-              : "",
         },
       }));
-
+      state.tableData = data.map((contract:any) => ({
+        id: contract?.id,
+        list: [
+          {
+            label: "نام و نام خانوادگی",
+            value:
+              contract?.mainCustomerSoldto?.person?.firstName &&
+              contract?.mainCustomerSoldto?.person?.lastName
+                ? contract?.mainCustomerSoldto?.person?.firstName +
+                  " " +
+                  contract?.mainCustomerSoldto?.person?.lastName
+                : "",
+          },
+        ],
+      }));
       state.ContractOverviewList = [
         {
           label: " قرار داد کل",
@@ -203,8 +222,8 @@ const contractSlice = createSlice({
       state.filters = filters;
       const limit = action?.payload?.pagination?.limit;
       state.limit = limit;
-      state.dateTimeRange.start =action?.payload?.meta?.startRangeTime;
-      state.dateTimeRange.end =action?.payload?.meta?.endRangeTime;
+      state.dateTimeRange.start = action?.payload?.meta?.startRangeTime;
+      state.dateTimeRange.end = action?.payload?.meta?.endRangeTime;
     });
   },
 });
