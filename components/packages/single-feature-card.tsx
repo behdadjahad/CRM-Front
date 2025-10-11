@@ -14,6 +14,7 @@ import { Checkbox } from '../ui/checkbox';
 import { convertDaysToMonths } from '@/lib/duration-utils';
 import { Clock, Plus } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
+import { getAllFeaturesWithDetails, getMatchedFeature, type FeatureDetail } from '@/lib/feature-match-utils';
 
 
 
@@ -34,6 +35,10 @@ interface SingleFeatureCardProps {
     isChecked?: boolean;
     onCheckChange?: (unitId: number, checked: boolean) => void;
     isSelectable?: boolean;
+    // Add highlighting props
+    isHighlighted?: boolean;
+    highlightCode?: string; // The feature code being highlighted
+    accessesJson?: any; // The accessesJson from the unit
 }
 
 
@@ -85,11 +90,26 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     removeFromCartLoading,
     isChecked,
     onCheckChange,
-    isSelectable = true
+    isSelectable = true,
+    isHighlighted = false,
+    highlightCode,
+    accessesJson
 }) => {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
+
+    // Get matched feature details if highlighted
+    const matchedFeature = isHighlighted && highlightCode && accessesJson
+        ? getMatchedFeature(accessesJson, highlightCode)
+        : null;
+
+    // Get all features for this unit
+    const allFeatures = accessesJson ? getAllFeaturesWithDetails(accessesJson) : [];
+
+    console.log("isHighlighted", isHighlighted);
+    console.log("matchedFeature", matchedFeature);
+    console.log("allFeatures", allFeatures);
 
     const handlePurchaseClick = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -166,10 +186,12 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
 
     return (
         <div
+            data-unit-card
             className={cn(
                 "relative bg-white rounded-lg p-4 transition-all duration-300 cursor-pointer",
                 "border shadow-sm",
-                isChecked ? "border-blue-500 border-2 shadow-md bg-blue-50/30" : "border-gray-200",
+                isHighlighted && "ring-4 ring-yellow-400 border-yellow-500 shadow-2xl bg-yellow-50/20",
+                isChecked ? "border-blue-500 border-2 shadow-md bg-blue-50/30" : !isHighlighted && "border-gray-200",
                 !isPurchaseModalOpen && "hover:shadow-md hover:-translate-y-1",
                 "flex flex-col justify-between min-h-[266px]"
             )}
@@ -186,7 +208,11 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                                 disabled={!isSelectable}
                             />
                             <Tooltip content={unit.name}>
-                                <p className={`text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px] ${!isSelectable ? 'opacity-60' : ''}`} style={{
+                                <p className={cn(
+                                    "text-lg lg:text-base xl:text-lg textlg zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]",
+                                    isHighlighted ? "font-bold text-yellow-700" : "font-medium",
+                                    !isSelectable && 'opacity-60'
+                                )} style={{
                                     display: '-webkit-box',
                                     WebkitLineClamp: 2,
                                     WebkitBoxOrient: 'vertical'

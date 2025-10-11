@@ -473,7 +473,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
           {generateFeatureAccess(pageFeatures
             , "filter-customers")?.show && !generateFeatureAccess(pageFeatures
               , "filter-customers")?.enable && (
-              <AccessDenied variant={"foreground"}
+              <AccessDenied featureCode="filter-customers" variant={"foreground"}
                 title="فیلتر "
                 message="امکان دسترسی به این قابلیت وجود ندارد "
                 icon={(<Image
@@ -508,6 +508,7 @@ export default function CustomerTabContainer({ tabList }: { tabList: any[] }) {
               , "export-customers")?.show && !generateFeatureAccess(pageFeatures
                 , "export-customers")?.enable && (
                 <AccessDenied
+                  featureCode="export-customers"
                   variant={""}
                   title="خروجی "
                   message="شما به این بخش دسترسی ندارید"

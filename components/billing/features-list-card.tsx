@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getPackagesByInvoice } from "@/api/packages/package-api";
 import { Package, PackageCategory, Unit, UnitLabel } from "@/types/packages";
+import { PackagesByInvoiceResponse } from "@/types/billing";
 
 // Interface for transformed feature data
 interface TransformedFeature {
@@ -69,7 +70,7 @@ export default function FeaturesListCard({
     const { id } = useParams();
 
     // Fetch packages by invoice ID with proper generic typing
-    const { data: packagesResponse, isLoading, error } = useQuery<any>({
+    const { data: packagesResponse, isLoading, error } = useQuery<PackagesByInvoiceResponse>({
         queryKey: ["packages-by-invoice", id],
         queryFn: () => getPackagesByInvoice(Number(id)),
         enabled: !!id,

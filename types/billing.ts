@@ -59,12 +59,14 @@ export interface BillingContainerProps {
     onLoadMoreFeatures: () => void;
     onLoadMoreDurations: () => void;
     onCloseAllFeatures: () => void;
+    isLoading?: boolean;
 }
 
 export interface OrderSummaryCardProps {
     packageData: PackageData;
     selectedDuration: DurationOption | null;
     onPay: () => void;
+    isLoading?: boolean;
 }
 
 export interface FeaturesListCardProps {
@@ -127,3 +129,67 @@ export interface ApiResponse<T> {
 }
 
 export type PackageResponse = ApiResponse<Package[]>;
+
+// Calculated Price for different durations
+export interface CalculatedPrice {
+    months: number;
+    price: number;
+}
+
+// Package with calculated prices response (from getPackagesByInvoice)
+export interface PackageWithCalculatedPrices {
+    id: number;
+    title: string;
+    description: string | null;
+    price: {
+        value: number;
+    };
+    currencyId: {
+        value: number;
+    };
+    createdAt: string;
+    updatedAt: string;
+    packageCategories: Array<{
+        id: number;
+        name: string;
+        price: {
+            value: number;
+        };
+        createdAt: string;
+        updatedAt: string;
+        deletedAt: string | null;
+        currencyId: number | null;
+        units?: Array<{
+            id: number;
+            name: string;
+            description: string | null;
+            accessesJson: any;
+            unitType: string | null;
+            unitModel: "perCount" | "perDuration" | "flat" | null;
+            enabledDurationInDays: number | null;
+            showDurationInDays: number | null;
+            countUnit: number | null;
+            price: number | null;
+            createdAt: string;
+            updatedAt: string;
+            deletedAt: string | null;
+            currencyId: number;
+            packageUnitLabelId: number | null;
+        }>;
+    }>;
+}
+
+// Response from getPackagesByInvoice API
+export interface PackagesByInvoiceData {
+    calculatedPrices: CalculatedPrice[];
+    package: PackageWithCalculatedPrices;
+}
+
+export interface PackagesByInvoiceResponse {
+    status: "success" | "error" | string;
+    message: string;
+    httpStatus: number;
+    redirectURL: string | null;
+    ui: UiMessage;
+    data: PackagesByInvoiceData;
+}

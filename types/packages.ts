@@ -41,6 +41,7 @@ export interface UnitLabel {
 
 // Unit Types
 export interface Unit {
+  code?: string;
   id: number;
   name: string;
   description?: string | null;

@@ -14,6 +14,7 @@ interface AccessDeniedInterface {
   variant?: any;
   className?: string;
   trigger?: React.ReactElement;
+  featureCode?: string; // Feature code to highlight in single-features page
 }
 
 export function AccessDenied({
@@ -23,13 +24,20 @@ export function AccessDenied({
   className,
   title,
   trigger,
+  featureCode,
 }: AccessDeniedInterface) {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+
   const handleBuyService = () => {
     setIsOpen(false); // Close modal first
-    router.push('/single-features'); // Navigate to single features page
+    // Navigate with feature code as query parameter
+    const url = featureCode
+      ? `/single-features?highlightCode=${encodeURIComponent(featureCode)}`
+      : '/single-features';
+    router.push(url);
+
   };
 
   return (

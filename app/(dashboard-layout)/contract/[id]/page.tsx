@@ -929,6 +929,7 @@ export default function Contract() {
                   {generateFeatureAccess(pageFeatures
                     , "add-service")?.show && !generateFeatureAccess(pageFeatures
                       , "add-service")?.enable && (<AccessDenied
+                        featureCode="add-service"
                         variant={""}
                         title=" ثبت "
                         message="شما به این بخش دسترسی ندارید"
@@ -938,7 +939,6 @@ export default function Contract() {
                     )}
 
                   <RegisteryForm
-
                     roleAcess={pageFeatures && generateFeatureAccess(pageFeatures
                       , "add-service")?.show && generateFeatureAccess(pageFeatures
                         , "add-service")?.enable ? true : false}
@@ -1081,6 +1081,7 @@ export default function Contract() {
                   {generateFeatureAccess(pageFeatures
                     , "add-service")?.show && !generateFeatureAccess(pageFeatures
                       , "add-service")?.enable && (<AccessDenied
+                        featureCode="add-service"
                         variant={""}
                         title=" ثبت "
                         message="شما به این بخش دسترسی ندارید"
@@ -1196,7 +1197,7 @@ export default function Contract() {
               ],
               children: (
                 <ServiceContainer
-                roleAcess={generateFeatureAccess(pageFeatures
+                  roleAcess={generateFeatureAccess(pageFeatures
                     , "add-service")?.show && generateFeatureAccess(pageFeatures
                       , "add-service")?.enable ? true : false}
                   askQuestion={false}
@@ -1231,6 +1232,7 @@ export default function Contract() {
                   {generateFeatureAccess(pageFeatures
                     , "add-service")?.show && !generateFeatureAccess(pageFeatures
                       , "add-service")?.enable && (<AccessDenied
+                        featureCode="add-service"
                         variant={""}
                         title=" ثبت "
                         message="شما به این بخش دسترسی ندارید"
@@ -1290,9 +1292,9 @@ export default function Contract() {
               children: (
                 <ServiceContainer
 
-roleAcess={generateFeatureAccess(pageFeatures
+                  roleAcess={generateFeatureAccess(pageFeatures
                     , "add-service")?.show && generateFeatureAccess(pageFeatures
-                      , "add-service")?.enable ? true : false}                askQuestion={false}
+                      , "add-service")?.enable ? true : false} askQuestion={false}
                   services={services}
                   multiChosen={true}
                   onActiveItemChange={serviceHandler}
@@ -1398,7 +1400,7 @@ roleAcess={generateFeatureAccess(pageFeatures
               ],
               children: (
                 <ServiceContainer
-                roleAcess={generateFeatureAccess(pageFeatures
+                  roleAcess={generateFeatureAccess(pageFeatures
                     , "add-service")?.show && generateFeatureAccess(pageFeatures
                       , "add-service")?.enable ? true : false}
                   askQuestion={false}
@@ -1416,7 +1418,7 @@ roleAcess={generateFeatureAccess(pageFeatures
                   >
                     ثبت
                   </Button> */}
-                    {
+                  {
 
                     generateFeatureAccess(pageFeatures
                       , "add-service")?.show && generateFeatureAccess(pageFeatures
@@ -1433,6 +1435,7 @@ roleAcess={generateFeatureAccess(pageFeatures
                   {generateFeatureAccess(pageFeatures
                     , "add-service")?.show && !generateFeatureAccess(pageFeatures
                       , "add-service")?.enable && (<AccessDenied
+                        featureCode="add-service"
                         variant={""}
                         title=" ثبت "
                         message="شما به این بخش دسترسی ندارید"

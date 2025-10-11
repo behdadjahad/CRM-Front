@@ -561,6 +561,7 @@ export default function Sale() {
         {generateFeatureAccess(pageFeatures, "create-contract")?.show &&
           !generateFeatureAccess(pageFeatures, "create-contract")?.enable && (
             <AccessDenied
+              featureCode="create-contract"
               title="قرارداد جدید"
               icon={
                 <Image
@@ -596,6 +597,7 @@ export default function Sale() {
         {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
           !generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
             <AccessDenied
+              featureCode="filter-contracts"
               title="فیلتر"
               icon={
                 <Image
@@ -609,7 +611,7 @@ export default function Sale() {
             />
           )}
         <div className="text-base font-bold h-9 flex items-center justify-center gap-4">
-       
+
           {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
             generateFeatureAccess(pageFeatures, "check-all-contracts")
               ?.enable && (
@@ -630,7 +632,7 @@ export default function Sale() {
           {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
             !generateFeatureAccess(pageFeatures, "check-all-contracts")
               ?.enable && (
-            <AccessDenied title={"انتخاب همه"} />
+              <AccessDenied featureCode="check-all-contracts" title={"انتخاب همه"} />
             )}
           {generateFeatureAccess(pageFeatures, "export-contracts")?.show &&
             generateFeatureAccess(pageFeatures, "export-contracts")?.enable && (
@@ -647,6 +649,7 @@ export default function Sale() {
             !generateFeatureAccess(pageFeatures, "export-contracts")
               ?.enable && (
               <AccessDenied
+                featureCode="export-contracts"
                 title="خروجی"
                 icon={
                   <Image
@@ -657,7 +660,7 @@ export default function Sale() {
                     className="w-4 h-4"
                   />
                 }
-              
+
               />
             )}
         </div>
@@ -713,7 +716,7 @@ export default function Sale() {
           />
         </div>
       </div>
-      
+
     </main>
   );
 }

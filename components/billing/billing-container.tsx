@@ -18,9 +18,10 @@ export default function BillingContainer({
     onCloseAllFeatures,
 }: BillingContainerProps) {
     const selectedDurationOption = data.durationOptions.find(
-        (option) => option.id === data.selectedDuration
-    );
+        (option) => option.id === data.selectedDuration,
 
+    );
+    console.log(data, "88888888888888888888888");
     return (
         <div className=" sm:bg-white  p-6  rounded-xl   " style={{ boxShadow: '0px 4px 4px 0px rgba(0, 0, 0, 0.12)' }}>
 

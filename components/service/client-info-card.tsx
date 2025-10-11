@@ -129,6 +129,7 @@ export default function ClientInfoCard({
               !generateFeatureAccess(pageFeatures, "delete-contract-customer")
                 ?.enable) && 
                 <AccessDenied
+                  featureCode="delete-contract-customer"
                   icon={
                     <Image
                       src={"/icons/disable-delete.png"}
@@ -160,6 +161,7 @@ export default function ClientInfoCard({
               !generateFeatureAccess(pageFeatures, "edit-contract-customer")
                 ?.enable) && 
                 <AccessDenied
+                  featureCode="edit-contract-customer"
                   icon={
                     <Image
                       src={"/icons/disable-edit.png"}

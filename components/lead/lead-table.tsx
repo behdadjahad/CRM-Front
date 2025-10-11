@@ -133,6 +133,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
             {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
               !generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
                 <AccessDenied
+                  featureCode="select-lead"
                   icon={
                     <Image
                       src={"/icons/checkbox-icon.png"}
@@ -218,6 +219,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   !generateFeatureAccess(pageFeatures, "select-lead")
                     ?.enable && (
                     <AccessDenied
+                      featureCode="select-lead"
                       icon={
                         <Image
                           src={"/icons/checkbox-icon.png"}

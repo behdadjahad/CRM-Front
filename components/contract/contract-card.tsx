@@ -180,6 +180,7 @@ export default function ContractCard({
           {generateFeatureAccess(pageFeatures, "select-contract")?.show &&
             !generateFeatureAccess(pageFeatures, "select-contract")?.enable && (
               <AccessDenied
+                featureCode="select-contract"
                 icon={
                   <Image
                     src={"/icons/checkbox-icon.png"}
@@ -300,6 +301,7 @@ export default function ContractCard({
                 !generateFeatureAccess(pageFeatures, "upsert-satisfaction")
                   .enable && (
                   <AccessDenied
+                    featureCode="upsert-satisfaction"
                     icon={
                       <Image
                         src={"/icons/disable-edit-pen.png"}

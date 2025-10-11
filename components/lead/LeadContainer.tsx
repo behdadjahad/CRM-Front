@@ -1,5 +1,5 @@
- 
- "use client";
+
+"use client";
 
 import { useDispatch, useSelector } from "react-redux";
 import LeadCreationContainer from "./lead-creation-container";
@@ -191,7 +191,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
       leadStatus: "",
       leadTag: [],
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
 
   const filterItems = [
@@ -378,11 +378,11 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
         open details
       </Button>
       {isDetailsOverlayOpen && (
-       <LeadDetailsOverlay
+        <LeadDetailsOverlay
           leadId={selectedLeadId ?? ""}
           onClose={handleCloseOverlay}
         />
-      )} 
+      )}
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           {/* <Button
@@ -418,13 +418,14 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
                 rangeItems={[]}
                 filterItems={filterItems}
                 sortList={[]}
-                onSortHandler={() => {}}
+                onSortHandler={() => { }}
                 onCancleHandler={cancleFilter}
               />
             )}
           {generateFeatureAccess(pageFeatures, "filter-lead")?.show &&
             !generateFeatureAccess(pageFeatures, "filter-lead")?.enable && (
               <AccessDenied
+                featureCode="filter-lead"
                 variant={"foreground"}
                 title="فیلتر "
                 message="امکان دسترسی به این قابلیت وجود ندارد "
@@ -455,6 +456,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           {generateFeatureAccess(pageFeatures, "export-lead")?.show &&
             !generateFeatureAccess(pageFeatures, "export-lead")?.enable && (
               <AccessDenied
+                featureCode="export-lead"
                 variant={""}
                 title="خروجی "
                 message="شما به این بخش دسترسی ندارید"
@@ -476,6 +478,7 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           {generateFeatureAccess(pageFeatures, "lead-action")?.show &&
             !generateFeatureAccess(pageFeatures, "lead-action")?.enable && (
               <AccessDenied
+                featureCode="lead-action"
                 variant={""}
                 title=" درخواست جدید "
                 message="شما به این بخش دسترسی ندارید"

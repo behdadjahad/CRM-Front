@@ -13,7 +13,8 @@ import { AccessProvider } from "@/contexts/AccessContext"; // Add this import
 import { fetchUserData } from "@/store/user-slice";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { CartSSEProvider } from "@/contexts/CartSSEContext";
+// Removed: CartSSEProvider - Now using direct EventSource in useCartCount hook
+// Removed: CartDebugger - No longer needed with simplified architecture
 
 const iranSansBold = localFont({
   src: "../../public/fonts/IRANSans(FaNum)_Bold.ttf",
@@ -48,16 +49,8 @@ export default function RootLayout({
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <AccessProvider>
-              {/* Polling mode - disabled to test SSE */}
-              {/* <CartPollingProvider>
-                <Layout>{children}</Layout>
-              </CartPollingProvider> */}
-
-              {/* SSE mode - ACTIVE for testing */}
-              <CartSSEProvider>
-                {/* <PageCodeHandler /> */}
-                <Layout>{children}</Layout>
-              </CartSSEProvider>
+              {/* Cart count now uses direct EventSource via useCartCount hook - no provider needed */}
+              <Layout>{children}</Layout>
             </AccessProvider>
           </Provider>
         </QueryClientProvider>

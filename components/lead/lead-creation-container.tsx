@@ -136,7 +136,7 @@ export default function LeadCreationContainer() {
             onClick={() => {
               setOpenModal(true);
             }}
-            // className={cn("text-aqua-foreground flex justify-end w-full")}
+          // className={cn("text-aqua-foreground flex justify-end w-full")}
           >
             درخواست جدید
           </Button>
@@ -145,6 +145,7 @@ export default function LeadCreationContainer() {
       {!generateFeatureAccess(pageFeatures, "export-lead")?.show &&
         !generateFeatureAccess(pagesData, "export-lead")?.enable && (
           <AccessDenied
+            featureCode="export-lead"
             variant={""}
             title=" درخواست جدید "
             message="شما به این بخش دسترسی ندارید"

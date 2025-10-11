@@ -123,6 +123,46 @@ export const fetchAllSingleFeatures = createAsyncThunk<any, any>(
     }
 );
 
+// Async thunk for loading more items (infinite scroll)
+export const loadMoreSingleFeatures = createAsyncThunk<any, any>(
+    "singleFeatures/loadMoreSingleFeatures",
+    async ({ page, limit, filters }) => {
+        try {
+            // Transform filters to match Swagger API structure
+            const requestBody = {
+                keyword: filters.keyword || undefined,
+                categoryNames: filters.categories || [],
+                unitModels: filters.unitModels || [],
+                unitTypes: filters.featureTypes || [],
+                durationStart: filters.durationStart || undefined,
+                durationEnd: filters.durationEnd || undefined,
+                countUnitstart: filters.countUnitstart || undefined,
+                countUnitEnd: filters.countUnitEnd || undefined,
+                priceStart: filters.minPrice || undefined,
+                priceEnd: filters.maxPrice || undefined,
+            };
+
+            // Remove undefined values
+            Object.keys(requestBody).forEach(key => {
+                if (requestBody[key as keyof typeof requestBody] === undefined) {
+                    delete requestBody[key as keyof typeof requestBody];
+                }
+            });
+
+            const result = await fetchService(
+                `package-unit/filter?page=${page}&limit=${limit}`,
+                {
+                    method: "POST",
+                    body: requestBody,
+                }
+            );
+            return result;
+        } catch {
+            return {};
+        }
+    }
+);
+
 const singleFeaturesSlice = createSlice({
     name: "singleFeatures",
     initialState,
@@ -142,6 +182,10 @@ const singleFeaturesSlice = createSlice({
         },
         resetState(state) {
             return initialState;
+        },
+        appendItems(state, action) {
+            // Append new items for infinite scroll
+            state.items = [...state.items, ...action.payload];
         }
     },
     extraReducers: (builder) => {
@@ -243,6 +287,71 @@ const singleFeaturesSlice = createSlice({
             .addCase(fetchAllSingleFeatures.rejected, (state, action) => {
                 state.error = action.error.message || "خطا در بارگذاری داده‌های صادرات";
             });
+
+        // Handle loadMoreSingleFeatures (infinite scroll)
+        builder
+            .addCase(loadMoreSingleFeatures.pending, (state) => {
+                // Don't set state.loading = true to keep existing items visible
+                // Component manages its own isLoadingMore state for the bottom spinner
+            })
+            .addCase(loadMoreSingleFeatures.fulfilled, (state, action) => {
+                // state.loading stays false, items remain visible
+                const response = action.payload;
+
+                // Transform and append new items
+                const newItems = response.data?.map((item: PackageUnit, index: number) => ({
+                    id: item.id,
+                    info: {
+                        "نام ویژگی": item.name,
+                        "توضیحات": item.description || "بدون توضیحات",
+                        "قیمت": `${formatPrice(item.price)} ${item.currency?.name || 'تومان'}`,
+                        "مدل واحد": getUnitModelLabel(item.unitModel),
+                        "دسته‌بندی": item.packageCategories?.[0]?.name || "عمومی",
+                        "وضعیت": item.deletedAt ? "غیرفعال" : "فعال",
+                    },
+                    subInfo: {
+                        "نوع واحد": item.unitType || "نامشخص",
+                        "مدت زمان فعال": item.enabledDurationInDays ? `${item.enabledDurationInDays} روز` : "نامحدود",
+                        "مدت زمان نمایش": item.showDurationInDays ? `${item.showDurationInDays} روز` : "نامحدود",
+                        "تعداد واحد": item.countUnit || 0,
+                        "تاریخ ایجاد": convertDate(item.createdAt, "persian"),
+                        "تاریخ به‌روزرسانی": convertDate(item.updatedAt, "persian"),
+                    },
+                    exportData: {
+                        id: item.id,
+                        ردیف: state.items.length + index + 1,
+                        "نام ویژگی": item.name,
+                        "توضیحات": item.description || "بدون توضیحات",
+                        "قیمت": item.price,
+                        "واحد ارز": item.currency?.name || 'تومان',
+                        "مدل واحد": item.unitModel,
+                        "مدل واحد (فارسی)": getUnitModelLabel(item.unitModel),
+                        "دسته‌بندی": item.packageCategories?.[0]?.name || "عمومی",
+                        "مدت زمان فعال (روز)": item.enabledDurationInDays,
+                        "مدت زمان نمایش (روز)": item.showDurationInDays,
+                        "تعداد واحد": item.countUnit,
+                        "تاریخ ایجاد": convertDate(item.createdAt, "persian"),
+                        "تاریخ به‌روزرسانی": convertDate(item.updatedAt, "persian"),
+                    },
+                    actions: [
+                        { label: "مشاهده جزئیات", value: "view" },
+                    ],
+                    rawData: item,
+                })) || [];
+
+                // Append new items to existing items
+                state.items = [...state.items, ...newItems];
+
+                // Update pagination
+                const totalItems = response?.pagination?.total || response.total || 0;
+                state.totalPages = Math.ceil(totalItems / limitForSingleFeatures);
+                state.total = totalItems;
+                state.currentPage = action.meta.arg.page;
+            })
+            .addCase(loadMoreSingleFeatures.rejected, (state, action) => {
+                // Don't change state.loading - keep items visible
+                state.error = action.error.message || "خطا در بارگذاری داده‌های بیشتر";
+            });
     },
 });
 
@@ -265,7 +374,8 @@ export const {
     setFilters,
     setCurrentPage,
     clearError,
-    resetState
+    resetState,
+    appendItems
 } = singleFeaturesSlice.actions;
 
 export default singleFeaturesSlice.reducer;

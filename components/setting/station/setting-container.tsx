@@ -335,6 +335,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "filter-airlines")?.enable) {
           return (
             <AccessDenied
+              featureCode="filter-airlines"
               variant="foreground"
               title="فیلتر"
               message="امکان دسترسی به این قابلیت وجود ندارد"
@@ -391,6 +392,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "filter-accommodations")?.enable) {
           return (
             <AccessDenied
+              featureCode="filter-accommodations"
               variant="foreground"
               title="فیلتر"
               message="امکان دسترسی به این قابلیت وجود ندارد"
@@ -430,6 +432,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "filter-airports")?.enable) {
           return (
             <AccessDenied
+              featureCode="filter-airports"
               variant="foreground"
               title="فیلتر"
               message="امکان دسترسی به این قابلیت وجود ندارد"
@@ -473,6 +476,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "export-airlines")?.enable) {
           return (
             <AccessDenied
+              featureCode="export-airlines"
               variant="foreground"
               title="خروجی"
               message="شما به این بخش دسترسی ندارید"
@@ -506,6 +510,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "export-accommodations")?.enable) {
           return (
             <AccessDenied
+              featureCode="export-accommodations"
               variant="foreground"
               title="خروجی"
               message="شما به این بخش دسترسی ندارید"
@@ -556,6 +561,7 @@ export default function SettingContainer({
           !generateFeatureAccess(pageFeatures, "export-airports")?.enable) {
           return (
             <AccessDenied
+              featureCode="export-airports"
               variant="foreground"
               title="خروجی"
               message="شما به این بخش دسترسی ندارید"

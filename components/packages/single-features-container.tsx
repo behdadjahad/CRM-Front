@@ -25,18 +25,24 @@ import {
 import {
     fetchSingleFeatures,
     fetchAllSingleFeatures,
+    loadMoreSingleFeatures,
     setCheckedItems,
     setFilters,
     setCurrentPage,
     clearError
 } from "@/store/single-features-slice";
+import { hasFeatureCode } from "@/lib/feature-match-utils";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useHighlightSearch } from "@/hooks/useHighlightSearch";
 
 interface SingleFeaturesContainerInterface {
     onPurchase?: (unitId: number, description: string) => void;
+    highlightCode?: string; // Feature code to highlight
 }
 
 export default function SingleFeaturesContainer({
-    onPurchase
+    onPurchase,
+    highlightCode
 }: SingleFeaturesContainerInterface) {
     const dispatch = useDispatch<AppDispatch>();
     const [sortBy, setSortBy] = useState<string>("name");
@@ -78,6 +84,7 @@ export default function SingleFeaturesContainer({
     });
 
     const cartItems = cartData?.data?.packageUnits || [];
+    console.log("cartItems", cartItems);
 
     // Helper function to check if item is in cart
     const isItemInCart = (itemId: number): boolean => {
@@ -385,6 +392,7 @@ export default function SingleFeaturesContainer({
         return uniqueCategories.sort();
     }, [packageUnits]);
 
+
     // Filter options
     const priceRanges = [
         { value: "all", label: "همه قیمت‌ها" },
@@ -420,6 +428,44 @@ export default function SingleFeaturesContainer({
     const displayUnits = useMemo(() => {
         return packageUnits; // packageUnits comes from Redux and is already filtered
     }, [packageUnits]);
+
+    console.log("displayUnits", displayUnits);
+
+    // Callback to load next page (used by both hooks)
+    const loadNextPage = useCallback(async () => {
+        const cleanFilters = { ...appliedFilters };
+        Object.keys(cleanFilters).forEach(key => {
+            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined ||
+                cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                delete cleanFilters[key as keyof SingleFeaturesFilters];
+            }
+        });
+
+        await dispatch(loadMoreSingleFeatures({
+            page: currentPage + 1,
+            limit: pageSize,
+            filters: cleanFilters
+        })).unwrap();
+    }, [currentPage, pageSize, appliedFilters, dispatch]);
+
+    // Use highlight search hook for auto-loading until highlighted item is found
+    const { isSearching: isSearchingHighlight, resetSearch } = useHighlightSearch({
+        items: displayUnits,
+        highlightCode,
+        currentPage,
+        totalPages,
+        isLoading: loading,
+        checkMatch: (unit, code) => hasFeatureCode(unit.accessesJson, code),
+        onLoadNextPage: loadNextPage,
+    });
+
+    // Use infinite scroll hook for manual scrolling
+    const { loadMoreRef, isLoadingMore } = useInfiniteScroll({
+        hasMore: currentPage < totalPages,
+        isLoading: loading,
+        onLoadMore: loadNextPage,
+        disabled: isSearchingHighlight, // Disable manual scroll while searching for highlight
+    });
 
     // Filter items for FilterContainer - Updated for multiple selection
     const filterItems = [
@@ -553,6 +599,9 @@ export default function SingleFeaturesContainer({
         setAppliedFilters(finalFilters);
         appliedFiltersRef.current = finalFilters;
 
+        // Reset highlight search when filters change
+        resetSearch();
+
         // Clean up undefined values
         const cleanFilters = { ...finalFilters };
         Object.keys(cleanFilters).forEach(key => {
@@ -582,6 +631,9 @@ export default function SingleFeaturesContainer({
         setSortBy("name");
         searchFormik.resetForm();
         setActualSearchTerm("");
+
+        // Reset highlight search when filters reset
+        resetSearch();
 
         // Directly dispatch with empty filters (including no search term)
         dispatch(fetchSingleFeatures({
@@ -654,49 +706,14 @@ export default function SingleFeaturesContainer({
         }));
     };
 
-    // Pagination handlers - following contract pattern
-    const handlePageChange = (page: number) => {
-        const cleanFilters = { ...appliedFilters };
-        Object.keys(cleanFilters).forEach(key => {
-            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
-                delete cleanFilters[key as keyof SingleFeaturesFilters];
-            }
-        });
-
-        dispatch(fetchSingleFeatures({
-            page: page,
-            limit: pageSize,
-            filters: cleanFilters
-        }));
-        dispatch(setCurrentPage(page));
-    };
-
-    const handlePageSizeChange = (size: number) => {
-        setPageSize(size);
-
-        const cleanFilters = { ...appliedFilters };
-        Object.keys(cleanFilters).forEach(key => {
-            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
-                delete cleanFilters[key as keyof SingleFeaturesFilters];
-            }
-        });
-
-        dispatch(fetchSingleFeatures({
-            page: 1,
-            limit: size,
-            filters: cleanFilters
-        }));
-        dispatch(setCurrentPage(1));
-    };
-
     // Get pagination info from Redux state
     const totalItems = total;
-    const hasNextPage = currentPage < totalPages;
-    const hasPrevPage = currentPage > 1;
+    const hasMoreData = currentPage < totalPages;
 
     // Convert PackageUnit to format expected by SingleFeatureCard
     const convertToSingleFeatureUnit = (unit: PackageUnit) => {
         return {
+            code: unit.accessesJson?.pages?.[0]?.code,
             id: unit.id,
             name: unit.name,
             description: unit.description || '',
@@ -995,17 +1012,9 @@ export default function SingleFeaturesContainer({
                 </div>
 
                 <div className="flex items-center gap-2">
-                    {/* Page Size Selector */}
-                    <select
-                        value={pageSize}
-                        onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                        className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                        <option value={10}>10 در صفحه</option>
-                        <option value={20}>20 در صفحه</option>
-                        <option value={50}>50 در صفحه</option>
-                        <option value={100}>100 در صفحه</option>
-                    </select>
+                    <span className="text-sm text-gray-500">
+                        نمایش {displayUnits.length} از {totalItems} مورد
+                    </span>
 
                     {searchFormik.values.searchTerm && (
                         <Button
@@ -1053,37 +1062,45 @@ export default function SingleFeaturesContainer({
                     </div>
                 ) : displayUnits.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayUnits.map((unit) => (
-                            <SingleFeatureCard
-                                key={unit.id}
-                                unit={convertToSingleFeatureUnit(unit)}
-                                chadcoCustomerId={chadcoCustomerId}
-                                onPurchase={handleUnitPurchase}
-                                isInCart={isItemInCart(unit.id)}
-                                onAddToCart={(unitId, requestMessage) => {
-                                    if (chadcoCustomerId) {
-                                        addToCartMutation.mutate({
-                                            packageUnitIds: [unitId],
-                                            chadcoCustomerId: chadcoCustomerId,
-                                            requestMessage: requestMessage
-                                        });
-                                    }
-                                }}
-                                onRemoveFromCart={(itemId) => {
-                                    if (chadcoCustomerId) {
-                                        removeFromCartMutation.mutate({
-                                            packageUnitIds: [parseInt(itemId)],
-                                            chadcoCustomerId: chadcoCustomerId
-                                        });
-                                    }
-                                }}
-                                showCartActions={true}
-                                isChecked={isItemChecked(unit.id)}
-                                onCheckChange={handleCheckItem}
-                                cartLoading={loadingItems.has(unit.id)}
-                                isSelectable={!isItemInCart(unit.id)}
-                            />
-                        ))}
+                        {displayUnits.map((unit) => {
+                            // Check if this unit has the highlighted feature code
+                            const isHighlighted = highlightCode ? hasFeatureCode(unit.accessesJson, highlightCode) : false;
+
+                            return (
+                                <SingleFeatureCard
+                                    key={unit.id}
+                                    unit={convertToSingleFeatureUnit(unit)}
+                                    chadcoCustomerId={chadcoCustomerId}
+                                    onPurchase={handleUnitPurchase}
+                                    isInCart={isItemInCart(unit.id)}
+                                    onAddToCart={(unitId, requestMessage) => {
+                                        if (chadcoCustomerId) {
+                                            addToCartMutation.mutate({
+                                                packageUnitIds: [unitId],
+                                                chadcoCustomerId: chadcoCustomerId,
+                                                requestMessage: requestMessage
+                                            });
+                                        }
+                                    }}
+                                    onRemoveFromCart={(itemId) => {
+                                        if (chadcoCustomerId) {
+                                            removeFromCartMutation.mutate({
+                                                packageUnitIds: [parseInt(itemId)],
+                                                chadcoCustomerId: chadcoCustomerId
+                                            });
+                                        }
+                                    }}
+                                    showCartActions={true}
+                                    isChecked={isItemChecked(unit.id)}
+                                    onCheckChange={handleCheckItem}
+                                    cartLoading={loadingItems.has(unit.id)}
+                                    isSelectable={!isItemInCart(unit.id)}
+                                    isHighlighted={isHighlighted}
+                                    highlightCode={highlightCode}
+                                    accessesJson={unit.accessesJson}
+                                />
+                            );
+                        })}
                     </div>
                 ) : (
                     <div className="text-center py-12">
@@ -1097,55 +1114,29 @@ export default function SingleFeaturesContainer({
                 )}
             </section>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-                <section className="flex justify-center items-center space-x-2 pt-8">
-                    <Button
-                        variant="outline"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={!hasPrevPage || loading}
-                        className="mx-1"
-                    >
-                        قبلی
-                    </Button>
+            {/* Infinite Scroll Trigger & Loading Indicator */}
+            {hasMoreData && (
+                <div ref={loadMoreRef} className="flex justify-center py-8">
+                    {isLoadingMore ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span className="text-sm text-gray-500">در حال بارگذاری...</span>
+                        </div>
+                    ) : (
+                        <div className="text-sm text-gray-400">
+                            اسکرول کنید تا بیشتر ببینید
+                        </div>
+                    )}
+                </div>
+            )}
 
-                    {/* Page Numbers */}
-                    <div className="flex space-x-1 mx-4">
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            let pageNumber;
-                            if (totalPages <= 5) {
-                                pageNumber = i + 1;
-                            } else if (currentPage <= 3) {
-                                pageNumber = i + 1;
-                            } else if (currentPage >= totalPages - 2) {
-                                pageNumber = totalPages - 4 + i;
-                            } else {
-                                pageNumber = currentPage - 2 + i;
-                            }
-
-                            return (
-                                <Button
-                                    key={pageNumber}
-                                    variant={currentPage === pageNumber ? "default" : "outline"}
-                                    onClick={() => handlePageChange(pageNumber)}
-                                    disabled={loading}
-                                    className="w-10 h-10 p-0 mx-0.5"
-                                >
-                                    {pageNumber}
-                                </Button>
-                            );
-                        })}
+            {/* End of list indicator */}
+            {!hasMoreData && displayUnits.length > 0 && (
+                <div className="flex justify-center py-8">
+                    <div className="text-sm text-gray-400">
+                        همه موارد نمایش داده شد ({totalItems} مورد)
                     </div>
-
-                    <Button
-                        variant="outline"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={!hasNextPage || loading}
-                        className="mx-1"
-                    >
-                        بعدی
-                    </Button>
-                </section>
+                </div>
             )}
         </div>
     );
