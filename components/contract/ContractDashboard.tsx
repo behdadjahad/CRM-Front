@@ -26,7 +26,8 @@ import ContractContainer from "./contract-container";
 import ViewToggleGroup from "../shared/ViewToggleGroup";
 import { LeadViewType } from "../lead/LeadContainer";
 import { leadViewOptions } from "@/constants/lead";
-import ContractListContainer from "./ContractListContainer";
+import ContractTableContainer from "./ContractTableContainer";
+
 export interface ContractDashboardInterface {
   contractList: ContractCardInterface[];
 }
@@ -518,7 +519,7 @@ export default function ContractDashboard({
               ?.enable && <AccessDenied title={"انتخاب همه"} />} */}
 
       {view === "table" ? (
-        <ContractListContainer list={[]} />
+        <ContractTableContainer list={[]} />
       ) : view === "pipe" ? (
         <div>pipe view</div>
       ) : (

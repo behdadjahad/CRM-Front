@@ -1,6 +1,5 @@
 export default function ContractTable() {
-    return <>
+    return <>table
     
-    
-    </>;
+     </>;
 }
