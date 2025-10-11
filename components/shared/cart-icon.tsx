@@ -4,7 +4,7 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { useCartCount } from "@/contexts/CartPollingContext";
+import { useCartCount } from "@/contexts/CartSSEContext";
 import { ShoppingCart } from "lucide-react";
 
 export interface CartIconInterface {
@@ -52,16 +52,16 @@ export default function CartIcon({ className }: CartIconInterface) {
       >
         {/* Shopping Cart Icon */}
         <ShoppingCart className="h-6 w-6 text-gray-700" />
-        
+
         {/* Item Count Badge */}
         {count > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse">
             {count > 99 ? "99+" : count}
           </span>
         )}
-        
+
         {/* SSE Connection Status Indicator */}
-        <div 
+        <div
           className={cn(
             "absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white transition-colors",
             getConnectionIndicatorColor()

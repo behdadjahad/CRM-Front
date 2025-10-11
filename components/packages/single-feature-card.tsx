@@ -28,6 +28,8 @@ interface SingleFeatureCardProps {
     onRemoveFromCart?: (itemId: string) => void;
     showCartActions?: boolean;
     cartLoading?: boolean;
+    addToCartLoading?: boolean;
+    removeFromCartLoading?: boolean;
     // Add selection props
     isChecked?: boolean;
     onCheckChange?: (unitId: number, checked: boolean) => void;
@@ -79,6 +81,8 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     onRemoveFromCart,
     showCartActions,
     cartLoading,
+    addToCartLoading,
+    removeFromCartLoading,
     isChecked,
     onCheckChange,
     isSelectable = true
@@ -226,21 +230,21 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                 />
                 {showCartActions && (
                     <div className="flex gap-2 mt-4">
-                        {isInCart ? (
+                        {(isInCart && !cartLoading) ? (
                             <Button
                                 variant="outline"
                                 onClick={() => onRemoveFromCart?.(unit.id.toString())}
-                                disabled={cartLoading}
+                                disabled={removeFromCartLoading || cartLoading}
                                 className="text-red-600 border-red-600 hover:bg-red-50"
                             >
-                                {cartLoading ? 'آیتم حذف شد...' : 'حذف از سبد خرید'}
+                                {(removeFromCartLoading || cartLoading) ? 'آیتم حذف شد...' : 'حذف از سبد خرید'}
                             </Button>
                         ) : (
                             <Button
                                 className="text-base "
                                 variant="info"
                                 onClick={handleAddToCart}
-                                disabled={!onAddToCart || cartLoading}
+                                disabled={!onAddToCart || addToCartLoading || cartLoading}
                             >
                                 <Plus size={20} />
                                 {cartLoading ? 'در حال پردازش...' : 'افزودن'}

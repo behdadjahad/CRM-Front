@@ -448,3 +448,4 @@ Nominatim محدودیت rate limit دارد (1 request per second). سرور م
 
 داده‌های نقشه از OpenStreetMap استفاده می‌کنند که تحت لایسنس ODbL است.
 
+

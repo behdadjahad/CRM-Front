@@ -105,7 +105,7 @@ export async function payFeatures(
     chadcoCustomerId: number
 ): Promise<CartApiResponse> {
     try {
-        const result = await fetchService(`payment/features-pay/${cartId}?chadcoCustomerId=${chadcoCustomerId}`, {
+        const result = await fetchService(`payment/features-pay?chadcoCustomerId=${chadcoCustomerId}`, {
             method: "PATCH",
         });
 

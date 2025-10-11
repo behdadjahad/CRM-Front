@@ -76,7 +76,16 @@ export class CartSSEService {
       this.cleanup();
 
       const url = `${this.config.baseUrl}/v1/cart/updates?chadcoCustomerId=${this.config.chadcoCustomerId}`;
+      console.log('[SSE] Connecting to URL:', url);
       this.onConnectionStatusCallback?.('connecting', 'Connecting to cart updates...');
+
+      // TEMPORARY: Mock SSE for testing (remove when backend is ready)
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[SSE] Using MOCK SSE endpoint for testing');
+        this.simulateSSE();
+        resolve();
+        return;
+      }
 
       try {
         this.eventSource = new EventSource(url);
@@ -91,7 +100,7 @@ export class CartSSEService {
         this.eventSource.onmessage = (event) => {
           try {
             const data = JSON.parse(event.data);
-            
+
             // Handle heartbeat
             if (data.type === 'heartbeat') {
               this.handleHeartbeat();
@@ -196,6 +205,49 @@ export class CartSSEService {
     }
   }
 
+  // TEMPORARY: Mock SSE simulation for testing
+  private simulateSSE(): void {
+    console.log('[SSE] Starting mock SSE simulation...');
+
+    // Simulate connection established
+    setTimeout(() => {
+      this.onConnectionStatusCallback?.('connected', 'Connected to mock SSE (testing mode)');
+
+      // Send initial cart count
+      this.onCartUpdateCallback?.({
+        type: 'connection_established',
+        itemCount: 2, // Mock initial count
+        timestamp: Date.now(),
+        message: 'Mock SSE connected'
+      });
+    }, 500);
+
+    // Simulate periodic updates
+    setInterval(() => {
+      if (this.isConnected()) {
+        // Send heartbeat
+        this.onCartUpdateCallback?.({
+          type: 'heartbeat',
+          timestamp: Date.now(),
+          message: 'Mock heartbeat'
+        });
+      }
+    }, 15000);
+
+    // Simulate cart updates every 30 seconds for testing
+    setInterval(() => {
+      if (this.isConnected()) {
+        const randomCount = Math.floor(Math.random() * 5) + 1;
+        this.onCartUpdateCallback?.({
+          type: 'cart_update',
+          itemCount: randomCount,
+          timestamp: Date.now(),
+          message: `Mock cart update: ${randomCount} items`
+        });
+      }
+    }, 30000);
+  }
+
   // Get connection status
   getConnectionStatus(): 'connecting' | 'connected' | 'disconnected' | 'error' {
     if (!this.eventSource) return 'disconnected';
@@ -214,6 +266,10 @@ export class CartSSEService {
 
   // Check if connected
   isConnected(): boolean {
+    // For mock mode, always return true if we're in development
+    if (process.env.NODE_ENV === 'development' && !this.eventSource) {
+      return true;
+    }
     return this.eventSource?.readyState === EventSource.OPEN;
   }
 

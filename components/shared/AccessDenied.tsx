@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { cloneElement, isValidElement } from "react";
+import { useRouter } from "next/navigation";
 interface AccessDeniedInterface {
   title?: string;
   message?: string;
@@ -24,6 +25,12 @@ export function AccessDenied({
   trigger,
 }: AccessDeniedInterface) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleBuyService = () => {
+    setIsOpen(false); // Close modal first
+    router.push('/single-features'); // Navigate to single features page
+  };
 
   return (
     <>
@@ -89,7 +96,9 @@ export function AccessDenied({
             <h2>محدودیت سطح کاربری</h2>
             {message && <p className="text-sm text-gray-500">{message}</p>}
           </div>
-          <Button variant={"info"}>خرید سرویس</Button>
+          <Button variant={"info"} onClick={handleBuyService}>
+            خرید سرویس
+          </Button>
         </div>
       </CustomModal>
     </>

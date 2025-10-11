@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useRef, useState, ReactNod
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 import { CartSSEService, CartSSEConfig, CartSSEEvent } from '@/services/cartSSE';
-import { useCartPolling } from '@/hooks/useCartPolling';
+// import { useCartPolling } from '@/hooks/useCartPolling'; // Disabled for pure SSE testing
 
 // Context types
 interface CartSSEState {
@@ -22,7 +22,7 @@ interface CartSSEContextType {
   connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   connectionMessage: string;
   lastUpdated: string | null;
-  
+
   // Actions
   connect: () => void;
   disconnect: () => void;
@@ -40,7 +40,7 @@ interface CartSSEProviderProps {
 // Provider component
 export function CartSSEProvider({ children }: CartSSEProviderProps) {
   const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
-  
+
   // State
   const [state, setState] = useState<CartSSEState>({
     count: 0,
@@ -54,18 +54,18 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
   const cartSSEServiceRef = useRef<CartSSEService | null>(null);
   const [useSSE, setUseSSE] = useState(true);
 
-  // Fallback polling when SSE fails
-  const { cartCount: pollingCount, isPolling } = useCartPolling({
-    enabled: !useSSE && !!chadcoCustomerId,
-    interval: 10000, // 10 seconds
-    onCartCountUpdate: (count) => {
-      setState(prev => ({
-        ...prev,
-        count,
-        lastUpdated: new Date().toISOString(),
-      }));
-    }
-  });
+  // Fallback polling - DISABLED for pure SSE testing
+  // const { cartCount: pollingCount, isPolling } = useCartPolling({
+  //   enabled: !useSSE && !!chadcoCustomerId,
+  //   interval: 10000, // 10 seconds
+  //   onCartCountUpdate: (count) => {
+  //     setState(prev => ({
+  //       ...prev,
+  //       count,
+  //       lastUpdated: new Date().toISOString(),
+  //     }));
+  //   }
+  // });
 
   // Initialize SSE service when customer ID is available
   useEffect(() => {
@@ -100,19 +100,21 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
     // Set up event handlers
     cartSSEServiceRef.current.onCartUpdate((event: CartSSEEvent) => {
       console.log('[SSE] Cart update received:', event);
-      
+
       if (event.type === 'cart_update' && typeof event.itemCount === 'number') {
+        const itemCount = event.itemCount; // Store to satisfy TypeScript
         setState(prev => ({
           ...prev,
-          count: event.itemCount,
+          count: itemCount,
           lastUpdated: new Date().toISOString(),
         }));
       } else if (event.type === 'connection_established') {
         // Backend sends initial count on connection
         if (typeof event.itemCount === 'number') {
+          const itemCount = event.itemCount; // Store to satisfy TypeScript
           setState(prev => ({
             ...prev,
-            count: event.itemCount,
+            count: itemCount,
             lastUpdated: new Date().toISOString(),
           }));
         }
@@ -121,7 +123,7 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
 
     cartSSEServiceRef.current.onConnectionStatus((status, message) => {
       console.log('[SSE] Connection status:', status, message);
-      
+
       setState(prev => ({
         ...prev,
         isConnected: status === 'connected',
@@ -129,21 +131,21 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
         connectionMessage: message,
       }));
 
-      // Switch to polling if SSE fails completely
-      if (status === 'disconnected' && message.includes('Max retries reached')) {
-        console.log('[SSE] Switching to polling fallback');
-        setUseSSE(false);
-        setState(prev => ({
-          ...prev,
-          connectionStatus: 'disconnected',
-          connectionMessage: 'Using polling fallback',
-        }));
-      }
+      // Polling fallback logic - DISABLED for pure SSE testing
+      // if (status === 'disconnected' && message.includes('Max retries reached')) {
+      //   console.log('[SSE] Switching to polling fallback');
+      //   setUseSSE(false);
+      //   setState(prev => ({
+      //     ...prev,
+      //     connectionStatus: 'disconnected',
+      //     connectionMessage: 'Using polling fallback',
+      //   }));
+      // }
     });
 
     cartSSEServiceRef.current.onError((error) => {
       console.error('[SSE] Error:', error);
-      
+
       setState(prev => ({
         ...prev,
         isConnected: false,
@@ -155,7 +157,7 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
     // Connect to SSE
     cartSSEServiceRef.current.connect().catch((error) => {
       console.error('[SSE] Failed to connect:', error);
-      
+
       setState(prev => ({
         ...prev,
         isConnected: false,
@@ -209,7 +211,7 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
     connectionStatus: state.connectionStatus,
     connectionMessage: state.connectionMessage,
     lastUpdated: state.lastUpdated,
-    
+
     // Actions
     connect,
     disconnect,
@@ -226,11 +228,11 @@ export function CartSSEProvider({ children }: CartSSEProviderProps) {
 // Custom hook to use the context
 export function useCartCount(): CartSSEContextType {
   const context = useContext(CartSSEContext);
-  
+
   if (context === undefined) {
     throw new Error('useCartCount must be used within a CartSSEProvider');
   }
-  
+
   return context;
 }
 

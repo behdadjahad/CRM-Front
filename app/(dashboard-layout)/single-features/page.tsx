@@ -20,11 +20,11 @@ export default function SingleFeaturesPage() {
         <main className="space-y-8">
             {/* Page Header */}
             <div className="mb-8">
-                <Title label="خرید فیچرهای تکی" />
+                <Title label="خرید فیچرهای " />
                 <Breadcrumb
                     list={[
                         { label: "داشبورد", link: "/" },
-                        { label: "خرید فیچرهای تکی" },
+                        { label: "خرید فیچرهای " },
                     ]}
                 />
             </div>

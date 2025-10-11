@@ -98,7 +98,7 @@ export default function OrderSummaryCard({
         payFeaturesMutation(cartId);
     };
 
-    const isPaymentDisabled = isPaymentPending || itemCount === 0 || finalTotal <= 0;
+    const isPaymentDisabled =  itemCount === 0;
 
 
     return (
