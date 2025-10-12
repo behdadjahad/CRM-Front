@@ -1,6 +1,8 @@
+import { getContracts } from "@/api/contract";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
+import ContractInfiniteCard from "./ContractInfiniteCard";
 export interface ContractInfiniteContainerInterface {
   status: string;
 }
@@ -44,11 +46,14 @@ export default function ContractInfiniteContainer({
       page?.data?.map((item: any, i: number) => {
         const contract = {
           id: item.id,
+          list: [{ label: "شماره قرارداد", value: item?.contractNo }],
         };
         if (page.data.length === i + 1) {
-          return <ContractInfiniteCard ref={ref} key={contract.id} />;
+          return (
+            <ContractInfiniteCard ref={ref} key={contract.id} {...contract} />
+          );
         }
-        return <ContractInfiniteCard key={contract.id} />;
+        return <ContractInfiniteCard key={contract.id} {...contract} />;
       })
     );
   return (
