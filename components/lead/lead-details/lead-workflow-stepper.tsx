@@ -27,8 +27,8 @@ export default function LeadWorkflowStepper({ currentStatus }: LeadWorkflowStepp
   const currentStepIndex = getCurrentStepIndex(currentStatus);
 
   return (
-    <div className="flex flex-col w-full gap-4 p-6">
-      <div className="flex items-center justify-between w-full">
+    <div className="flex flex-col w-full gap-3 lg:gap-4 p-3 lg:p-6">
+      <div className="flex items-center justify-between w-full overflow-x-auto">
         {leadSteps.map((step, index) => {
           const isCompleted = index < currentStepIndex;
           const isCurrent = index === currentStepIndex;
@@ -37,11 +37,11 @@ export default function LeadWorkflowStepper({ currentStatus }: LeadWorkflowStepp
           return (
             <React.Fragment key={step.value}>
               <div
-                className={`flex flex-col items-center gap-2 ${isCurrent ? "cursor-pointer" : ""
+                className={`flex flex-col items-center gap-1 lg:gap-2 min-w-0 flex-shrink-0 ${isCurrent ? "cursor-pointer" : ""
                   }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${isCurrent
+                  className={`w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${isCurrent
                     ? "border-[#1C68DA] bg-white"
                     : isCompleted
                       ? "border-[#1C284F] bg-[#1C284F]"
@@ -54,11 +54,11 @@ export default function LeadWorkflowStepper({ currentStatus }: LeadWorkflowStepp
                       alt="completed"
                       width={1024}
                       height={1024}
-                      className="w-3 h-3"
+                      className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3"
                     />
                   ) : (
                     <div
-                      className={`w-2 h-2 rounded-full ${isCurrent ? "bg-[#1C68DA]" : "bg-gray-300"
+                      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2 lg:h-2 rounded-full ${isCurrent ? "bg-[#1C68DA]" : "bg-gray-300"
                         }`}
                     />
                   )}
@@ -67,7 +67,7 @@ export default function LeadWorkflowStepper({ currentStatus }: LeadWorkflowStepp
 
               {index < leadSteps.length - 1 && (
                 <div
-                  className={`flex-1 h-0.5 mx-2 transition-all duration-200 ${isCompleted ? "bg-[#1C284F]" : "bg-gray-300"
+                  className={`flex-1 h-0.5 mx-1 sm:mx-2 min-w-[15px] transition-all duration-200 ${isCompleted ? "bg-[#1C284F]" : "bg-gray-300"
                     }`}
                 />
               )}
@@ -76,13 +76,13 @@ export default function LeadWorkflowStepper({ currentStatus }: LeadWorkflowStepp
         })}
       </div>
 
-      <div className="w-full flex justify-between px-2">
+      <div className="w-full flex justify-between px-1 sm:px-2">
         {leadSteps.map((step, index) => {
           const isCurrent = index === currentStepIndex;
           return (
             <div
               key={index}
-              className={`text-center text-sm font-medium transition-colors duration-200 ${isCurrent
+              className={`text-center text-xs sm:text-sm font-medium transition-colors duration-200 max-w-[60px] sm:max-w-[80px] lg:max-w-none truncate ${isCurrent
                 ? "text-[#1C68DA]"
                 : index < currentStepIndex
                   ? "text-[#1C284F]"

@@ -32,6 +32,8 @@ import FormMaker, { FieldType } from '@/components/shared/form-maker';
 import { FaLocationArrow, FaMapMarkerAlt, FaSnapchatGhost, FaTag, FaTags, FaThLarge, FaUser, FaUserAlt, FaUserAltSlash } from 'react-icons/fa';
 import LeadActionButtons from './lead-action-buttons';
 import { MdLocationCity } from 'react-icons/md';
+import EventHeaderActionButtons from './lead-action-buttons';
+import EventStatusCard from './event-status-card';
 
 
 interface EventTabContentProps {
@@ -90,157 +92,29 @@ export default function EventTabContent({ className }: EventTabContentProps) {
     ];
 
     return (
-        <div className={cn("w-full space-y-6 p-6", className)}>
+        <div className={cn("w-full space-y-4 sm:space-y-6 rounded-b-lg border border-[#D5D7DA] max-h-[calc(100vh-300px)] scrollbar-hide overflow-y-auto p-3 sm:p-4 lg:p-6", className)}>
             {/* Event Type Selection */}
-            <div className="space-y-3">
-                <label className="text-sm font-medium">نوع رویداد</label>
-                <div className="flex gap-2 flex-wrap">
-                    {eventTypes.map((type) => {
-                        const Icon = type.icon;
-                        return (
-                            <Button
-                                key={type.value}
-                                variant={selectedEventType === type.value ? "default" : "outline"}
-                                size="sm"
-                                onClick={() => setSelectedEventType(type.value)}
-                                className={cn(
-                                    "flex items-center gap-2 px-4 py-2 h-auto",
-                                    selectedEventType === type.value
-                                        ? "bg-blue-600 text-white border-blue-600"
-                                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                                )}
-                            >
-                                <Icon className="w-4 h-4" />
-                                {type.label}
-                            </Button>
-                        );
-                    })}
-                </div>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-3 sm:gap-0">
+
+                <EventHeaderActionButtons
+                    onSubmit={() => formik.handleSubmit()}
+                    onCancel={() => formik.resetForm()}
+                    isCompleted={isCompleted}
+                    setIsCompleted={setIsCompleted}
+                />
+                  <label className="text-sm sm:text-base font-bold text-right w-full sm:w-auto">رویدادهای ثبت شده</label>
             </div>
 
-            {/* Form Fields */}
-            <FormMaker
 
-                form={formik}
-                fields={[
-                    {
-                        dependantKey: "startTimeType",
-                        outerIcon: <Clock className="w-5 h-5 text-[#B6BCC2]" />,
-                        key: "startTime",
-                        component: "date-time",
-                        placeholder: "تاریخ و زمان شروع",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full md:w-1/2",
-                    },
-                    {
-                        dependantKey: "endDateType",
-                        key: "endDate",
-                        component: "date-time",
-                        placeholder: "تاریخ و زمان پایان",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full pl-5  md:w-1/2",
-                    },
-                    {
-                        outerIcon: <FaTag stroke="white" className="w-5 h-5 text-[#B6BCC2]" />,
-                        key: "temparetureInput",
-                        dependantKey: "temparetureType",
-                        component: "Select",
-                        placeholder: "میزان علاقه‌مندی",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full",
-                        options: interestLevels.map(level => ({
-                            label: level,
-                            value: level,
-                        })),
-                    },
-                    {
-                        outerIcon: <FaMapMarkerAlt className="w-5 h-5 text-[#B6BCC2]" />,
-                        key: "location",
-                        component: "input",
-                        placeholder: "مکان",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full",
-                    },
-                    {
-                        outerIcon: <MenuIcon className="w-5 h-5 self-start text-[#B6BCC2]" />,
-                        key: "description",
-                        component: "textarea",
-                        placeholder: "متن توضیحات ",
-                        type: "text",
-                        floating: true,
-                        className: "w-full ",
-                    },
-                    {
-                        outerIcon: <User2 className="w-5 h-5 text-[#B6BCC2]" />,
-                        key: "followUpResponsible",
-                        component: "input",
-                        placeholder: "مسئول پیگیری",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full",
-                    },
-                    {
-                        dependantKey: "personSearchPreview",
-                        key: "personSearch",
-                        component: "multi-select",
-                        placeholder: "جستجوی شخص",
-                        type: "text",
-                        floating: true,
-                        labelClassName: "w-full",
-                        className: "w-full mr-8",
-                        options: [
-                            {
-                                label: "سرد",
-                                value: "COLD",
-                                className: "bg-static-info-light text-static-info-primary",
-                                activeClassName: "border border-static-info-primary",
-                            },
-                            {
-                                label: "گرم",
-                                value: "WARM",
-                                className: "bg-static-warning-light text-static-warning-primary",
-                                activeClassName: "border border-static-warning-border",
-                            },
-                            {
-                                label: "داغ",
-                                value: "HOT",
-                                className: "bg-static-error-light text-static-error-primary",
-                                activeClassName: "border border-static-error-primary",
-                            },
-                            {
-                                label: "داغ",
-                                value: "HOT",
-                                className: "bg-static-error-light text-static-error-primary",
-                                activeClassName: "border border-static-error-primary",
-                            },
-                        ],
-                    },
-                    {
-                        key: "personSearchPreview",
-                        dependantKey: "person",
-                        component: "tag-preview",
-                        className: "w-full",
-                    },
 
-                ]}
-                className="flex flex-row-reverse w-full"
-            />
-
-            <LeadActionButtons
-                onSubmit={() => formik.handleSubmit()}
-                onCancel={() => formik.resetForm()}
-                isCompleted={isCompleted}
-                setIsCompleted={setIsCompleted}
-            />
+            {/* Event Cards */}
+            <div className="flex flex-col gap-3 sm:gap-4 w-full">
+                <EventStatusCard type="voice" time="today" status="pending" personName="مینا فرجاد" date="۱۴۰۴/۲/۱۷" />
+                <EventStatusCard type="sms" time="past" status="cancel" personName="محمد امیری" date="۱۴۰۴/۲/۱۷" />
+                <EventStatusCard type="email" time="future" status="done" personName="محمد امیری" date="۱۴۰۴/۲/۱۷" />
+                <EventStatusCard type="meeting" time="future" status="success" personName="محمد امیری" date="۱۴۰۴/۲/۱۷" />
+                <EventStatusCard type="voip" time="future" status="success" personName="محمد امیری" date="۱۴۰۴/۲/۱۷" />
+            </div>
 
 
         </div>

@@ -75,19 +75,19 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      {
-        label: "خرید فیچرهای تکی",
-        link: "/single-features",
-        icon: (
-          <Image
-            src={"/icons/menu-package-icon.svg"}
-            alt="خرید فیچرهای تکی"
-            width={1024}
-            height={1024}
-            className="w-6 h-6"
-          />
-        ),
-      },
+      // {
+      //   label: "خرید فیچرهای تکی",
+      //   link: "/single-features",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/menu-package-icon.svg"}
+      //       alt="خرید فیچرهای تکی"
+      //       width={1024}
+      //       height={1024}
+      //       className="w-6 h-6"
+      //     />
+      //   ),
+      // },
       {
         label: "فاکتورها",
         link: "/invoice",

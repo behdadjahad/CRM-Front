@@ -42,7 +42,7 @@ export default function LeadInfoHeader({
   })
 
   return (
-    <div className={`flex flex-col gap-3 mb-6 ${className}`}>
+    <div className={`flex flex-col gap-3 p-3 mb-6 ${className}`}>
       {/* Main Title */}
       <h1 className="text-2xl flex flex-col gap-1 font-bold text-gray-900 mb-2">
         {title}

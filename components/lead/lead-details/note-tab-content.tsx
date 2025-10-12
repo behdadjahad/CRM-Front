@@ -79,7 +79,7 @@ export default function NoteTabContent() {
                 </label> */}
 
                 {/* Text Editor */}
-                <div className=' border-[#D5D7DA]  rounded-lg overflow-hidden'>
+                <div className=' rounded-lg overflow-hidden'>
                     <TextEditorInput
                         item={item}
                         form={{
@@ -94,7 +94,7 @@ export default function NoteTabContent() {
                     <Button
                         variant={"info"}
                         onClick={handleSubmit}
-                       className='px-12 mt-5'
+                        className='px-12 mt-5'
                     >
                         ثبت
                     </Button>
@@ -118,7 +118,7 @@ export default function NoteTabContent() {
                             key={note.id}
                             className='bg-[#FAFAFA] border border-[#D5D7DA] rounded-[12px] p-2'
                         >
-                        
+
 
                             {/* Content - Right aligned */}
                             <div className='text-right text-base font-normal  text-[#181D27] mt-2 mb-3 leading-relaxed'>

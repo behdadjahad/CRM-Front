@@ -1,55 +1,127 @@
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 import { SettingsIcon } from 'lucide-react'
-import React from 'react'
+import React, { useState } from 'react'
+import { MdAdd, MdExpandMore, MdFilterList } from 'react-icons/md'
 interface LeadActionButtonsInterface {
-  onSubmit: () => void
-  onCancel: () => void
-  isCompleted: boolean
-  setIsCompleted: (isCompleted: boolean) => void
+    onSubmit: () => void
+    onCancel: () => void
+    isCompleted: boolean
+    setIsCompleted: (isCompleted: boolean) => void
 }
 
-export default function LeadActionButtons({
-  onSubmit,
-  onCancel,
-  isCompleted,
-  setIsCompleted,
+export default function EventHeaderActionButtons({
+    onSubmit,
+    onCancel,
+    isCompleted,
+    setIsCompleted,
 }: LeadActionButtonsInterface) {
-  return (
-  <>
-   {/* Action Buttons and Checkbox */}
-   <div className="flex items-center justify-between ">
+    const [eventStatus, setEventStatus] = useState<"done" | "pending" | "all">("all");
+    const [eventTime, setEventTime] = useState<"" | "today" | "past" | "future" | "custom">("today");
+    const statusList = [
+        {
+            label: "همه",
+            value: "all"
+        },
+        {
+            label: "انجام شده",
+            value: "done"
+        },
+        {
+            label: "انجام نشده",
+            value: "pending"
+        },
+    ]
+    const timeList = [
+        {
+            label: "امروز",
+            value: "today"
+        },
+        {
+            label: "گذشته",
+            value: "past"
+        },
+        {
+            label: "آینده",
+            value: "future"
+        },
+        {
+            label: "شخصی سازی",
+            value: "custom"
+        },
+    ]
+
+
+
+    return (
+        <>
+            {/* Action Buttons and Checkbox */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto">
                 {/* Action Buttons */}
-                <div className="flex gap-2.5">
-                    <Button variant="info"
-                        onClick={onSubmit}
-                        className="px-8 py-2"
+                <Button variant="info"
+                    onClick={onSubmit}
+                    className="px-3 py-2 text-xs sm:text-sm flex-1 sm:flex-none"
+                >
+                    <span className="inline">رویداد جدید</span>
+
+                    <MdAdd size={14} className="sm:mr-1" />
+                </Button>
+                <div className=''>
+                    {/* show drpdown to sort event status */}
+                    <DropdownMenu
                     >
-                        ثبت تغییرات
-                    </Button>
-                    <Button variant="foreground" className="px-16 py-2">
-                        لغو
-                    </Button>
+                        <DropdownMenuTrigger>
+                            <Button variant="outline"
+                                onClick={onSubmit}
+                                className="py-1 px-2 sm:px-3 text-static-text-secondary border-static-border-secondary text-xs sm:text-sm font-medium flex-1 sm:flex-none"
+                            >
+                                <MdExpandMore size={16} className="sm:w-6 sm:h-6" />
+                                <span className="hidden sm:inline">
+                                    {eventStatus === "all" ? "همه" : eventStatus === "done" ? "انجام شده" : "انجام نشده"}
+                                </span>
+                                <span className="sm:hidden">
+                                    {eventStatus === "all" ? "همه" : eventStatus === "done" ? "انجام" : "انجام نشده"}
+                                </span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            {
+                                statusList?.map((item) => (
+                                    <DropdownMenuItem className={cn("hover:bg-static-border-neutral hover:text-static-text-secondary", eventStatus === item.value ? "bg-primary-foreground text-primary-active" : "")} onClick={() => setEventStatus(item.value as "done" | "pending" | "all")}>
+                                        {item.label}
+                                    </DropdownMenuItem>
+                                ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <div>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Button variant="outline"
+                                onClick={onSubmit}
+                                className=" py-1 px-3 text-static-text-secondary border-static-border-secondary  text-base font-medium"
+                            >
+                                <MdExpandMore size={25} />
+                                {eventTime === "today" ? "امروز" : eventTime === "past" ? "گذشته" : eventTime === "future" ? "آینده" : "شخصی سازی"}
+                            </Button>
+                        </DropdownMenuTrigger>
 
-                {/* Status Toggle */}
-                <div className="flex items-center gap-2">
-                    <label htmlFor="completed" className="text-sm font-medium">
-                        انجام شده
-                    </label>
-                    <Checkbox
-                        id="completed"
-                        checked={isCompleted}
-                        onCheckedChange={(checked) => setIsCompleted(checked === true)}
-                    />
-                </div>
-                </div>
-                {/* setting icon */}
-                <div className='cursor-not-allowed hover:bg-static-border-neutral border p-3 border-[#E0E0E0] rounded-lg'>
-                    <SettingsIcon className="w-5 h-5 text-[#717680]" />
-                </div>
 
+                        <DropdownMenuContent>
+                            {
+                                timeList?.map((item) => (
+                                    <DropdownMenuItem className={cn("hover:bg-static-border-neutral hover:text-static-text-secondary", eventTime === item.value ? "bg-primary-foreground text-primary-active" : "")} onClick={() => setEventTime(item.value as "today" | "past" | "future" | "custom")}>
+                                        {item.label}
+                                    </DropdownMenuItem>
+                                ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                </div>
             </div>
-  </>
+        </>
 
-  )
+    )
 }

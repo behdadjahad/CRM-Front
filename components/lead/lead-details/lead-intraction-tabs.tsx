@@ -1,14 +1,11 @@
 
-import FormMaker from '@/components/shared/form-maker'
-import { Badge } from '@/components/ui/badge'
-import { buildRowOptions, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs'
 import React, { useState } from 'react'
-import TextEditorInput from '@/components/shared/input/TextEditorInput - Copy'
-import { PlusIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+
 import EventTabContent from './event-tab-content'
 import NoteTabContent from './note-tab-content'
+import EmailTabContent from './email-tab-content'
 export default function LeadInteractionTabs() {
 
 
@@ -20,21 +17,26 @@ export default function LeadInteractionTabs() {
       value: "events"
     },
     {
+      label: " ایمیل   ",
+      value: "email"
+    },
+    {
       label: " یادداشت ها  ",
       value: "notes"
     }
   ]
-  const [activeTab, setActiveTab] = useState<("events" | "notes")>("events")
+  const [activeTab, setActiveTab] = useState<("events" | "notes" | "email")>("events")
 
 
   return (
     <>
       {/* Tabs */}
       <Tabs
+    
         defaultValue={tabs[0].value}
         value={activeTab}
-        onValueChange={(value) => setActiveTab(value as "events" | "notes")}
-        className={cn("w-full hidden md:block")}
+        onValueChange={(value) =>setActiveTab(value as "events" | "notes" | "email")}
+        className={cn("w-full block")}
         activationMode="automatic"
       >
         <TabsList className="w-full flex flex-row-reverse">
@@ -56,19 +58,17 @@ export default function LeadInteractionTabs() {
           >
             {/* <InvoiceList data={listItems} /> */}
 
-            <div className="w-full">
+            <div className="w-full p-2 sm:p-3 lg:p-4" >
               {
                 item.value === "events" ? (
                   <EventTabContent />
+                ) : item.value === "email" ? (
+                  <EmailTabContent />
                 ) : (
                   <NoteTabContent />
-                  
                 )
               }
-
             </div>
-
-
           </TabsContent>
         ))}
       </Tabs>

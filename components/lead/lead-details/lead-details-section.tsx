@@ -1,12 +1,27 @@
 import { ChevronDown } from 'lucide-react'
+import Tag from '@/components/shared/Tag';
 import React, { useState } from 'react'
 export default function LeadDetailsSection() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const toggleDetails = () => {
     setIsDetailsOpen(!isDetailsOpen)
   }
+  const tags = [
+    {
+      label: 'داغ',
+      value: 'hot'
+    },
+    {
+      label: 'پولدار',
+      value: 'success'
+    },
+    {
+      label: 'پیگیر',
+      value: 'info'
+    }
+  ]
   return (
-    <div>
+    <div className=''>
       {/* Details Section - Dropdown */}
       <div className="mb-6">
         {/* Dropdown Header */}
@@ -20,18 +35,17 @@ export default function LeadDetailsSection() {
               }`}
           />
         </button>
-
         {/* Dropdown Content */}
-        <div className={`overflow-hidden transition-all duration-300 ${isDetailsOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0'
+        <div className={`overflow-hidden px-4  transition-all duration-300 ${isDetailsOpen ? 'max-h-96 opacity-100 mt-3' : 'max-h-0 opacity-0'
           }`}>
-          <div className="space-y-3 text-right">
-            {/* Follow-up Responsible */}
+          <div className="space-y-3 text-right ">
+
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-              
-                <span className="text-sm text-gray-600">مسئول پیگیری</span>
-              </div>
-              <span className="text-sm font-medium text-gray-900">سیما احدی</span>
+
+
+              <span className="text-sm text-gray-600">مسئول پیگیری</span>
+
+              <span className="text-sm  font-medium text-gray-900">سیما احدی</span>
             </div>
 
             {/* Request Source */}
@@ -43,7 +57,22 @@ export default function LeadDetailsSection() {
             {/* Interest */}
             <div className="flex items-center justify-between">
               <span className="text-sm text-gray-600">علاقه مندی</span>
-              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">داغ</span>
+              {tags && tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {tags.map((tag, index) => (
+                    <Tag
+                      key={index}
+                      text={tag.label}
+                      variant={tag.value === 'hot' ? 'hot' : tag.value === 'success' ? 'success' : tag.value === 'info' ? 'info' : 'default'}
+                      size="sm"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="flex items-start gap-5 justify-between">
+              <span className="text-sm text-gray-600">توضیحات</span>
+              <span className="text-sm font-medium whitespace-normal text-gray-900">داده نمونه: احتمال خرید بلیط و تور پاریس یکطرفه</span>
             </div>
           </div>
         </div>
