@@ -58,7 +58,7 @@ export default function ContractInfiniteContainer({
       })
     );
   return (
-    <div className="max-h-[600px] overflow-y-scroll flex flex-col gap-4 px-2 py-3">
+    <div className="h-[600px] overflow-y-auto flex flex-col gap-4 px-2 py-3">
       {content}
       {isFetchingNextPage && <h3>Loading...</h3>}
     </div>

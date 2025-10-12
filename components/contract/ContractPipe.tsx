@@ -1,3 +1,4 @@
+import AddContractToPipe from "./AddContractToPipe";
 import ContractInfiniteContainer from "./ContractInfiniteContainer";
 
 export interface ContractPipeInterface {
@@ -12,7 +13,7 @@ export default function ContractPipe({ label, value }: ContractPipeInterface) {
       <div className="flex flex-col gap-4">
         {" "}
         <ContractInfiniteContainer status={value} />
-        <div className="w-full bg-red-300">add contract to pipe</div>
+        <AddContractToPipe />
         <div className="bg-[#DEEBFB] p-3 ">footer</div>
       </div>
     </div>
