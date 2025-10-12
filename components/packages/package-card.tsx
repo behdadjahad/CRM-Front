@@ -4,12 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { Package, PackageCardProp, PackageItem } from '@/types/packages';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import PackageIcon from './package-icons';
-import { getColorValue } from './package-icons';
 import PurchaseFlowModal from './purchase-flow-modal';
 import { selectPackage } from '@/api/packages/package-api';
 import { CustomToast } from '../shared/custome-toast';
+import { useRouter } from 'next/navigation';
 
 
 // Helper function to get border color class
@@ -39,9 +38,7 @@ const PriceDisplay: React.FC<{
     const formatPrice = (price: number) => {
         return price.toLocaleString('fa-IR');
     };
-
-
-
+    
     return (
         <div className="flex flex-col items-center space-y-2">
             {originalPrice && originalPrice > currentPrice && (
@@ -69,7 +66,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
     onPackageSelect,
     isMobile = false
 }) => {
-
+    const router = useRouter();
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
@@ -103,21 +100,31 @@ const PackageCard: React.FC<PackageCardProp> = ({
             const result = await selectPackage({
                 packageId: data.id,
                 requestMessage: description,
+                numberOfMonths: 1,
                 chadcoCustomerId: chadcoCustomerId!,
 
             });
             if (result?.status === "success") {
-
                 setStatus('success');
+
+                // Show success toast with invoice information
+                CustomToast({
+                    type: 'success',
+                    message: 'درخواست شما با موفقیت ثبت شد. فاکتور شما ایجاد شده است.',
+                });
+
+                // Call the callback if provided
+                if (onPackageSelect) {
+                    onPackageSelect(data.id, result);
+                }
+
+                // Redirect to invoice page after 3 seconds
+                setTimeout(() => {
+                    router.push('/invoice');
+                }, 3000);
             }
             else {
                 setStatus('error');
-            }
-
-
-            // Call the callback if provided
-            if (onPackageSelect) {
-                onPackageSelect(data.id, result);
             }
 
         } catch (error) {

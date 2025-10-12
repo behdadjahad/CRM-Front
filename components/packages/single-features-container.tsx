@@ -810,12 +810,12 @@ export default function SingleFeaturesContainer({
                 appliedFilters.keyword ||
                 actualSearchTerm ||
                 sortBy !== "name") && (
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-gray-50 rounded-lg p-4 hidden">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-medium text-gray-700">فیلترهای فعال:</span>
+                            {/* <span className="text-sm font-medium text-gray-700">فیلترهای فعال:</span> */}
 
                             {/* Search Tag */}
-                            {(appliedFilters.keyword || actualSearchTerm) && (
+                            {/* {(appliedFilters.keyword || actualSearchTerm) && (
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     جستجو: "{appliedFilters.keyword || actualSearchTerm}"
                                     <button
@@ -849,10 +849,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            )}
+                            )} */}
 
-                            {/* Category Tags - Multiple */}
-                            {appliedFilters.categories?.map((category: string) => (
+                         
+                            {/* {appliedFilters.categories?.map((category: string) => (
                                 <span key={category} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     دسته‌بندی: {category}
                                     <button
@@ -870,10 +870,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Price Range Tags - Multiple */}
-                            {appliedFilters.minPrice !== undefined && appliedFilters.maxPrice !== undefined && (
+                            {/* {appliedFilters.minPrice !== undefined && appliedFilters.maxPrice !== undefined && (
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     قیمت: {appliedFilters.minPrice} - {appliedFilters.maxPrice}
                                     <button
@@ -891,10 +891,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            )}
+                            )} */}
 
                             {/* Unit Model Tags - Multiple */}
-                            {appliedFilters.unitModels?.map((unitModel: string) => (
+                            {/* {appliedFilters.unitModels?.map((unitModel: string) => (
                                 <span key={unitModel} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     مدل: {unitModelOptions.find(u => u.value === unitModel)?.label}
                                     <button
@@ -912,10 +912,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Feature Type Tags - Multiple */}
-                            {appliedFilters.featureTypes?.map((featureType: string) => (
+                            {/* {appliedFilters.featureTypes?.map((featureType: string) => (
                                 <span key={featureType} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     نوع: {featureTypes.find(f => f.value === featureType)?.label}
                                     <button
@@ -933,10 +933,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Calendar Options Tags */}
-                            {appliedFilters.calendarOptions?.map((option: string) => (
+                            {/* {appliedFilters.calendarOptions?.map((option: string) => (
                                 <span key={option} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     تقویم: {option}
                                     <button
@@ -954,10 +954,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Panel Settings Tags */}
-                            {appliedFilters.panelSettings?.map((setting: string) => (
+                            {/* {appliedFilters.panelSettings?.map((setting: string) => (
                                 <span key={setting} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     پنل: {setting}
                                     <button
@@ -975,10 +975,10 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Sort Tag */}
-                            {sortBy !== "name" && (
+                            {/* {sortBy !== "name" && (
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
                                     مرتب‌سازی: {sortOptions.find(s => s.value === sortBy)?.label}
                                     <button
@@ -988,15 +988,15 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            )}
+                            )} */}
 
                             {/* Clear All Button */}
-                            <button
+                            {/* <button
                                 onClick={handleCancelFilter}
-                                className="px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors"
+                                                                className="text-xs text-danger hover:text-danger/80 transition-colors"
                             >
                                 پاک کردن همه
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 )}

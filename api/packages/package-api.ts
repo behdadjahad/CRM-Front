@@ -90,11 +90,13 @@ export async function getPackageUnits(params?: {
 export async function selectPackage({
   packageId,
   requestMessage,
+  numberOfMonths,
   chadcoCustomerId,
 
 }: {
   packageId: number;
   requestMessage: string;
+  numberOfMonths: number;
   chadcoCustomerId: number;
 
 }) {
@@ -102,6 +104,7 @@ export async function selectPackage({
     console.log('🔍 API: Starting selectPackage call', {
       packageId,
       requestMessage,
+      numberOfMonths,
       chadcoCustomerId,
       endpoint: `packages/buy/${chadcoCustomerId}`
     });
@@ -110,6 +113,7 @@ export async function selectPackage({
       method: "POST",
       body: {
         packageId,
+        numberOfMonths,
         requestMessage,
       },
     });

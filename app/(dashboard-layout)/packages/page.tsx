@@ -11,9 +11,11 @@ import { useQuery } from "@tanstack/react-query";
 import { getPackages, } from "@/api/packages/package-api";
 import { buildComparisonData } from "@/hooks/usePackageComparison";
 import { PackagesApiResponse } from "@/types/packages-api";
+import { useRouter } from "next/navigation";
 
 
 export default function PackagesPage() {
+  const router = useRouter();
 
   const { data: packageData, isLoading, error } = useQuery<PackagesApiResponse>({
     queryKey: ["packageData"],
@@ -52,11 +54,13 @@ export default function PackagesPage() {
           data={comparisonData}
           onPackageSelect={(packageId, result) => {
             console.log('Package selected:', packageId, result);
-            // Handle package selection logic here
+            // Package selection handled in PackageCard component
+            // This callback can be used for additional tracking if needed
           }}
           onPackagePurchase={(packageId) => {
             console.log('Package purchase:', packageId);
-            // Handle package purchase logic here
+            // Package purchase handled in PackageCard component
+            // This callback can be used for additional tracking if needed
           }}
         />
       </section>
