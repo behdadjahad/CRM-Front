@@ -115,7 +115,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       // },
       {
         label: "قرارداد ها",
-        link: "/sale",
+        link: "/contracts",
         icon: (
           <Image
             src={"/icons/document.png"}

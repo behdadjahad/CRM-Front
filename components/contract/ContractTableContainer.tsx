@@ -25,7 +25,7 @@ export default function ContractTableContainer({
   function searchSubmitHandler() {
     dispatch(setCheckedItems([]));
     const searchValue = contractSearchFormik.values.contractKeyWord;
-    const limit = useSelector((state: any) => state.contract.limit);
+ 
     dispatch(
       fetchContracts({
         page: 1,
@@ -40,8 +40,10 @@ export default function ContractTableContainer({
   const currentPage = useSelector((state: any) => state.contract.currentPage);
   const total = useSelector((state: any) => state.contract.total);
   const limit = useSelector((state: any) => state.contract.limit);
+
   const filters = useSelector((state: any) => state.contract.filters);
-  const pages = useSelector((state: any) => state.lead.totalPages);
+  const pages = useSelector((state: any) => state.contract.totalPages);
+  const contractList = useSelector((state: any) => state.contract.tableData);
   const limitFormik = useFormik({
     initialValues: {
       limit: limit,
@@ -103,7 +105,7 @@ export default function ContractTableContainer({
           />
         </div>
       </div>
-      <ContractTable />
+      <ContractTable contractList={contractList} />
       <div className="grid grid-cols-3 custom-shadow bg-card p-3 rounded-md">
         <div className="col-span-2 w-full">
           {pages > 1 && (

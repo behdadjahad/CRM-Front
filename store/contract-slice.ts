@@ -18,6 +18,7 @@ export interface ContractState {
   ContractOverviewList: {
     label: string;
     value: number;
+    className?: string;
   }[];
   limit: number;
   scrollPosition: number;
@@ -179,7 +180,7 @@ const contractSlice = createSlice({
           "نوع قرارداد": item?.contractType?.name,
         },
       }));
-      state.tableData = data.map((contract:any) => ({
+      state.tableData = data.map((contract: any) => ({
         id: contract?.id,
         list: [
           {
@@ -192,6 +193,33 @@ const contractSlice = createSlice({
                   contract?.mainCustomerSoldto?.person?.lastName
                 : "",
           },
+          {
+            label: "تاریخ ثبت",
+            value:
+              contract?.submitDateTime && contract?.dateType
+                ? convertDate(contract?.submitDateTime, contract?.dateType)
+                : "",
+          },
+          {
+            label: "مسئول قرارداد",
+            value:
+              contract?.userResponsible?.fullName
+                ?   contract?.userResponsible?.fullName
+                : "",
+          },
+          {
+            label: "تاریخ قرارداد",
+            value:
+              contract?.contractDate && contract?.dateType
+                ? convertDate(contract?.contractDate, contract?.dateType)
+                : "",
+          },
+          { label: "مقصد", value: contract?.destinationCountry?.name ?? "" },
+          { label: "واحد ارز", value: contract?.contractCurrency?.name ?? "" },
+          { label: "موضوع قرارداد", value: contract?.contractType?.name ?? "" },
+          { label: "امتیاز مشتری", value: contract?.contractSatisfaction[0]?.satisfactionScore
+            ? contract?.contractSatisfaction[0]?.satisfactionScore
+            : 0  },
         ],
       }));
       state.ContractOverviewList = [
@@ -202,6 +230,7 @@ const contractSlice = createSlice({
             (action?.payload?.meta?.doneCount ?? 0) +
             (action?.payload?.meta?.inProgressCount ?? 0) +
             (action?.payload?.meta?.initialCount ?? 0),
+          className:"border border-[#1C68DA] bg-[#D5ECFF] text-[#2949A4]"
         },
         {
           label: "قرار داد تکمیل شده",
@@ -209,6 +238,10 @@ const contractSlice = createSlice({
         },
         {
           label: " قرار داد ناقص",
+          value: action?.payload?.meta?.initialCount ?? "",
+        },
+        {
+          label: " قرار داد درجریان",
           value: action?.payload?.meta?.inProgressCount ?? "",
         },
       ];

@@ -27,6 +27,7 @@ import ViewToggleGroup from "../shared/ViewToggleGroup";
 import { LeadViewType } from "../lead/LeadContainer";
 import { leadViewOptions } from "@/constants/lead";
 import ContractTableContainer from "./ContractTableContainer";
+import ContractOverviewContainer from "./ContractOverviewContainer";
 
 export interface ContractDashboardInterface {
   contractList: ContractCardInterface[];
@@ -425,7 +426,7 @@ export default function ContractDashboard({
   return (
     <div className="w-full flex flex-col gap-4 bg-card rounded-lg p-6">
       {/* <ContractOverview list={ContractOverviewList} /> */}
-
+      <ContractOverviewContainer list={[]} />
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           {" "}
