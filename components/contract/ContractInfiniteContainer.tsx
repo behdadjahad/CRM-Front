@@ -3,6 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ContractInfiniteCard from "./ContractInfiniteCard";
+import { Draggable } from "@hello-pangea/dnd";
 export interface ContractInfiniteContainerInterface {
   status: string;
 }
@@ -43,19 +44,42 @@ export default function ContractInfiniteContainer({
 
   const content =
     isSuccess &&
-    contractPipeData?.pages?.map((page) =>
-      page?.data?.map((item: any, i: number) => {
-        const contract = {
-          id: item.id,
-          list: [{ label: "شماره قرارداد:", value: item?.contractNo }],
-        };
-        if (page.data.length === i + 1) {
-          return (
-            <ContractInfiniteCard ref={ref} key={contract.id} {...contract} />
+    contractPipeData?.pages?.map(
+      (page) =>
+        page?.data?.map((item: any, i: number) => {
+          const contract = {
+            id: item.id,
+            list: [{ label: "شماره قرارداد:", value: item?.contractNo }],
+          };
+          const card = (
+            <ContractInfiniteCard
+              key={contract.id}
+              {...contract}
+              ref={page.data.length === i + 1 ? ref : null}
+            />
           );
-        }
-        return <ContractInfiniteCard key={contract.id} {...contract} />;
-      })
+
+          return (
+            <Draggable draggableId={contract.id.toString()} index={i} key={contract.id}>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                >
+                  {card}
+                </div>
+              )}
+            </Draggable>
+          );
+        })
+      //     if (page.data.length === i + 1) {
+      //       return (
+      //         <ContractInfiniteCard ref={ref} key={contract.id} {...contract} />
+      //       );
+      //     }
+      //     return <ContractInfiniteCard key={contract.id} {...contract} />;
+      //   })
     );
   return (
     <div className="h-[600px] overflow-y-auto flex flex-col gap-4 px-2 py-3">
