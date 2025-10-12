@@ -232,3 +232,4 @@ We went from over-engineering (complex architecture for a simple problem) to rig
 
 **Result**: YAGNI (You Aren't Gonna Need It) principle applied successfully! 🎉
 
+

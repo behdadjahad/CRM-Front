@@ -140,3 +140,4 @@ const SSE_URL = 'http://185.126.203.246:3001/api/v1/cart/updates';
 
 **Result**: From ~1500 lines of complex code to ~70 lines of simple code! 🎉
 
+

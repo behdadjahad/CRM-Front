@@ -21,15 +21,15 @@ export interface PlaceResult {
 
 export interface PlaceAddress {
     [key: string]: string;
-    road?: string;
-    neighbourhood?: string;
-    suburb?: string;
-    city?: string;
-    county?: string;
-    state?: string;
-    postcode?: string;
-    country?: string;
-    country_code?: string;
+    road: string;
+    neighbourhood: string;
+    suburb: string;
+    city: string;
+    county: string;
+    state: string;
+    postcode: string;
+    country: string;
+    country_code: string;
 }
 
 export interface PlaceAutocompleteProps {

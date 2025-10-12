@@ -34,16 +34,19 @@ import {
 import { hasFeatureCode } from "@/lib/feature-match-utils";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useHighlightSearch } from "@/hooks/useHighlightSearch";
+import { useSearchParams } from "next/navigation";
 
 interface SingleFeaturesContainerInterface {
     onPurchase?: (unitId: number, description: string) => void;
-    highlightCode?: string; // Feature code to highlight
+
 }
 
 export default function SingleFeaturesContainer({
     onPurchase,
-    highlightCode
+
 }: SingleFeaturesContainerInterface) {
+    const searchParams = useSearchParams()
+    const highlightCode = searchParams.get('highlightCode')
     const dispatch = useDispatch<AppDispatch>();
     const [sortBy, setSortBy] = useState<string>("name");
     const [actualSearchTerm, setActualSearchTerm] = useState("");
@@ -65,14 +68,16 @@ export default function SingleFeaturesContainer({
     } = useSelector((state: RootState) => state.singleFeatures);
 
     const chadcoCustomerId = useSelector(
-        (state: RootState) => state.login.chadcoCustomerId
+        (state: RootState) => state?.login?.chadcoCustomerId
     );
-
+    //   const queryClient = useQueryClient();
+    //   const { data: categoryData } = useQuery({
+    //     queryKey: ["categoryData"],
+    //     queryFn: async () => await getPackageCategory(),
+    //   });
     // Fetch cart data using React Query
     const {
         data: cartData,
-        isLoading: cartLoading,
-        error: cartError
     } = useQuery<CartApiResponse | null>({
         queryKey: ['cart', chadcoCustomerId],
         queryFn: async () => {
@@ -451,7 +456,7 @@ export default function SingleFeaturesContainer({
     // Use highlight search hook for auto-loading until highlighted item is found
     const { isSearching: isSearchingHighlight, resetSearch } = useHighlightSearch({
         items: displayUnits,
-        highlightCode,
+        highlightCode: highlightCode! || "",
         currentPage,
         totalPages,
         isLoading: loading,
@@ -1064,7 +1069,7 @@ export default function SingleFeaturesContainer({
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {displayUnits.map((unit) => {
                             // Check if this unit has the highlighted feature code
-                            const isHighlighted = highlightCode ? hasFeatureCode(unit.accessesJson, highlightCode) : false;
+                            const isHighlighted = highlightCode! ? hasFeatureCode(unit.accessesJson, highlightCode!) : false;
 
                             return (
                                 <SingleFeatureCard
@@ -1096,7 +1101,7 @@ export default function SingleFeaturesContainer({
                                     cartLoading={loadingItems.has(unit.id)}
                                     isSelectable={!isItemInCart(unit.id)}
                                     isHighlighted={isHighlighted}
-                                    highlightCode={highlightCode}
+                                    highlightCode={highlightCode! || ""}
                                     accessesJson={unit.accessesJson}
                                 />
                             );

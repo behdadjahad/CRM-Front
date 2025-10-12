@@ -1,15 +1,15 @@
 "use client";
 
-import React from "react";
-import { useSearchParams } from "next/navigation";
+import React, { Suspense } from "react";
+
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
 import SingleFeaturesContainer from "@/components/packages/single-features-container";
 import { CustomToast } from "@/components/shared/custome-toast";
 
+
 export default function SingleFeaturesPage() {
-    const searchParams = useSearchParams();
-    const highlightCode = searchParams.get('highlightCode');
+
 
     // Handle unit purchase
     const handleUnitPurchase = (unitId: number, description: string) => {
@@ -33,11 +33,22 @@ export default function SingleFeaturesPage() {
                 />
             </div>
 
+
+            <Suspense fallback={
+                <div className="text-center py-12">
+                    <div className="text-gray-500 text-lg">
+                        در حال بارگذاری...
+                    </div>
+                </div>
+            }>
+                <SingleFeaturesContainer
+                    onPurchase={handleUnitPurchase}
+
+                />
+            </Suspense>
+
+
             {/* Single Features Container */}
-            <SingleFeaturesContainer
-                onPurchase={handleUnitPurchase}
-                highlightCode={highlightCode || undefined}
-            />
         </main>
     );
 }
