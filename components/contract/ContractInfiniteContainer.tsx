@@ -25,6 +25,7 @@ export default function ContractInfiniteContainer({
       getContracts({
         page: pageParam,
         limit: LIMIT,
+        filters: {},
       }),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
@@ -46,7 +47,7 @@ export default function ContractInfiniteContainer({
       page?.data?.map((item: any, i: number) => {
         const contract = {
           id: item.id,
-          list: [{ label: "شماره قرارداد", value: item?.contractNo }],
+          list: [{ label: "شماره قرارداد:", value: item?.contractNo }],
         };
         if (page.data.length === i + 1) {
           return (
@@ -57,7 +58,7 @@ export default function ContractInfiniteContainer({
       })
     );
   return (
-    <div className="max-h-64 overflow-y-scroll flex flex-col gap-4">
+    <div className="max-h-[600px] overflow-y-scroll flex flex-col gap-4 px-2 py-3">
       {content}
       {isFetchingNextPage && <h3>Loading...</h3>}
     </div>
