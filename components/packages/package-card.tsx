@@ -66,7 +66,8 @@ const PriceDisplay: React.FC<{
 const PackageCard: React.FC<PackageCardProp> = ({
     data,
     chadcoCustomerId,
-    onPackageSelect
+    onPackageSelect,
+    isMobile = false
 }) => {
 
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
@@ -145,34 +146,29 @@ const PackageCard: React.FC<PackageCardProp> = ({
     return (
         <div
             className={cn(
-                "relative bg-white rounded-[8px] py-6 px-4 transition-all duration-300 cursor-pointer",
+                "relative bg-white rounded-[8px] transition-all duration-300 cursor-pointer",
                 "border-l border-r border-b border-zinc-200",
                 "border-t-4",
                 getBorderColorClass(data.title),
-                !isPurchaseModalOpen && "hover:shadow-lg md:hover:scale-105 md:origin-center ",
-                // "hover:shadow-lg md:hover:scale-105 md:origin-center  ",
-                // {
-                //     "border-orange-300 shadow-lg": isSelected,
-                //     "border-gray-200 hover:border-gray-300": !isSelected,
-                // },
-                // className
+                !isPurchaseModalOpen && "hover:shadow-lg md:hover:scale-105 md:origin-center",
+                isMobile ? "py-4 px-3" : "py-6 px-4"
             )}
         // onClick={handleCardClick}
         >
 
-            <div className='flex justify-between items-start mb-8 lg:flex-col xl:flex-row  flex-row'>
+            <div className={cn('flex justify-between items-start flex-row', isMobile ? 'mb-4' : 'mb-8 lg:flex-col xl:flex-row')}>
                 <div className='flex flex-col lg:order-2 order-1 xl:order-1'>
                     {/* Package name */}
-                    <p className="text-lg  font-medium  text-gray-900 ">
+                    <p className={cn("font-medium text-gray-900", isMobile ? "text-sm" : "text-lg")}>
                         {data.title}
                     </p>
                     {/* Package subtitle */}
                     {data.description ? (
-                        <p className="text-sm text-gray-600 text-center ">
+                        <p className={cn("text-gray-600 text-center", isMobile ? "text-xs" : "text-sm")}>
                             {data.description}
                         </p>
                     ) : (
-                        <p className="text-sm h-5 text-gray-600 text-center ">
+                        <p className={cn("text-gray-600 text-center", isMobile ? "text-xs h-4" : "text-sm h-5")}>
 
                         </p>
                     )}
@@ -182,7 +178,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
                     <PackageIcon
                         type={data.title as 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید'}
                         color={data.title as 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید'}
-                        className="w-12 h-12"
+                        className={isMobile ? "w-8 h-8" : "w-12 h-12"}
                     />
                 </div>
             </div>
@@ -191,7 +187,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
 
 
             {/* Price display */}
-            <div className="mb-6">
+            <div className={isMobile ? "mb-4" : "mb-6"}>
                 <PriceDisplay
                     originalPrice={data.price}
                     currentPrice={data.price || 0}
@@ -202,7 +198,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
             </div>
 
 
-            <Button variant={"info"} onClick={handlePurchaseClick} className="w-full border border-warning hover:bg-white hover:border-black hover:border" >
+            <Button variant={"info"} onClick={handlePurchaseClick} className={cn("w-full border border-warning hover:bg-white hover:border-black hover:border", isMobile ? "text-xs py-2" : "")}>
                 شروع کردن
             </Button>
 

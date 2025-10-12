@@ -171,4 +171,5 @@ export interface PackageCardProp {
   data: Package;
   chadcoCustomerId?: number;
   onPackageSelect?: (packageId: number, result?: any) => void;
+  isMobile?: boolean;
 }

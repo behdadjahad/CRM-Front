@@ -22,16 +22,16 @@ export default function PackagesPage() {
 
   console.log("packageData", packageData);
 
-  
+
 
   if (!packageData) return <p>No data</p>;
 
   const comparisonData = buildComparisonData(packageData?.data?.packages || [], packageData?.data?.labels || []);
 
   return (
-    <main className="space-y-8">
+    <main className="space-y-4 xl:space-y-8">
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-4 xl:mb-8">
         <Title label="جدول ویژگی ها" />
         <Breadcrumb
           list={[
@@ -47,7 +47,7 @@ export default function PackagesPage() {
       </div>
 
       {/* Package Cards Section */}
-      <section className="mb-12 ">
+      <section className="mb-6 xl:mb-12">
         <PackageComparisonContainer
           data={comparisonData}
           onPackageSelect={(packageId, result) => {
@@ -62,7 +62,7 @@ export default function PackagesPage() {
       </section>
 
       {/* Feature Comparison Table */}
-      <section className="bg-white p-8">
+      <section className="bg-white p-4 xl:p-8">
         <ComparisonTable
           data={comparisonData}
         />
