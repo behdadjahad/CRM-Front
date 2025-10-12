@@ -1,0 +1,60 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
+export interface ContractInfiniteContainerInterface {
+  status: string;
+}
+
+export default function ContractInfiniteContainer({
+  status,
+}: ContractInfiniteContainerInterface) {
+  const { ref, inView } = useInView();
+  const LIMIT = 6;
+
+  const {
+    data: contractPipeData,
+    isSuccess,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["contractPipeData", status],
+    queryFn: ({ pageParam = 1 }) =>
+      getContracts({
+        page: pageParam,
+        limit: LIMIT,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage =
+        lastPage?.data?.length === LIMIT ? allPages.length + 1 : undefined;
+      return nextPage;
+    },
+    initialPageParam: 1,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const content =
+    isSuccess &&
+    contractPipeData?.pages?.map((page) =>
+      page?.data?.map((item: any, i: number) => {
+        const contract = {
+          id: item.id,
+        };
+        if (page.data.length === i + 1) {
+          return <ContractInfiniteCard ref={ref} key={contract.id} />;
+        }
+        return <ContractInfiniteCard key={contract.id} />;
+      })
+    );
+  return (
+    <div className="max-h-64 overflow-y-scroll flex flex-col gap-4">
+      {content}
+      {isFetchingNextPage && <h3>Loading...</h3>}
+    </div>
+  );
+}
