@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-
+import Link from "next/link";
 import { getSortFieldFromLabel } from "@/lib/utils";
 import { AccessDenied } from "../shared/AccessDenied";
 import { generateFeatureAccess } from "@/lib/generatePageData";
@@ -145,7 +145,7 @@ export default function ContractTable({
                   onClick={() => toggleSort(col.label)}
                 >
                   {sortStates[col.label] === "desc" ? (
-                      <Image
+                    <Image
                       src={"/icons/chevron-down.svg"}
                       alt="checkbox"
                       width={1024}
@@ -172,50 +172,55 @@ export default function ContractTable({
       <TableBody>
         {contractList?.map((contract, rowIndex) => (
           <Fragment key={contract.id}>
-            <TableRow className="border border-gray-200 bg-card">
-              <TableCell className="flex items-center justify-center">
-                {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-                  generateFeatureAccess(pageFeatures, "select-lead")
-                    ?.enable && (
-                    <Checkbox
-                      onCheckedChange={(checked: boolean) => {
-                        checkItemHandler(contract.exportData, checked);
-                      }}
-                      checked={checkedItems.some(
-                        (obj: any) => obj.id === contract.id
-                      )}
-                    />
-                  )}
-                {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-                  !generateFeatureAccess(pageFeatures, "select-lead")
-                    ?.enable && (
-                    <AccessDenied
-                      icon={
-                        <Image
-                          src={"/icons/checkbox-icon.png"}
-                          alt="checkbox"
-                          width={1024}
-                          height={1024}
-                          className="w-4 h-4"
-                        />
-                      }
-                    />
-                  )}
-              </TableCell>
-              {contract.list.map((cell, cellIndex) => {
-                return (
-                  <TableCell key={cellIndex} className="text-center text-xs">
-                    <span>{cell.value}</span>
-                  </TableCell>
-                );
-              })}
-              <TableCell className="text-center text-xs">
-                <div className="flex items-center gap-4 w-full justify-center">
-                  {" "}
-                  ادیت
-                </div>
-              </TableCell>
-            </TableRow>
+            <Link
+              href={`/contract/${contract.id}`}
+              style={{ display: "contents" }} // ✅ Preserves layout
+            >
+              <TableRow className="border border-gray-200 bg-card">
+                <TableCell className="flex items-center justify-center">
+                  {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                    generateFeatureAccess(pageFeatures, "select-lead")
+                      ?.enable && (
+                      <Checkbox
+                        onCheckedChange={(checked: boolean) => {
+                          checkItemHandler(contract.exportData, checked);
+                        }}
+                        checked={checkedItems.some(
+                          (obj: any) => obj.id === contract.id
+                        )}
+                      />
+                    )}
+                  {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                    !generateFeatureAccess(pageFeatures, "select-lead")
+                      ?.enable && (
+                      <AccessDenied
+                        icon={
+                          <Image
+                            src={"/icons/checkbox-icon.png"}
+                            alt="checkbox"
+                            width={1024}
+                            height={1024}
+                            className="w-4 h-4"
+                          />
+                        }
+                      />
+                    )}
+                </TableCell>
+                {contract.list.map((cell, cellIndex) => {
+                  return (
+                    <TableCell key={cellIndex} className="text-center text-xs">
+                      <span>{cell.value}</span>
+                    </TableCell>
+                  );
+                })}
+                <TableCell className="text-center text-xs">
+                  <div className="flex items-center gap-4 w-full justify-center">
+                    {" "}
+                    ادیت
+                  </div>
+                </TableCell>
+              </TableRow>
+            </Link>
           </Fragment>
         ))}
       </TableBody>

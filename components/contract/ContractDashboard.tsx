@@ -28,6 +28,7 @@ import { LeadViewType } from "../lead/LeadContainer";
 import { leadViewOptions } from "@/constants/lead";
 import ContractTableContainer from "./ContractTableContainer";
 import ContractOverviewContainer from "./ContractOverviewContainer";
+import ContractPipeContainer from "./ContractPipeContainer";
 
 export interface ContractDashboardInterface {
   contractList: ContractCardInterface[];
@@ -522,7 +523,9 @@ export default function ContractDashboard({
       {view === "table" ? (
         <ContractTableContainer list={[]} />
       ) : view === "pipe" ? (
-        <div>pipe view</div>
+        <ContractPipeContainer
+          pipeList={[{ title: "ناقص", value: "initial" }]}
+        />
       ) : (
         <></>
       )}

@@ -93,70 +93,91 @@ const contractSlice = createSlice({
     builder.addCase(fetchContracts.fulfilled, (state, action) => {
       const data = action?.payload?.data;
       state.items = action?.payload?.data?.map((item: any, index: number) => ({
-        id: item.id,
-        contract: {
-          date:
-            item?.contractDate && item?.dateType
-              ? convertDate(item?.contractDate, item?.dateType)
-              : "",
-          destination: item?.destinationCountry?.name ?? "",
-          submitter: item?.userSubmitter?.fullName ?? "",
-          unit: item?.contractCurrency?.name,
-          customer: {
-            name:
-              item?.mainCustomerSoldto?.person?.firstName &&
-              item?.mainCustomerSoldto?.person?.lastName
-                ? item?.mainCustomerSoldto?.person?.firstName +
-                  " " +
-                  item?.mainCustomerSoldto?.person?.lastName
+        // id: item.id,
+        // contract: {
+        //   date:
+        //     item?.contractDate && item?.dateType
+        //       ? convertDate(item?.contractDate, item?.dateType)
+        //       : "",
+        //   destination: item?.destinationCountry?.name ?? "",
+        //   submitter: item?.userSubmitter?.fullName ?? "",
+        //   unit: item?.contractCurrency?.name,
+        //   customer: {
+        //     name:
+        //       item?.mainCustomerSoldto?.person?.firstName &&
+        //       item?.mainCustomerSoldto?.person?.lastName
+        //         ? item?.mainCustomerSoldto?.person?.firstName +
+        //           " " +
+        //           item?.mainCustomerSoldto?.person?.lastName
+        //         : "",
+        //     image:
+        //       item?.mainCustomerSoldto?.person?.avatar &&
+        //       ServerImageAddress + item?.mainCustomerSoldto?.person?.avatar,
+        //   },
+        // },
+        // footer: {
+        //   // cost: item?.buyPrice ? item?.buyPrice : 0,
+        //   cost: item?.buyPrice,
+        //   // income: item.sellPrice ? item?.sellPrice : 0,
+        //   income: item?.sellPrice,
+        //   // overall:
+        //   //   item?.sellPrice && item?.buyPrice
+        //   //     ? item.sellPrice - item.buyPrice
+        //   //     : 0,
+        //   overall: item?.sellPrice - item?.buyPrice,
+        // },
+        // header: {
+        //   contractNumber: item.contractNo,
+        //   icon:
+        //     item?.contractType?.iconFile &&
+        //     ServerImageAddress + item?.contractType?.iconFile,
+        //   submitDate:
+        //     item?.submitDateTime && item?.dateType
+        //       ? convertDate(item?.submitDateTime, item?.dateType)
+        //       : "",
+        //   title: item?.contractType?.name,
+        // },
+        // score: {
+        //   id: item?.contractSatisfaction[0]?.id,
+        //   isSubmitted: item?.contractSatisfaction[0]?.satisfactionScore
+        //     ? true
+        //     : false,
+        //   final: item?.contractSatisfaction[0]?.satisfactionScore
+        //     ? item?.contractSatisfaction[0]?.satisfactionScore
+        //     : 0,
+        //   scoreInPercent: item?.contractSatisfaction?.[0]?.satisfactionScore
+        //     ? (item?.contractSatisfaction?.[0]?.satisfactionScore * 100) / 10
+        //     : 0,
+        //   totalVotes: totalVotes,
+        // },
+        // services: item.avServices
+        //   ? services.filter((obj) => item.avServices.includes(obj.name))
+        //   : [],
+        // user: {
+        //   image: "/images/expert.png",
+        //   name: item?.userResponsible?.fullName,
+        // },
+        id: item?.id,
+        list: [
+          {
+            label: ":تاریخ ثبت",
+            value:
+              item?.submitDateTime && item?.dateType
+                ? convertDate(item?.submitDateTime, item?.dateType)
                 : "",
-            image:
-              item?.mainCustomerSoldto?.person?.avatar &&
-              ServerImageAddress + item?.mainCustomerSoldto?.person?.avatar,
           },
-        },
-        footer: {
-          // cost: item?.buyPrice ? item?.buyPrice : 0,
-          cost: item?.buyPrice,
-          // income: item.sellPrice ? item?.sellPrice : 0,
-          income: item?.sellPrice,
-          // overall:
-          //   item?.sellPrice && item?.buyPrice
-          //     ? item.sellPrice - item.buyPrice
-          //     : 0,
-          overall: item?.sellPrice - item?.buyPrice,
-        },
-        header: {
-          contractNumber: item.contractNo,
-          icon:
-            item?.contractType?.iconFile &&
-            ServerImageAddress + item?.contractType?.iconFile,
-          submitDate:
-            item?.submitDateTime && item?.dateType
-              ? convertDate(item?.submitDateTime, item?.dateType)
-              : "",
-          title: item?.contractType?.name,
-        },
-        score: {
-          id: item?.contractSatisfaction[0]?.id,
-          isSubmitted: item?.contractSatisfaction[0]?.satisfactionScore
-            ? true
-            : false,
-          final: item?.contractSatisfaction[0]?.satisfactionScore
-            ? item?.contractSatisfaction[0]?.satisfactionScore
-            : 0,
-          scoreInPercent: item?.contractSatisfaction?.[0]?.satisfactionScore
-            ? (item?.contractSatisfaction?.[0]?.satisfactionScore * 100) / 10
-            : 0,
-          totalVotes: totalVotes,
-        },
-        services: item.avServices
-          ? services.filter((obj) => item.avServices.includes(obj.name))
-          : [],
-        user: {
-          image: "/images/expert.png",
-          name: item?.userResponsible?.fullName,
-        },
+          {
+            label: ":شماره قرارداد",
+            value: item.contractNo ?? "",
+          },
+          {
+            label: ":تاریخ ثبت",
+            value:
+              item?.submitDateTime && item?.dateType
+                ? convertDate(item?.submitDateTime, item?.dateType)
+                : "",
+          },
+        ],
         exportData: {
           id: item.id,
           ردیف: index + 1,
@@ -202,10 +223,9 @@ const contractSlice = createSlice({
           },
           {
             label: "مسئول قرارداد",
-            value:
-              contract?.userResponsible?.fullName
-                ?   contract?.userResponsible?.fullName
-                : "",
+            value: contract?.userResponsible?.fullName
+              ? contract?.userResponsible?.fullName
+              : "",
           },
           {
             label: "تاریخ قرارداد",
@@ -217,9 +237,12 @@ const contractSlice = createSlice({
           { label: "مقصد", value: contract?.destinationCountry?.name ?? "" },
           { label: "واحد ارز", value: contract?.contractCurrency?.name ?? "" },
           { label: "موضوع قرارداد", value: contract?.contractType?.name ?? "" },
-          { label: "امتیاز مشتری", value: contract?.contractSatisfaction[0]?.satisfactionScore
-            ? contract?.contractSatisfaction[0]?.satisfactionScore
-            : 0  },
+          {
+            label: "امتیاز مشتری",
+            value: contract?.contractSatisfaction[0]?.satisfactionScore
+              ? contract?.contractSatisfaction[0]?.satisfactionScore
+              : 0,
+          },
         ],
       }));
       state.ContractOverviewList = [
@@ -230,7 +253,7 @@ const contractSlice = createSlice({
             (action?.payload?.meta?.doneCount ?? 0) +
             (action?.payload?.meta?.inProgressCount ?? 0) +
             (action?.payload?.meta?.initialCount ?? 0),
-          className:"border border-[#1C68DA] bg-[#D5ECFF] text-[#2949A4]"
+          className: "border border-[#1C68DA] bg-[#D5ECFF] text-[#2949A4]",
         },
         {
           label: "قرار داد تکمیل شده",
