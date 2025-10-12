@@ -1,14 +1,14 @@
 import ContractInfiniteContainer from "./ContractInfiniteContainer";
 
 export interface ContractPipeInterface {
-  title: string;
+  label: string;
   value: string;
 }
 
-export default function ContractPipe({ title, value }: ContractPipeInterface) {
+export default function ContractPipe({ label, value }: ContractPipeInterface) {
   return (
     <div className="flex flex-col  rounded-2xl overflow-hidden border border-[#E9EAEB]">
-      <div className="text-center bg-[#5786EB] p-3 text-card">{title}</div>
+      <div className="text-center bg-[#5786EB] p-3 text-card">{label}</div>
       <div className="flex flex-col gap-4">
         {" "}
         <ContractInfiniteContainer status={value} />

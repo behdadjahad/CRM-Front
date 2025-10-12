@@ -2,7 +2,7 @@ import PipeCreation from "../pipe/PipeCreation";
 import ContractPipe from "./ContractPipe";
 export interface ContractPipeContainerInterface {
   pipeList: {
-    title: string;
+    label: string;
     value: string;
   }[];
 }

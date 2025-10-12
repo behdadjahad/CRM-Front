@@ -524,7 +524,7 @@ export default function ContractDashboard({
         <ContractTableContainer list={[]} />
       ) : view === "pipe" ? (
         <ContractPipeContainer
-          pipeList={[{ title: "ناقص", value: "initial" }]}
+          pipeList={contractStateOptions}
         />
       ) : (
         <></>

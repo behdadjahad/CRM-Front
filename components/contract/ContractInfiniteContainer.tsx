@@ -25,7 +25,7 @@ export default function ContractInfiniteContainer({
       getContracts({
         page: pageParam,
         limit: LIMIT,
-        filters: {},
+        filters: { contractState: [status] },
       }),
     getNextPageParam: (lastPage, allPages) => {
       const nextPage =
