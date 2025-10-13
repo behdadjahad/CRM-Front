@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import NotificationDrawer from "./notification-drawer";
 import { useState } from "react";
+import { useNotifications } from "@/hooks/useNotifications";
 
 
 export interface NotificationInterface {
@@ -14,6 +15,11 @@ export default function Notification({
   className,
 }: NotificationInterface) {
   const [openNotification, setOpenNotification] = useState(false);
+  const { count, isConnected } = useNotifications();
+
+  // Use SSE count if available, otherwise fall back to prop
+  const hasUnreadNotifications = count > 0 || unread;
+
   return (
     <div
       className={cn(
@@ -22,10 +28,8 @@ export default function Notification({
       )}
     >
       <div className="relative">
-        {unread ? (
+        {hasUnreadNotifications && (
           <span className="p-1 bg-destructive rounded-full w-2 h-2 absolute top-0 right-0"></span>
-        ) : (
-          <></>
         )}
         <Image
           src={"/icons/notification.png"}
@@ -35,6 +39,13 @@ export default function Notification({
           onClick={() => setOpenNotification(true)}
           className="cursor-pointer"
         />
+
+        {/* Show count badge if count > 0 */}
+        {count > 0 && (
+          <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+            {count > 99 ? '99+' : count}
+          </div>
+        )}
       </div>
       <NotificationDrawer
         setState={setOpenNotification}

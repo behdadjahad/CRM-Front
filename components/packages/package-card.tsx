@@ -38,7 +38,7 @@ const PriceDisplay: React.FC<{
     const formatPrice = (price: number) => {
         return price.toLocaleString('fa-IR');
     };
-    
+
     return (
         <div className="flex flex-col items-center space-y-2">
             {originalPrice && originalPrice > currentPrice && (
@@ -129,8 +129,6 @@ const PackageCard: React.FC<PackageCardProp> = ({
 
         } catch (error) {
             setStatus('error');
-
-            // Re-throw error so modal can handle it
             throw error;
         } finally {
             setIsSelecting(false);
