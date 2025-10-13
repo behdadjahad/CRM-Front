@@ -8,11 +8,11 @@ import { FaUndo } from "react-icons/fa";
 export default function TextInput({
   form,
   item,
-  disabled=false
+  disabled = false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-     disabled?:boolean
+  disabled?: boolean
 }) {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -61,8 +61,8 @@ export default function TextInput({
               ? formatPrice(item.defaultValue)
               : formatPrice(form.values[item.key])
             : item.defaultValue
-            ? item.defaultValue
-            : form.values[item.key]
+              ? item.defaultValue
+              : form.values[item.key]
         }
         type={passwordVisible ? "text" : item.type}
         multiple={true}
@@ -80,7 +80,7 @@ export default function TextInput({
           }
         )}
         readOnly={item.readonly}
-         disabled={(item?.disabled || disabled) ?? false}
+        disabled={(item?.disabled || disabled) ?? false}
       />
 
       {item.floating ? (
@@ -117,12 +117,12 @@ export default function TextInput({
             className="w-full h-full object-cover"
           />
         </Button>
-      ) : item.hasReset  ? (
+      ) : item.hasReset ? (
         <Button
           className="p-0 bg-transparent border-none cursor-pointer absolute left-3 top-1/2 transform -translate-y-1/2 text-tertiary-background hover:text-subtitle outline-none w-10 h-7"
           onClick={item?.resetFunction}
         >
-         <FaUndo />
+          <FaUndo />
         </Button>
       ) : (
         <></>

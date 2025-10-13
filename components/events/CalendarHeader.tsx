@@ -39,10 +39,10 @@ const CalendarTypeFilteringList: {
   label: string;
   value: CalendarType;
 }[] = [
-  { label: "شمسی", value: "jalali" },
-  { label: "قمری", value: "hijri" },
-  { label: "میلادی", value: "gregory" },
-];
+    { label: "شمسی", value: "jalali" },
+    { label: "قمری", value: "hijri" },
+    { label: "میلادی", value: "gregory" },
+  ];
 export default function CalendarHeader({
   date,
   selectedDaysRange,
@@ -97,10 +97,10 @@ export default function CalendarHeader({
               fullRange?.length > 0 &&
               fullRange?.map((item, index) => (
                 <div key={"" + index} className="flex items-center gap-1" dir={isLtr ? "ltr" : "rtl"}>
-                  <span className={`${isLtr ? "custom-font":""}`}>{item.day}</span>
+                  <span className={`${isLtr ? "custom-font" : ""}`}>{item.day}</span>
                   <span>{item.monthName}</span>
-                  <span className={`${isLtr ? "custom-font":""}`}>{item.year}</span>
-                  <span>{index  < fullRange.length -1  && fullRange.length > 1 ? "-" : ""}</span>
+                  <span className={`${isLtr ? "custom-font" : ""}`}>{item.year}</span>
+                  <span>{index < fullRange.length - 1 && fullRange.length > 1 ? "-" : ""}</span>
                 </div>
               ))} */}
             <Button
@@ -124,7 +124,7 @@ export default function CalendarHeader({
         onActiveTime={onActiveTime}
         calendarRangeType={calendarRangeType}
       />
-      <div className="flex items-stretch justify-center gap-4 text-[#414651]">
+      <div className="flex items-stretch justify-center gap-4 text-static-secondary-gray-dark">
         <div className="flex items-stretch justify-center">
           <Button
             onClick={isLtr ? onNext : onPrev}
@@ -134,7 +134,7 @@ export default function CalendarHeader({
             <FaArrowRight />
           </Button>
 
-          <div onClick={() => onOpenDateSelector(calendarRangeType)} className="px-4 py-1 border rounded text-sm cursor-pointer text-[#414651] flex items-center justify-center" dir={isLtr ? "ltr" : "rtl"}>
+          <div onClick={() => onOpenDateSelector(calendarRangeType)} className="px-4 py-1 border rounded text-sm cursor-pointer text-static-secondary-gray-dark flex items-center justify-center" dir={isLtr ? "ltr" : "rtl"}>
             {selectedDaysRange &&
               selectedDaysRange.length > 0 &&
               selectedDaysRange?.map((item, index) => (

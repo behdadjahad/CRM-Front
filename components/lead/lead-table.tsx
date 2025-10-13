@@ -38,39 +38,39 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
     {
       label: "ایجاد شده",
       value: "INITIAL",
-      className: "text-[#1C68DA] bg-[#F2F7FE]",
+      className: "text-static-info-primary bg-static-info-light",
     },
     {
       label: "درجریان",
       value: "INPROGRESS",
-      className: "text-[#F79009] bg-[#FFFAEB]",
+      className: "text-static-warning-primary bg-static-warning-light",
     },
     {
       label: "تبدیل به قرارداد",
       value: "CONTRACTED",
-      className: "text-[#039855] bg-[#ECFDF3]",
+      className: "text-static-success-primary bg-static-success-light",
     },
     {
       label: "ازدست رفته",
       value: "FAILED",
-      className: "text-[#F04438] bg-[#FEF3F2]",
+      className: "text-static-error-primary bg-static-error-light",
     },
   ];
   const leadTemp = [
     {
       label: "گرم",
       value: "WARM",
-      className: "text-[#F79009] bg-[#FFFAEB]",
+      className: "text-static-warning-primary bg-static-warning-light",
     },
     {
       label: "سرد",
       value: "COLD",
-      className: "text-[#1C68DA] bg-[#F2F7FE]",
+      className: "text-static-info-primary bg-static-info-light",
     },
     {
       label: "داغ",
       value: "HOT",
-      className: "text-[#F04438] bg-[#FEF3F2]",
+      className: "text-static-error-primary bg-static-error-light",
     },
   ];
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
@@ -82,7 +82,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
 
   const filters = useSelector((state: any) => state.lead.filters);
   const toggleSort = (label: string) => {
-   
+
     // dispatch(config.setCheckedItems([]));
     setSortStates((prev) => {
       const newSort = prev[label] === "desc" ? "asc" : "desc";
@@ -133,6 +133,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
             {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
               !generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
                 <AccessDenied
+                  featureCode="select-lead"
                   icon={
                     <Image
                       src={"/icons/checkbox-icon.png"}
@@ -218,6 +219,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   !generateFeatureAccess(pageFeatures, "select-lead")
                     ?.enable && (
                     <AccessDenied
+                      featureCode="select-lead"
                       icon={
                         <Image
                           src={"/icons/checkbox-icon.png"}
@@ -239,7 +241,7 @@ export default function LeadTable({ leadList }: LeadTableInterface) {
                   cell.label === "علاقه مندی"
                     ? leadTemp.find((temp) => temp.value === cell.value)
                     : null;
-           
+
                 return (
                   <TableCell key={cellIndex} className="text-center text-xs">
                     {cell.label == "وضعیت" ? (

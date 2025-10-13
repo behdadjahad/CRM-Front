@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Creatable from "react-select/creatable";
 import { components } from "react-select";
 import { cn } from "@/lib/utils";
@@ -7,20 +7,20 @@ import { FormMakerInterface } from "./form-maker";
 const MultiSelectInput = React.memo(function MultiSelectInput({
   form,
   item,
-  disabled=false
+  disabled = false
 }: {
   form: any;
   item: FormMakerInterface["fields"][0];
-  disabled?:boolean
+  disabled?: boolean
 }) {
   const [options, setOptions] = useState(item.options || []);
 
   const handleValueChange = useCallback(
     (data: any) => {
-     
+
       const values = data?.length > 0 ? data.map((d: any) => d.value) : [];
 
-      form.setFieldValue(item.key, [...form.values[item.key], ...values]);
+      form.setFieldValue(item.key, [...(form?.values[item.key] || []), ...values]);
       if (item.dependantKey) {
         form.setFieldValue(item.dependantKey, [
           ...(form.values[item.dependantKey] || []), // <-- safe fallback
@@ -59,7 +59,7 @@ const MultiSelectInput = React.memo(function MultiSelectInput({
 
   return (
     <Creatable
-    
+
       isClearable
       isMulti
       menuPlacement={item.menuPlacement}

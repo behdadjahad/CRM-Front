@@ -79,6 +79,7 @@ export default function ClientInfoContainer() {
           {generateFeatureAccess(pageFeatures, "add-customer")?.show &&
             !generateFeatureAccess(pageFeatures, "add-customer")?.enable && (
               <AccessDenied
+                featureCode="add-customer"
                 title="افزودن مشتری"
                 icon={
                   <Image

@@ -41,6 +41,7 @@ export interface UnitLabel {
 
 // Unit Types
 export interface Unit {
+  code?: string;
   id: number;
   name: string;
   description?: string | null;
@@ -170,4 +171,5 @@ export interface PackageCardProp {
   data: Package;
   chadcoCustomerId?: number;
   onPackageSelect?: (packageId: number, result?: any) => void;
+  isMobile?: boolean;
 }

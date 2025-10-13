@@ -18,7 +18,7 @@ export default function ActionDropDownContent({
   return (
     <>
       <div
-        className={`text-foreground text-xs cursor-pointer hover:bg-[#D5D7DA] w-full text-right rounded-sm p-2 bg-card"
+        className={`text-foreground text-xs cursor-pointer hover:bg-static-border-neutral w-full text-right rounded-sm p-2 bg-card"
         //   activeItem === label ? "" : ""
         `}
         onClick={() => {

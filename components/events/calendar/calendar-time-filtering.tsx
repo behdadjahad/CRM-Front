@@ -17,17 +17,15 @@ export default function CalendarTimeFiltering({
 }: CalendarTimeFilteringInterface) {
   console.log(list)
   return (
-    <div className="flex items-center justify-center border border-[#D5D7DA] rounded-lg">
+    <div className="flex items-center justify-center border border-static-border-neutral rounded-lg">
       {list.map((item, index) => (
         <Button
           key={item.value}
-          className={`text-[#414651] border border-[#D5D7DA] rounded-none border-none ${
-            index === 0 ? "rounded-r-lg" : ""
-          } ${index === list.length - 1 ? "rounded-l-lg" : ""} ${
-            item.value === calendarRangeType
-              ? "bg-[#FAFAFA] text-[#252B37]"
+          className={`text-static-secondary-gray-dark border border-static-border-neutral rounded-none border-none ${index === 0 ? "rounded-r-lg" : ""
+            } ${index === list.length - 1 ? "rounded-l-lg" : ""} ${item.value === calendarRangeType
+              ? "bg-static-background-neutral text-static-text-secondary"
               : ""
-          }`}
+            }`}
           variant="ghost"
           size="sm"
           onClick={() => {

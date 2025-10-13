@@ -1,9 +1,12 @@
 "use client";
-
-import React, { useState, useMemo, useCallback, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { debounce } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { addToCart as addToCartApi, getCartItems, removeFromCart as removeFromCartApi } from '@/api/cart';
+import { CartApiResponse, CartItem } from '@/types/cart';
+import toast from 'react-hot-toast';
 
 import FilterContainer from "@/components/section/filter-container";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
@@ -13,6 +16,7 @@ import { RootState, AppDispatch } from "@/store";
 import { CustomToast } from "@/components/shared/custome-toast";
 import { convertDaysToMonths } from "@/lib/duration-utils";
 import { limitForSingleFeatures } from "@/lib/utils";
+
 import {
     PackageUnit,
     SingleFeaturesFilters,
@@ -21,23 +25,34 @@ import {
 import {
     fetchSingleFeatures,
     fetchAllSingleFeatures,
+    loadMoreSingleFeatures,
     setCheckedItems,
     setFilters,
     setCurrentPage,
     clearError
 } from "@/store/single-features-slice";
+import { hasFeatureCode } from "@/lib/feature-match-utils";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { useHighlightSearch } from "@/hooks/useHighlightSearch";
+import { useSearchParams } from "next/navigation";
 
 interface SingleFeaturesContainerInterface {
     onPurchase?: (unitId: number, description: string) => void;
+
 }
 
 export default function SingleFeaturesContainer({
-    onPurchase
+    onPurchase,
+
 }: SingleFeaturesContainerInterface) {
+    const searchParams = useSearchParams()
+    const highlightCode = searchParams.get('highlightCode')
     const dispatch = useDispatch<AppDispatch>();
     const [sortBy, setSortBy] = useState<string>("name");
     const [actualSearchTerm, setActualSearchTerm] = useState("");
     const [pageSize, setPageSize] = useState(limitForSingleFeatures); // Items per page
+    const [loadingItems, setLoadingItems] = useState<Set<number>>(new Set()); // Track loading per item
+    const queryClient = useQueryClient();
 
     // Get state from Redux store
     const {
@@ -48,12 +63,200 @@ export default function SingleFeaturesContainer({
         total,
         loading,
         error,
-        filters: currentFilters,
-        checkedItems
+        checkedItems,
+        filters,
     } = useSelector((state: RootState) => state.singleFeatures);
 
-    // Get customer ID from Redux store
-    const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
+    const chadcoCustomerId = useSelector(
+        (state: RootState) => state?.login?.chadcoCustomerId
+    );
+    //   const queryClient = useQueryClient();
+    //   const { data: categoryData } = useQuery({
+    //     queryKey: ["categoryData"],
+    //     queryFn: async () => await getPackageCategory(),
+    //   });
+    // Fetch cart data using React Query
+    const {
+        data: cartData,
+    } = useQuery<CartApiResponse | null>({
+        queryKey: ['cart', chadcoCustomerId],
+        queryFn: async () => {
+            if (!chadcoCustomerId) return null;
+            return await getCartItems(chadcoCustomerId);
+        },
+        enabled: !!chadcoCustomerId,
+        staleTime: 5 * 60 * 1000, // 5 minutes
+    });
+
+    const cartItems = cartData?.data?.packageUnits || [];
+    console.log("cartItems", cartItems);
+
+    // Helper function to check if item is in cart
+    const isItemInCart = (itemId: number): boolean => {
+        if (!Array.isArray(cartItems)) {
+            return false;
+        }
+        return cartItems.some((item: CartItem) => item.id === itemId);
+    };
+
+    // Add to cart mutation
+    const addToCartMutation = useMutation({
+        mutationFn: async ({ packageUnitIds, chadcoCustomerId, requestMessage }: { packageUnitIds: number[], chadcoCustomerId: number, requestMessage?: string }) => {
+            return await addToCartApi(packageUnitIds, chadcoCustomerId, requestMessage);
+        },
+        onMutate: async ({ packageUnitIds }) => {
+            // Set loading state for these items
+            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
+
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
+                if (!old?.data?.packageUnits) return old;
+
+                // Find the items being added from the current items list
+                const itemsToAdd = items.filter(item => packageUnitIds.includes(item.id));
+
+                // Recalculate totals
+                const newItems = [...old.data.packageUnits, ...itemsToAdd];
+                const newOriginalTotal = newItems.reduce((sum, item) => sum + item.price, 0);
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        packageUnits: newItems,
+                        originalTotal: newOriginalTotal,
+                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
+                    }
+                };
+            });
+
+            // Return a context object with the snapshotted value
+            return { previousCart, packageUnitIds };
+        },
+        onError: (err: any, variables, context) => {
+            // If the mutation fails, use the context returned from onMutate to roll back
+            if (context?.previousCart) {
+                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
+            }
+            // Remove loading state for these items
+            if (context?.packageUnitIds) {
+                setLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    return newSet;
+                });
+            }
+            const errorMessage = err?.message || 'خطا در افزودن به سبد خرید';
+            toast.error(errorMessage);
+        },
+        onSuccess: (data, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                return newSet;
+            });
+            toast.success('آیتم با موفقیت به سبد خرید اضافه شد');
+
+            // Clear selected items that were just added to cart
+            const remainingSelected = checkedItems.filter(id => !variables.packageUnitIds.includes(id));
+            dispatch(setCheckedItems(remainingSelected));
+        },
+        onSettled: () => {
+            // Always refetch after error or success to ensure server state
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+    // Remove from cart mutation
+    const removeFromCartMutation = useMutation({
+        mutationFn: async ({ packageUnitIds, chadcoCustomerId }: { packageUnitIds: number[], chadcoCustomerId: number }) => {
+            return await removeFromCartApi(packageUnitIds, chadcoCustomerId);
+        },
+        onMutate: async ({ packageUnitIds }) => {
+            // Set loading state for these items
+            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
+
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
+
+            // Snapshot the previous value
+            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
+
+            // Optimistically update to the new value
+            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
+                if (!old?.data?.packageUnits) return old;
+
+                const updatedItems = old.data.packageUnits.filter((item: CartItem) =>
+                    !packageUnitIds.includes(item.id)
+                );
+
+                // Recalculate totals
+                const newOriginalTotal = updatedItems.reduce((sum, item) => sum + item.price, 0);
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        packageUnits: updatedItems,
+                        originalTotal: newOriginalTotal,
+                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
+                    }
+                };
+            });
+
+            return { previousCart, packageUnitIds };
+        },
+        onError: (err: any, variables, context) => {
+            // If the mutation fails, roll back
+            if (context?.previousCart) {
+                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
+            }
+            // Remove loading state for these items
+            if (context?.packageUnitIds) {
+                setLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    return newSet;
+                });
+            }
+            const errorMessage = err?.message || 'خطا در حذف از سبد خرید';
+            toast.error(errorMessage);
+        },
+        onSuccess: (data, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                return newSet;
+            });
+            toast.success('آیتم از سبد خرید حذف شد');
+        },
+        onSettled: () => {
+            // Always refetch after error or success
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+    // Add multi-selection handler (around line 350, after other handlers)
+    const handleAddSelectedToCart = () => {
+        if (chadcoCustomerId) {
+            addToCartMutation.mutate({
+                packageUnitIds: checkedItems,
+                chadcoCustomerId: chadcoCustomerId,
+                requestMessage: `Bulk request for ${checkedItems.length} features`
+            });
+
+            // Clear selected items after adding to cart
+            dispatch(setCheckedItems([]));
+        }
+    };
 
     // Search form using formik (consistent pattern)
     const searchFormik = useFormik({
@@ -84,61 +287,100 @@ export default function SingleFeaturesContainer({
         onSubmit: () => { },
     });
 
-    // Debounced search
+    // Separate state for applied filters (what's actually being used for API calls)
+    const [appliedFilters, setAppliedFilters] = useState<SingleFeaturesFilters>({});
+
+    // Ref to track current applied filters to avoid circular dependencies
+    const appliedFiltersRef = useRef<SingleFeaturesFilters>({});
+
+    // Debounced search that triggers data fetch
     const debouncedSearch = useCallback(
         debounce((keyword: string) => {
             setActualSearchTerm(keyword);
+
+            // Create filters with current applied filters + new search term
+            const searchFilters = {
+                ...appliedFiltersRef.current,
+                keyword: keyword || undefined
+            };
+
+            // Clean up undefined values
+            const cleanFilters = { ...searchFilters };
+            Object.keys(cleanFilters).forEach(key => {
+                if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                    delete cleanFilters[key as keyof SingleFeaturesFilters];
+                }
+            });
+
+            // Update applied filters
+            setAppliedFilters(searchFilters);
+            appliedFiltersRef.current = searchFilters;
+
+            // Fetch data with search term
+            dispatch(fetchSingleFeatures({
+                page: 1,
+                limit: pageSize,
+                filters: cleanFilters
+            }));
+            dispatch(setCurrentPage(1));
         }, 300),
-        []
+        [pageSize, dispatch]
     );
+
+    // Update ref when appliedFilters changes
+    useEffect(() => {
+        appliedFiltersRef.current = appliedFilters;
+    }, [appliedFilters]);
 
     useEffect(() => {
         debouncedSearch(searchFormik.values.searchTerm);
         return () => debouncedSearch.cancel();
     }, [searchFormik.values.searchTerm, debouncedSearch]);
 
-    // Fetch data when filters, page, or search changes
-    const fetchData = useCallback(() => {
-        const filters: SingleFeaturesFilters = {
+    // Function to transform form values to API filters
+    const transformFormToFilters = useCallback((formValues: typeof filterFormik.values): SingleFeaturesFilters => {
+        return {
             keyword: actualSearchTerm,
-            categories: filterFormik.values.categories.length > 0 ? filterFormik.values.categories : undefined,
-            priceRanges: filterFormik.values.priceRanges.length > 0 ? filterFormik.values.priceRanges : undefined,
-            featureTypes: filterFormik.values.featureTypes.length > 0 ? filterFormik.values.featureTypes : undefined,
-            unitModels: filterFormik.values.unitModels.length > 0 ? filterFormik.values.unitModels : undefined,
-            calendarOptions: filterFormik.values.calendarOptions.length > 0 ? filterFormik.values.calendarOptions : undefined,
-            panelSettings: filterFormik.values.panelSettings.length > 0 ? filterFormik.values.panelSettings : undefined,
+            categories: formValues.categories.length > 0 ? formValues.categories : undefined,
+            unitModels: formValues.unitModels.length > 0 ? formValues.unitModels : undefined,
+            featureTypes: formValues.featureTypes.length > 0 ? formValues.featureTypes : undefined,
+            // Map price ranges to minPrice/maxPrice
+            minPrice: formValues.priceRanges.length > 0 ?
+                Math.min(...formValues.priceRanges.map(range => {
+                    if (range === "free") return 0;
+                    if (range === "0-50") return 0;
+                    if (range === "50-200") return 50000;
+                    if (range === "200+") return 200000;
+                    return 0;
+                })) : undefined,
+            maxPrice: formValues.priceRanges.length > 0 ?
+                Math.max(...formValues.priceRanges.map(range => {
+                    if (range === "free") return 0;
+                    if (range === "0-50") return 50000;
+                    if (range === "50-200") return 200000;
+                    if (range === "200+") return 1000000; // Set a high upper limit
+                    return 1000000;
+                })) : undefined,
+            calendarOptions: formValues.calendarOptions.length > 0 ? formValues.calendarOptions : undefined,
+            panelSettings: formValues.panelSettings.length > 0 ? formValues.panelSettings : undefined,
         };
+    }, [actualSearchTerm]);
 
-        // Clean up undefined values
-        Object.keys(filters).forEach(key => {
-            if (filters[key as keyof SingleFeaturesFilters] === undefined || filters[key as keyof SingleFeaturesFilters] === "") {
-                delete filters[key as keyof SingleFeaturesFilters];
+
+    useEffect(() => {
+        const cleanFilters = { ...appliedFilters };
+        Object.keys(cleanFilters).forEach(key => {
+            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                delete cleanFilters[key as keyof SingleFeaturesFilters];
             }
         });
 
-        // Update filters in Redux and fetch data
-        dispatch(setFilters(filters));
         dispatch(fetchSingleFeatures({
             page: currentPage,
             limit: pageSize,
-            filters
+            filters: cleanFilters
         }));
-    }, [dispatch, currentPage, pageSize, actualSearchTerm, filterFormik.values]);
-
-    // Reset to first page when filters change
-    useEffect(() => {
-        dispatch(setCurrentPage(1));
-    }, [dispatch, filterFormik.values, actualSearchTerm, sortBy]);
-
-    // Fetch data when dependencies change
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    // Initial data fetch on component mount
-    useEffect(() => {
-        fetchData();
-    }, []);
+    }, [dispatch]);
 
     // Get raw package units from Redux items for filtering options
     const packageUnits = useMemo(() => {
@@ -155,6 +397,7 @@ export default function SingleFeaturesContainer({
         return uniqueCategories.sort();
     }, [packageUnits]);
 
+
     // Filter options
     const priceRanges = [
         { value: "all", label: "همه قیمت‌ها" },
@@ -166,16 +409,15 @@ export default function SingleFeaturesContainer({
 
     const unitModelOptions = [
         { value: "all", label: "همه مدل‌ها" },
-        { value: "flat", label: "ثابت" },
+        { value: "flat", label: "بدون محدودیت" },
         { value: "perCount", label: "بر اساس تعداد" },
         { value: "perDuration", label: "بر اساس مدت" },
     ];
 
     const featureTypes = [
-        { value: "all", label: "همه انواع" },
-        { value: "basic", label: "پایه" },
-        { value: "premium", label: "پیشرفته" },
-        { value: "enterprise", label: "سازمانی" },
+        { value: "sale", label: "فروش" },
+        { value: "rent", label: "اجاره" },
+
     ];
 
     // Sort options
@@ -191,6 +433,44 @@ export default function SingleFeaturesContainer({
     const displayUnits = useMemo(() => {
         return packageUnits; // packageUnits comes from Redux and is already filtered
     }, [packageUnits]);
+
+    console.log("displayUnits", displayUnits);
+
+    // Callback to load next page (used by both hooks)
+    const loadNextPage = useCallback(async () => {
+        const cleanFilters = { ...appliedFilters };
+        Object.keys(cleanFilters).forEach(key => {
+            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined ||
+                cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                delete cleanFilters[key as keyof SingleFeaturesFilters];
+            }
+        });
+
+        await dispatch(loadMoreSingleFeatures({
+            page: currentPage + 1,
+            limit: pageSize,
+            filters: cleanFilters
+        })).unwrap();
+    }, [currentPage, pageSize, appliedFilters, dispatch]);
+
+    // Use highlight search hook for auto-loading until highlighted item is found
+    const { isSearching: isSearchingHighlight, resetSearch } = useHighlightSearch({
+        items: displayUnits,
+        highlightCode: highlightCode! || "",
+        currentPage,
+        totalPages,
+        isLoading: loading,
+        checkMatch: (unit, code) => hasFeatureCode(unit.accessesJson, code),
+        onLoadNextPage: loadNextPage,
+    });
+
+    // Use infinite scroll hook for manual scrolling
+    const { loadMoreRef, isLoadingMore } = useInfiniteScroll({
+        hasMore: currentPage < totalPages,
+        isLoading: loading,
+        onLoadMore: loadNextPage,
+        disabled: isSearchingHighlight, // Disable manual scroll while searching for highlight
+    });
 
     // Filter items for FilterContainer - Updated for multiple selection
     const filterItems = [
@@ -311,9 +591,38 @@ export default function SingleFeaturesContainer({
     }));
 
     // Handle filter actions
-    const handleFilter = () => {
-        // Filters apply automatically via react-query
-        console.log("Filters applied:", filterFormik.values);
+    const handleApplyFilters = () => {
+        // Transform current form values to filters and apply them
+        const newFilters = transformFormToFilters(filterFormik.values);
+
+        // Preserve the current search term from applied filters
+        const finalFilters = {
+            ...newFilters,
+            keyword: appliedFilters.keyword || actualSearchTerm
+        };
+
+        setAppliedFilters(finalFilters);
+        appliedFiltersRef.current = finalFilters;
+
+        // Reset highlight search when filters change
+        resetSearch();
+
+        // Clean up undefined values
+        const cleanFilters = { ...finalFilters };
+        Object.keys(cleanFilters).forEach(key => {
+            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                delete cleanFilters[key as keyof SingleFeaturesFilters];
+            }
+        });
+
+        // Directly dispatch with page 1 (reset to first page when applying new filters)
+        dispatch(fetchSingleFeatures({
+            page: 1,
+            limit: pageSize,
+            filters: cleanFilters
+        }));
+        dispatch(setCurrentPage(1));
+        console.log("Filters applied:", cleanFilters);
     };
 
     const handleSort = (sortValue: string) => {
@@ -322,16 +631,32 @@ export default function SingleFeaturesContainer({
 
     const handleCancelFilter = () => {
         filterFormik.resetForm();
+        setAppliedFilters({});
+        appliedFiltersRef.current = {};
         setSortBy("name");
         searchFormik.resetForm();
         setActualSearchTerm("");
-        dispatch(setCurrentPage(1)); // Reset to first page
-        // Clear filters in Redux
+
+        // Reset highlight search when filters reset
+        resetSearch();
+
+        // Directly dispatch with empty filters (including no search term)
+        dispatch(fetchSingleFeatures({
+            page: 1,
+            limit: pageSize,
+            filters: {}
+        }));
+        dispatch(setCurrentPage(1));
         dispatch(setFilters({}));
     };
 
     // Handle bulk operations
     const handleCheckItem = (itemId: number, checked: boolean) => {
+        // Don't allow selection if item is already in cart
+        if (isItemInCart(itemId)) {
+            return;
+        }
+
         if (checked) {
             dispatch(setCheckedItems([...checkedItems, itemId]));
         } else {
@@ -341,8 +666,11 @@ export default function SingleFeaturesContainer({
 
     const handleCheckAll = (checked: boolean) => {
         if (checked) {
-            const allIds = items.map(item => item.id);
-            dispatch(setCheckedItems(allIds));
+            // Only select items that are not in cart
+            const selectableIds = items
+                .filter(item => !isItemInCart(item.id))
+                .map(item => item.id);
+            dispatch(setCheckedItems(selectableIds));
         } else {
             dispatch(setCheckedItems([]));
         }
@@ -355,7 +683,8 @@ export default function SingleFeaturesContainer({
 
     // Get selected items count
     const selectedCount = checkedItems.length;
-    const allItemsSelected = items.length > 0 && checkedItems.length === items.length;
+    const selectableItems = items.filter(item => !isItemInCart(item.id));
+    const allItemsSelected = selectableItems.length > 0 && checkedItems.length === selectableItems.length;
 
     // Handle unit purchase
     const handleUnitPurchase = async (unitId: number, description: string) => {
@@ -367,27 +696,29 @@ export default function SingleFeaturesContainer({
     // Handle data refresh
     const handleRefresh = () => {
         dispatch(clearError());
-        fetchData();
-    };
 
-    // Pagination handlers
-    const handlePageChange = (page: number) => {
-        dispatch(setCurrentPage(page));
-    };
+        const cleanFilters = { ...appliedFilters };
+        Object.keys(cleanFilters).forEach(key => {
+            if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                delete cleanFilters[key as keyof SingleFeaturesFilters];
+            }
+        });
 
-    const handlePageSizeChange = (size: number) => {
-        setPageSize(size);
-        dispatch(setCurrentPage(1)); // Reset to first page when changing page size
+        dispatch(fetchSingleFeatures({
+            page: currentPage,
+            limit: pageSize,
+            filters: cleanFilters
+        }));
     };
 
     // Get pagination info from Redux state
     const totalItems = total;
-    const hasNextPage = currentPage < totalPages;
-    const hasPrevPage = currentPage > 1;
+    const hasMoreData = currentPage < totalPages;
 
     // Convert PackageUnit to format expected by SingleFeatureCard
     const convertToSingleFeatureUnit = (unit: PackageUnit) => {
         return {
+            code: unit.accessesJson?.pages?.[0]?.code,
             id: unit.id,
             name: unit.name,
             description: unit.description || '',
@@ -437,7 +768,7 @@ export default function SingleFeaturesContainer({
                     <div className="flex flex-row items-center justify-between">
                         {/* Filter Container */}
                         <FilterContainer
-                            onFilterHandler={handleFilter}
+                            onFilterHandler={handleApplyFilters}
                             rangeItems={rangeItems}
                             filterItems={filterItems}
                             sortList={sortList}
@@ -468,132 +799,186 @@ export default function SingleFeaturesContainer({
             </section>
 
             {/* Active Filters Tags */}
-            {(filterFormik.values.categories.length > 0 ||
-                filterFormik.values.priceRanges.length > 0 ||
-                filterFormik.values.unitModels.length > 0 ||
-                filterFormik.values.featureTypes.length > 0 ||
-                filterFormik.values.calendarOptions.length > 0 ||
-                filterFormik.values.panelSettings.length > 0 ||
+            {((appliedFilters.categories?.length ?? 0) > 0 ||
+                (appliedFilters.priceRanges?.length ?? 0) > 0 ||
+                (appliedFilters.unitModels?.length ?? 0) > 0 ||
+                (appliedFilters.featureTypes?.length ?? 0) > 0 ||
+                (appliedFilters.calendarOptions?.length ?? 0) > 0 ||
+                (appliedFilters.panelSettings?.length ?? 0) > 0 ||
+                appliedFilters.minPrice !== undefined ||
+                appliedFilters.maxPrice !== undefined ||
+                appliedFilters.keyword ||
                 actualSearchTerm ||
                 sortBy !== "name") && (
-                    <div className="bg-gray-50 rounded-lg p-4">
+                    <div className="bg-gray-50 rounded-lg p-4 hidden">
                         <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-medium text-gray-700">فیلترهای فعال:</span>
+                            {/* <span className="text-sm font-medium text-gray-700">فیلترهای فعال:</span> */}
 
                             {/* Search Tag */}
-                            {actualSearchTerm && (
+                            {/* {(appliedFilters.keyword || actualSearchTerm) && (
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                                    جستجو: "{actualSearchTerm}"
+                                    جستجو: "{appliedFilters.keyword || actualSearchTerm}"
                                     <button
                                         onClick={() => {
                                             searchFormik.setFieldValue("searchTerm", "");
                                             setActualSearchTerm("");
+                                            // Remove keyword from applied filters
+                                            const newFilters = { ...appliedFilters };
+                                            delete newFilters.keyword;
+                                            setAppliedFilters(newFilters);
+                                            appliedFiltersRef.current = newFilters;
+
+                                            // Clean up undefined values
+                                            const cleanFilters = { ...newFilters };
+                                            Object.keys(cleanFilters).forEach(key => {
+                                                if (cleanFilters[key as keyof SingleFeaturesFilters] === undefined || cleanFilters[key as keyof SingleFeaturesFilters] === "") {
+                                                    delete cleanFilters[key as keyof SingleFeaturesFilters];
+                                                }
+                                            });
+
+                                            // Fetch data without search term
+                                            dispatch(fetchSingleFeatures({
+                                                page: 1,
+                                                limit: pageSize,
+                                                filters: cleanFilters
+                                            }));
+                                            dispatch(setCurrentPage(1));
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            )}
+                            )} */}
 
-                            {/* Category Tags - Multiple */}
-                            {filterFormik.values.categories.map((category: string) => (
+                         
+                            {/* {appliedFilters.categories?.map((category: string) => (
                                 <span key={category} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     دسته‌بندی: {category}
                                     <button
                                         onClick={() => {
-                                            const newCategories = filterFormik.values.categories.filter((c: string) => c !== category);
-                                            filterFormik.setFieldValue("categories", newCategories);
+                                            const newCategories = appliedFilters.categories?.filter((c: string) => c !== category) || [];
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                categories: newCategories
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Price Range Tags - Multiple */}
-                            {filterFormik.values.priceRanges.map((priceRange: string) => (
-                                <span key={priceRange} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                                    قیمت: {priceRanges.find(p => p.value === priceRange)?.label}
+                            {/* {appliedFilters.minPrice !== undefined && appliedFilters.maxPrice !== undefined && (
+                                <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
+                                    قیمت: {appliedFilters.minPrice} - {appliedFilters.maxPrice}
                                     <button
                                         onClick={() => {
-                                            const newPriceRanges = filterFormik.values.priceRanges.filter((p: string) => p !== priceRange);
-                                            filterFormik.setFieldValue("priceRanges", newPriceRanges);
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                minPrice: undefined,
+                                                maxPrice: undefined
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            )} */}
 
                             {/* Unit Model Tags - Multiple */}
-                            {filterFormik.values.unitModels.map((unitModel: string) => (
+                            {/* {appliedFilters.unitModels?.map((unitModel: string) => (
                                 <span key={unitModel} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     مدل: {unitModelOptions.find(u => u.value === unitModel)?.label}
                                     <button
                                         onClick={() => {
-                                            const newUnitModels = filterFormik.values.unitModels.filter((u: string) => u !== unitModel);
-                                            filterFormik.setFieldValue("unitModels", newUnitModels);
+                                            const newUnitModels = appliedFilters.unitModels?.filter((u: string) => u !== unitModel) || [];
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                unitModels: newUnitModels
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Feature Type Tags - Multiple */}
-                            {filterFormik.values.featureTypes.map((featureType: string) => (
+                            {/* {appliedFilters.featureTypes?.map((featureType: string) => (
                                 <span key={featureType} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     نوع: {featureTypes.find(f => f.value === featureType)?.label}
                                     <button
                                         onClick={() => {
-                                            const newFeatureTypes = filterFormik.values.featureTypes.filter((f: string) => f !== featureType);
-                                            filterFormik.setFieldValue("featureTypes", newFeatureTypes);
+                                            const newFeatureTypes = appliedFilters.featureTypes?.filter((f: string) => f !== featureType) || [];
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                featureTypes: newFeatureTypes
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Calendar Options Tags */}
-                            {filterFormik.values.calendarOptions.map((option: string) => (
+                            {/* {appliedFilters.calendarOptions?.map((option: string) => (
                                 <span key={option} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     تقویم: {option}
                                     <button
                                         onClick={() => {
-                                            const newOptions = filterFormik.values.calendarOptions.filter((o: string) => o !== option);
-                                            filterFormik.setFieldValue("calendarOptions", newOptions);
+                                            const newOptions = appliedFilters.calendarOptions?.filter((o: string) => o !== option) || [];
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                calendarOptions: newOptions
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Panel Settings Tags */}
-                            {filterFormik.values.panelSettings.map((setting: string) => (
+                            {/* {appliedFilters.panelSettings?.map((setting: string) => (
                                 <span key={setting} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     پنل: {setting}
                                     <button
                                         onClick={() => {
-                                            const newSettings = filterFormik.values.panelSettings.filter((s: string) => s !== setting);
-                                            filterFormik.setFieldValue("panelSettings", newSettings);
+                                            const newSettings = appliedFilters.panelSettings?.filter((s: string) => s !== setting) || [];
+                                            const updatedFilters = {
+                                                ...appliedFilters,
+                                                panelSettings: newSettings
+                                            };
+                                            setAppliedFilters(updatedFilters);
+                                            appliedFiltersRef.current = updatedFilters;
                                         }}
                                         className="ml-1 text-blue-600 hover:text-blue-800"
                                     >
                                         ×
                                     </button>
                                 </span>
-                            ))}
+                            ))} */}
 
                             {/* Sort Tag */}
-                            {sortBy !== "name" && (
+                            {/* {sortBy !== "name" && (
                                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">
                                     مرتب‌سازی: {sortOptions.find(s => s.value === sortBy)?.label}
                                     <button
@@ -603,35 +988,38 @@ export default function SingleFeaturesContainer({
                                         ×
                                     </button>
                                 </span>
-                            )}
+                            )} */}
 
                             {/* Clear All Button */}
-                            <button
+                            {/* <button
                                 onClick={handleCancelFilter}
-                                className="px-3 py-1 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-full transition-colors"
+                                                                className="text-xs text-danger hover:text-danger/80 transition-colors"
                             >
                                 پاک کردن همه
-                            </button>
+                            </button> */}
                         </div>
                     </div>
                 )}
 
             {/* Results Summary */}
             <div className="flex justify-between items-center">
-
+                {/* Select All Checkbox */}
+                <div className="flex items-center gap-2">
+                    <input
+                        type="checkbox"
+                        checked={allItemsSelected}
+                        onChange={(e) => handleCheckAll(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300"
+                    />
+                    <span className="text-sm text-gray-700">
+                        {selectedCount > 0 ? `${selectedCount} مورد انتخاب شده` : `انتخاب همه (${selectableItems.length} مورد قابل انتخاب)`}
+                    </span>
+                </div>
 
                 <div className="flex items-center gap-2">
-                    {/* Page Size Selector */}
-                    <select
-                        value={pageSize}
-                        onChange={(e) => handlePageSizeChange(Number(e.target.value))}
-                        className="px-3 py-2 border border-gray-300 rounded-md text-sm"
-                    >
-                        <option value={10}>10 در صفحه</option>
-                        <option value={20}>20 در صفحه</option>
-                        <option value={50}>50 در صفحه</option>
-                        <option value={100}>100 در صفحه</option>
-                    </select>
+                    <span className="text-sm text-gray-500">
+                        نمایش {displayUnits.length} از {totalItems} مورد
+                    </span>
 
                     {searchFormik.values.searchTerm && (
                         <Button
@@ -644,7 +1032,31 @@ export default function SingleFeaturesContainer({
                     )}
                 </div>
             </div>
-
+            {checkedItems.length > 0 && (
+                <div className="fixed top-3 left-1/2 transform -translate-x-1/2 bg-white p-4 rounded-xl shadow-2xl border-2 border-blue-500 z-50 animate-in slide-in-from-bottom-5">
+                    <div className="flex items-center gap-4">
+                        <span className="text-sm font-medium text-gray-700">
+                            {checkedItems.length} مورد انتخاب شده
+                        </span>
+                        <Button
+                            onClick={handleAddSelectedToCart}
+                            variant="info"
+                            size="lg"
+                            className="px-6"
+                            disabled={addToCartMutation.isPending}
+                        >
+                            {addToCartMutation.isPending ? 'در حال افزودن...' : 'افزودن به سبد خرید'}
+                        </Button>
+                        <button
+                            onClick={() => dispatch(setCheckedItems([]))}
+                            className="text-gray-500 hover:text-gray-700 text-sm"
+                            disabled={addToCartMutation.isPending}
+                        >
+                            لغو انتخاب
+                        </button>
+                    </div>
+                </div>
+            )}
             {/* Features Grid */}
             <section>
                 {loading ? (
@@ -655,14 +1067,45 @@ export default function SingleFeaturesContainer({
                     </div>
                 ) : displayUnits.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayUnits.map((unit) => (
-                            <SingleFeatureCard
-                                key={unit.id}
-                                unit={convertToSingleFeatureUnit(unit)}
-                                chadcoCustomerId={chadcoCustomerId}
-                                onPurchase={handleUnitPurchase}
-                            />
-                        ))}
+                        {displayUnits.map((unit) => {
+                            // Check if this unit has the highlighted feature code
+                            const isHighlighted = highlightCode! ? hasFeatureCode(unit.accessesJson, highlightCode!) : false;
+
+                            return (
+                                <SingleFeatureCard
+                                    key={unit.id}
+                                    unit={convertToSingleFeatureUnit(unit)}
+                                    chadcoCustomerId={chadcoCustomerId}
+                                    onPurchase={handleUnitPurchase}
+                                    isInCart={isItemInCart(unit.id)}
+                                    onAddToCart={(unitId, requestMessage) => {
+                                        if (chadcoCustomerId) {
+                                            addToCartMutation.mutate({
+                                                packageUnitIds: [unitId],
+                                                chadcoCustomerId: chadcoCustomerId,
+                                                requestMessage: requestMessage
+                                            });
+                                        }
+                                    }}
+                                    onRemoveFromCart={(itemId) => {
+                                        if (chadcoCustomerId) {
+                                            removeFromCartMutation.mutate({
+                                                packageUnitIds: [parseInt(itemId)],
+                                                chadcoCustomerId: chadcoCustomerId
+                                            });
+                                        }
+                                    }}
+                                    showCartActions={true}
+                                    isChecked={isItemChecked(unit.id)}
+                                    onCheckChange={handleCheckItem}
+                                    cartLoading={loadingItems.has(unit.id)}
+                                    isSelectable={!isItemInCart(unit.id)}
+                                    isHighlighted={isHighlighted}
+                                    highlightCode={highlightCode! || ""}
+                                    accessesJson={unit.accessesJson}
+                                />
+                            );
+                        })}
                     </div>
                 ) : (
                     <div className="text-center py-12">
@@ -676,55 +1119,29 @@ export default function SingleFeaturesContainer({
                 )}
             </section>
 
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-                <section className="flex justify-center items-center space-x-2 pt-8">
-                    <Button
-                        variant="outline"
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={!hasPrevPage || loading}
-                        className="mx-1"
-                    >
-                        قبلی
-                    </Button>
+            {/* Infinite Scroll Trigger & Loading Indicator */}
+            {hasMoreData && (
+                <div ref={loadMoreRef} className="flex justify-center py-8">
+                    {isLoadingMore ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <span className="text-sm text-gray-500">در حال بارگذاری...</span>
+                        </div>
+                    ) : (
+                        <div className="text-sm text-gray-400">
+                            اسکرول کنید تا بیشتر ببینید
+                        </div>
+                    )}
+                </div>
+            )}
 
-                    {/* Page Numbers */}
-                    <div className="flex space-x-1 mx-4">
-                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                            let pageNumber;
-                            if (totalPages <= 5) {
-                                pageNumber = i + 1;
-                            } else if (currentPage <= 3) {
-                                pageNumber = i + 1;
-                            } else if (currentPage >= totalPages - 2) {
-                                pageNumber = totalPages - 4 + i;
-                            } else {
-                                pageNumber = currentPage - 2 + i;
-                            }
-
-                            return (
-                                <Button
-                                    key={pageNumber}
-                                    variant={currentPage === pageNumber ? "default" : "outline"}
-                                    onClick={() => handlePageChange(pageNumber)}
-                                    disabled={loading}
-                                    className="w-10 h-10 p-0 mx-0.5"
-                                >
-                                    {pageNumber}
-                                </Button>
-                            );
-                        })}
+            {/* End of list indicator */}
+            {!hasMoreData && displayUnits.length > 0 && (
+                <div className="flex justify-center py-8">
+                    <div className="text-sm text-gray-400">
+                        همه موارد نمایش داده شد ({totalItems} مورد)
                     </div>
-
-                    <Button
-                        variant="outline"
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={!hasNextPage || loading}
-                        className="mx-1"
-                    >
-                        بعدی
-                    </Button>
-                </section>
+                </div>
             )}
         </div>
     );

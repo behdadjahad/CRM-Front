@@ -14,14 +14,33 @@ import { Checkbox } from '../ui/checkbox';
 import { convertDaysToMonths } from '@/lib/duration-utils';
 import { Clock, Plus } from 'lucide-react';
 import Tooltip from '../ui/tooltip';
+import { getAllFeaturesWithDetails, getMatchedFeature, type FeatureDetail } from '@/lib/feature-match-utils';
 
 
 
+// Update the interface (around line 20-24)
 interface SingleFeatureCardProps {
     unit: SingleFeatureUnit;
     chadcoCustomerId?: number;
     onPurchase?: (unitId: number, description: string) => void;
+    // Add these cart-related props
+    isInCart?: boolean;
+    onAddToCart?: (unitId: number, requestMessage?: string) => void;
+    onRemoveFromCart?: (itemId: string) => void;
+    showCartActions?: boolean;
+    cartLoading?: boolean;
+    addToCartLoading?: boolean;
+    removeFromCartLoading?: boolean;
+    // Add selection props
+    isChecked?: boolean;
+    onCheckChange?: (unitId: number, checked: boolean) => void;
+    isSelectable?: boolean;
+    // Add highlighting props
+    isHighlighted?: boolean;
+    highlightCode?: string; // The feature code being highlighted
+    accessesJson?: any; // The accessesJson from the unit
 }
+
 
 
 // Price display component for single features
@@ -34,7 +53,7 @@ const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, sh
         return <p className="text-xs text-gray-500"> {countUnit} محدودیت</p>;
     }
     if (unitModel === "flat") {
-        return <p className="text-xs text-gray-500">-</p>;
+        return <p className="text-xs text-gray-500">بدون محدودیت</p>;
     }
     return "";
 };
@@ -61,11 +80,36 @@ const FeaturePriceDisplay: React.FC<{
 const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     unit,
     chadcoCustomerId,
-    onPurchase
+    onPurchase,
+    isInCart,
+    onAddToCart,
+    onRemoveFromCart,
+    showCartActions,
+    cartLoading,
+    addToCartLoading,
+    removeFromCartLoading,
+    isChecked,
+    onCheckChange,
+    isSelectable = true,
+    isHighlighted = false,
+    highlightCode,
+    accessesJson
 }) => {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
+
+    // Get matched feature details if highlighted
+    const matchedFeature = isHighlighted && highlightCode && accessesJson
+        ? getMatchedFeature(accessesJson, highlightCode)
+        : null;
+
+    // Get all features for this unit
+    const allFeatures = accessesJson ? getAllFeaturesWithDetails(accessesJson) : [];
+
+    console.log("isHighlighted", isHighlighted);
+    console.log("matchedFeature", matchedFeature);
+    console.log("allFeatures", allFeatures);
 
     const handlePurchaseClick = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -133,37 +177,51 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
             setStatus('order-details');
         };
     }, []);
+    const handleAddToCart = () => {
+        if (onAddToCart) {
+            onAddToCart(unit.id, `Request for ${unit.name}`);
+        }
+    };
+
 
     return (
         <div
+            data-unit-card
             className={cn(
                 "relative bg-white rounded-lg p-4 transition-all duration-300 cursor-pointer",
-                "border border-gray-200 shadow-sm",
+                "border shadow-sm",
+                isHighlighted && "ring-4 ring-yellow-400 border-yellow-500 shadow-2xl bg-yellow-50/20",
+                isChecked ? "border-blue-500 border-2 shadow-md bg-blue-50/30" : !isHighlighted && "border-gray-200",
                 !isPurchaseModalOpen && "hover:shadow-md hover:-translate-y-1",
                 "flex flex-col justify-between min-h-[266px]"
             )}
         >
             <div className='bg-[#F8F8F8] rounded-[8x] py-2.5 px-4'>
-              
+
                 <div className="mb-4">
                     <div className="flex justify-between items-start mb-2">
-                        <div className="flex items-center gap-2">       
+                        <div className="flex items-center gap-2">
                             <Checkbox
-                            // checked={option.isSelected}
-                            // onCheckedChange={() => onDurationChange(option.id)}
-                            className="border border-[#D5D7DA]"
-                        />
-                        <Tooltip content={unit.name}>
-                            <p className="text-lg lg:text-base xl:text-lg textlg font-medium zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]" style={{
-                                display: '-webkit-box',
-                                WebkitLineClamp: 2,
-                                WebkitBoxOrient: 'vertical'
-                            }}>
-                                {unit.name}
-                            </p>
+                                checked={isChecked}
+                                onCheckedChange={(checked) => onCheckChange?.(unit.id, checked as boolean)}
+                                className="border border-[#D5D7DA]"
+                                disabled={!isSelectable}
+                            />
+                            <Tooltip content={unit.name}>
+                                <p className={cn(
+                                    "text-lg lg:text-base xl:text-lg textlg zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]",
+                                    isHighlighted ? "font-bold text-yellow-700" : "font-medium",
+                                    !isSelectable && 'opacity-60'
+                                )} style={{
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 2,
+                                    WebkitBoxOrient: 'vertical'
+                                }}>
+                                    {unit.name}
+                                </p>
                             </Tooltip>
-                            
-                            </div>
+
+                        </div>
 
                         {unit.category && (
                             <Tag text={unit.category.name} />
@@ -180,7 +238,7 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                         {unit.description || 'توضیحات در دسترس نیست'}
                     </p>
 
-                 
+
                 </div>
 
                 <div className="flex border border-[#D5D7DA] border-dashed rounded-full w-fit px-2.5 py-1 justify-between items-center">
@@ -196,19 +254,31 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                     currency={unit.currency}
 
                 />
+                {showCartActions && (
+                    <div className="flex gap-2 mt-4">
+                        {(isInCart && !cartLoading) ? (
+                            <Button
+                                variant="outline"
+                                onClick={() => onRemoveFromCart?.(unit.id.toString())}
+                                disabled={removeFromCartLoading || cartLoading}
+                                className="text-red-600 border-red-600 hover:bg-red-50"
+                            >
+                                {(removeFromCartLoading || cartLoading) ? 'آیتم حذف شد...' : 'حذف از سبد خرید'}
+                            </Button>
+                        ) : (
+                            <Button
+                                className="text-base "
+                                variant="info"
+                                onClick={handleAddToCart}
+                                disabled={!onAddToCart || addToCartLoading || cartLoading}
+                            >
+                                <Plus size={20} />
+                                {cartLoading ? 'در حال پردازش...' : 'افزودن'}
+                            </Button>
+                        )}
+                    </div>
+                )}
 
-
-           
-                <Button
-                    variant="info"
-                    onClick={handlePurchaseClick}
-                    className="text-base "
-                    disabled={isSelecting}
-
-                >
-                    <Plus size={20} />
-                    {isSelecting ? 'در حال پردازش...' : 'افزودن'}
-                </Button>
             </div>
 
         </div>

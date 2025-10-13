@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { cloneElement, isValidElement } from "react";
+import { useRouter } from "next/navigation";
 interface AccessDeniedInterface {
   title?: string;
   message?: string;
@@ -13,6 +14,7 @@ interface AccessDeniedInterface {
   variant?: any;
   className?: string;
   trigger?: React.ReactElement;
+  featureCode?: string; // Feature code to highlight in single-features page
 }
 
 export function AccessDenied({
@@ -22,8 +24,21 @@ export function AccessDenied({
   className,
   title,
   trigger,
+  featureCode,
 }: AccessDeniedInterface) {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+
+
+  const handleBuyService = () => {
+    setIsOpen(false); // Close modal first
+    // Navigate with feature code as query parameter
+    const url = featureCode
+      ? `/single-features?highlightCode=${encodeURIComponent(featureCode)}`
+      : '/single-features';
+    router.push(url);
+
+  };
 
   return (
     <>
@@ -89,7 +104,9 @@ export function AccessDenied({
             <h2>محدودیت سطح کاربری</h2>
             {message && <p className="text-sm text-gray-500">{message}</p>}
           </div>
-          <Button variant={"info"}>خرید سرویس</Button>
+          <Button variant={"info"} onClick={handleBuyService}>
+            خرید سرویس
+          </Button>
         </div>
       </CustomModal>
     </>

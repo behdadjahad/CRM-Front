@@ -25,11 +25,13 @@ export default function TextEditorInput({
   };
   return (
     <ReactQuill
+
       theme="snow"
       value={form.values[item.key]}
       onChange={(value) => {
         form.setFieldValue(item.key, value);
       }}
+      placeholder={item.floating ? " " : item.placeholder}
       modules={modules}
       className={cn("w-full flex flex-col min-h-[222px] mt-6", item.className)}
     />

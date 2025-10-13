@@ -52,27 +52,35 @@ const PackageComparisonContainer: React.FC<PackageComparisonContainerProps> = ({
   );
 
   return (
-    <div className={cn("w-full flex justify-end items-end space-y-8 ",)}>
+    <div className={cn("w-full flex justify-end items-end space-y-4 xl:space-y-8")}>
 
-
-      {/* Package cards grid */}
-      <div className="grid grid-cols-1 w-10/12 md:grid-cols-2 lg:grid-cols-12 gap-6">
-        {filteredPackages?.map((packageData) => (
-          <>
-            <div key={packageData.id} className='col-span-3'>
+      {/* Mobile: Horizontal scrollable package cards */}
+      <div className="xl:hidden w-full">
+        <div className="flex overflow-x-auto gap-4 pb-4 scrollbar-hide">
+          {filteredPackages?.map((packageData) => (
+            <div key={packageData.id} className='flex-shrink-0 w-64'>
               <PackageCard
-                key={packageData.id}
                 data={packageData}
                 chadcoCustomerId={chadcoCustomerId}
                 onPackageSelect={handlePackageSelect}
-              // isSelected={selectedPackageId === packageData.id.toString()}
-              // onSelect={handlePackageSelect}
-              // onPurchase={handlePackagePurchase}
-              // className="h-full"
+                isMobile={true}
               />
             </div>
+          ))}
+        </div>
+      </div>
 
-          </>
+      {/* Desktop: Package cards grid */}
+      <div className="hidden xl:grid grid-cols-12 w-10/12 gap-6">
+        {filteredPackages?.map((packageData) => (
+          <div key={packageData.id} className='col-span-3'>
+            <PackageCard
+              data={packageData}
+              chadcoCustomerId={chadcoCustomerId}
+              onPackageSelect={handlePackageSelect}
+              isMobile={false}
+            />
+          </div>
         ))}
       </div>
 

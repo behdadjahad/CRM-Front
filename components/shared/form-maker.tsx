@@ -35,6 +35,8 @@ export interface OptionType {
 export interface FieldType {
   outerIcon?: React.ReactNode;
 
+ 
+
   component:
     | "input"
     | "multi-added-input"
@@ -113,6 +115,7 @@ export interface FormMakerInterface {
 export default function FormMaker({
   form,
 
+
   fields,
   className,
   hasAccess = true,
@@ -133,6 +136,7 @@ export default function FormMaker({
           );
         case "tag-preview":
           return <TagPreview form={form} item={item} />;
+          return <TagPreview form={form} item={item} />;
         case "SuggestionInput":
           return (
             <SuggestionInput
@@ -142,6 +146,7 @@ export default function FormMaker({
             />
           );
         case "input":
+          return <TextInput disabled={!hasAccess} item={item} form={form} />;
           return <TextInput disabled={!hasAccess} item={item} form={form} />;
         case "multi-added-input":
           return <MultiAddedTextInput item={{ ...item }} form={form} />;

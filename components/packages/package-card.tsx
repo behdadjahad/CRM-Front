@@ -4,29 +4,28 @@ import React, { useEffect, useState } from 'react';
 import { Package, PackageCardProp, PackageItem } from '@/types/packages';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import PackageIcon from './package-icons';
-import { getColorValue } from './package-icons';
 import PurchaseFlowModal from './purchase-flow-modal';
 import { selectPackage } from '@/api/packages/package-api';
 import { CustomToast } from '../shared/custome-toast';
+import { useRouter } from 'next/navigation';
 
 
 // Helper function to get border color class
 const getBorderColorClass = (color: string): string => {
     switch (color) {
         case 'طلایی':
-            return 'border-t-[#F8AC3F]';
+            return 'border-t-static-package-gold';
         case 'نقره ای':
-            return 'border-t-[#B6BCC2]';
+            return 'border-t-static-package-silver';
         case 'برنزی':
-            return 'border-t-[#BF8970]';
+            return 'border-t-static-package-bronze';
         case 'آبی':
-            return 'border-t-[#2949A4]';
+            return 'border-t-static-primary-blue-dark';
         case 'سفید':
-            return 'border-t-[#6B7280]';
+            return 'border-t-static-package-white';
         default:
-            return 'border-t-[#2949A4]';
+            return 'border-t-static-primary-blue-dark';
     }
 };
 // Price display component
@@ -40,12 +39,10 @@ const PriceDisplay: React.FC<{
         return price.toLocaleString('fa-IR');
     };
 
-
-
     return (
         <div className="flex flex-col items-center space-y-2">
             {originalPrice && originalPrice > currentPrice && (
-                <div className="text-xs text-[#637381] line-through">
+                <div className="text-xs text-static-secondary-gray-light line-through">
                     {formatPrice(originalPrice)} {currency}
                 </div>
             )}
@@ -54,7 +51,7 @@ const PriceDisplay: React.FC<{
                 {currentPrice === 0 ? 'رایگان' : `${formatPrice(currentPrice)} ${currency}`}
             </div>
             {currentPrice > 0 && (
-                <div className="text-sm whitespace-nowrap font-normal text-[#637381] ">
+                <div className="text-sm whitespace-nowrap font-normal text-static-secondary-gray-light ">
                     در ماه
                 </div>
             )}
@@ -66,9 +63,10 @@ const PriceDisplay: React.FC<{
 const PackageCard: React.FC<PackageCardProp> = ({
     data,
     chadcoCustomerId,
-    onPackageSelect
+    onPackageSelect,
+    isMobile = false
 }) => {
-
+    const router = useRouter();
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
     const [status, setStatus] = useState<"error" | "success" | "loading" | "order-details">('order-details');
@@ -93,36 +91,44 @@ const PackageCard: React.FC<PackageCardProp> = ({
             CustomToast({
                 type: 'error',
                 message: 'لطفا توضیحات را وارد کنید',
-              });
-              setStatus('error');
-              return;
-    
+            });
+            setStatus('error');
+            return;
+
         }
         try {
             const result = await selectPackage({
                 packageId: data.id,
                 requestMessage: description,
+                numberOfMonths: 1,
                 chadcoCustomerId: chadcoCustomerId!,
 
             });
             if (result?.status === "success") {
-
                 setStatus('success');
+
+                // Show success toast with invoice information
+                CustomToast({
+                    type: 'success',
+                    message: 'درخواست شما با موفقیت ثبت شد. فاکتور شما ایجاد شده است.',
+                });
+
+                // Call the callback if provided
+                if (onPackageSelect) {
+                    onPackageSelect(data.id, result);
+                }
+
+                // Redirect to invoice page after 3 seconds
+                setTimeout(() => {
+                    router.push('/invoice');
+                }, 3000);
             }
             else {
                 setStatus('error');
             }
 
-
-            // Call the callback if provided
-            if (onPackageSelect) {
-                onPackageSelect(data.id, result);
-            }
-
         } catch (error) {
             setStatus('error');
-
-            // Re-throw error so modal can handle it
             throw error;
         } finally {
             setIsSelecting(false);
@@ -145,34 +151,29 @@ const PackageCard: React.FC<PackageCardProp> = ({
     return (
         <div
             className={cn(
-                "relative bg-white rounded-[8px] py-6 px-4 transition-all duration-300 cursor-pointer",
+                "relative bg-white rounded-[8px] transition-all duration-300 cursor-pointer",
                 "border-l border-r border-b border-zinc-200",
                 "border-t-4",
                 getBorderColorClass(data.title),
-                !isPurchaseModalOpen && "hover:shadow-lg md:hover:scale-105 md:origin-center ",
-                // "hover:shadow-lg md:hover:scale-105 md:origin-center  ",
-                // {
-                //     "border-orange-300 shadow-lg": isSelected,
-                //     "border-gray-200 hover:border-gray-300": !isSelected,
-                // },
-                // className
+                !isPurchaseModalOpen && "hover:shadow-lg md:hover:scale-105 md:origin-center",
+                isMobile ? "py-4 px-3" : "py-6 px-4"
             )}
         // onClick={handleCardClick}
         >
 
-            <div className='flex justify-between items-start mb-8 lg:flex-col xl:flex-row  flex-row'>
+            <div className={cn('flex justify-between items-start flex-row', isMobile ? 'mb-4' : 'mb-8 lg:flex-col xl:flex-row')}>
                 <div className='flex flex-col lg:order-2 order-1 xl:order-1'>
                     {/* Package name */}
-                    <p className="text-lg  font-medium  text-gray-900 ">
+                    <p className={cn("font-medium text-gray-900", isMobile ? "text-sm" : "text-lg")}>
                         {data.title}
                     </p>
                     {/* Package subtitle */}
                     {data.description ? (
-                        <p className="text-sm text-gray-600 text-center ">
+                        <p className={cn("text-gray-600 text-center", isMobile ? "text-xs" : "text-sm")}>
                             {data.description}
                         </p>
                     ) : (
-                        <p className="text-sm h-5 text-gray-600 text-center ">
+                        <p className={cn("text-gray-600 text-center", isMobile ? "text-xs h-4" : "text-sm h-5")}>
 
                         </p>
                     )}
@@ -182,7 +183,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
                     <PackageIcon
                         type={data.title as 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید'}
                         color={data.title as 'طلایی' | 'نقره ای' | 'برنزی' | 'آبی' | 'سفید'}
-                        className="w-12 h-12"
+                        className={isMobile ? "w-8 h-8" : "w-12 h-12"}
                     />
                 </div>
             </div>
@@ -191,7 +192,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
 
 
             {/* Price display */}
-            <div className="mb-6">
+            <div className={isMobile ? "mb-4" : "mb-6"}>
                 <PriceDisplay
                     originalPrice={data.price}
                     currentPrice={data.price || 0}
@@ -202,7 +203,7 @@ const PackageCard: React.FC<PackageCardProp> = ({
             </div>
 
 
-            <Button variant={"info"} onClick={handlePurchaseClick} className="w-full border border-warning hover:bg-white hover:border-black hover:border" >
+            <Button variant={"info"} onClick={handlePurchaseClick} className={cn("w-full border border-warning hover:bg-white hover:border-black hover:border", isMobile ? "text-xs py-2" : "")}>
                 شروع کردن
             </Button>
 

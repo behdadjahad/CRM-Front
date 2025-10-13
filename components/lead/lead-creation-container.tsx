@@ -25,7 +25,7 @@ export default function LeadCreationContainer() {
 
   const queryClient = useQueryClient();
   const dispatch = useDispatch<any>();
-  const userData = useSelector((state: RootState) => state.user);
+  const userData = useSelector((state: RootState) => state.login);
   const limit = useSelector((state: any) => state.lead.limit);
   const filters = useSelector((state: any) => state.lead.limit);
   const [openModal, setOpenModal] = useState<boolean>(false);
@@ -76,7 +76,7 @@ export default function LeadCreationContainer() {
       description: "",
       leadResponsible: userData?.fullName,
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
   });
 
   const { mutate: addLeadHandler } = useMutation({
@@ -136,7 +136,7 @@ export default function LeadCreationContainer() {
             onClick={() => {
               setOpenModal(true);
             }}
-            // className={cn("text-aqua-foreground flex justify-end w-full")}
+          // className={cn("text-aqua-foreground flex justify-end w-full")}
           >
             درخواست جدید
           </Button>
@@ -145,6 +145,7 @@ export default function LeadCreationContainer() {
       {!generateFeatureAccess(pageFeatures, "export-lead")?.show &&
         !generateFeatureAccess(pagesData, "export-lead")?.enable && (
           <AccessDenied
+            featureCode="export-lead"
             variant={""}
             title=" درخواست جدید "
             message="شما به این بخش دسترسی ندارید"
@@ -229,20 +230,20 @@ export default function LeadCreationContainer() {
                 {
                   label: "سرد",
                   value: "COLD",
-                  className: "bg-[#F2F7FE] text-[#1C68DA]",
-                  activeClassName: "border border-[#1C68DA]",
+                  className: "bg-static-info-light text-static-info-primary",
+                  activeClassName: "border border-static-info-primary",
                 },
                 {
                   label: "گرم",
                   value: "WARM",
-                  className: "bg-[#FFFAEB] text-[#F79009]",
-                  activeClassName: "border border-[#DC6803]",
+                  className: "bg-static-warning-light text-static-warning-primary",
+                  activeClassName: "border border-static-warning-border",
                 },
                 {
                   label: "داغ",
                   value: "HOT",
-                  className: "bg-[#FEF3F2] text-[#F04438]",
-                  activeClassName: "border border-[#F04438]",
+                  className: "bg-static-error-light text-static-error-primary",
+                  activeClassName: "border border-static-error-primary",
                 },
               ],
 

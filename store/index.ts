@@ -19,6 +19,7 @@ import loginReducer from "./login-slice";
 import invoiceReducer from "./invoice-slice";
 import adminInvoiceReducer from "./admin-invoice-slice";
 import singleFeaturesReducer from "./single-features-slice";
+import cartReducer from "./cart-slice";
 
 
 
@@ -43,6 +44,7 @@ export const store = configureStore({
     invoice: invoiceReducer,
     adminInvoice: adminInvoiceReducer,
     singleFeatures: singleFeaturesReducer,
+    cart: cartReducer,
   },
 });
 

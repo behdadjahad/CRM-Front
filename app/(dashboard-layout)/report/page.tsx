@@ -573,7 +573,9 @@ export default function Report() {
               {generateFeatureAccess(pageFeatures
                 , "export-reports")?.show && !generateFeatureAccess(pageFeatures
                   , "export-reports")?.enable && (
-                  <AccessDenied variant={"foreground"}
+                  <AccessDenied
+                  featureCode="export-reports"
+                  variant={"foreground"}
                     title="خروجی "
                     message="امکان دسترسی به این قابلیت وجود ندارد "
                     icon={(<Image
@@ -674,6 +676,7 @@ export default function Report() {
                 , "export-reports")?.show && !generateFeatureAccess(pageFeatures
                   , "export-reports")?.enable && (
                   <AccessDenied variant={"foreground"}
+                    
                     title="خروجی "
                     message="امکان دسترسی به این قابلیت وجود ندارد "
                     icon={(<Image

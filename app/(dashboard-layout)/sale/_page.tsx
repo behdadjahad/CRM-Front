@@ -53,7 +53,7 @@ export default function Sale() {
   useEffect(() => {
     const token = safeLocalStorage.getItem("token");
     if (!token) {
-      router.push("/login");
+      // router.push("/login");
     } else {
       router.push("/sale");
     }
@@ -560,6 +560,7 @@ export default function Sale() {
         {generateFeatureAccess(pageFeatures, "create-contract")?.show &&
           !generateFeatureAccess(pageFeatures, "create-contract")?.enable && (
             <AccessDenied
+              featureCode="create-contract"
               title="قرارداد جدید"
               icon={
                 <Image
@@ -600,6 +601,7 @@ export default function Sale() {
         {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
           !generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
             <AccessDenied
+              featureCode="filter-contracts"
               title="فیلتر"
               icon={
                 <Image
@@ -648,6 +650,7 @@ export default function Sale() {
             !generateFeatureAccess(pageFeatures, "export-contracts")
               ?.enable && (
               <AccessDenied
+                featureCode="export-contracts"
                 title="خروجی"
                 icon={
                   <Image

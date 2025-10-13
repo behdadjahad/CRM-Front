@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Leaflet CSS - Required for map functionality */
+@import 'leaflet/dist/leaflet.css';
+
 @layer base {
   :root {
     /*blue colors*/
@@ -119,13 +122,16 @@
     --link-shadow: 214.3 31.8% 91.4%;
   }
 }
+
 @font-face {
   font-family: "customFont";
   src: url(/public/fonts/Inter.ttf);
 }
+
 .custom-font {
   font-family: "customFont";
 }
+
 @layer base {
   * {
     @apply border-border/20 leading-normal scroll-smooth;
@@ -165,8 +171,8 @@
     @apply absolute top-1/2 right-3 -translate-y-1/2 text-muted pointer-events-none transition-all duration-200 ease-in-out;
   }
 
-  .floating-input:focus ~ .floating-label,
-  .floating-input:not(:placeholder-shown) ~ .floating-label {
+  .floating-input:focus~.floating-label,
+  .floating-input:not(:placeholder-shown)~.floating-label {
     @apply text-foreground-mute px-2 bg-primary-foreground right-3 top-0;
   }
 
@@ -200,8 +206,8 @@
     @apply absolute top-1/2 right-3 -translate-y-1/2 text-base text-foreground-mute pointer-events-none transition-all duration-200 ease-in-out;
   }
 
-  .phone-floating-input:focus ~ .phone-floating-label,
-  .phone-floating-input:not(:placeholder-shown) ~ .phone-floating-label {
+  .phone-floating-input:focus~.phone-floating-label,
+  .phone-floating-input:not(:placeholder-shown)~.phone-floating-label {
     @apply text-foreground-mute px-2 bg-primary-foreground right-3 top-0;
   }
 }
@@ -223,7 +229,7 @@
 }
 
 .react-tel-input .selected-flag .arrow {
-  @apply !left-2.5 md:!left-5;
+  /* @apply !left-2.5 md: !left-5; */
 }
 
 .loader {
@@ -241,13 +247,17 @@
     transform: rotate(1turn);
   }
 }
+
 .custom-shadow {
-  @apply drop-shadow-none; /* reset */
+  @apply drop-shadow-none;
+  /* reset */
   filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.07));
 }
+
 .custom-tooltip {
   @apply bg-black text-white text-sm rounded px-3 py-1 shadow;
 }
+
 .leaflet-tooltip {
   background-color: #000 !important;
   color: #fff !important;
@@ -256,11 +266,13 @@
 
   border-radius: 4px;
 }
+
 .custom-guage text {
   fill: #000 !important;
   color: #000 !important;
   text-decoration-color: #000 !important;
 }
+
 .gauge-component-class {
   fill: #000 !important;
   color: #000 !important;
@@ -268,8 +280,10 @@
 
 .disabled-day {
   color: #b6bcc2 !important;
-  pointer-events: none; /* optional: disable clicks */
+  pointer-events: none;
+  /* optional: disable clicks */
 }
+
 .calendar-day {
   background-color: white !important;
   font-size: 12px !important;
@@ -291,52 +305,62 @@
   align-items: center; */
   vertical-align: middle;
 }
+
 .fc .fc-daygrid-day-frame {
-  max-height: 130px; /* adjust as needed */
-  overflow-y: auto; /* allow scrolling if events overflow */
+  max-height: 130px;
+  /* adjust as needed */
+  overflow-y: auto;
+  /* allow scrolling if events overflow */
 }
+
 .fc .fc-daygrid-day {
-  height: 120px; /* fixed height */
+  height: 120px;
+  /* fixed height */
 }
+
 .current-day {
   @apply bg-[#1C68DA] text-white rounded-full h-6 w-6 flex items-center justify-center;
 }
+
 .flex-container {
   @apply flex items-center justify-center gap-2;
 }
+
 .event-container {
   @apply flex items-center justify-between w-full p-1 rounded-xl border border-[#FCCEEE] bg-[#FDF2FA] cursor-pointer;
 }
+
 .event-call {
   @apply border-[#FCCEEE] bg-[#FDF2FA];
 }
-.event-sms {
-}
-.event-email {
-}
-.event-voip {
-}
-.event-meet {
-}
+
+.event-sms {}
+
+.event-email {}
+
+.event-voip {}
+
+.event-meet {}
+
 .event-text {
   @apply text-[#C11574] font-bold;
 }
+
 .event-time {
   @apply text-[#DD2590];
 }
-.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink > th:first-child {
+
+.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink>th:first-child {
   @apply flex items-center justify-center h-full w-full border-none;
 }
-.fc-timegrid
-  .fc-col-header
-  thead
-  .fc-scrollgrid-shrink
-  > th:first-child::after {
+
+.fc-timegrid .fc-col-header thead .fc-scrollgrid-shrink>th:first-child::after {
   content: "";
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 20px; /* set image size */
+  width: 20px;
+  /* set image size */
   height: 20px;
   /* center */
   background-image: url("/icons/calendar-time.png");
@@ -344,11 +368,15 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
 .fc-event {
   background-color: transparent !important;
   border: none !important;
 }
+
 .disable-shadow {
   box-shadow: inset 0 1px 2px hsla(0, 0%, 0%, 0.2),
-    /* inner shadow */ 0 1px 2px hsla(0, 0%, 0%, 0.08); /* drop shadow */
+    /* inner shadow */
+    0 1px 2px hsla(0, 0%, 0%, 0.08);
+  /* drop shadow */
 }

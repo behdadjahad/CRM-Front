@@ -4,12 +4,12 @@
 export const pagesData = [
   { url: "/sale", code: "sale", title: "sale" },
   {
+  url: `/contract/[id]`,
+  code: "contract",
+},
+  {
     url: `/contract/service/[id]`,
     code: "service",
-  },
-    {
-    url: `/contract/[id]`,
-    code: "contract",
   },
 
   {
@@ -38,5 +38,5 @@ export const pagesData = [
   },
   { url: "/customer/[id]", code: "single-customer" }
   ,
-  // { url: "/contract/[id]", code: "contract" }
+
 ];

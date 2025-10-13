@@ -68,7 +68,7 @@ export default function ContractInfoContainer({
       country: contract?.data?.destinationCountry?.id.toString() ?? "",
       city: contract?.data?.destinationCity?.id.toString() ?? "",
     },
-    onSubmit: async () => {},
+    onSubmit: async () => { },
     enableReinitialize: true,
   });
   const { data: countryData } = useQuery({
@@ -130,11 +130,10 @@ export default function ContractInfoContainer({
           {list.map((item, index) => (
             <div
               key={item.label}
-              className={`flex flex-row md:flex-col   gap-2.5  justify-between  ${
-                index === list.length - 2
+              className={`flex flex-row md:flex-col   gap-2.5  justify-between  ${index === list.length - 2
                   ? "w-full"
                   : "w-full md:w-fit md:items-center"
-              } `}
+                } `}
             >
               <span className="text-sm font-normal  text-foreground">
                 {item.label}
@@ -151,19 +150,19 @@ export default function ContractInfoContainer({
                   >
                     {generateFeatureAccess(pageFeatures, "upsert-satisfaction")
                       .show && (
-                      <RatingChart
-                        value={item?.score?.scoreInPercent}
-                        color="#FFA500"
-                      />
-                    )}
+                        <RatingChart
+                          value={item?.score?.scoreInPercent}
+                          color="#FFA500"
+                        />
+                      )}
 
                     <div className="text-center text-[10px] relative -mt-2 flex items-center gap-1 text-foreground">
                       {generateFeatureAccess(
                         pageFeatures,
                         "upsert-satisfaction"
                       ).show && (
-                        <span>از مجموع {item?.score?.totalVotes} امتیاز</span>
-                      )}
+                          <span>از مجموع {item?.score?.totalVotes} امتیاز</span>
+                        )}
                       {generateFeatureAccess(
                         pageFeatures,
                         "upsert-satisfaction"
@@ -222,15 +221,15 @@ export default function ContractInfoContainer({
                         !generateFeatureAccess(
                           pageFeatures,
                           "upsert-satisfaction"
-                        ).enable && <AccessDenied  icon={ 
-                        
-                         <Image
-                                src={"/icons/disable-edit-pen.png"}
-                                alt="ادیت"
-                                width={1024}
-                          height={1024}
-                          className="w-3 h-3"
-                              />
+                        ).enable && <AccessDenied featureCode="upsert-satisfaction" icon={
+
+                          <Image
+                            src={"/icons/disable-edit-pen.png"}
+                            alt="ادیت"
+                            width={1024}
+                            height={1024}
+                            className="w-3 h-3"
+                          />
                         } />}
                     </div>
                   </div>

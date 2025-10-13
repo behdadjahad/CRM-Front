@@ -5,8 +5,9 @@ import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetOverlay, SheetContent } from '@/components/ui/sheet';
 import { Dialog, DialogOverlay, DialogContent } from '@/components/ui/dialog';
-import { X, CheckCircle } from 'lucide-react';
+import { X, CheckCircle, FileText } from 'lucide-react';
 import { Package } from '@/types/packages';
+import { useRouter } from 'next/navigation';
 
 interface PurchaseFlowModalProps {
     isOpen: boolean;
@@ -27,6 +28,7 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
 
     status
 }) => {
+    const router = useRouter();
     const [currentStep, setCurrentStep] = useState<ModalStep>('order-details');
     const [description, setDescription] = useState('');
     const [isMobile, setIsMobile] = useState(false);
@@ -204,19 +206,38 @@ const PurchaseFlowModal: React.FC<PurchaseFlowModalProps> = ({
             {/* Content */}
             <div className="flex flex-col items-center text-center mb-6">
                 <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
-                <p className="text-gray-600 leading-relaxed">
-                    کاربر گرامی درخواست شما در اسرع وقت توسط ادمین بررسی خواهد شد.
+                <p className="text-gray-600 leading-relaxed mb-4">
+                    درخواست شما با موفقیت ثبت شد و فاکتور شما ایجاد شده است.
                 </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                        <FileText className="w-5 h-5 text-blue-600" />
+                        <span className="text-sm font-medium text-blue-800">فاکتور ایجاد شد</span>
+                    </div>
+                    <p className="text-xs text-blue-700">
+                        می‌توانید فاکتور خود را در صفحه فاکتورها مشاهده کنید
+                    </p>
+                </div>
             </div>
 
-            {/* Action Button */}
-            <div className="flex justify-center">
+            {/* Action Buttons */}
+            <div className="flex gap-3 justify-center">
+                <Button
+                    variant="outline"
+                    onClick={handleSuccessComplete}
+                    className="px-6 py-2 border-gray-300 text-gray-700"
+                >
+                    بستن
+                </Button>
                 <Button
                     variant={"info"}
-                    onClick={handleSuccessComplete}
-                    className="px-8 py-2  text-black"
+                    onClick={() => {
+                        router.push('/invoice');
+                        handleSuccessComplete();
+                    }}
+                    className="px-6 py-2"
                 >
-                    متوجه شدم
+                    مشاهده فاکتور
                 </Button>
             </div>
         </>

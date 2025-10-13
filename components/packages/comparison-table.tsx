@@ -103,8 +103,16 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
                 {categoryGroups.map((group) => (
                     <AccordionItem key={group.category.id} value={group.category.id.toString()} className="border-0 mb-4">
                         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                            <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 bg-[#E9EAEB] border-0 rounded-t-lg">
-                                <div className="grid grid-cols-5 w-full">
+                            <AccordionTrigger className="px-4 py-3 hover:bg-gray-50 bg-static-border-card border-0 rounded-t-lg">
+                                {/* Mobile: Category name only */}
+                                <div className="xl:hidden w-full">
+                                    <div className="text-right whitespace-nowrap font-bold text-zinc-900 text-lg">
+                                        {group.category.name}
+                                    </div>
+                                </div>
+
+                                {/* Desktop: Full grid layout */}
+                                <div className="hidden xl:grid grid-cols-5 w-full">
                                     <div className="text-right whitespace-nowrap font-bold text-zinc-900 text-[20px]">
                                         {group.category.name}
                                     </div>
@@ -116,7 +124,57 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ data, className }) =>
                             </AccordionTrigger>
 
                             <AccordionContent className="border-t border-gray-100 rounded-b-lg">
-                                <div className="bg-white">
+                                {/* Mobile: Scrollable comparison table */}
+                                <div className="xl:hidden">
+                                    <div className="overflow-x-auto">
+                                        <div className="min-w-max">
+                                            {/* Package headers */}
+                                            <div className="flex border-b-2 border-gray-200 bg-gray-50">
+                                                <div className="w-48 flex-shrink-0 p-3 text-right text-sm font-medium text-gray-700">
+                                                    ویژگی
+                                                </div>
+                                                {data.packages.map((packageData) => (
+                                                    <div key={packageData.id} className="w-32 flex-shrink-0 p-3 text-center text-sm font-medium text-gray-700 border-r border-gray-200 last:border-r-0">
+                                                        {packageData.title}
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            {/* Feature rows */}
+                                            {group.units.length > 0 ? (
+                                                group.units.map((unitComparison, index) => (
+                                                    <div key={unitComparison.identity.name} className="flex border-b border-gray-100">
+                                                        <div className="w-48 flex-shrink-0 p-3 text-right text-sm text-gray-600">
+                                                            {unitComparison.identity.label ?
+                                                                unitComparison.identity.label.name :
+                                                                unitComparison.identity.name
+                                                            }
+                                                        </div>
+                                                        {data.packages.map((packageData) => (
+                                                            <div key={packageData.id} className="w-32 flex-shrink-0 p-3 text-center border-r border-gray-100 last:border-r-0">
+                                                                {renderFeatureCell(unitComparison, packageData.id)}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="flex">
+                                                    <div className="w-48 flex-shrink-0 p-3 text-right text-sm text-gray-400">
+                                                        هیچ واحدی در این دسته‌بندی وجود ندارد
+                                                    </div>
+                                                    {data.packages.map((packageData) => (
+                                                        <div key={packageData.id} className="w-32 flex-shrink-0 p-3 text-center border-r border-gray-100 last:border-r-0">
+                                                            <span className="text-gray-400">-</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Desktop: Original grid layout */}
+                                <div className="hidden xl:block bg-white">
                                     {group.units.length > 0 ? (
                                         group.units.map((unitComparison, index) => (
                                             <div

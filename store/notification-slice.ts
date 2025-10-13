@@ -39,7 +39,22 @@ const initialState: NotificationState = {
 const notificationSlice = createSlice({
   name: "notification",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    updateNotificationCount: (state, action) => {
+      // Update the unread count in tabList
+      const unreadTabIndex = state.tabList.findIndex(tab => tab.value === notificationStatus.unread);
+      if (unreadTabIndex !== -1) {
+        state.tabList[unreadTabIndex].count = action.payload;
+      }
+    },
+    updateTotalNotificationCount: (state, action) => {
+      // Update the total count in tabList
+      const allTabIndex = state.tabList.findIndex(tab => tab.value === notificationStatus.all);
+      if (allTabIndex !== -1) {
+        state.tabList[allTabIndex].count = action.payload;
+      }
+    }
+  },
 
   extraReducers: (builder) => {
     builder.addCase(fetchAllNotifications.fulfilled, (state, action) => {
@@ -52,10 +67,10 @@ const notificationSlice = createSlice({
           item.entityName === notificationEntityName.flight
             ? `/contract/service/${item?.entityId}`
             : item.entityName === notificationEntityName.customer
-            ? `/customer/${item?.entityId}`
-            : item.entityName === notificationEntityName.contract
-            ? `/contract/service/${item?.entityId}`
-            : "",
+              ? `/customer/${item?.entityId}`
+              : item.entityName === notificationEntityName.contract
+                ? `/contract/service/${item?.entityId}`
+                : "",
         time: item?.createdAt ? convertDate(item?.createdAt, dateType) : "",
       }));
 
@@ -98,10 +113,10 @@ const notificationSlice = createSlice({
           item.entityName === notificationEntityName.flight
             ? `/contract/service/${item?.entityId}`
             : item.entityName === notificationEntityName.customer
-            ? `/customer/${item?.entityId}`
-            : item.entityName === notificationEntityName.contract
-            ? `/contract/service/${item?.entityId}`
-            : "",
+              ? `/customer/${item?.entityId}`
+              : item.entityName === notificationEntityName.contract
+                ? `/contract/service/${item?.entityId}`
+                : "",
         time: item?.createdAt ? convertDate(item?.createdAt, dateType) : "",
       }));
       state.tabList = [
@@ -162,4 +177,5 @@ export const fetchDrawerNotifications = createAsyncThunk<any, any>(
   }
 );
 
+export const { updateNotificationCount, updateTotalNotificationCount } = notificationSlice.actions;
 export default notificationSlice.reducer;

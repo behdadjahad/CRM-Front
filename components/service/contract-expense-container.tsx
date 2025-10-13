@@ -278,6 +278,7 @@ export default function ContractExpenseContainer() {
             !generateFeatureAccess(pageFeatures, "change-exchange-rates")
               ?.enable && (
               <AccessDenied
+                featureCode="change-exchange-rates"
                 title={contractCurrency?.name}
                 icon={
                   <Image

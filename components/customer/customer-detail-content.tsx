@@ -198,6 +198,7 @@ export default function CustomerDetailContent({
             )}
             {generateFeatureAccess(pageFeatures, "export-customer-contracts")?.show && !generateFeatureAccess(pageFeatures, "export-customer-contracts")?.enable && (
               <AccessDenied
+                featureCode="export-customer-contracts"
                 variant={""}
                 title="خروجی "
                 message="شما به این بخش دسترسی ندارید"

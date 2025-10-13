@@ -10,6 +10,7 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getPackagesByInvoice } from "@/api/packages/package-api";
 import { Package, PackageCategory, Unit, UnitLabel } from "@/types/packages";
+import { PackagesByInvoiceResponse } from "@/types/billing";
 
 // Interface for transformed feature data
 interface TransformedFeature {
@@ -69,7 +70,7 @@ export default function FeaturesListCard({
     const { id } = useParams();
 
     // Fetch packages by invoice ID with proper generic typing
-    const { data: packagesResponse, isLoading, error } = useQuery<any>({
+    const { data: packagesResponse, isLoading, error } = useQuery<PackagesByInvoiceResponse>({
         queryKey: ["packages-by-invoice", id],
         queryFn: () => getPackagesByInvoice(Number(id)),
         enabled: !!id,
@@ -87,7 +88,7 @@ export default function FeaturesListCard({
     const hasExpandedCategories = expandedCategories.size > 0;
     const hasExpandedFeatures = expandedFeatures.size > 0;
     const hasAnyExpanded = hasExpandedCategories || hasExpandedFeatures;
- 
+
     // Toggle individual feature description box
     const toggleFeatureDescription = (featureId: string) => {
         setExpandedFeatures(prev => {
@@ -147,7 +148,7 @@ export default function FeaturesListCard({
     return (
         <>
             <style dangerouslySetInnerHTML={{ __html: scrollbarStyles }} />
-            <div className="bg-white rounded-lg shadow-sm border border-[#D3D3D3] mb-6 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-static-border-light mb-6 p-6">
                 <h2 className="text-base font-medium leading-snug text-black mb-6 flex items-center gap-2">
                     <Image src="/icons/feature-list-icon.svg" alt="features-list-card-icon" width={20} height={20} />
                     لیست ویژگی ها
@@ -176,9 +177,9 @@ export default function FeaturesListCard({
                                 >
                                     <div className="flex items-center gap-2">
                                         {expandedCategories.has(category.id) ? (
-                                            <ChevronUpIcon className="w-5 h-5 text-[#414651]" />
+                                            <ChevronUpIcon className="w-5 h-5 text-static-secondary-gray-dark" />
                                         ) : (
-                                            <ChevronDownIcon className="w-5 h-5 text-[#414651]" />
+                                            <ChevronDownIcon className="w-5 h-5 text-static-secondary-gray-dark" />
                                         )}
                                         <span className="font-medium text-gray-600 text-sm leading-[140%] tracking-normal text-right">
                                             {category.title}
@@ -191,26 +192,26 @@ export default function FeaturesListCard({
                                     <div className="px-4 pb-4 ">
                                         <div className="pt-4  space-y-2">
                                             {category.features.map((feature: TransformedFeature, featureIndex: number) => (
-                                                <div key={feature.id} className={cn("space-y-2 w-11/12 bg-[#FDFDFD] rounded-lg border border-[#E9EAEB] transition-colors h-fit", expandedFeatures.has(feature.id) && "bg-gray-200 h-fit")}>
+                                                <div key={feature.id} className={cn("space-y-2 w-11/12 bg-static-background-light rounded-lg border border-static-border-card transition-colors h-fit", expandedFeatures.has(feature.id) && "bg-gray-200 h-fit")}>
                                                     {/* Feature Item - Clickable to show description */}
                                                     <button
                                                         onClick={() => toggleFeatureDescription(feature.id)}
                                                         className="w-full  flex items-center justify-between text-right  p-2 rounded"
                                                     >
                                                         <div className="flex items-center gap-2">
-                                                            <ChevronDownIcon className="w-4 h-4 text-[#414651]" />
+                                                            <ChevronDownIcon className="w-4 h-4 text-static-secondary-gray-dark" />
                                                             <span className="text-sm font-medium text-gray-600">
                                                                 {feature.name}
                                                             </span>
                                                         </div>
                                                         {/* Display duration and count from API data */}
                                                         {feature.duration && (
-                                                            <div className="bg-white text-[10px] text-secondary rounded-[10px] px-2.5 py-1 border border-[#D5D7DA]">
+                                                            <div className="bg-white text-[10px] text-secondary rounded-[10px] px-2.5 py-1 border border-static-border-neutral">
                                                                 {feature.duration}
                                                             </div>
                                                         )}
                                                         {feature.count > 0 && (
-                                                            <div className="bg-white text-[10px] text-secondary rounded-[10px] px-5 py-1 border border-[#D5D7DA]">
+                                                            <div className="bg-white text-[10px] text-secondary rounded-[10px] px-5 py-1 border border-static-border-neutral">
                                                                 {feature.count}
                                                             </div>
                                                         )}
@@ -244,7 +245,7 @@ export default function FeaturesListCard({
                                     variant="outline"
                                     className="w-full text-gray-600 hover:text-gray-800"
                                 >
-                                    <ChevronUpIcon className="w-5 h-5 text-[#414651]" />
+                                    <ChevronUpIcon className="w-5 h-5 text-static-secondary-gray-dark" />
                                     کمتر
                                 </Button>
                             )}
@@ -255,7 +256,7 @@ export default function FeaturesListCard({
                                 variant="ghost"
                                 className="w-full hover:text-black hover:bg-primary/10"
                             >
-                                <ChevronDownIcon className="w-5 h-5 text-[#414651]" />
+                                <ChevronDownIcon className="w-5 h-5 text-static-secondary-gray-dark" />
                                 بیشتر
                             </Button>
                         </div>
