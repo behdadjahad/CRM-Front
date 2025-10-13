@@ -48,7 +48,7 @@ export default function DurationSelectionCard({
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("fa-IR").format(price);
     };
-    console.log(durationOptions,"88888888888888888888888")
+    console.log(durationOptions, "88888888888888888888888")
 
     return (
         <>
@@ -71,9 +71,12 @@ export default function DurationSelectionCard({
                     {durationOptions.map((option) => (
                         <div
                             key={option.id}
-                            className={`border-2 w-full rounded-lg py-3 px-4 m-1 cursor-pointer transition-all `}
+                            className={`border-2 w-full rounded-lg py-3 px-4 m-1 cursor-pointer transition-all`}
                             style={{
-                                background: "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 97, 254, 0.1) 100%)"
+                                background: option.isSelected
+                                    ? "linear-gradient(90deg, rgba(0, 97, 254, 0.2) 0%, rgba(0, 97, 254, 0.1) 100%)"
+                                    : "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 97, 254, 0.1) 100%)",
+                                borderColor: option.isSelected ? '#0061FE' : 'transparent'
                             }}
                             onClick={() => onDurationChange(option.id)}
                         >

@@ -149,7 +149,7 @@ export interface PackageWithCalculatedPrices {
     };
     createdAt: string;
     updatedAt: string;
-    packageCategories: Array<{
+    packageCategories?: Array<{
         id: number;
         name: string;
         price: {

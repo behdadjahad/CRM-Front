@@ -98,7 +98,7 @@ export default function OrderSummaryCard({
         payFeaturesMutation(cartId);
     };
 
-    const isPaymentDisabled =  itemCount === 0;
+    const isPaymentDisabled = itemCount === 0;
 
 
     return (
@@ -158,7 +158,21 @@ export default function OrderSummaryCard({
                         </span>
                     </div>
                 )}
-
+                    {/*  also show تخفیف باندل  */}
+                    <div className="flex justify-between items-center">
+                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">
+                            تخفیف باندل:
+                            {/* show the tag in red for discount percentage of bundel */}
+                            <span className="text-red-500">
+                                {/* {discountPercentByBandle > 0 && ` (${discountPercentByBandle}%)`} */}
+                            </span>
+                        </span>
+                        <span className="font-medium text-static-secondary-gray-dark">
+                            {/* - {formatPrice(discountAmountByBandle)} تومان */}
+                            {/* {discountPercentByBandle > 0 && ` (${discountPercentByBandle}%)`} */}
+                        </span>
+                    </div>
+                  
                 {/* Final Total */}
                 <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                     <span className="text-base font-semibold text-gray-900">قیمت نهایی :</span>
@@ -195,13 +209,7 @@ export default function OrderSummaryCard({
                         'پرداخت'
                     )}
                 </Button>
-                <Button
-                    variant={'outline'}
-                    className='lg:w-full text-base py-2 w-full font-medium text-black border border-black sm:w-fit px-12'
-                    disabled={isPaymentDisabled}
-                >
-                    ایجاد باندل (13% تخفیف )
-                </Button>
+
             </div>
         </div>
     );
