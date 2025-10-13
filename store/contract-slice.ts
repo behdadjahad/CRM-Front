@@ -158,6 +158,45 @@ const contractSlice = createSlice({
         //   name: item?.userResponsible?.fullName,
         // },
         id: item?.id,
+        headerData: {
+          contractType: item?.contractType?.name ?? "",
+        },
+        list: [
+          {
+            label: "تاریخ ثبت:",
+            value: convertDate(item?.submitDateTime, item?.dateType),
+          },
+          { label: "شماره قرارداد:", value: item?.contractNo },
+          {
+            label: "ثبت کننده:",
+            value: item?.userSubmitter?.fullName ?? "",
+          },
+          {
+            label: "مسئول قرارداد:",
+            value: item?.userResponsible?.fullName
+              ? item?.userResponsible?.fullName
+              : "",
+          },
+          {
+            label: "موضوع قرارداد:",
+            value: item?.contractType?.name ?? "",
+          },
+        ],
+
+        footerData: [
+          {
+            label: "درآمد:",
+            value: "",
+          },
+          {
+            label: "هزینه:",
+            value: "",
+          },
+          {
+            label: "سودوزیان:",
+            value: "",
+          },
+        ],
         exportData: {
           id: item.id,
           ردیف: index + 1,

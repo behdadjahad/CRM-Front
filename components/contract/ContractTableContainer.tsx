@@ -6,6 +6,7 @@ import { fetchContracts, setCheckedItems } from "@/store/contract-slice";
 import { useState } from "react";
 import { buildRowOptions } from "@/lib/utils";
 import ContractTable from "./ContractTable";
+import ContractContainer from "./ContractContainer";
 
 export interface ContractTableContainerInterface {
   list: any[];
@@ -25,7 +26,7 @@ export default function ContractTableContainer({
   function searchSubmitHandler() {
     dispatch(setCheckedItems([]));
     const searchValue = contractSearchFormik.values.contractKeyWord;
- 
+
     dispatch(
       fetchContracts({
         page: 1,
@@ -44,6 +45,7 @@ export default function ContractTableContainer({
   const filters = useSelector((state: any) => state.contract.filters);
   const pages = useSelector((state: any) => state.contract.totalPages);
   const contractList = useSelector((state: any) => state.contract.tableData);
+  const contractCardList = useSelector((state: any) => state.contract.items);
   const limitFormik = useFormik({
     initialValues: {
       limit: limit,
@@ -90,7 +92,7 @@ export default function ContractTableContainer({
             form={contractSearchFormik}
             fields={[
               {
-                key: "leadKeyWord",
+                key: "contractKeyWord",
                 component: "input",
                 icon: "/icons/search-icon.png",
                 type: "text",
@@ -105,7 +107,12 @@ export default function ContractTableContainer({
           />
         </div>
       </div>
-      <ContractTable contractList={contractList} />
+      {}
+      <ContractTable contractList={contractList} className="hidden lg:flex" />
+      <ContractContainer
+        contractList={contractCardList}
+        className="grid lg:hidden gap-4 mt-4"
+      />
       <div className="grid grid-cols-3 custom-shadow bg-card p-3 rounded-md">
         <div className="col-span-2 w-full">
           {pages > 1 && (
