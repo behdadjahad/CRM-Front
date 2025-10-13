@@ -1,0 +1,29 @@
+import AddContractToPipe from "./AddContractToPipe";
+import ContractInfiniteContainer from "./ContractInfiniteContainer";
+import { Droppable } from "@hello-pangea/dnd";
+export interface ContractPipeInterface {
+  label: string;
+  value: string;
+}
+
+export default function ContractPipe({ label, value }: ContractPipeInterface) {
+  return (
+    <Droppable droppableId={value}>
+      {(provided) => (
+        <div
+          className="flex flex-col rounded-2xl overflow-hidden border border-[#E9EAEB]"
+          ref={provided.innerRef}
+          {...provided.droppableProps}
+        >
+          <div className="text-center bg-[#5786EB] p-3 text-card">{label}</div>
+          <div className="flex flex-col gap-4">
+            <ContractInfiniteContainer status={value} />
+            <AddContractToPipe />
+            <div className="bg-[#DEEBFB] p-3 ">footer</div>
+          </div>
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  );
+}

@@ -15,7 +15,7 @@ import { createContract, getContractNumber } from "@/api/contract";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getUsers } from "@/api/auth";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 import { getCities, getCountries } from "@/api/location";
 import { convertToGregorian } from "@/lib/date";
 import { CustomToast } from "../shared/custome-toast";
@@ -98,7 +98,6 @@ export default function ContractCreation({
 
   useEffect(() => {
     if (users) {
-
       const userOption: OptionType[] = users?.data?.map((item: any) => ({
         label: item.fullName,
         value: item.id.toString(),
@@ -134,7 +133,6 @@ export default function ContractCreation({
       return createContract(id, data);
     },
     onSuccess: (response) => {
-    
       setOpenModal(false);
       formik.resetForm();
       setActiveItem(null);
@@ -184,7 +182,13 @@ export default function ContractCreation({
   return (
     <>
       <Button variant={"info"} onClick={() => setOpenModal(true)}>
-        <FaPlus size={16} />
+        <Image
+          src={"/icons/narrow-plus.svg"}
+          alt="قرارداد جدید"
+          width={1024}
+          height={1024}
+          className="w-5 h-5"
+        />
 
         <span>قرارداد جدید</span>
       </Button>

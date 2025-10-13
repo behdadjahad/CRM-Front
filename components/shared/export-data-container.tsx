@@ -24,11 +24,10 @@ export default function ExportDataContainer({
   headerLabels,
   list,
   onGetData,
-dateTimeRange,
-  
+  dateTimeRange,
+
   checkedItems,
 }: ExportDataContainerInterface) {
-
   const { service } = useParams();
   const [showOptions, setShowOptions] = useState(false);
   const [exportOutput, setExportOutput] = useState<string>("");
@@ -148,11 +147,7 @@ dateTimeRange,
     >
       {" "}
       {!showOptions && (
-        <Button
-          type="button"
-          variant={"info"}
-          className="bg-quartiery-background text-tertiary-foreground"
-        >
+        <Button type="button" variant={"info"}>
           <span>خروجی</span>
           <Image
             src={"/icons/dark-download.png"}

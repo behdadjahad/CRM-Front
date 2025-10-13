@@ -21,7 +21,7 @@ export default function FilterContainer({
   rangeItems: any[];
   filterItems: any[];
   sortList?: OptionType[];
-  onSortHandler:any;
+  onSortHandler?:any;
   onCancleHandler:any;
 }) {
   const [openFilter, setOpenFilter] = useState(false);

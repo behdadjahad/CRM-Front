@@ -2,7 +2,7 @@
 
 import { getContractTypes } from "@/api/contract";
 import ContractContainer from "@/components/contract/contract-container";
-import ContractCreation from "@/components/sale/contract-creation";
+import ContractCreation from "@/components/contract/contract-creation";
 
 import Breadcrumb from "@/components/shared/breadcrumb";
 import { ServiceCardInterface } from "@/components/shared/service-card";
@@ -27,7 +27,7 @@ import {
   contractStateOptions,
   serviceOptions,
 } from "@/constants/customer-filter-fields";
-import ContractOverview from "@/components/sale/contract-overview";
+import ContractOverview from "@/components/contract/contract-overview";
 
 import { useRouter } from "next/navigation";
 import ExportDataContainer from "@/components/shared/export-data-container";
@@ -43,8 +43,6 @@ import {
 export default function Sale() {
   const dispatch = useDispatch<any>();
   const pageFeatures = usePageData();
-
-
 
   const [contractTypes, setContractTypes] = useState<ServiceCardInterface[]>(
     []
@@ -106,7 +104,8 @@ export default function Sale() {
           id: item.id,
           image: "http://185.126.203.246:3000/public/" + item.iconFile,
           title: item.name,
-          activeImage: "http://185.126.203.246:3000/public/" + item.activeIconFile,
+          activeImage:
+            "http://185.126.203.246:3000/public/" + item.activeIconFile,
         }))
       );
     }
@@ -135,13 +134,13 @@ export default function Sale() {
       minSellRange: "",
       maxSellRange: "",
     },
-    onSubmit: async () => { },
+    onSubmit: async () => {},
   });
   const limitFormik = useFormik({
     initialValues: {
       limit: limit,
     },
-    onSubmit: async () => { },
+    onSubmit: async () => {},
   });
 
   const filterItems = [
@@ -424,9 +423,9 @@ export default function Sale() {
       gender: formik.values.gender,
       birthDate: formik.values.birthdate
         ? convertToGregorian(
-          formik.values.birthdate,
-          formik.values.birthdateType
-        )
+            formik.values.birthdate,
+            formik.values.birthdateType
+          )
         : "",
       customerIdNumber: formik.values.idNumber,
       customerJob: formik.values.career,
@@ -434,9 +433,9 @@ export default function Sale() {
       contractNo: formik.values.contractNumber,
       contractDate: formik.values.contractDate
         ? convertToGregorian(
-          formik.values.contractDate,
-          formik.values?.contractDateType
-        )
+            formik.values.contractDate,
+            formik.values?.contractDateType
+          )
         : "",
     };
 
@@ -578,21 +577,26 @@ export default function Sale() {
       <ContractOverview list={ContractOverviewList} />
 
       <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-y-4">
-        {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
-          generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
-            <FilterContainer
-              onFilterHandler={() => {
-                submitFilter();
-              }}
-              rangeItems={rangeItems}
-              filterItems={filterItems}
-              sortList={customerSortlist}
-              onSortHandler={(item: string) => {
-                submitSort(item);
-              }}
-              onCancleHandler={cancleFilter}
-            />
-          )}
+        <div className="flex items-center">
+          {" "}
+          <div>grid view</div>
+          {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
+            generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
+              <FilterContainer
+                onFilterHandler={() => {
+                  submitFilter();
+                }}
+                rangeItems={rangeItems}
+                filterItems={filterItems}
+                sortList={customerSortlist}
+                onSortHandler={(item: string) => {
+                  submitSort(item);
+                }}
+                onCancleHandler={cancleFilter}
+              />
+            )}
+        </div>
+
         {generateFeatureAccess(pageFeatures, "filter-contracts")?.show &&
           !generateFeatureAccess(pageFeatures, "filter-contracts")?.enable && (
             <AccessDenied
@@ -609,7 +613,6 @@ export default function Sale() {
             />
           )}
         <div className="text-base font-bold h-9 flex items-center justify-center gap-4">
-       
           {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
             generateFeatureAccess(pageFeatures, "check-all-contracts")
               ?.enable && (
@@ -629,9 +632,7 @@ export default function Sale() {
             )}
           {generateFeatureAccess(pageFeatures, "check-all-contracts")?.show &&
             !generateFeatureAccess(pageFeatures, "check-all-contracts")
-              ?.enable && (
-            <AccessDenied title={"انتخاب همه"} />
-            )}
+              ?.enable && <AccessDenied title={"انتخاب همه"} />}
           {generateFeatureAccess(pageFeatures, "export-contracts")?.show &&
             generateFeatureAccess(pageFeatures, "export-contracts")?.enable && (
               <ExportDataContainer
@@ -657,7 +658,6 @@ export default function Sale() {
                     className="w-4 h-4"
                   />
                 }
-              
               />
             )}
         </div>
@@ -713,7 +713,6 @@ export default function Sale() {
           />
         </div>
       </div>
-      
     </main>
   );
 }

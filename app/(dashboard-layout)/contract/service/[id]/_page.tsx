@@ -202,7 +202,7 @@ export default function Service() {
         </div>
 
         <Button variant={"foreground"} className="">
-          <Link href="/sale">برگشت</Link>
+          <Link href="/contracts">برگشت</Link>
         </Button>
       </div>
       <div

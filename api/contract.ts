@@ -5,7 +5,6 @@ export async function getContractTypes(): Promise<ServiceOutput> {
     const result: ServiceOutput = await fetchService("contract-type");
 
     return result;
-
   } catch {
     return {
       success: false,
@@ -36,9 +35,7 @@ export interface ServiceOutput {
   };
 }
 
-export async function getContractNumber(
-  id: number
-): Promise<any> {
+export async function getContractNumber(id: number): Promise<any> {
   try {
     const result: ContractTypeOutput = await fetchService(
       `contract-type/suggest/${id}`
@@ -141,26 +138,16 @@ export interface ContractCreationOutput {
   };
 }
 
-export async function getContracts({ data }: { data?: any }): Promise<ContractInformationOutput> {
-  try {
-    const result: ContractInformationOutput = await fetchService(
-      "contract-chadco-customer/filter-contracts", {
+export async function getContracts({ page, limit, filters }: any) {
+  const result = await fetchService(
+    `contract-chadco-customer/filter-contracts?page=${page}&limit=${limit}`,
+    {
       method: "POST",
-      body: data ? data : {}
+      body: filters ? filters : {},
     }
-    );
+  );
 
-    return result;
-  } catch {
-    return {
-      data: [],
-      pagination: {
-        total: 0,
-      },
-      doneCount: 0,
-      inProgressCount: 0,
-    };
-  }
+  return result;
 }
 
 export interface ContractInformationOutput {
@@ -173,14 +160,11 @@ export interface ContractInformationOutput {
 }
 
 export async function getContractById(id: number): Promise<any> {
-
   try {
-    const result = await fetchService(
-      `contract-chadco-customer/${id}`
-    );
+    const result = await fetchService(`contract-chadco-customer/${id}`);
 
     return result;
-  } catch { }
+  } catch {}
 }
 
 export interface ContractOutput {
@@ -190,8 +174,8 @@ export interface ContractOutput {
   contractNo: string;
   avServices: any;
   state: string;
-  destinationCity: { id: number, name: string };
-  destinationCountry: { id: number, name: string };
+  destinationCity: { id: number; name: string };
+  destinationCountry: { id: number; name: string };
   userResponsible: {
     id: number;
     firstName: string;
@@ -223,4 +207,3 @@ export interface ContractOutput {
   isItFinalized: boolean;
   contractStatus: string;
 }
-
