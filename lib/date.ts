@@ -4,7 +4,7 @@ import MomentTimezone from "moment-timezone";
 import momentHijri from "moment-hijri";
 
 //type DateType = "Lunar" | "Solar" | "Gregorian";
-
+console.log(convertDate("2025-09-06T06:16:01.171Z","Geregorian"))
 export function convertDate(dateStr: string, targetType: string): string {
  
   // Parse the input date in YYYY/MM/DD format

@@ -13,7 +13,7 @@ const ContractInfiniteCard = forwardRef<
 >(({ list }, ref) => {
   const customerInfiniteCardContent = (
     <div className="rounded-lg border border-[#E9EAEB] p-3 bg-[#F8FAFF]">
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-2">
         {list.map((item, index) => (
           <div
             className="flex flex-row items-center justify-between text-[#212B36] text-xs"

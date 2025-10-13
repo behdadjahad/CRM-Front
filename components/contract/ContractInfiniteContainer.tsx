@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ContractInfiniteCard from "./ContractInfiniteCard";
 import { Draggable } from "@hello-pangea/dnd";
+import { convertDate } from "@/lib/date";
 export interface ContractInfiniteContainerInterface {
   status: string;
 }
@@ -49,7 +50,28 @@ export default function ContractInfiniteContainer({
         page?.data?.map((item: any, i: number) => {
           const contract = {
             id: item.id,
-            list: [{ label: "شماره قرارداد:", value: item?.contractNo  },],
+            list: [
+              {
+                label: "تاریخ ثبت:",
+                value:
+
+                     convertDate(item?.submitDateTime, item?.dateType)
+                
+              },
+              { label: "شماره قرارداد:", value: item?.contractNo },
+              {
+                label: "ثبت کننده:",
+                value: item?.userSubmitter?.fullName ?? "",
+              },
+              {
+                label: "مسئول قرارداد:",
+                value: item?.userSubmitter?.fullName ?? "",
+              },
+              {
+                label: "موضوع قرارداد:",
+                value: item?.userSubmitter?.fullName ?? "",
+              },
+            ],
           };
           const card = (
             <ContractInfiniteCard
@@ -60,7 +82,11 @@ export default function ContractInfiniteContainer({
           );
 
           return (
-            <Draggable draggableId={contract.id.toString()} index={i} key={contract.id}>
+            <Draggable
+              draggableId={contract.id.toString()}
+              index={i}
+              key={contract.id}
+            >
               {(provided) => (
                 <div
                   ref={provided.innerRef}

@@ -158,26 +158,6 @@ const contractSlice = createSlice({
         //   name: item?.userResponsible?.fullName,
         // },
         id: item?.id,
-        list: [
-          {
-            label: ":تاریخ ثبت",
-            value:
-              item?.submitDateTime && item?.dateType
-                ? convertDate(item?.submitDateTime, item?.dateType)
-                : "",
-          },
-          {
-            label: ":شماره قرارداد",
-            value: item.contractNo ?? "",
-          },
-          {
-            label: ":تاریخ ثبت",
-            value:
-              item?.submitDateTime && item?.dateType
-                ? convertDate(item?.submitDateTime, item?.dateType)
-                : "",
-          },
-        ],
         exportData: {
           id: item.id,
           ردیف: index + 1,
