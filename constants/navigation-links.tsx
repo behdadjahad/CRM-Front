@@ -5,6 +5,99 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
   {
     category: "خانه",
     links: [
+      {
+        id: "contracts",
+        label: "قراردادها",
+        link: "/contracts",
+        icon: (
+          <Image
+            src={"/icons/document.png"}
+            alt="قراردادها"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+        subMenu: [
+          {
+            id: "new-contract",
+            label: "قرارداد جدید",
+            link: "/contracts/new",
+          },
+          {
+            id: "contract-list",
+            label: "لیست قرارداد ها",
+            link: "/contracts",
+          },
+        ],
+      },
+      {
+        id: "purchase",
+        label: "خرید",
+        link: "/purchase",
+        icon: (
+          <Image
+            src={"/icons/menu-package-icon.svg"}
+            alt="خرید"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+        subMenu: [
+          {
+            id: "invoice-sub",
+            label: "صورتحساب",
+            link: "/invoice",
+          },
+          {
+            id: "package-sub",
+            label: "پکیج",
+            link: "/packages",
+          },
+          {
+            id: "feature-sub",
+            label: "فیچر",
+            link: "/single-features",
+          },
+        ],
+      },
+      {
+        id: "invoice-main",
+        label: "صورتحساب",
+        link: "/invoice",
+        icon: (
+          <Image
+            src={"/icons/menu-invoice-icon.svg"}
+            alt="صورتحساب"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+        badge: "۵",
+      },
+      {
+        id: "settings-plain",
+        label: "تنظیمات",
+        link: "/settings",
+        icon: null,
+      },
+      {
+        id: "settings-with-icon",
+        label: "تنظیمات",
+        link: "/settings",
+        icon: (
+          <Image
+            src={"/icons/setting.png"}
+            alt="تنظیمات"
+            width={1024}
+            height={1024}
+            className="w-6 h-6"
+          />
+        ),
+      },
+
       // {
       //   label: "قرارداد جدید",
       //   link: "/sale",
@@ -37,6 +130,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       //   ),
       // },
       {
+        id: "customer",
         label: "مشتری",
         link: "/customer",
         icon: (
@@ -50,6 +144,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
       },
       {
+        id: "lead",
         label: "درخواست ها",
         link: "/lead",
         icon: (
@@ -63,6 +158,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
       },
       {
+        id: "packages",
         label: "پکیج ها",
         link: "/packages",
         icon: (
@@ -89,6 +185,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       //   ),
       // },
       {
+        id: "invoice",
         label: "فاکتورها",
         link: "/invoice",
         icon: (
@@ -102,6 +199,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
       },
       {
+        id: "report",
         label: "گزارش ها",
         link: "/report",
         icon: (
@@ -127,6 +225,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       //   ),
       // },
       {
+        id: "contracts",
         label: "قرارداد ها",
         link: "/contracts",
         icon: (
@@ -146,6 +245,7 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
     category: "تنظیمات",
     links: [
       {
+        id: "settings",
         label: "تنظیمات",
         link: "",
         icon: (
@@ -158,14 +258,17 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
         subMenu: [
           {
+            id: "airport",
             label: "فرودگاه",
             link: "/setting/airport",
           },
           {
+            id: "hotel",
             label: "هتل",
             link: "/setting/hotel",
           },
           {
+            id: "airline",
             label: "ایرلاین",
             link: "/setting/airline",
           },
@@ -181,6 +284,7 @@ export const cartDrawerLinks: { category: string; links: NavLinkInterface[] }[] 
     category: "خرید",
     links: [
       {
+        id: "single-features",
         label: "بازگشت به فیچرها",
         link: "/single-features",
         icon: (
@@ -194,6 +298,7 @@ export const cartDrawerLinks: { category: string; links: NavLinkInterface[] }[] 
         ),
       },
       {
+        id: "cart",
         label: "سبد خرید",
         link: "/cart",
         icon: (

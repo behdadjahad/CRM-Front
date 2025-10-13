@@ -1,9 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export interface NavLinkInterface {
+  id?: string;
   link: string;
   icon?: React.ReactNode;
   label?: string;
@@ -14,10 +17,13 @@ export interface NavLinkInterface {
   children?: React.ReactNode;
   onClick?: () => any;
   subMenu?: {
+    id?: string;
     label: string;
     link: string;
   }[];
   state?: boolean;
+  isExpanded?: boolean;
+  badge?: string;
 }
 
 export function NavLink({
@@ -32,74 +38,81 @@ export function NavLink({
   onClick,
   subMenu,
   state,
+  isExpanded,
+  badge,
 }: NavLinkInterface) {
   const pathname = usePathname();
+  const handleclick = (e: React.MouseEvent) => {
+    if (subMenu && subMenu.length > 0 && state) {
+      e.preventDefault();
+      onClick?.();
+    } else {
+      onClick?.();
+    }
+  };
+  useEffect(() => {
+    console.log("_______________isExpanded_________________", isExpanded);
+  }, [isExpanded]);
 
   return (
-    <div className={cn("relative", !state && subMenu?.length ? "group" : "")}>
-      <Link
-        href={link}
-        {...props}
-        onClick={onClick}
+    <div className="flex flex-col">
+      <div
+        onClick={handleclick}
         className={cn(
-          "text-base text-foreground flex flex-row items-center",
+          "text-primary-foreground text-xs p-3 rounded-xl relative flex flex-row items-center cursor-pointer",
           { "gap-2.5": label && icon },
-          pathname == link ? activeClassName : "",
+          pathname == link ? "bg-primary-hover before:absolute before:bg-orange-500 before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9" : "",
           className
         )}
       >
-        {icon}
-        {label && (
-          <span className={cn("text-clip line-clamp-1", labelClass)}>
+        {icon && <span className="flex-shrink-0">{icon}</span>}
+        {label && state && (
+          <span className={cn("text-clip line-clamp-1 flex-grow", labelClass)}>
             {label}
           </span>
         )}
+        {badge && state && (
+          <span className="bg-white/20 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center ml-auto">
+            {badge}
+          </span>
+        )}
+        {subMenu && subMenu.length > 0 && state && (
+          <ChevronDownIcon className={cn(
+            "w-4 h-4 ml-auto transition-transform duration-200",
+            isExpanded ? "rotate-180" : ""
+          )} />
+        )}
         {children}
-      </Link>
-      {!state && subMenu && subMenu.length > 0 && (
-        <div className="absolute right-full top-0 hidden group-hover:block bg-primary shadow-md rounded-md z-10  w-36 px-3 py-1">
-          {subMenu.map((item) => (
-            <Link
-              key={`subLink-${item.link}`}
-              href={item.link}
-              {...props}
-              onClick={onClick}
-              className={cn(
-                "px-3 py-1 block",
-                pathname === item.link ? "bg-primary-hover rounded-lg" : "hover:border-b-2"
-              )}
-            >
-              <span className={cn("text-xs text-clip")}>
-                {item.label}
-              </span>
-            </Link>
-          ))}
-        </div>
-      )}
-      {state && subMenu &&
-        subMenu.length > 0 &&
-        subMenu.map((item) => {
-          return (
-            <Link
-              href={item.link}
-              {...props}
-              onClick={onClick}
-              className={cn(
-                "text-base text-foreground flex flex-row items-center",
-                { "gap-2.5": item.label && icon },
-                pathname == item.link ? activeClassName : "",
-                className
-              )}
-              key={`subLink-${item.link}`}
-            >
-              {item.label && (
-                <span className={cn("text-clip line-clamp-1", labelClass)}>
+      </div>
+
+
+      {/* Inline submenu for expanded state */}
+      {subMenu && subMenu.length && isExpanded && (
+        <div className={cn(
+          "ml-4 border-r-2 border-white/10 pr-2 overflow-hidden transition-all duration-200 bg-danger",
+          isExpanded ? "max-h-96 bg-danger opacity-100" : "max-h-0 opacity-0"
+        )}>
+          <div className="py-1">
+            {subMenu.map((item) => (
+              <Link
+                key={`subLink-${item.link}`}
+                href={item.link}
+                {...props}
+                onClick={onClick}
+                className={cn(
+                  "text-primary-foreground text-xs py-2 px-3 rounded-lg relative flex items-center mb-1",
+                  pathname == item.link ? "bg-primary-hover before:absolute before:bg-orange-500 before:-right-2 before:rounded-l-[6px] before:w-1 before:h-6" : "hover:bg-white/5"
+                )}
+              >
+                <span className="w-2 h-2 bg-white/40 rounded-full mr-2 flex-shrink-0"></span>
+                <span className="text-clip line-clamp-1">
                   {item.label}
                 </span>
-              )}
-            </Link>
-          );
-        })}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
