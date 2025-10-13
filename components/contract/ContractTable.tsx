@@ -87,57 +87,65 @@ export default function ContractTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="text-center bg-white border-none">
-            {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-              !generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
-                <AccessDenied
-                  icon={
-                    <Image
-                      src={"/icons/checkbox-icon.png"}
-                      alt="checkbox"
-                      width={1024}
-                      height={1024}
-                      className="w-4 h-4"
-                    />
-                  }
-                />
-              )}
-
-            {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-              generateFeatureAccess(pageFeatures, "select-lead")?.enable && (
-                <Checkbox
-                  onCheckedChange={(checked: boolean) => {
-                    if (checked) {
-                      const updatedCheckItems = checkedItems?.filter(
-                        (item: any) =>
-                          !contractList?.some((l) => l.id === item.id)
-                      );
-                      const dataArray = contractList.map(
-                        (item: any) => item.exportData
-                      );
-                      dispatch(
-                        setCheckedItems([...updatedCheckItems, ...dataArray])
-                      );
-                    } else {
-                      const updatedItems = checkedItems?.filter(
-                        (item: any) =>
-                          !contractList?.some((l) => l.id === item.id)
-                      );
-                      dispatch(setCheckedItems(updatedItems));
-                    }
-                  }}
-                  checked={contractList?.every((item) =>
-                    checkedItems.some((obj: any) => obj.id === item.id)
-                  )}
-                />
-              )}
-          </TableHead>
+          <TableHead className="text-center bg-white border-none"></TableHead>
           {contractList?.[0]?.list.map((col, idx) => (
             <TableHead
               key={idx}
-              className="text-center text-xs bg-card border-l font-bold"
+              className="text-center text-xs bg-card border-l text-[#1E1E1E]"
             >
-              <div className="flex items-center gap-2 w-full justify-center">
+              <div className="flex items-center w-full justify-between">
+                {idx === 0 && (
+                  <div>
+                    {" "}
+                    {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                      !generateFeatureAccess(pageFeatures, "select-lead")
+                        ?.enable && (
+                        <AccessDenied
+                          icon={
+                            <Image
+                              src={"/icons/checkbox-icon.png"}
+                              alt="checkbox"
+                              width={1024}
+                              height={1024}
+                              className="w-4 h-4"
+                            />
+                          }
+                        />
+                      )}
+                    {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
+                      generateFeatureAccess(pageFeatures, "select-lead")
+                        ?.enable && (
+                        <Checkbox
+                          onCheckedChange={(checked: boolean) => {
+                            if (checked) {
+                              const updatedCheckItems = checkedItems?.filter(
+                                (item: any) =>
+                                  !contractList?.some((l) => l.id === item.id)
+                              );
+                              const dataArray = contractList.map(
+                                (item: any) => item.exportData
+                              );
+                              dispatch(
+                                setCheckedItems([
+                                  ...updatedCheckItems,
+                                  ...dataArray,
+                                ])
+                              );
+                            } else {
+                              const updatedItems = checkedItems?.filter(
+                                (item: any) =>
+                                  !contractList?.some((l) => l.id === item.id)
+                              );
+                              dispatch(setCheckedItems(updatedItems));
+                            }
+                          }}
+                          checked={contractList?.every((item) =>
+                            checkedItems.some((obj: any) => obj.id === item.id)
+                          )}
+                        />
+                      )}
+                  </div>
+                )}
                 <span>{col.label}</span>
 
                 <Button
@@ -165,8 +173,6 @@ export default function ContractTable({
               </div>
             </TableHead>
           ))}
-
-          <TableHead className="text-center text-xs bg-card border font-bold" />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -177,48 +183,56 @@ export default function ContractTable({
               style={{ display: "contents" }} // ✅ Preserves layout
             >
               <TableRow className="border border-gray-200 bg-card">
-                <TableCell className="flex items-center justify-center">
-                  {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-                    generateFeatureAccess(pageFeatures, "select-lead")
-                      ?.enable && (
-                      <Checkbox
-                        onCheckedChange={(checked: boolean) => {
-                          checkItemHandler(contract.exportData, checked);
-                        }}
-                        checked={checkedItems.some(
-                          (obj: any) => obj.id === contract.id
-                        )}
-                      />
-                    )}
-                  {generateFeatureAccess(pageFeatures, "select-lead")?.show &&
-                    !generateFeatureAccess(pageFeatures, "select-lead")
-                      ?.enable && (
-                      <AccessDenied
-                        icon={
-                          <Image
-                            src={"/icons/checkbox-icon.png"}
-                            alt="checkbox"
-                            width={1024}
-                            height={1024}
-                            className="w-4 h-4"
-                          />
-                        }
-                      />
-                    )}
-                </TableCell>
+                <TableCell className="flex items-center justify-center"></TableCell>
                 {contract.list.map((cell, cellIndex) => {
                   return (
                     <TableCell key={cellIndex} className="text-center text-xs">
-                      <span>{cell.value}</span>
+                      <div className="flex items-center justify-between">
+                        {" "}
+                        {cellIndex === 0 && (
+                          <div>
+                            {" "}
+                            {generateFeatureAccess(pageFeatures, "select-lead")
+                              ?.show &&
+                              generateFeatureAccess(pageFeatures, "select-lead")
+                                ?.enable && (
+                                <Checkbox
+                                  onCheckedChange={(checked: boolean) => {
+                                    checkItemHandler(
+                                      contract.exportData,
+                                      checked
+                                    );
+                                  }}
+                                  checked={checkedItems.some(
+                                    (obj: any) => obj.id === contract.id
+                                  )}
+                                />
+                              )}
+                            {generateFeatureAccess(pageFeatures, "select-lead")
+                              ?.show &&
+                              !generateFeatureAccess(
+                                pageFeatures,
+                                "select-lead"
+                              )?.enable && (
+                                <AccessDenied
+                                  icon={
+                                    <Image
+                                      src={"/icons/checkbox-icon.png"}
+                                      alt="checkbox"
+                                      width={1024}
+                                      height={1024}
+                                      className="w-4 h-4"
+                                    />
+                                  }
+                                />
+                              )}{" "}
+                          </div>
+                        )}{" "}
+                        <span>{cell.value}</span>
+                      </div>
                     </TableCell>
                   );
                 })}
-                <TableCell className="text-center text-xs">
-                  <div className="flex items-center gap-4 w-full justify-center">
-                    {" "}
-                    ادیت
-                  </div>
-                </TableCell>
               </TableRow>
             </Link>
           </Fragment>

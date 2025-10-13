@@ -49,7 +49,7 @@ export default function ContractInfiniteContainer({
         page?.data?.map((item: any, i: number) => {
           const contract = {
             id: item.id,
-            list: [{ label: "شماره قرارداد:", value: item?.contractNo }],
+            list: [{ label: "شماره قرارداد:", value: item?.contractNo  },],
           };
           const card = (
             <ContractInfiniteCard
