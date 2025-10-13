@@ -111,7 +111,7 @@ export default function ContractTableContainer({
       <ContractTable contractList={contractList} className="hidden lg:flex" />
       <ContractContainer
         contractList={contractCardList}
-        className="grid lg:hidden gap-4 mt-4"
+        className="grid grid-cols-1 md:grid-cols-2 lg:hidden gap-4 mt-4 p-3"
       />
       <div className="grid grid-cols-3 custom-shadow bg-card p-3 rounded-md">
         <div className="col-span-2 w-full">
