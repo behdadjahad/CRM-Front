@@ -5,6 +5,7 @@ import { useInView } from "react-intersection-observer";
 import ContractInfiniteCard from "./ContractInfiniteCard";
 import { Draggable } from "@hello-pangea/dnd";
 import { convertDate } from "@/lib/date";
+import { contractType } from "@/lib/utils";
 export interface ContractInfiniteContainerInterface {
   status: string;
 }
@@ -50,13 +51,13 @@ export default function ContractInfiniteContainer({
         page?.data?.map((item: any, i: number) => {
           const contract = {
             id: item.id,
+            headerData: {
+              contractType:item?.contractType?.name ?? ""
+            },
             list: [
               {
                 label: "تاریخ ثبت:",
-                value:
-
-                     convertDate(item?.submitDateTime, item?.dateType)
-                
+                value: convertDate(item?.submitDateTime, item?.dateType),
               },
               { label: "شماره قرارداد:", value: item?.contractNo },
               {
@@ -65,11 +66,28 @@ export default function ContractInfiniteContainer({
               },
               {
                 label: "مسئول قرارداد:",
-                value: item?.userSubmitter?.fullName ?? "",
+                value: item?.userResponsible?.fullName
+                  ? item?.userResponsible?.fullName
+                  : "",
               },
               {
                 label: "موضوع قرارداد:",
-                value: item?.userSubmitter?.fullName ?? "",
+                value: item?.contractType?.name ?? "",
+              },
+            ],
+
+            footerData: [
+              {
+                label: "درآمد:",
+                value: "",
+              },
+              {
+                label: "هزینه:",
+                value: "",
+              },
+              {
+                label: "سودوزیان:",
+                value: "",
               },
             ],
           };
