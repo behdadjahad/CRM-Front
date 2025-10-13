@@ -1,16 +1,20 @@
 import React, { forwardRef } from "react";
+import { AddEvent } from "../lead/AddEvent";
+import { leadFollowUpTypeList } from "@/constants/lead";
 
 export interface ContractInfiniteCardInterface {
   list: {
     label: string;
     value: string;
   }[];
-  footerData?: {
+  footerData: {
     label: string;
     value: string;
   }[];
   headerData: {
     contractType: string;
+    customer: string;
+    contractDate: string;
   };
 }
 
@@ -21,9 +25,21 @@ const ContractInfiniteCard = forwardRef<
   const customerInfiniteCardContent = (
     <div className="rounded-lg border border-[#E9EAEB] bg-[#F8FAFF] flex flex-col gap-2">
       <div className="flex flex-col gap-4 p-3">
-        <div className="flex justify-between items-center">
-          <div>1</div>
-          <div className="text-[#2949A4] py-1 px-4 rounded-full border border-[#1C68DA]">{headerData.contractType}</div>
+        <div className="flex justify-between items-center ">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-[#DEEBFB] flex items-center justify-center">
+              img
+            </div>{" "}
+            <div className="flex flex-col justify-between text-sm">
+              <div>{headerData.customer}</div>
+
+              <div>{headerData.contractDate}</div>
+            </div>
+          </div>
+
+          <div className="text-[#2949A4] py-1 px-4 rounded-full border border-[#1C68DA]">
+            {headerData.contractType}
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           {list.map((item, index) => (
@@ -37,11 +53,12 @@ const ContractInfiniteCard = forwardRef<
           ))}
         </div>
       </div>
+      <AddEvent list={leadFollowUpTypeList} onSubmit={() => {}} />
       <div className="flex border-t px-6 py-3 bg-[#DEEBFB] justify-between items-center">
         {footerData?.map((item, index) => (
           <div
             key={`footer-data-${index}`}
-            className="flex gap-1 text-[#1C284F]"
+            className="flex gap-1 text-[#1C284F] text-xs"
           >
             <span>{item.label}</span>
             <span>{item.value}</span>

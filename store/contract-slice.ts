@@ -186,15 +186,15 @@ const contractSlice = createSlice({
         footerData: [
           {
             label: "درآمد:",
-            value: "",
+            value: item.sellPrice ? formatPrice(item?.sellPrice) : 0,
           },
           {
             label: "هزینه:",
-            value: "",
+            value: item?.buyPrice ? formatPrice(item?.buyPrice) : 0,
           },
           {
-            label: "سودوزیان:",
-            value: "",
+            label: item?.sellPrice - item?.buyPrice >= 0 ? "سود:" : "زیان:",
+            value: formatPrice(item?.sellPrice - item?.buyPrice),
           },
         ],
         exportData: {
