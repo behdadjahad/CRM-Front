@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 import FilterContainer from "@/components/section/filter-container";
 import FormMaker, { OptionType } from "@/components/shared/form-maker";
 import SingleFeatureCard from "./single-feature-card";
+import BundleCard from "./bundle-card";
 import { Button } from "@/components/ui/button";
 import { RootState, AppDispatch } from "@/store";
 import { CustomToast } from "@/components/shared/custome-toast";
@@ -52,6 +53,7 @@ export default function SingleFeaturesContainer({
     const [actualSearchTerm, setActualSearchTerm] = useState("");
     const [pageSize, setPageSize] = useState(limitForSingleFeatures); // Items per page
     const [loadingItems, setLoadingItems] = useState<Set<number>>(new Set()); // Track loading per item
+    const [bundleLoadingItems, setBundleLoadingItems] = useState<Set<number>>(new Set()); // Track loading per bundle
     const queryClient = useQueryClient();
 
     // Get state from Redux store
@@ -65,6 +67,7 @@ export default function SingleFeaturesContainer({
         error,
         checkedItems,
         filters,
+        bundles,
     } = useSelector((state: RootState) => state.singleFeatures);
 
     const chadcoCustomerId = useSelector(
@@ -97,6 +100,14 @@ export default function SingleFeaturesContainer({
             return false;
         }
         return cartItems.some((item: CartItem) => item.id === itemId);
+    };
+
+    // Helper function to check if bundle is in cart
+    const isBundleInCart = (bundleId: number): boolean => {
+        if (!Array.isArray(cartItems)) {
+            return false;
+        }
+        return cartItems.some((item: CartItem) => item.bundleId === bundleId);
     };
 
     // Add to cart mutation
@@ -151,6 +162,19 @@ export default function SingleFeaturesContainer({
                     context.packageUnitIds.forEach((id: number) => newSet.delete(id));
                     return newSet;
                 });
+
+                // Clear bundle loading state if this was a bundle operation
+                const bundleIds = bundles.filter(bundle =>
+                    bundle.features.some(f => context.packageUnitIds.includes(f.id))
+                ).map(bundle => bundle.id);
+
+                if (bundleIds.length > 0) {
+                    setBundleLoadingItems(prev => {
+                        const newSet = new Set(prev);
+                        bundleIds.forEach(id => newSet.delete(id));
+                        return newSet;
+                    });
+                }
             }
             const errorMessage = err?.message || 'خطا در افزودن به سبد خرید';
             toast.error(errorMessage);
@@ -162,6 +186,20 @@ export default function SingleFeaturesContainer({
                 variables.packageUnitIds.forEach(id => newSet.delete(id));
                 return newSet;
             });
+
+            // Clear bundle loading state if this was a bundle operation
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.packageUnitIds.includes(f.id))
+            ).map(bundle => bundle.id);
+
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    bundleIds.forEach(id => newSet.delete(id));
+                    return newSet;
+                });
+            }
+
             toast.success('آیتم با موفقیت به سبد خرید اضافه شد');
 
             // Clear selected items that were just added to cart
@@ -664,6 +702,25 @@ export default function SingleFeaturesContainer({
         }
     };
 
+    // Handle bundle selection
+    const handleCheckBundle = (bundleId: number, checked: boolean) => {
+        // Don't allow selection if bundle is already in cart
+        if (isBundleInCart(bundleId)) {
+            return;
+        }
+
+        if (checked) {
+            dispatch(setCheckedItems([...checkedItems, `bundle-${bundleId}`]));
+        } else {
+            dispatch(setCheckedItems(checkedItems.filter(id => id !== `bundle-${bundleId}`)));
+        }
+    };
+
+    // Check if bundle is selected
+    const isBundleChecked = (bundleId: number) => {
+        return checkedItems.includes(`bundle-${bundleId}`);
+    };
+
     const handleCheckAll = (checked: boolean) => {
         if (checked) {
             // Only select items that are not in cart
@@ -851,7 +908,7 @@ export default function SingleFeaturesContainer({
                                 </span>
                             )} */}
 
-                         
+
                             {/* {appliedFilters.categories?.map((category: string) => (
                                 <span key={category} className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
                                     دسته‌بندی: {category}
@@ -1057,6 +1114,59 @@ export default function SingleFeaturesContainer({
                     </div>
                 </div>
             )}
+            {/* Bundles Section */}
+            {bundles.length > 0 && (
+                <section className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                        باندل‌ها ({bundles.length})
+                    </h2>
+                    <div className="space-y-4">
+                        {bundles.map((bundle) => (
+                            <BundleCard
+                                convertToSingleFeatureUnit={convertToSingleFeatureUnit}
+                                key={bundle.id}
+                                bundle={bundle}
+                                isChecked={isBundleChecked(bundle.id)}
+                                onCheckChange={handleCheckBundle}
+                                isSelectable={!isBundleInCart(bundle.id)}
+                                onAddToCart={(bundleId, bundleName) => {
+                                    if (chadcoCustomerId) {
+                                        // Set bundle loading state
+                                        setBundleLoadingItems(prev => new Set([...Array.from(prev), bundleId]));
+
+                                        // Add all features in bundle to cart
+                                        const featureIds = bundle.features.map(f => f.id);
+                                        addToCartMutation.mutate({
+                                            packageUnitIds: featureIds,
+                                            chadcoCustomerId: chadcoCustomerId,
+                                            requestMessage: `Bundle: ${bundleName}`
+                                        });
+                                    }
+                                }}
+                                onRemoveFromCart={(bundleId) => {
+                                    if (chadcoCustomerId) {
+                                        // Set bundle loading state
+                                        setBundleLoadingItems(prev => new Set([...Array.from(prev), bundleId]));
+
+                                        // Remove all features in bundle from cart
+                                        const featureIds = bundle.features.map(f => f.id);
+                                        removeFromCartMutation.mutate({
+                                            packageUnitIds: featureIds,
+                                            chadcoCustomerId: chadcoCustomerId
+                                        });
+                                    }
+                                }}
+                                isInCart={isBundleInCart(bundle.id)}
+                                showCartActions={true}
+                                cartLoading={bundleLoadingItems.has(bundle.id)}
+                                bundleLoading={bundleLoadingItems.has(bundle.id)}
+                                chadcoCustomerId={chadcoCustomerId}
+                            />
+                        ))}
+                    </div>
+                </section>
+            )}
+
             {/* Features Grid */}
             <section>
                 {loading ? (

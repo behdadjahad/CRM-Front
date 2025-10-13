@@ -8,8 +8,10 @@ import { convertDate } from "@/lib/date";
 import {
     PackageUnit,
     SingleFeaturesFilters,
-    SingleFeaturesApiResponse
+    SingleFeaturesApiResponse,
+    BundleGroup
 } from "@/types/single-features-api";
+import { organizeFeaturesWithBundles } from "@/lib/bundle-utils";
 
 export interface SingleFeaturesState {
     items: any[];
@@ -25,6 +27,7 @@ export interface SingleFeaturesState {
         start: string;
         end: string;
     };
+    bundles: BundleGroup[]
 }
 
 const initialState: SingleFeaturesState = {
@@ -41,6 +44,7 @@ const initialState: SingleFeaturesState = {
         start: "",
         end: "",
     },
+    bundles: [],
 };
 
 // Async thunk for fetching paginated single features
@@ -199,8 +203,12 @@ const singleFeaturesSlice = createSlice({
                 state.loading = false;
                 const response = action.payload;
 
+                // Organize features into bundles
+                const { bundles, allFeatures } = organizeFeaturesWithBundles(response.data || []);
+                state.bundles = bundles;
+
                 // Transform data for UI display
-                state.items = response.data?.map((item: PackageUnit, index: number) => ({
+                state.items = allFeatures.map((item: PackageUnit, index: number) => ({
                     id: item.id,
                     info: {
                         "نام ویژگی": item.name,
@@ -237,7 +245,7 @@ const singleFeaturesSlice = createSlice({
                         "شناسه ارز": item.currencyId,
                     },
                     rawData: item, // Keep original data for component usage
-                })) || [];
+                }));
 
                 // Handle pagination
                 const totalItems = response?.pagination?.total || response.total || response.data?.length || 0;

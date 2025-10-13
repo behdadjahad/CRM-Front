@@ -50,22 +50,26 @@ export function NavLink({
       onClick?.();
     }
   };
-  useEffect(() => {
-    console.log("_______________isExpanded_________________", isExpanded);
-  }, [isExpanded]);
+
+  const isActive = pathname === link;
+  const hasActiveSubmenu = subMenu?.some(item => pathname === item.link);
 
   return (
     <div className="flex flex-col">
       <div
         onClick={handleclick}
         className={cn(
-          "text-primary-foreground text-xs p-3 rounded-xl relative flex flex-row items-center cursor-pointer",
+          "text-primary-foreground text-xs p-3 rounded-xl   justify-center relative flex flex-row items-center cursor-pointer",
           { "gap-2.5": label && icon },
-          pathname == link ? "bg-primary-hover before:absolute before:bg-orange-500 before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9" : "",
+          { "gap-0 justify-center": !state },
+          (isActive || hasActiveSubmenu) && "bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9",
           className
         )}
       >
-        {icon && <span className="flex-shrink-0">{icon}</span>}
+        {icon && <span className="flex-shrink-0">{icon}</span>}   
+         {/* <span className={cn(" flex-grow text-white whitespace-nowrap",labelClass)}>
+          {label}
+        </span> */}
         {label && state && (
           <span className={cn("text-clip line-clamp-1 flex-grow", labelClass)}>
             {label}
@@ -77,7 +81,7 @@ export function NavLink({
           </span>
         )}
         {subMenu && subMenu.length > 0 && state && (
-          <ChevronDownIcon className={cn(
+          <ChevronDownIcon color="white" className={cn(
             "w-4 h-4 ml-auto transition-transform duration-200",
             isExpanded ? "rotate-180" : ""
           )} />
@@ -85,27 +89,25 @@ export function NavLink({
         {children}
       </div>
 
-
-      {/* Inline submenu for expanded state */}
+      {/* Collapsible submenu */}
       {subMenu && subMenu.length && isExpanded && (
         <div className={cn(
-          "ml-4 border-r-2 border-white/10 pr-2 overflow-hidden transition-all duration-200 bg-danger",
-          isExpanded ? "max-h-96 bg-danger opacity-100" : "max-h-0 opacity-0"
+          "ml-4 pr-2  transition-all duration-200 ",
+          isExpanded ? "h-auto opacity-100" : "h-0 opacity-0"
         )}>
-          <div className="py-1">
+          <div className="ml-4 mt-1  pr-2">
             {subMenu.map((item) => (
               <Link
                 key={`subLink-${item.link}`}
                 href={item.link}
                 {...props}
-                onClick={onClick}
                 className={cn(
-                  "text-primary-foreground text-xs py-2 px-3 rounded-lg relative flex items-center mb-1",
-                  pathname == item.link ? "bg-primary-hover before:absolute before:bg-orange-500 before:-right-2 before:rounded-l-[6px] before:w-1 before:h-6" : "hover:bg-white/5"
+                  "text-primary-foreground text-xs py-2  w-full  relative flex items-center transition-all duration-200  mb-1",
+                  pathname === item.link ? "text-white" : ""
                 )}
               >
                 <span className="w-2 h-2 bg-white/40 rounded-full mr-2 flex-shrink-0"></span>
-                <span className="text-clip line-clamp-1">
+                <span className="text-white overflow-visible pr-1" >
                   {item.label}
                 </span>
               </Link>

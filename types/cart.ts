@@ -41,6 +41,7 @@ export interface CartItem {
   currencyId: number;
   createdAt: string;
   updatedAt: string;
+  bundleId?: number; // For bundle items
 }
 
 // Cart data structure

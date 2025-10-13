@@ -29,14 +29,15 @@ export default function OrderSummaryCard({
     const invoiceData: SingleInvoice | undefined = response?.data;
 
     const { mutate: payInvoiceMutation } = useMutation({
-        mutationFn: (id: number) => payInvoice(id, invoiceData?.chadcoCustomerId || 0),
+        mutationFn: ({ id, months }: { id: number, months: number }) => 
+            payInvoice(id, invoiceData?.chadcoCustomerId || 0, months),
         onSuccess: () => {
             // alert("پرداخت با موفقیت انجام شد");
         },
     });
 
     const handlePayment = () => {
-        payInvoiceMutation(Number(id));
+        payInvoiceMutation({ id: Number(id), months: selectedDuration?.months || 0 });
     }
 
     // Show skeleton while loading
@@ -199,7 +200,7 @@ export default function OrderSummaryCard({
                 <div className="flex justify-between items-center">
                     <span className="text-base font-normal text-static-text-summary">جمع کل:</span>
                     <span className="text-base font-medium text-static-text-summary ">
-                        {selectedDuration?.currentPrice ? formatPrice(selectedDuration.currentPrice) : (packageData?.basePrice ? formatPrice(packageData.basePrice) : "-")} تومان
+                        {selectedDuration?.finalPrice ? formatPrice(selectedDuration.finalPrice) : (packageData?.basePrice ? formatPrice(packageData.basePrice) : "-")} تومان
                     </span>
                 </div>
             </div>

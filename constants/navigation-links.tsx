@@ -1,7 +1,7 @@
 import { NavLinkInterface } from "@/components/shared/nav-link";
 import Image from "next/image";
 
-export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
+export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
   {
     category: "خانه",
     links: [
@@ -31,37 +31,32 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
           },
         ],
       },
-      {
-        id: "purchase",
-        label: "خرید",
-        link: "/purchase",
-        icon: (
-          <Image
-            src={"/icons/menu-package-icon.svg"}
-            alt="خرید"
-            width={1024}
-            height={1024}
-            className="w-6 h-6"
-          />
-        ),
-        subMenu: [
-          {
-            id: "invoice-sub",
-            label: "صورتحساب",
-            link: "/invoice",
-          },
-          {
-            id: "package-sub",
-            label: "پکیج",
-            link: "/packages",
-          },
-          {
-            id: "feature-sub",
-            label: "فیچر",
-            link: "/single-features",
-          },
-        ],
-      },
+      // {
+      //   id: "purchase",
+      //   label: "خرید",
+      //   link: "/purchase",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/menu-package-icon.svg"}
+      //       alt="خرید"
+      //       width={1024}
+      //       height={1024}
+      //       className="w-6 h-6"
+      //     />
+      //   ),
+      //   subMenu: [
+      //     {
+      //       id: "package-sub",
+      //       label: "پکیج",
+      //       link: "/packages",
+      //     },
+      //     {
+      //       id: "feature-sub",
+      //       label: "فیچر",
+      //       link: "/single-features",
+      //     },
+      //   ],
+      // },
       {
         id: "invoice-main",
         label: "صورتحساب",
@@ -77,26 +72,21 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
         ),
         badge: "۵",
       },
-      {
-        id: "settings-plain",
-        label: "تنظیمات",
-        link: "/settings",
-        icon: null,
-      },
-      {
-        id: "settings-with-icon",
-        label: "تنظیمات",
-        link: "/settings",
-        icon: (
-          <Image
-            src={"/icons/setting.png"}
-            alt="تنظیمات"
-            width={1024}
-            height={1024}
-            className="w-6 h-6"
-          />
-        ),
-      },
+     
+      // {
+      //   id: "settings-with-icon",
+      //   label: "تنظیمات",
+      //   link: "/settings",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/setting.png"}
+      //       alt="تنظیمات"
+      //       width={1024}
+      //       height={1024}
+      //       className="w-6 h-6"
+      //     />
+      //   ),
+      // },
 
       // {
       //   label: "قرارداد جدید",
@@ -224,25 +214,25 @@ export const drawerLinks: { category: string; links: NavLinkInterface[] }[] = [
       //     />
       //   ),
       // },
-      {
-        id: "contracts",
-        label: "قرارداد ها",
-        link: "/contracts",
-        icon: (
-          <Image
-            src={"/icons/document.png"}
-            alt="قرارداد ها"
-            width={1024}
-            height={1024}
-            className="w-6 h-6"
-          />
-        ),
-      },
+      // {
+      //   id: "contracts",
+      //   label: "قرارداد ها",
+      //   link: "/contracts",
+      //   icon: (
+      //     <Image
+      //       src={"/icons/document.png"}
+      //       alt="قرارداد ها"
+      //       width={1024}
+      //       height={1024}
+      //       className="w-6 h-6"
+      //     />
+      //   ),
+      // },
 
     ],
   },
   {
-    category: "تنظیمات",
+ 
     links: [
       {
         id: "settings",

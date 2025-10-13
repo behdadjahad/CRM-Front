@@ -27,15 +27,25 @@ export interface FeatureCategory {
     features: Feature[];
 }
 
+    // "months": 1,
+    // "originalPrice": 1000000,
+    // "finalPrice": 1000000,
+    // "discountPercent": 0,
+    // "isSpecialized": false
+
 export interface DurationOption {
-    id: string;
-    title: string;
-    description: string;
-    originalPrice: number;
-    discount: Discount;
-    currentPrice: number;
-    isSelected: boolean;
-    isPopular?: boolean;
+ months: number;
+ originalPrice: number;
+ finalPrice: number;
+ discountPercent: number;
+ isSpecialized: boolean;
+ isSelected: boolean;
+//  isPopular: boolean;
+//  discount: Discount;
+//  currentPrice: number;
+ description: string;
+ title: string;
+ id: string;
 }
 
 export interface UserInfo {
@@ -181,7 +191,7 @@ export interface PackageWithCalculatedPrices {
 
 // Response from getPackagesByInvoice API
 export interface PackagesByInvoiceData {
-    calculatedPrices: CalculatedPrice[];
+    calculatedPrices: DurationOption[];
     package: PackageWithCalculatedPrices;
 }
 

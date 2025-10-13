@@ -43,17 +43,16 @@ export default function InvoiceDetailPage() {
         }
 
         return packageResponse.data.calculatedPrices.map((calc, index) => ({
-            id: `duration-${calc.months}`,
+            // id: `duration-${calc.months}`,
+            id: calc.months.toString(),
+            months: calc.months,
             title: `${calc.months} ماهه`,
             description: calc.months === 6 ? "محبوب ترین" : `پکیج ${calc.months} ماهه`,
-            originalPrice: calc.price,
-            discount: {
-                percentage: 0,
-                amount: 0,
-            },
-            currentPrice: calc.price,
-            isSelected: billingData?.selectedDuration === `duration-${calc.months}` || (index === 0 && !billingData?.selectedDuration),
-            isPopular: calc.months === 6,
+            originalPrice: calc.originalPrice,
+            finalPrice: calc.finalPrice,
+            discountPercent: 0,
+            isSpecialized: false,
+            isSelected: billingData?.selectedDuration === calc.months.toString() || (index === 0 && !billingData?.selectedDuration),
         }));
     }, [packageResponse, billingData?.selectedDuration]);
 
@@ -62,7 +61,7 @@ export default function InvoiceDetailPage() {
         if (packageResponse?.data && invoiceResponse?.data && !billingData) {
             const packageData = packageResponse.data.package;
             const invoiceData = invoiceResponse.data;
-            const firstDurationId = `duration-${packageResponse.data.calculatedPrices[0]?.months}`;
+            const firstDurationId = packageResponse.data.calculatedPrices[0]?.months.toString();
 
             setBillingData({
                 user: {
@@ -128,7 +127,7 @@ export default function InvoiceDetailPage() {
             durationId: durationId,
             months: months,
             title: selectedOption?.title,
-            price: selectedOption?.currentPrice,
+            price: selectedOption?.finalPrice,
             packageTitle: packageResponse?.data?.package?.title
         });
 

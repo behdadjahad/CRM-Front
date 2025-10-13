@@ -45,6 +45,38 @@ export interface Permission {
     }[];
 }
 
+export interface PackageBundle {
+    id: number;
+    name: string;
+}
+
+// Bundle group structure for rendering
+export interface BundleGroup {
+    id: number;
+    name: string;
+    features: PackageUnit[];
+    totalPrice: number;
+    currency?: {
+        id: number;
+        name: string;
+        description: string;
+    };
+}
+
+// Cart bundle item structure
+export interface CartBundleItem {
+    id: number;
+    bundleId: number;
+    bundleName: string;
+    features: PackageUnit[];
+    totalPrice: number;
+    currency: {
+        id: number;
+        name: string;
+        description: string;
+    };
+}
+
 export interface PackageUnit {
     id: number;
     name: string;
@@ -68,6 +100,8 @@ export interface PackageUnit {
     packageCategories: PackageCategory[];
     permissions: Permission[];
     packageUnitLabel: string | null;
+    PackageBundle?: PackageBundle[];
+
 }
 
 export interface Currency {
@@ -126,4 +160,16 @@ export interface SingleFeaturesContainerProps {
     packageUnits: PackageUnit[];
     onPurchase?: (unitId: number, description: string) => void;
     chadcoCustomerId?: number;
+}
+
+export interface BundleGroup {
+    id: number;
+    name: string;
+    features: PackageUnit[];
+    totalPrice: number;
+    currency?: {
+        id: number;
+        name: string;
+        description: string;
+    };
 }

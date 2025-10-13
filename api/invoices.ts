@@ -51,17 +51,17 @@ export async function getSingleInvoice(id: number) {
 }
 
 //pay invoice
-export async function payInvoice(invoiceId: number, chadcoCustomerId: number, months?: number) {
+export async function payInvoice(invoiceId: number, chadcoCustomerId: number, numberOfMonths?: number) {
   try {
     let url = `payment/pay/${invoiceId}?chadcoCustomerId=${chadcoCustomerId}`;
 
-    // Add months parameter if provided
-    if (months) {
-      url += `&months=${months}`;
-    }
+  
 
     const result = await fetchService(url, {
       method: "PATCH",
+      body: {
+        numberOfMonths: numberOfMonths
+      }
     });
 
     return result;
