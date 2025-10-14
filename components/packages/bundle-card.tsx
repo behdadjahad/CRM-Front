@@ -5,7 +5,7 @@ import { BundleGroup } from '@/types/single-features-api';
 import { cn, formatPrice } from '@/lib/utils';
 import SingleFeatureCard from './single-feature-card';
 // convertToSingleFeatureUnit will be passed as prop from container
-
+import { Package } from 'lucide-react';
 interface BundleCardProps {
     bundle: BundleGroup;
     isChecked?: boolean;
@@ -74,11 +74,12 @@ const BundleCard: React.FC<BundleCardProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-lg border shadow-sm transition-all duration-300 border-gray-200 hover:shadow-md">
+        <div className="bg-[#F8AC3F1F] rounded-[20px]  shadow-sm transition-all duration-300 border-gray-100 border-dashed border-2 hover:shadow-md">
             {/* Bundle Header */}
-            <div className="p-4 border-b border-gray-100">
+            <div className="p-4 ">
                 <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
+                        <Package size={22} className="text-black" />
                         <h3 className="text-lg font-semibold text-gray-900">
                             {bundle.name}
                         </h3>

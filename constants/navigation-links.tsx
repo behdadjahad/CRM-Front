@@ -1,6 +1,6 @@
 import { NavLinkInterface } from "@/components/shared/nav-link";
 import Image from "next/image";
-
+import { Calendar1, CalendarFold, CalendarFoldIcon } from "lucide-react";
 export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
   {
     category: "خانه",
@@ -18,6 +18,7 @@ export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
             className="w-6 h-6"
           />
         ),
+        badge: "۵",
         subMenu: [
           {
             id: "new-contract",
@@ -31,94 +32,6 @@ export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
           },
         ],
       },
-      // {
-      //   id: "purchase",
-      //   label: "خرید",
-      //   link: "/purchase",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/menu-package-icon.svg"}
-      //       alt="خرید"
-      //       width={1024}
-      //       height={1024}
-      //       className="w-6 h-6"
-      //     />
-      //   ),
-      //   subMenu: [
-      //     {
-      //       id: "package-sub",
-      //       label: "پکیج",
-      //       link: "/packages",
-      //     },
-      //     {
-      //       id: "feature-sub",
-      //       label: "فیچر",
-      //       link: "/single-features",
-      //     },
-      //   ],
-      // },
-      {
-        id: "invoice-main",
-        label: "صورتحساب",
-        link: "/invoice",
-        icon: (
-          <Image
-            src={"/icons/menu-invoice-icon.svg"}
-            alt="صورتحساب"
-            width={1024}
-            height={1024}
-            className="w-6 h-6"
-          />
-        ),
-        badge: "۵",
-      },
-     
-      // {
-      //   id: "settings-with-icon",
-      //   label: "تنظیمات",
-      //   link: "/settings",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/setting.png"}
-      //       alt="تنظیمات"
-      //       width={1024}
-      //       height={1024}
-      //       className="w-6 h-6"
-      //     />
-      //   ),
-      // },
-
-      // {
-      //   label: "قرارداد جدید",
-      //   link: "/sale",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/file-add.png"}
-      //       alt="قرارداد جدید"
-      //       width={22}
-      //       height={22}
-      //     />
-      //   ),
-      // },
-      // {
-      //   label: "کاربر",
-      //   link: "/user",
-      //   icon: (
-      //     <Image src={"/icons/user.png"} alt="کاربر" width={22} height={22} />
-      //   ),
-      // },
-      // {
-      //   label: "کارگزار",
-      //   link: "/broker",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/user-dollar.png"}
-      //       alt="کارگزار"
-      //       width={22}
-      //       height={22}
-      //     />
-      //   ),
-      // },
       {
         id: "customer",
         label: "مشتری",
@@ -132,6 +45,19 @@ export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
             className="w-6 h-6"
           />
         ),
+        badge: "۵",
+        subMenu: [
+          {
+            id: "new-customer",
+            label: "مشتری جدید",
+            link: "/customer/new",
+          },
+          {
+            id: "customer-list",
+            label: "لیست مشتری ها",
+            link: "/customer",
+          },
+        ],
       },
       {
         id: "lead",
@@ -146,47 +72,58 @@ export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
             className="w-6 h-6"
           />
         ),
+        badge: "۵",
       },
       {
-        id: "packages",
-        label: "پکیج ها",
-        link: "/packages",
+        id: "calendar",
+        label: "رویدادها",
+        link: "/calendar",
+        icon: (
+          <CalendarFoldIcon
+          className="w-6 text-gray-600 h-6"
+          />
+        ),
+      },
+      {
+        id: "purchase",
+        label: "خرید",
+        link: "/purchase",
         icon: (
           <Image
             src={"/icons/menu-package-icon.svg"}
-            alt="پکیج ها"
+            alt="خرید"
             width={1024}
             height={1024}
             className="w-6 h-6"
           />
         ),
+        subMenu: [
+          {
+            id: "package-sub",
+            label: "پکیج",
+            link: "/packages",
+          },
+          {
+            id: "feature-sub",
+            label: "فیچر",
+            link: "/single-features",
+          },
+        ],
       },
-      // {
-      //   label: "خرید فیچرهای تکی",
-      //   link: "/single-features",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/menu-package-icon.svg"}
-      //       alt="خرید فیچرهای تکی"
-      //       width={1024}
-      //       height={1024}
-      //       className="w-6 h-6"
-      //     />
-      //   ),
-      // },
       {
-        id: "invoice",
-        label: "فاکتورها",
+        id: "invoice-main",
+        label: "صورتحساب",
         link: "/invoice",
         icon: (
           <Image
             src={"/icons/menu-invoice-icon.svg"}
-            alt="فاکتورها"
+            alt="صورتحساب"
             width={1024}
             height={1024}
             className="w-6 h-6"
           />
         ),
+        badge: "۲",
       },
       {
         id: "report",
@@ -202,37 +139,10 @@ export const drawerLinks: { category?: string; links: NavLinkInterface[] }[] = [
           />
         ),
       },
-      // {
-      //   label: "فروش",
-      //   link: "/sale",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/report.png"}
-      //       alt="فروش"
-      //       width={22}
-      //       height={22}
-      //     />
-      //   ),
-      // },
-      // {
-      //   id: "contracts",
-      //   label: "قرارداد ها",
-      //   link: "/contracts",
-      //   icon: (
-      //     <Image
-      //       src={"/icons/document.png"}
-      //       alt="قرارداد ها"
-      //       width={1024}
-      //       height={1024}
-      //       className="w-6 h-6"
-      //     />
-      //   ),
-      // },
-
     ],
   },
   {
- 
+
     links: [
       {
         id: "settings",

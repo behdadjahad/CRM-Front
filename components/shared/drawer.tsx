@@ -35,11 +35,12 @@ export default function Drawer({
         "hidden  lg:block w-0 absolute lg:relative h-screen lg:w-54 bg-primary text-primary-foreground pb-3 pt-4 px-4.5 transition-all duration-200 overflow-x-hidden z-[100]",
         {
           // "lg:w-20.5": !state,
-          "lg:w-40 overflow-visible": !state,
+          "lg:w-25 overflow-visible": !state,
         },
         {
           // "z-50 block w-4/5 max-w-96": state,
-          "z-50 block w-4/5 max-w-96 overflow-x-hidden": state,
+          // it mustact like  menu open when we click on  expandable item
+          "z-50 block w-4/5  max-w-96 overflow-x-hidden": state,
         }
       )}
     >
@@ -78,6 +79,7 @@ export default function Drawer({
                       activeClassName=""
                       labelClass={!state ? "hidden" : ""}
                       state={state}
+                      setState={setState}
                       isExpanded={expandedItems.has(linkItem?.id || linkItem?.label || "")}
                     />
                   </div>
