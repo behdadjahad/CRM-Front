@@ -36,6 +36,7 @@ import { hasFeatureCode } from "@/lib/feature-match-utils";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { useHighlightSearch } from "@/hooks/useHighlightSearch";
 import { useSearchParams } from "next/navigation";
+import AutocompleteInput from "../shared/autocomplete-input";
 
 interface SingleFeaturesContainerInterface {
     onPurchase?: (unitId: number, description: string) => void;
@@ -835,21 +836,60 @@ export default function SingleFeaturesContainer({
 
                         {/* Search Input */}
                         <div>
-                            <FormMaker
-                                form={searchFormik}
-                                fields={[
-                                    {
-                                        key: "searchTerm",
-                                        component: "input",
-                                        placeholder: "جستجو در فیچرها...",
-                                        icon: "/icons/search-icon.png",
-                                        iconClassName: "w-4 h-4 right-3 top-3",
-                                        labelClassName: "h-8 p-0",
-                                        type: "text",
-                                        className: "border rounded-md p-0 w-80",
-                                    },
-                                ]}
-                            />
+                            {/* Search Input with Autocomplete */}
+                            <div>
+                                <AutocompleteInput<PackageUnit>
+                                    value={searchFormik.values.searchTerm}
+                                    onChange={(value: string) => searchFormik.setFieldValue("searchTerm", value)}
+                                    onSelect={(selectedFeature) => {
+                                        // When user selects a suggestion, set search term and trigger search
+                                        searchFormik.setFieldValue("searchTerm", selectedFeature.name);
+                                        setActualSearchTerm(selectedFeature.name);
+
+                                        // Trigger search with selected feature name
+                                        const searchFilters = {
+                                            ...appliedFiltersRef.current,
+                                            keyword: selectedFeature.name
+                                        };
+
+                                        setAppliedFilters(searchFilters);
+                                        appliedFiltersRef.current = searchFilters;
+
+                                        dispatch(fetchSingleFeatures({
+                                            page: 1,
+                                            limit: pageSize,
+                                            filters: searchFilters
+                                        }));
+                                        dispatch(setCurrentPage(1));
+                                    }}
+                                    data={packageUnits}
+                                    filterFn={(unit, query) => {
+                                        const lowerQuery = query.toLowerCase();
+                                        const matches = (
+                                            unit.name.toLowerCase().includes(lowerQuery) ||
+                                            unit.description?.toLowerCase().includes(lowerQuery) ||
+                                            unit.packageCategories?.some(cat =>
+                                                cat.name.toLowerCase().includes(lowerQuery)
+                                            ) || false
+                                        );
+
+                                        // Debug log to see what's being filtered
+                                        if (matches) {
+                                            console.log('Matching unit:', unit.name, 'for query:', query);
+                                        }
+
+                                        return matches;
+                                    }}
+                                    displayFn={(unit) => {
+                                        const category = unit.packageCategories?.[0]?.name || 'عمومی';
+                                        return `${unit.name} (${category})`;
+                                    }}
+                                    placeholder="جستجو در فیچرها..."
+                                    className="w-80"
+                                    maxResults={10}
+                                    debounceMs={300}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

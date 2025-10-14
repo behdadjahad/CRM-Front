@@ -136,7 +136,7 @@ export default function FormMaker({
           );
         case "tag-preview":
           return <TagPreview form={form} item={item} />;
-          return <TagPreview form={form} item={item} />;
+    
         case "SuggestionInput":
           return (
             <SuggestionInput
@@ -147,7 +147,7 @@ export default function FormMaker({
           );
         case "input":
           return <TextInput disabled={!hasAccess} item={item} form={form} />;
-          return <TextInput disabled={!hasAccess} item={item} form={form} />;
+          // return <TextInput disabled={!hasAccess} item={item} form={form} />;
         case "multi-added-input":
           return <MultiAddedTextInput item={{ ...item }} form={form} />;
         case "phone":

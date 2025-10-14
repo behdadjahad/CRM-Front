@@ -59,10 +59,26 @@ export interface CartData {
   finalTotal: number;
   createdAt: string;
   updatedAt: string;
+  items: any[];
   packageUnits: CartItem[];
   satisfiedBundles: any[];
 }
-
+// "id": 2,
+// "chadcoCustomerId": 303,
+// "discountCodeId": null,
+// "originalTotal": 3000000,
+// "discountAmount": 0,
+// "discountPercent": 0,
+// "discountAmountByDiscountCode": null,
+// "discountPercentByDiscountCode": null,
+// "taxAmount": 0,
+// "taxPercent": 0,
+// "finalTotal": 3000000,
+// "createdAt": "2025-10-11T06:13:27.960Z",
+// "updatedAt": "2025-10-11T10:09:55.661Z",
+// "items": [],
+// "packageUnits": [],
+// "satisfiedBundles": []
 // API Response structure
 export interface CartApiResponse {
   status: "success" | "error";
