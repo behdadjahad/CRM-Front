@@ -234,3 +234,4 @@ export const useCartOperations = ({ chadcoCustomerId }: UseCartOperationsProps) 
 export const canUpdateQuantity = (unitType?: string, unitModel?: string): boolean => {
     return unitType === 'perCount' || unitModel === 'flat';
 };
+
