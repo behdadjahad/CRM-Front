@@ -3,5 +3,6 @@
  */
 
 export { useCartActions } from './useCartActions';
-export { useQuantityUpdate, canUpdateQuantity } from './useQuantityUpdate';
+export { useQuantityUpdate } from './useQuantityUpdate';
+export { useCartOperations, canUpdateQuantity } from './useCartOperations';
 

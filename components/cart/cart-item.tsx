@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import QuantityInput from "../shared/quantity-input";
 import { convertDaysToMonths } from "@/lib/duration-utils";
-import { canUpdateQuantity } from "@/hooks/cart/useQuantityUpdate";
+import { canUpdateQuantity } from "@/hooks/cart/useCartOperations";
 
 interface CartItemProps {
     item: CartItemType;
@@ -16,6 +16,7 @@ interface CartItemProps {
     showPrice?: boolean; // Control price display (default true)
     showRemoveButton?: boolean; // Control remove button display (default true)
     getOptimisticQuantity?: (itemId: number, fallbackQuantity: number) => number;
+    isItemUpdating?: (itemId: number) => boolean;
 }
 
 export default function CartItem({
@@ -28,6 +29,7 @@ export default function CartItem({
     showPrice = true,
     showRemoveButton = true,
     getOptimisticQuantity,
+    isItemUpdating,
 }: CartItemProps) {
     const getTagClasses = (tag?: string) => {
         switch (tag) {
@@ -166,6 +168,7 @@ export default function CartItem({
                             onDecreaseQuantity={handleQuantityChange}
                             onIncreaseQuantity={handleQuantityChange}
                             isUpdating={isUpdating}
+                            isItemUpdating={isItemUpdating?.(item.id)}
                         />
                     )}
 

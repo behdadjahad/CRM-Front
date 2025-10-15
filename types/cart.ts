@@ -25,6 +25,7 @@ export interface Page {
 // AccessesJson structure
 export interface AccessesJson {
   pages: Page[];
+  usageCount?: number;
 }
 
 // Package Unit (Cart Item)

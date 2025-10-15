@@ -27,7 +27,7 @@ export const organizeCartItemsWithBundles = (
     // Create bundle groups from satisfied bundles
     satisfiedBundles.forEach(bundle => {
         const bundleItems = cartItems.filter(item =>
-            bundle.packageUnitIds.includes(item.id)
+            bundle?.packageUnitIds?.includes(item.id)
         );
 
         if (bundleItems.length > 0) {

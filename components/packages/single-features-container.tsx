@@ -1243,8 +1243,15 @@ export default function SingleFeaturesContainer({
                                     }}
                                     onRemoveFromCart={(itemId) => {
                                         if (chadcoCustomerId) {
+                                            // Find the item in cart items array to get its quantity
+                                            const cartItemWithQuantity = cartData?.data?.items?.find((item: any) => item.unitId.toString() === itemId);
+                                            const quantity = cartItemWithQuantity?.count || 1;
+
+                                            // Create array with multiple copies of the same ID based on quantity
+                                            const itemIdsToRemove = Array(quantity).fill(parseInt(itemId));
+
                                             removeFromCartMutation.mutate({
-                                                unitIds: [parseInt(itemId)],
+                                                unitIds: itemIdsToRemove,
                                                 chadcoCustomerId: chadcoCustomerId
                                             });
                                         }

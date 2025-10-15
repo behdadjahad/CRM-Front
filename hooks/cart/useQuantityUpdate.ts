@@ -5,7 +5,6 @@ import { CustomToast } from '@/components/shared/custome-toast';
 interface UseQuantityUpdateProps {
     chadcoCustomerId: number;
     onSuccess?: () => void;
-    onQuantityChange?: (itemId: number, newQuantity: number) => void;
 }
 
 interface PendingUpdate {
@@ -22,12 +21,12 @@ interface PendingUpdate {
 export const useQuantityUpdate = ({
     chadcoCustomerId,
     onSuccess,
-    onQuantityChange,
 }: UseQuantityUpdateProps) => {
     const [isUpdating, setIsUpdating] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout>();
     const pendingUpdatesRef = useRef<Map<number, PendingUpdate>>(new Map());
     const [optimisticQuantities, setOptimisticQuantities] = useState<Map<number, number>>(new Map());
+    const [failedItems, setFailedItems] = useState<Set<number>>(new Set());
 
     // Clear pending updates when component unmounts
     useEffect(() => {
@@ -67,17 +66,21 @@ export const useQuantityUpdate = ({
                 type: 'success',
                 message: 'تعداد با موفقیت به‌روزرسانی شد',
             });
-            onSuccess?.();
+
+            // Delay the refetch to allow optimistic state to clear first
+            setTimeout(() => {
+                onSuccess?.();
+            }, 100);
         } catch (error: any) {
+            // Mark item as failed
+            setFailedItems(prev => new Set([...Array.from(prev), itemId]));
+
             // Rollback optimistic quantity on error
             setOptimisticQuantities(prev => {
                 const newMap = new Map(prev);
                 newMap.delete(itemId);
                 return newMap;
             });
-
-            // Notify parent component to rollback
-            onQuantityChange?.(itemId, originalQuantity);
 
             const errorMessage = error?.message || 'خطا در به‌روزرسانی تعداد';
             CustomToast({
@@ -87,22 +90,26 @@ export const useQuantityUpdate = ({
         } finally {
             setIsUpdating(false);
         }
-    }, [chadcoCustomerId, onSuccess, onQuantityChange]);
+    }, [chadcoCustomerId, onSuccess]);
 
     const debouncedQuantityUpdate = useCallback((
         itemId: number,
         currentQuantity: number,
         newQuantity: number
     ) => {
+        // Clear failed state for this item when starting new update
+        setFailedItems(prev => {
+            const newSet = new Set(prev);
+            newSet.delete(itemId);
+            return newSet;
+        });
+
         // Immediately update UI optimistically
         setOptimisticQuantities(prev => {
             const newMap = new Map(prev);
             newMap.set(itemId, newQuantity);
             return newMap;
         });
-
-        // Notify parent component of immediate UI change
-        onQuantityChange?.(itemId, newQuantity);
 
         // Store the pending update with original quantity for rollback
         pendingUpdatesRef.current.set(itemId, {
@@ -124,21 +131,42 @@ export const useQuantityUpdate = ({
                 pendingUpdatesRef.current.delete(itemId);
             }
         }, 500); // 500ms debounce delay
-    }, [executeQuantityUpdate, onQuantityChange]);
+    }, [executeQuantityUpdate]);
 
     // Get optimistic quantity for an item
     const getOptimisticQuantity = useCallback((itemId: number, fallbackQuantity: number) => {
-        return optimisticQuantities.get(itemId) ?? fallbackQuantity;
+        // Check if this item has failed - if so, use server quantity
+        if (failedItems.has(itemId)) {
+            return fallbackQuantity;
+        }
+
+        // Check if there's an optimistic quantity for this item
+        const optimisticQuantity = optimisticQuantities.get(itemId);
+
+        // If there's an optimistic quantity, use it (even if pending)
+        if (optimisticQuantity !== undefined) {
+            return optimisticQuantity;
+        }
+
+        // Only fall back to server quantity if no optimistic update exists
+        return fallbackQuantity;
+    }, [optimisticQuantities, failedItems]);
+
+    // Check if a specific item is being updated
+    const isItemUpdating = useCallback((itemId: number) => {
+        return optimisticQuantities.has(itemId);
     }, [optimisticQuantities]);
 
     return {
         updateQuantity: debouncedQuantityUpdate,
         isUpdating,
         getOptimisticQuantity,
+        isItemUpdating,
     };
 };
 
 /**
+ 
  * Check if an item supports quantity updates
  * Only perCount and flat unit types support quantity changes
  */

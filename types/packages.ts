@@ -24,6 +24,7 @@ export interface PageAccess {
 
 export interface AccessesJson {
   pages?: PageAccess[];
+  usageCount?: number;
 }
 
 // Currency Types

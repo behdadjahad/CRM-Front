@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 import { XCircle } from 'lucide-react';
 import Image from 'next/image';
 
-export default function DiscountCodeCard() {
+interface DiscountCodeCardProps {
+    cartId: number;
+    chadcoCustomerId: number;
+}
+
+export default function DiscountCodeCard({ cartId, chadcoCustomerId }: DiscountCodeCardProps) {
     const discountCode = false;
     const discountAmount = 10000;
     const isLoading = false;

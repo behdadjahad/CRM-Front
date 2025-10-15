@@ -15,6 +15,7 @@ interface CartBundleCardProps {
     isUpdating: boolean;
     isRemoving?: boolean;
     getOptimisticQuantity?: (itemId: number, fallbackQuantity: number) => number;
+    isItemUpdating?: (itemId: number) => boolean;
 }
 
 const CartBundleCard: React.FC<CartBundleCardProps> = ({
@@ -24,6 +25,7 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
     isUpdating,
     isRemoving = false,
     getOptimisticQuantity,
+    isItemUpdating,
 }) => {
     const discountAmount = bundle.totalPrice - bundle.discountedPrice;
     const savingsPercent = bundle.discountPercent;
@@ -112,7 +114,6 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
                         آیتم‌های باندل ({bundle.items.length} مورد)
                     </span>
                 </div> */}
-
                 {bundle.items.map((item, index) => (
                     <div key={item.id} className="relative">
                         {/* Bundle Item Indicator */}
@@ -128,6 +129,7 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
                                 isInBundle={true}
                                 showRemoveButton={false} // Hide remove button for bundled items
                                 getOptimisticQuantity={getOptimisticQuantity}
+                                isItemUpdating={isItemUpdating}
                             />
                         </div>
                     </div>

@@ -46,11 +46,8 @@ export default function OrderSummaryCard({
     const queryClient = useQueryClient();
     const bundleDiscountAmount = bundles.reduce((acc, bundle) => acc + (bundle.totalPrice - bundle.discountedPrice), 0);
 
-    const displayingTotal = originalTotal
-        - discountAmount
-        - discountAmount
-        - bundleDiscountAmount
-        + taxAmount;
+    // Use server's finalTotal instead of manual calculation to ensure accuracy
+    const displayingTotal = finalTotal;
 
     const { mutate: payFeaturesMutation, isPending: isPaymentPending } = useMutation({
         mutationFn: (cartId: number) => payFeatures(cartId, chadcoCustomerId),
@@ -153,27 +150,27 @@ export default function OrderSummaryCard({
                         </span>
                     </div>
                 )}
-                {/*  also show تخفیف باندل  */}
-                <div className="flex justify-between items-center">
-                    <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">
-                        تخفیف باندل:
-                        {/* show the tag in red for discount percentage of bundel */}
-                        <span className="text-red-500">
-                            {bundleDiscountPercent > 0 && ` (${bundleDiscountPercent}%)`}
+                {/* Bundle Discount - only show if there are bundles with discounts */}
+                {bundleDiscountAmount > 0 && (
+                    <div className="flex justify-between items-center">
+                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">
+                            تخفیف باندل:
+                            {/* show the tag in red for discount percentage of bundel */}
+                            <span className="text-red-500">
+                                {bundleDiscountPercent > 0 && ` (${bundleDiscountPercent}%)`}
+                            </span>
                         </span>
-                    </span>
-                    <span className="font-medium whitespace-nowrap text-static-secondary-gray-dark">
+                        <span className="font-medium whitespace-nowrap text-static-secondary-gray-dark">
 
-                        {bundleDiscountAmount && bundleDiscountAmount > 0 ? <span className="text-red-500">- {formatPrice(bundleDiscountAmount)} تومان</span> : "-"}
-                    </span>
-
-
-
-                    {/* {discountPercentByBandle > 0 && ` (${discountPercentByBandle}%)`} */}
+                            <span className="text-red-500">- {formatPrice(bundleDiscountAmount)} تومان</span>
+                        </span>
 
 
 
-                </div>
+                        {/* {discountPercentByBandle > 0 && ` (${discountPercentByBandle}%)`} */}
+
+                    </div>
+                )}
 
                 {/* Final Total */}
                 <div className="flex w-full justify-between items-center xl:flex-row flex-col pt-4 border-t border-gray-200">

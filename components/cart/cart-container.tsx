@@ -49,19 +49,36 @@ export default function CartContainer() {
     const discountAmount = cartData?.data?.discountAmount || 0;
     const taxAmount = cartData?.data?.taxAmount || 0;
     const finalTotal = cartData?.data?.finalTotal || 0;
-    // Calculate total item count including quantities
-    const itemCount = cartItems.reduce((total, item) => total + item.count, 0);
+
+    // Quantity update hook with debouncing and optimistic updates
+    const { updateQuantity, isUpdating: isQuantityUpdating, getOptimisticQuantity, isItemUpdating } = useQuantityUpdate({
+        chadcoCustomerId: chadcoCustomerId || 0,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+    });
+
+
+
 
     // Merge cart items with quantities for proper display
     const itemsWithQuantities = useMemo(() => {
         return packageUnits.map(unit => {
             const cartItem = cartItems.find(item => item.unitId === unit.id);
+            const serverQuantity = cartItem?.count || 1;
+
+            // Use optimistic quantity if available, otherwise use server quantity
+            const optimisticQuantity = getOptimisticQuantity(unit.id, serverQuantity);
+
             return {
                 ...unit,
-                quantity: cartItem?.count || 1
+                quantity: optimisticQuantity
             };
         });
-    }, [packageUnits, cartItems]);
+    }, [packageUnits, cartItems, getOptimisticQuantity]);
+
+    // Calculate total item count including optimistic quantities
+    const itemCount = itemsWithQuantities.reduce((total, item) => total + item.quantity, 0);
 
     // Organize items into bundles and individual items
     const { bundles, individualItems, bundledItemIds } = useMemo(() =>
@@ -93,23 +110,21 @@ export default function CartContainer() {
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
         },
     });
-    // Quantity update hook with debouncing and optimistic updates
-    const { updateQuantity, isUpdating: isQuantityUpdating, getOptimisticQuantity } = useQuantityUpdate({
-        chadcoCustomerId: chadcoCustomerId || 0,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
-        },
-        onQuantityChange: (itemId, newQuantity) => {
-            // This is called immediately for optimistic updates
-            // The actual cart data will be updated when API responds
-        },
-    });
 
     const handleRemoveItem = (id: string) => {
         if (!chadcoCustomerId) return;
 
+        // Find the item to get its quantity
+        const item = itemsWithQuantities.find(item => item.id.toString() === id);
+        if (!item) return;
+
+        const quantity = item.quantity || 1;
+
+        // Create array with multiple copies of the same ID based on quantity
+        const itemIdsToRemove = Array(quantity).fill(parseInt(id));
+
         removeItemMutation.mutate({
-            packageUnitIds: [parseInt(id)],
+            packageUnitIds: itemIdsToRemove,
             chadcoCustomerId
         });
     };
@@ -117,11 +132,14 @@ export default function CartContainer() {
     const handleRemoveBundle = (bundleId: number) => {
         if (!chadcoCustomerId) return;
 
-        // Find the bundle and get all its item IDs
+        // Find the bundle and get all its item IDs with quantities
         const bundle = bundles.find(b => b.id === bundleId);
         if (!bundle) return;
 
-        const itemIds = bundle.items.map(item => item.id);
+        // Create array with multiple copies of each item ID based on quantity
+        const itemIds = bundle.items.flatMap(item =>
+            Array(item.quantity || 1).fill(item.id)
+        );
 
         removeItemMutation.mutate({
             packageUnitIds: itemIds,
@@ -207,6 +225,7 @@ export default function CartContainer() {
                                                 isUpdating={isQuantityUpdating}
                                                 isRemoving={removeItemMutation.isPending}
                                                 getOptimisticQuantity={getOptimisticQuantity}
+                                                isItemUpdating={isItemUpdating}
                                             />
                                         ))}
                                     </div>
@@ -229,6 +248,7 @@ export default function CartContainer() {
                                                 isUpdating={isQuantityUpdating}
                                                 isRemoving={removeItemMutation.isPending}
                                                 getOptimisticQuantity={getOptimisticQuantity}
+                                                isItemUpdating={isItemUpdating}
                                             />
                                         ))}
                                     </div>
@@ -239,7 +259,10 @@ export default function CartContainer() {
 
                     {/* Left side - Discount & Summary */}
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 ">
-                        <DiscountCodeCard />
+                        <DiscountCodeCard
+                            cartId={cartData?.data?.id || 0}
+                            chadcoCustomerId={chadcoCustomerId || 0}
+                        />
                         <OrderSummaryCard
                             // bundleDiscountByAmount={bundleDiscountByAmount}
                             bundles={bundles}

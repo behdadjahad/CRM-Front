@@ -1,17 +1,19 @@
 import React from 'react'
-import { Minus, Plus } from 'lucide-react'
+import { Minus, Plus, Loader2 } from 'lucide-react'
 interface QanutityType {
     quantity: number
     onDecreaseQuantity: (quantity: number) => void
     onIncreaseQuantity: (quantity: number) => void
     isUpdating: boolean
+    isItemUpdating?: boolean
 }
 
 export default function QuantityInput({
     quantity,
     onDecreaseQuantity,
     onIncreaseQuantity,
-    isUpdating
+    isUpdating,
+    isItemUpdating = false
 }: QanutityType) {
     return (
         <div className="flex items-center gap-2">
@@ -23,7 +25,13 @@ export default function QuantityInput({
             >
                 <Minus className="w-3 h-3 text-border-foreground" />
             </button>
-            <div className="font-medium border px-7 text-sm my-2 py-1  bg-gray-100 flex items-center justify-center rounded-sm text-foreground dark:text-white text-center">{quantity}</div>
+            <div className="font-medium border px-7 text-sm my-2 py-1  bg-gray-100 flex items-center justify-center rounded-sm text-foreground dark:text-white text-center">
+                {isItemUpdating ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                    quantity
+                )}
+            </div>
             <button
                 onClick={() => onIncreaseQuantity(quantity + 1)}
                 disabled={isUpdating}
