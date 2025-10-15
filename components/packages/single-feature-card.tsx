@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 
 import { selectUnit } from '@/api/packages/package-api';
 import { CustomToast } from '../shared/custome-toast';
-// import SingleFeaturePurchaseModal from './single-feature-purchase-modal';
 import { SingleFeatureUnit } from '@/data/single-features-mock-data';
 import Tag from '../billing/tag';
 import { Checkbox } from '../ui/checkbox';
@@ -38,7 +37,7 @@ interface SingleFeatureCardProps {
     // Add highlighting props
     isHighlighted?: boolean;
     highlightCode?: string; // The feature code being highlighted
-    accessesJson?: any; // The accessesJson from the unit
+    accessesJson?: { pages: Array<{ code: string; features: Array<{ code: string }> }> };
     // Add bundle-related props
     isInBundle?: boolean; // If true, hide individual price/button and show bundle info
     showPrice?: boolean; // Control price display

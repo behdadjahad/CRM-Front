@@ -1,0 +1,561 @@
+"filename", "language", "TypeScript", "JSON with Comments", "CSS", "HTML", "Markdown", "JavaScript", "XML", "JSON", "TypeScript JSX", "MS SQL", "comment", "blank", "total"
+"e:\CHADCO\CRM-Front\.eslintrc.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 1, 20
+"e:\CHADCO\CRM-Front\ACCESS_MANAGEMENT_ANALYSIS.md", "Markdown", 0, 0, 0, 0, 933, 0, 0, 0, 0, 0, 0, 208, 1141
+"e:\CHADCO\CRM-Front\PROJECT_DOCUMENTATION.md", "Markdown", 0, 0, 0, 0, 827, 0, 0, 0, 0, 0, 0, 146, 973
+"e:\CHADCO\CRM-Front\README.md", "Markdown", 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 14, 38
+"e:\CHADCO\CRM-Front\__tests__\calendar-modal-utils.test.ts", "TypeScript", 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 19, 108
+"e:\CHADCO\CRM-Front\access_control_documentation.md", "Markdown", 0, 0, 0, 0, 342, 0, 0, 0, 0, 0, 0, 77, 419
+"e:\CHADCO\CRM-Front\access_control_implementation.md", "Markdown", 0, 0, 0, 0, 503, 0, 0, 0, 0, 0, 0, 97, 600
+"e:\CHADCO\CRM-Front\access_control_schema.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 348, 0, 0, 0, 0, 348
+"e:\CHADCO\CRM-Front\api\accommodation.ts", "TypeScript", 132, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 159
+"e:\CHADCO\CRM-Front\api\admin.ts", "TypeScript", 416, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 54, 470
+"e:\CHADCO\CRM-Front\api\auth.ts", "TypeScript", 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 119
+"e:\CHADCO\CRM-Front\api\calendar.ts", "TypeScript", 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"e:\CHADCO\CRM-Front\api\cart.ts", "TypeScript", 95, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 15, 119
+"e:\CHADCO\CRM-Front\api\ceo.ts", "TypeScript", 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"e:\CHADCO\CRM-Front\api\client.ts", "TypeScript", 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 14, 127
+"e:\CHADCO\CRM-Front\api\contract.ts", "TypeScript", 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 210
+"e:\CHADCO\CRM-Front\api\currency.ts", "TypeScript", 69, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 82
+"e:\CHADCO\CRM-Front\api\customer-service.ts", "TypeScript", 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 22
+"e:\CHADCO\CRM-Front\api\customer.ts", "TypeScript", 105, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 120
+"e:\CHADCO\CRM-Front\api\event.ts", "TypeScript", 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 47
+"e:\CHADCO\CRM-Front\api\expense.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12
+"e:\CHADCO\CRM-Front\api\filter.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12
+"e:\CHADCO\CRM-Front\api\flight.ts", "TypeScript", 94, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 119
+"e:\CHADCO\CRM-Front\api\follow-up.ts", "TypeScript", 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"e:\CHADCO\CRM-Front\api\invoices.ts", "TypeScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 17, 80
+"e:\CHADCO\CRM-Front\api\lead.ts", "TypeScript", 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 57
+"e:\CHADCO\CRM-Front\api\legal-document.ts", "TypeScript", 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 59
+"e:\CHADCO\CRM-Front\api\location.ts", "TypeScript", 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 90
+"e:\CHADCO\CRM-Front\api\notification.ts", "TypeScript", 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 25
+"e:\CHADCO\CRM-Front\api\other.ts", "TypeScript", 65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 80
+"e:\CHADCO\CRM-Front\api\packages\package-api.ts", "TypeScript", 147, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 29, 181
+"e:\CHADCO\CRM-Front\api\report.ts", "TypeScript", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15
+"e:\CHADCO\CRM-Front\api\role.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12
+"e:\CHADCO\CRM-Front\api\satisfaction.ts", "TypeScript", 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 44
+"e:\CHADCO\CRM-Front\api\service.ts", "TypeScript", 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 42
+"e:\CHADCO\CRM-Front\api\setting-airline.ts", "TypeScript", 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 32
+"e:\CHADCO\CRM-Front\api\setting-airport.ts", "TypeScript", 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 32
+"e:\CHADCO\CRM-Front\api\setting-hotel.ts", "TypeScript", 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 32
+"e:\CHADCO\CRM-Front\api\signup.ts", "TypeScript", 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 36, 8, 103
+"e:\CHADCO\CRM-Front\api\stop.ts", "TypeScript", 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 33
+"e:\CHADCO\CRM-Front\api\ticket.ts", "TypeScript", 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 33
+"e:\CHADCO\CRM-Front\api\transportation.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 12
+"e:\CHADCO\CRM-Front\api\visa.ts", "TypeScript", 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 108
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\category\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 228, 0, 1, 9, 238
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\invoices\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 288, 0, 12, 21, 321
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\invoices\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 28, 7, 86
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\label\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 189, 0, 1, 7, 197
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\package-unit\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 216, 0, 0, 9, 225
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\package\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 193, 0, 1, 11, 205
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\page\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 94, 0, 0, 10, 104
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\permission\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 120, 0, 1, 6, 127
+"e:\CHADCO\CRM-Front\app\(admin-layout)\admin\role\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 0, 3, 117
+"e:\CHADCO\CRM-Front\app\(admin-layout)\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 9, 55
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\calendar\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 6, 72
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\cart\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 2, 7
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\[id]\_page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 1338, 0, 64, 61, 1463
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 276, 0, 5, 17, 298
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\service\[id]\_page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 276, 0, 5, 17, 298
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\contracts\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 0, 3, 96
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\customer\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 1, 8, 98
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\customer\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 7, 32
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\invoice\[id]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 193, 0, 22, 34, 249
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\invoice\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 5, 79
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 3, 7, 62
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\lead\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 8, 47
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\notification\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 3, 27
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\packages\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 55, 0, 7, 15, 77
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 1, 5, 21
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\pending-register\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 6, 80
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\place-autocomplete-demo\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 22, 25, 307
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\register\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 3, 25
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\report\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 651, 0, 227, 57, 935
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\sale\_page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 691, 0, 1, 30, 722
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\setting\[service]\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 247, 0, 7, 25, 279
+"e:\CHADCO\CRM-Front\app\(dashboard-layout)\single-features\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 3, 12, 54
+"e:\CHADCO\CRM-Front\app\(login-layout)\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 4, 5, 50
+"e:\CHADCO\CRM-Front\app\(login-layout)\login\forget-password\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 86, 0, 0, 13, 99
+"e:\CHADCO\CRM-Front\app\(login-layout)\login\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 4, 21
+"e:\CHADCO\CRM-Front\app\(login-layout)\post-signup\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 5, 23
+"e:\CHADCO\CRM-Front\app\(login-layout)\signup\page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 5, 30
+"e:\CHADCO\CRM-Front\boot\chadco-customer-service.ts", "TypeScript", 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 30, 250
+"e:\CHADCO\CRM-Front\boot\fetch-service.ts", "TypeScript", 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 75, 33, 253
+"e:\CHADCO\CRM-Front\components\admin\admin-layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 1, 3, 41
+"e:\CHADCO\CRM-Front\components\admin\category\add-category-to-package.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 134, 0, 0, 4, 138
+"e:\CHADCO\CRM-Front\components\admin\category\category-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 4, 62
+"e:\CHADCO\CRM-Front\components\admin\delete-confirmation.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 2, 64
+"e:\CHADCO\CRM-Front\components\admin\forms\creation-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 85, 0, 0, 3, 88
+"e:\CHADCO\CRM-Front\components\admin\forms\editable-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 88, 0, 0, 4, 92
+"e:\CHADCO\CRM-Front\components\admin\label\label-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 9, 67
+"e:\CHADCO\CRM-Front\components\admin\no-data.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 8
+"e:\CHADCO\CRM-Front\components\admin\package-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 4, 69
+"e:\CHADCO\CRM-Front\components\admin\package-unit\add-package-unit-to-category.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 8, 141
+"e:\CHADCO\CRM-Front\components\admin\package-unit\add-package-unit-to-label.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 133, 0, 0, 4, 137
+"e:\CHADCO\CRM-Front\components\admin\package-unit\package-unit-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 4, 70
+"e:\CHADCO\CRM-Front\components\admin\page\add-page-feature-to-page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 147, 0, 0, 5, 152
+"e:\CHADCO\CRM-Front\components\admin\page\page-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 2, 54
+"e:\CHADCO\CRM-Front\components\admin\permission\add-permission-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0, 5, 132
+"e:\CHADCO\CRM-Front\components\admin\permission\add-permission-to-package-unit.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 138, 0, 0, 7, 145
+"e:\CHADCO\CRM-Front\components\admin\permission\add-permission-to-role.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 0, 5, 142
+"e:\CHADCO\CRM-Front\components\admin\permission\permission-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 5, 42
+"e:\CHADCO\CRM-Front\components\admin\permission\permission-page-feature-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 0, 8, 89
+"e:\CHADCO\CRM-Front\components\admin\requests\admin-request-detail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"e:\CHADCO\CRM-Front\components\admin\requests\admin-requests-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 273, 0, 11, 14, 298
+"e:\CHADCO\CRM-Front\components\admin\requests\admin-requests-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 166, 0, 21, 8, 195
+"e:\CHADCO\CRM-Front\components\admin\requests\discount-action-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 5, 66
+"e:\CHADCO\CRM-Front\components\admin\requests\request-status-badge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 7, 53
+"e:\CHADCO\CRM-Front\components\admin\role\role-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 0, 2, 54
+"e:\CHADCO\CRM-Front\components\admin\tables\category-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 232, 0, 1, 14, 247
+"e:\CHADCO\CRM-Front\components\admin\tables\feature-selection-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 94, 0, 0, 4, 98
+"e:\CHADCO\CRM-Front\components\admin\tables\label-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 162, 0, 0, 7, 169
+"e:\CHADCO\CRM-Front\components\admin\tables\package-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 169, 0, 14, 10, 193
+"e:\CHADCO\CRM-Front\components\admin\tables\package-unit-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 294, 0, 21, 15, 330
+"e:\CHADCO\CRM-Front\components\admin\tables\page-feature-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 141, 0, 0, 14, 155
+"e:\CHADCO\CRM-Front\components\admin\tables\page-selection-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 294, 0, 1, 16, 311
+"e:\CHADCO\CRM-Front\components\admin\tables\page-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 171, 0, 0, 5, 176
+"e:\CHADCO\CRM-Front\components\admin\tables\permission-feature-sub-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 220, 0, 5, 14, 239
+"e:\CHADCO\CRM-Front\components\admin\tables\permission-page-sub-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 324, 0, 3, 22, 349
+"e:\CHADCO\CRM-Front\components\admin\tables\permission-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 288, 0, 0, 12, 300
+"e:\CHADCO\CRM-Front\components\admin\tables\role-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 175, 0, 0, 10, 185
+"e:\CHADCO\CRM-Front\components\admin\tag-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 1, 24
+"e:\CHADCO\CRM-Front\components\admin\tag-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 1, 24
+"e:\CHADCO\CRM-Front\components\billing\README.md", "Markdown", 0, 0, 0, 0, 103, 0, 0, 0, 0, 0, 0, 26, 129
+"e:\CHADCO\CRM-Front\components\billing\billing-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 5, 12, 64
+"e:\CHADCO\CRM-Front\components\billing\duration-selection-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 108, 0, 25, 21, 154
+"e:\CHADCO\CRM-Front\components\billing\features-list-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 226, 0, 19, 23, 268
+"e:\CHADCO\CRM-Front\components\billing\order-summary-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 161, 0, 26, 34, 221
+"e:\CHADCO\CRM-Front\components\billing\tag.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 3, 9, 52
+"e:\CHADCO\CRM-Front\components\calendar\CustomRangeDatePicker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 127, 0, 0, 4, 131
+"e:\CHADCO\CRM-Front\components\cart\cart-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 181, 0, 16, 21, 218
+"e:\CHADCO\CRM-Front\components\cart\cart-header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 3, 26
+"e:\CHADCO\CRM-Front\components\cart\cart-item.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 117, 0, 7, 11, 135
+"e:\CHADCO\CRM-Front\components\cart\cart-layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 5, 8, 57
+"e:\CHADCO\CRM-Front\components\cart\cart-skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 3, 5, 58
+"e:\CHADCO\CRM-Front\components\cart\discount-code-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 27, 8, 89
+"e:\CHADCO\CRM-Front\components\cart\empty-cart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 2, 17
+"e:\CHADCO\CRM-Front\components\cart\order-summary-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 183, 0, 14, 19, 216
+"e:\CHADCO\CRM-Front\components\chart\customize-pi-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 4, 54
+"e:\CHADCO\CRM-Front\components\chart\multiple-bar-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 108, 0, 51, 8, 167
+"e:\CHADCO\CRM-Front\components\chart\pi-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 1, 4, 72
+"e:\CHADCO\CRM-Front\components\contract\AddContractToPipe.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 127, 4, 171
+"e:\CHADCO\CRM-Front\components\contract\ContractDashboard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 500, 0, 25, 10, 535
+"e:\CHADCO\CRM-Front\components\contract\ContractInfiniteCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 7, 42
+"e:\CHADCO\CRM-Front\components\contract\ContractInfiniteContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 78, 0, 7, 6, 91
+"e:\CHADCO\CRM-Front\components\contract\ContractOverviewContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 1, 20
+"e:\CHADCO\CRM-Front\components\contract\ContractPipe.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 2, 30
+"e:\CHADCO\CRM-Front\components\contract\ContractPipeContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 2, 5, 41
+"e:\CHADCO\CRM-Front\components\contract\ContractTable.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 230, 0, 0, 14, 244
+"e:\CHADCO\CRM-Front\components\contract\ContractTableContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 154, 0, 0, 6, 160
+"e:\CHADCO\CRM-Front\components\contract\contract-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 322, 0, 4, 24, 350
+"e:\CHADCO\CRM-Front\components\contract\contract-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 0, 5, 56
+"e:\CHADCO\CRM-Front\components\contract\contract-creation.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 329, 0, 0, 18, 347
+"e:\CHADCO\CRM-Front\components\contract\contract-overview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 4, 45
+"e:\CHADCO\CRM-Front\components\contract\editable-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 287, 0, 0, 19, 306
+"e:\CHADCO\CRM-Front\components\contract\registery-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 90, 0, 0, 5, 95
+"e:\CHADCO\CRM-Front\components\customer\customer-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 95, 0, 4, 5, 104
+"e:\CHADCO\CRM-Front\components\customer\customer-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 84, 0, 0, 7, 91
+"e:\CHADCO\CRM-Front\components\customer\customer-detail-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 247, 0, 5, 13, 265
+"e:\CHADCO\CRM-Front\components\customer\customer-detail-contract-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 0, 8, 82
+"e:\CHADCO\CRM-Front\components\customer\customer-detail-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 174, 0, 2, 6, 182
+"e:\CHADCO\CRM-Front\components\customer\customer-detail-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 144, 0, 1, 9, 154
+"e:\CHADCO\CRM-Front\components\customer\customer-expenses-overview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 45, 0, 0, 2, 47
+"e:\CHADCO\CRM-Front\components\customer\customer-personal-info.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 240, 0, 1, 5, 246
+"e:\CHADCO\CRM-Front\components\customer\customer-report-info-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 3, 23
+"e:\CHADCO\CRM-Front\components\customer\customer-satisfaction-report-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 3, 53
+"e:\CHADCO\CRM-Front\components\customer\customer-satisfaction-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 2, 3, 69
+"e:\CHADCO\CRM-Front\components\customer\customer-tab-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 530, 0, 8, 26, 564
+"e:\CHADCO\CRM-Front\components\customer\customer-tab-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 21, 7, 153
+"e:\CHADCO\CRM-Front\components\customer\customer-table-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 235, 0, 1, 7, 243
+"e:\CHADCO\CRM-Front\components\events\AddCustomerToFeatureContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 161, 0, 1, 9, 171
+"e:\CHADCO\CRM-Front\components\events\CalendarContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 759, 0, 291, 97, 1147
+"e:\CHADCO\CRM-Front\components\events\CalendarHeader.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 158, 0, 10, 7, 175
+"e:\CHADCO\CRM-Front\components\events\CustomRangeCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 92, 0, 0, 5, 97
+"e:\CHADCO\CRM-Front\components\events\DailyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 5, 13, 86
+"e:\CHADCO\CRM-Front\components\events\EventDetailCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 5, 4, 67
+"e:\CHADCO\CRM-Front\components\events\EventDetailContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 73, 0, 1, 10, 84
+"e:\CHADCO\CRM-Front\components\events\EventDetailSidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 112, 0, 1, 5, 118
+"e:\CHADCO\CRM-Front\components\events\EventEditForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 87, 0, 0, 3, 90
+"e:\CHADCO\CRM-Front\components\events\GridDailyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 0, 5, 80
+"e:\CHADCO\CRM-Front\components\events\GridMonthlyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 118, 0, 0, 6, 124
+"e:\CHADCO\CRM-Front\components\events\GridWeeklyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 0, 7, 118
+"e:\CHADCO\CRM-Front\components\events\MonthlyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 135, 0, 5, 20, 160
+"e:\CHADCO\CRM-Front\components\events\WeeklyCalendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 13, 22, 163
+"e:\CHADCO\CRM-Front\components\events\calendar\CalendarTypeFiltering.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 3, 42
+"e:\CHADCO\CRM-Front\components\events\calendar\DateSelectorModal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 230, 0, 14, 38, 282
+"e:\CHADCO\CRM-Front\components\events\calendar\DateSelectorStepperClean.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 270, 0, 0, 28, 298
+"e:\CHADCO\CRM-Front\components\events\calendar\EventCreationContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 346, 0, 61, 17, 424
+"e:\CHADCO\CRM-Front\components\events\calendar\calendar-time-filtering.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 3, 41
+"e:\CHADCO\CRM-Front\components\events\calendar\hooks\useDateSelector.ts", "TypeScript", 145, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 22, 169
+"e:\CHADCO\CRM-Front\components\events\calendar\hooks\useDateSelectorResult.ts", "TypeScript", 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10, 63
+"e:\CHADCO\CRM-Front\components\events\calendar\pickers\DayPicker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 36, 161
+"e:\CHADCO\CRM-Front\components\events\calendar\pickers\MonthPicker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 0, 12, 79
+"e:\CHADCO\CRM-Front\components\events\calendar\pickers\YearPicker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 15, 81
+"e:\CHADCO\CRM-Front\components\events\lead\LeadContactTypeCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 2, 59
+"e:\CHADCO\CRM-Front\components\events\lead\LeadContactTypeContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 1, 3, 39
+"e:\CHADCO\CRM-Front\components\form\inputs\SelectableTagInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 2, 32
+"e:\CHADCO\CRM-Front\components\invoice\InvoiceCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 15, 3, 98
+"e:\CHADCO\CRM-Front\components\invoice\InvoiceContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 188, 0, 1, 9, 198
+"e:\CHADCO\CRM-Front\components\invoice\InvoiceList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 3, 32
+"e:\CHADCO\CRM-Front\components\invoice\InvoicePreview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 144, 0, 67, 10, 221
+"e:\CHADCO\CRM-Front\components\invoice\InvoiceSkeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 151, 0, 4, 11, 166
+"e:\CHADCO\CRM-Front\components\invoice\invoice-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 144, 0, 6, 16, 166
+"e:\CHADCO\CRM-Front\components\invoice\invoice-page.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 197, 0, 11, 25, 233
+"e:\CHADCO\CRM-Front\components\invoice\invoice-preview-modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 162, 0, 7, 11, 180
+"e:\CHADCO\CRM-Front\components\lead\AddCustomerToLeadContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 129, 0, 1, 5, 135
+"e:\CHADCO\CRM-Front\components\lead\AddEventToLead.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 2, 39
+"e:\CHADCO\CRM-Front\components\lead\AddLeadToPipe.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 1, 40
+"e:\CHADCO\CRM-Front\components\lead\EventCreationContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 173, 0, 4, 1, 178
+"e:\CHADCO\CRM-Front\components\lead\LeadCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 4, 51
+"e:\CHADCO\CRM-Front\components\lead\LeadContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 476, 0, 26, 12, 514
+"e:\CHADCO\CRM-Front\components\lead\LeadEditionContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 282, 0, 0, 8, 290
+"e:\CHADCO\CRM-Front\components\lead\LeadPipe.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 5, 5, 86
+"e:\CHADCO\CRM-Front\components\lead\LeadPipeContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 37, 3, 84
+"e:\CHADCO\CRM-Front\components\lead\LeadPipeCreation.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 2, 42
+"e:\CHADCO\CRM-Front\components\lead\LeadStatus.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 1, 2, 59
+"e:\CHADCO\CRM-Front\components\lead\LeadTableContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 149, 0, 0, 5, 154
+"e:\CHADCO\CRM-Front\components\lead\lead-creation-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 288, 0, 1, 13, 302
+"e:\CHADCO\CRM-Front\components\lead\lead-details\close-reason-modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 148, 0, 9, 16, 173
+"e:\CHADCO\CRM-Front\components\lead\lead-details\email-tab-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 81, 0, 8, 11, 100
+"e:\CHADCO\CRM-Front\components\lead\lead-details\event-status-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 10, 13, 105
+"e:\CHADCO\CRM-Front\components\lead\lead-details\event-tab-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 103, 0, 2, 18, 123
+"e:\CHADCO\CRM-Front\components\lead\lead-details\index.ts", "TypeScript", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 12
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-action-buttons.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 115, 0, 3, 9, 127
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-detail-overlay.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 5, 8, 84
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-details-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 5, 6, 82
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 5, 9, 78
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 3, 12, 75
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-sidebar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 2, 9, 100
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-intraction-tabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 2, 11, 78
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-organization-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 6, 6, 54
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-person-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 7, 6, 87
+"e:\CHADCO\CRM-Front\components\lead\lead-details\lead-workflow-stepper.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 89, 0, 1, 9, 99
+"e:\CHADCO\CRM-Front\components\lead\lead-details\note-tab-content.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 117, 0, 13, 13, 143
+"e:\CHADCO\CRM-Front\components\lead\lead-details\type.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 2, 18
+"e:\CHADCO\CRM-Front\components\lead\lead-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 286, 0, 1, 15, 302
+"e:\CHADCO\CRM-Front\components\login\login-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 105, 0, 21, 17, 143
+"e:\CHADCO\CRM-Front\components\login\organization-information.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 7, 4, 37
+"e:\CHADCO\CRM-Front\components\login\reset-password-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 94, 0, 0, 5, 99
+"e:\CHADCO\CRM-Front\components\login\user-recovery-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 1, 4, 62
+"e:\CHADCO\CRM-Front\components\login\verificartion-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 77, 0, 0, 10, 87
+"e:\CHADCO\CRM-Front\components\menu\sidebar-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 4, 10, 116
+"e:\CHADCO\CRM-Front\components\notification\NotificationBadge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 1, 7, 45
+"e:\CHADCO\CRM-Front\components\notification\notification-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 13, 4, 117
+"e:\CHADCO\CRM-Front\components\notification\notification-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 140, 0, 1, 8, 149
+"e:\CHADCO\CRM-Front\components\notification\notification-drop-down.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 0, 5, 54
+"e:\CHADCO\CRM-Front\components\notification\notification-header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 3, 34
+"e:\CHADCO\CRM-Front\components\notification\notification-tab-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 6, 48
+"e:\CHADCO\CRM-Front\components\packages\bundle-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 160, 0, 8, 12, 180
+"e:\CHADCO\CRM-Front\components\packages\comparison-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 192, 0, 22, 18, 232
+"e:\CHADCO\CRM-Front\components\packages\feature-tag.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 4, 13, 84
+"e:\CHADCO\CRM-Front\components\packages\package-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 177, 0, 15, 33, 225
+"e:\CHADCO\CRM-Front\components\packages\package-comparison-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 75, 0, 14, 15, 104
+"e:\CHADCO\CRM-Front\components\packages\package-icons.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 122, 0, 4, 9, 135
+"e:\CHADCO\CRM-Front\components\packages\purchase-flow-modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 273, 0, 16, 35, 324
+"e:\CHADCO\CRM-Front\components\packages\single-feature-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 260, 0, 15, 44, 319
+"e:\CHADCO\CRM-Front\components\packages\single-feature-purchase-modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 274, 0, 17, 29, 320
+"e:\CHADCO\CRM-Front\components\packages\single-features-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 901, 0, 266, 116, 1283
+"e:\CHADCO\CRM-Front\components\pipe\PipeCreation.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 2, 42
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\FORM_MAKER_INTEGRATION.md", "Markdown", 0, 0, 0, 0, 413, 0, 0, 0, 0, 0, 0, 83, 496
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\MapSelector.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 218, 0, 29, 32, 279
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocomplete.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 240, 0, 31, 26, 297
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocompleteFormField.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 92, 0, 43, 18, 153
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocompleteWithMap.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 28, 16, 183
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\README.md", "Markdown", 0, 0, 0, 0, 339, 0, 0, 0, 0, 0, 0, 114, 453
+"e:\CHADCO\CRM-Front\components\placeAutocomplete\index.ts", "TypeScript", 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 7, 82
+"e:\CHADCO\CRM-Front\components\register\registration-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 388, 0, 3, 13, 404
+"e:\CHADCO\CRM-Front\components\register\registration-progress.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 0, 3, 83
+"e:\CHADCO\CRM-Front\components\register\registration-upload-document-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 99, 0, 1, 6, 106
+"e:\CHADCO\CRM-Front\components\register\registration-upload-document-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 3, 67
+"e:\CHADCO\CRM-Front\components\report\bar-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 6, 40
+"e:\CHADCO\CRM-Front\components\report\call-contracts.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 4, 42
+"e:\CHADCO\CRM-Front\components\report\month-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 0, 4, 72
+"e:\CHADCO\CRM-Front\components\report\overview-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 5, 35
+"e:\CHADCO\CRM-Front\components\report\pie-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 5, 34
+"e:\CHADCO\CRM-Front\components\report\report-overview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 3, 19
+"e:\CHADCO\CRM-Front\components\report\satisfaction-report.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 4, 39
+"e:\CHADCO\CRM-Front\components\report\time-filter.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 50, 5, 116
+"e:\CHADCO\CRM-Front\components\satisfaction\overview-detail-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 137, 0, 10, 12, 159
+"e:\CHADCO\CRM-Front\components\satisfaction\overview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 8, 44
+"e:\CHADCO\CRM-Front\components\satisfaction\social-media.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 49, 0, 6, 4, 59
+"e:\CHADCO\CRM-Front\components\section\contract-report-table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 2, 4, 73
+"e:\CHADCO\CRM-Front\components\section\filter-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 7, 11, 70
+"e:\CHADCO\CRM-Front\components\section\filter-drawer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 95, 0, 0, 5, 100
+"e:\CHADCO\CRM-Front\components\section\font-provider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 2, 7
+"e:\CHADCO\CRM-Front\components\section\iran-map.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 67, 0, 2, 15, 84
+"e:\CHADCO\CRM-Front\components\section\progress-bar-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 1, 34
+"e:\CHADCO\CRM-Front\components\section\report-pdf.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 3, 19
+"e:\CHADCO\CRM-Front\components\section\satisfaction.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 262, 0, 9, 5, 276
+"e:\CHADCO\CRM-Front\components\section\table-pdf.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 180, 0, 4, 13, 197
+"e:\CHADCO\CRM-Front\components\section\time-filter-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 122, 0, 0, 2, 124
+"e:\CHADCO\CRM-Front\components\section\world-map.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 74, 0, 45, 19, 138
+"e:\CHADCO\CRM-Front\components\service\client-info-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 278, 0, 1, 9, 288
+"e:\CHADCO\CRM-Front\components\service\client-info-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 91, 0, 0, 9, 100
+"e:\CHADCO\CRM-Front\components\service\contract-expense-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 96, 0, 3, 6, 105
+"e:\CHADCO\CRM-Front\components\service\contract-expense-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 239, 0, 61, 24, 324
+"e:\CHADCO\CRM-Front\components\service\customer-infinite-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 148, 0, 4, 15, 167
+"e:\CHADCO\CRM-Front\components\service\customer-infinite-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 109, 0, 0, 7, 116
+"e:\CHADCO\CRM-Front\components\service\customer-list-section.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 5, 66
+"e:\CHADCO\CRM-Front\components\service\customer-manager.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 239, 0, 2, 16, 257
+"e:\CHADCO\CRM-Front\components\service\customer-submitter-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 122, 0, 0, 6, 128
+"e:\CHADCO\CRM-Front\components\service\customer-suggestion-infinite-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 86, 0, 0, 10, 96
+"e:\CHADCO\CRM-Front\components\service\customer-suggestion-infinte-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 103, 0, 8, 11, 122
+"e:\CHADCO\CRM-Front\components\service\expense-detail.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 111, 0, 22, 6, 139
+"e:\CHADCO\CRM-Front\components\service\expense-form-generator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 162, 0, 0, 9, 171
+"e:\CHADCO\CRM-Front\components\service\expense-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 108, 0, 3, 9, 120
+"e:\CHADCO\CRM-Front\components\service\hotel\hotel-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 247, 0, 1, 14, 262
+"e:\CHADCO\CRM-Front\components\service\hotel\hotel-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 291, 0, 21, 18, 330
+"e:\CHADCO\CRM-Front\components\service\hotel\room-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 249, 0, 8, 11, 268
+"e:\CHADCO\CRM-Front\components\service\other\other-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 138, 0, 0, 5, 143
+"e:\CHADCO\CRM-Front\components\service\other\other-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 207, 0, 2, 9, 218
+"e:\CHADCO\CRM-Front\components\service\overal-expense-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 1, 3, 57
+"e:\CHADCO\CRM-Front\components\service\service-customer-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 6, 2, 70
+"e:\CHADCO\CRM-Front\components\service\service-customer-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 3, 23
+"e:\CHADCO\CRM-Front\components\service\service-customer-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 0, 3, 86
+"e:\CHADCO\CRM-Front\components\service\service-customer-manager.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 6, 131
+"e:\CHADCO\CRM-Front\components\service\ticket\flight-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 130, 0, 0, 2, 132
+"e:\CHADCO\CRM-Front\components\service\ticket\flight-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 351, 0, 8, 17, 376
+"e:\CHADCO\CRM-Front\components\service\ticket\one-way-ticket-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 374, 0, 8, 13, 395
+"e:\CHADCO\CRM-Front\components\service\ticket\round-trip-ticket-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 739, 0, 0, 17, 756
+"e:\CHADCO\CRM-Front\components\service\ticket\stop-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 155, 0, 0, 7, 162
+"e:\CHADCO\CRM-Front\components\service\ticket\ticket-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 300, 0, 0, 8, 308
+"e:\CHADCO\CRM-Front\components\service\ticket\ticket-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 116, 0, 0, 11, 127
+"e:\CHADCO\CRM-Front\components\service\visa\visa-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 261, 0, 2, 10, 273
+"e:\CHADCO\CRM-Front\components\service\visa\visa-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 222, 0, 13, 8, 243
+"e:\CHADCO\CRM-Front\components\setting\setting-create-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 8, 62
+"e:\CHADCO\CRM-Front\components\setting\setting-edit-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 121, 0, 0, 4, 125
+"e:\CHADCO\CRM-Front\components\setting\station\setting-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 568, 0, 64, 60, 692
+"e:\CHADCO\CRM-Front\components\setting\station\setting-table-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 245, 0, 0, 13, 258
+"e:\CHADCO\CRM-Front\components\share\SelectableTagCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 1, 36
+"e:\CHADCO\CRM-Front\components\share\customer\CustomerCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 4, 74
+"e:\CHADCO\CRM-Front\components\shared\AccessDenied.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 98, 0, 10, 7, 115
+"e:\CHADCO\CRM-Front\components\shared\ActionDropDown.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 7, 120
+"e:\CHADCO\CRM-Front\components\shared\ActionDropDownContent.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 78, 0, 1, 3, 82
+"e:\CHADCO\CRM-Front\components\shared\Calendar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 1, 27
+"e:\CHADCO\CRM-Front\components\shared\DroppableActionCard .tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 1, 30
+"e:\CHADCO\CRM-Front\components\shared\DroppableActionContainer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 3, 21
+"e:\CHADCO\CRM-Front\components\shared\README.md", "Markdown", 0, 0, 0, 0, 369, 0, 0, 0, 0, 0, 0, 78, 447
+"e:\CHADCO\CRM-Front\components\shared\Tag.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 138, 0, 21, 26, 185
+"e:\CHADCO\CRM-Front\components\shared\ViewToggleGroup.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 46, 0, 0, 3, 49
+"e:\CHADCO\CRM-Front\components\shared\animated-bar-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 108, 0, 3, 6, 117
+"e:\CHADCO\CRM-Front\components\shared\autocomplete-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 229, 0, 12, 22, 263
+"e:\CHADCO\CRM-Front\components\shared\bar-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 79, 0, 0, 4, 83
+"e:\CHADCO\CRM-Front\components\shared\breadcrumb.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 3, 35
+"e:\CHADCO\CRM-Front\components\shared\cart-icon.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 2, 13, 54
+"e:\CHADCO\CRM-Front\components\shared\checkbox-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 41, 0, 0, 2, 43
+"e:\CHADCO\CRM-Front\components\shared\company-logo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 27, 0, 0, 4, 31
+"e:\CHADCO\CRM-Front\components\shared\contract-info-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 390, 0, 0, 12, 402
+"e:\CHADCO\CRM-Front\components\shared\currency-drop-down.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 0, 12, 88
+"e:\CHADCO\CRM-Front\components\shared\custom-modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 4, 52
+"e:\CHADCO\CRM-Front\components\shared\custom-time-picker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 1, 4, 55
+"e:\CHADCO\CRM-Front\components\shared\custome-date-picker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 132, 0, 20, 17, 169
+"e:\CHADCO\CRM-Front\components\shared\custome-date-time-picker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 138, 0, 18, 16, 172
+"e:\CHADCO\CRM-Front\components\shared\custome-toast.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 83, 0, 2, 11, 96
+"e:\CHADCO\CRM-Front\components\shared\date-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 4, 68
+"e:\CHADCO\CRM-Front\components\shared\date-time-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 65, 0, 0, 4, 69
+"e:\CHADCO\CRM-Front\components\shared\drawer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 105, 0, 5, 9, 119
+"e:\CHADCO\CRM-Front\components\shared\expert-info-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 3, 43
+"e:\CHADCO\CRM-Front\components\shared\export-data-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 179, 0, 2, 17, 198
+"e:\CHADCO\CRM-Front\components\shared\file-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 71, 0, 6, 8, 85
+"e:\CHADCO\CRM-Front\components\shared\file-preview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 2, 6, 64
+"e:\CHADCO\CRM-Front\components\shared\form-extender.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 308, 0, 29, 28, 365
+"e:\CHADCO\CRM-Front\components\shared\form-maker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 216, 0, 3, 15, 234
+"e:\CHADCO\CRM-Front\components\shared\form-tab-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 145, 0, 20, 10, 175
+"e:\CHADCO\CRM-Front\components\shared\header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 9, 45
+"e:\CHADCO\CRM-Front\components\shared\input\TextEditorInput - Copy.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 4, 40
+"e:\CHADCO\CRM-Front\components\shared\input\TextEditorInput.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 27, 16, 72
+"e:\CHADCO\CRM-Front\components\shared\layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 3, 41
+"e:\CHADCO\CRM-Front\components\shared\list-preview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 1, 3, 54
+"e:\CHADCO\CRM-Front\components\shared\location-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 68, 0, 3, 3, 74
+"e:\CHADCO\CRM-Front\components\shared\logo.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 1, 3, 34
+"e:\CHADCO\CRM-Front\components\shared\map.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 2, 9, 55
+"e:\CHADCO\CRM-Front\components\shared\multi-added-text-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 88, 0, 3, 8, 99
+"e:\CHADCO\CRM-Front\components\shared\multi-select-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 10, 123
+"e:\CHADCO\CRM-Front\components\shared\nav-link.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 119, 0, 9, 12, 140
+"e:\CHADCO\CRM-Front\components\shared\notification-drawer.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 0, 8, 122
+"e:\CHADCO\CRM-Front\components\shared\notification-header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 3, 5, 27
+"e:\CHADCO\CRM-Front\components\shared\notification-list.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 1, 11
+"e:\CHADCO\CRM-Front\components\shared\notification.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 2, 7, 57
+"e:\CHADCO\CRM-Front\components\shared\person-info-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 3, 43
+"e:\CHADCO\CRM-Front\components\shared\phone-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 3, 40
+"e:\CHADCO\CRM-Front\components\shared\pie-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 4, 68
+"e:\CHADCO\CRM-Front\components\shared\profile-drop-down.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 95, 0, 10, 22, 127
+"e:\CHADCO\CRM-Front\components\shared\progress-bar.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 40, 0, 0, 6, 46
+"e:\CHADCO\CRM-Front\components\shared\quantity-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 2, 1, 38
+"e:\CHADCO\CRM-Front\components\shared\radio-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 33, 0, 0, 3, 36
+"e:\CHADCO\CRM-Front\components\shared\range-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 2, 30
+"e:\CHADCO\CRM-Front\components\shared\rating-chart.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 6, 70
+"e:\CHADCO\CRM-Front\components\shared\search-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 114, 0, 10, 20, 144
+"e:\CHADCO\CRM-Front\components\shared\search.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 9, 73
+"e:\CHADCO\CRM-Front\components\shared\select-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 106, 0, 4, 3, 113
+"e:\CHADCO\CRM-Front\components\shared\service-card.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 69, 0, 0, 6, 75
+"e:\CHADCO\CRM-Front\components\shared\service-container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 116, 0, 0, 10, 126
+"e:\CHADCO\CRM-Front\components\shared\single-file-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 10, 69
+"e:\CHADCO\CRM-Front\components\shared\single-file-preview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 8, 52
+"e:\CHADCO\CRM-Front\components\shared\slider-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 5, 39
+"e:\CHADCO\CRM-Front\components\shared\sort-drop-down.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 5, 55
+"e:\CHADCO\CRM-Front\components\shared\suggestion-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 126, 0, 3, 10, 139
+"e:\CHADCO\CRM-Front\components\shared\tag-preview.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 6, 48
+"e:\CHADCO\CRM-Front\components\shared\text-area-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 0, 4, 55
+"e:\CHADCO\CRM-Front\components\shared\text-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 105, 0, 17, 11, 133
+"e:\CHADCO\CRM-Front\components\shared\time-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 4, 4, 64
+"e:\CHADCO\CRM-Front\components\shared\title.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 3, 14
+"e:\CHADCO\CRM-Front\components\shared\toggle-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 2, 37
+"e:\CHADCO\CRM-Front\components\shared\verification-input.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 15, 97
+"e:\CHADCO\CRM-Front\components\signup\post-sign-up-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 3, 35
+"e:\CHADCO\CRM-Front\components\signup\sign-up-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 148, 0, 1, 11, 160
+"e:\CHADCO\CRM-Front\components\ui\accordion.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 0, 9, 59
+"e:\CHADCO\CRM-Front\components\ui\badge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 36, 0, 0, 6, 42
+"e:\CHADCO\CRM-Front\components\ui\button.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 1, 6, 87
+"e:\CHADCO\CRM-Front\components\ui\checkbox.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 5, 31
+"e:\CHADCO\CRM-Front\components\ui\dialog.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 13, 71
+"e:\CHADCO\CRM-Front\components\ui\dropdown-menu.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 182, 0, 0, 19, 201
+"e:\CHADCO\CRM-Front\components\ui\popover.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 25, 0, 0, 7, 32
+"e:\CHADCO\CRM-Front\components\ui\popup.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 3, 17
+"e:\CHADCO\CRM-Front\components\ui\progress.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 6, 37
+"e:\CHADCO\CRM-Front\components\ui\radio-group.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 6, 45
+"e:\CHADCO\CRM-Front\components\ui\select.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 146, 0, 0, 15, 161
+"e:\CHADCO\CRM-Front\components\ui\sheet.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 62, 0, 0, 9, 71
+"e:\CHADCO\CRM-Front\components\ui\skeleton.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 3, 16
+"e:\CHADCO\CRM-Front\components\ui\slider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 29, 0, 0, 4, 33
+"e:\CHADCO\CRM-Front\components\ui\table.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 107, 0, 0, 11, 118
+"e:\CHADCO\CRM-Front\components\ui\tabs.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 48, 0, 0, 8, 56
+"e:\CHADCO\CRM-Front\components\ui\tooltip.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 4, 19, 125
+"e:\CHADCO\CRM-Front\config\config.ts", "TypeScript", 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 6
+"e:\CHADCO\CRM-Front\constants\admin-creation-form-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 399, 0, 102, 5, 506
+"e:\CHADCO\CRM-Front\constants\admin-invoice-actions.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 4, 27
+"e:\CHADCO\CRM-Front\constants\admin-sidebar-menu-links.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 113, 0, 0, 4, 117
+"e:\CHADCO\CRM-Front\constants\client-form-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 360, 0, 41, 3, 404
+"e:\CHADCO\CRM-Front\constants\color-mapping.ts", "TypeScript", 63, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 15, 99
+"e:\CHADCO\CRM-Front\constants\contract.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"e:\CHADCO\CRM-Front\constants\countries-phone-code.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 0, 6
+"e:\CHADCO\CRM-Front\constants\credentials.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 2, 34
+"e:\CHADCO\CRM-Front\constants\customer-filter-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 54, 0, 0, 2, 56
+"e:\CHADCO\CRM-Front\constants\event-creation-form-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 0, 1, 27
+"e:\CHADCO\CRM-Front\constants\invoice-constants.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 107, 4, 191
+"e:\CHADCO\CRM-Front\constants\lead.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 2, 32
+"e:\CHADCO\CRM-Front\constants\navigation-links.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 213, 0, 1, 2, 216
+"e:\CHADCO\CRM-Front\constants\pages-data.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 6, 43
+"e:\CHADCO\CRM-Front\constants\registration-creation-form-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 314, 0, 0, 1, 315
+"e:\CHADCO\CRM-Front\constants\service-form-fields.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 2, 55
+"e:\CHADCO\CRM-Front\constants\services.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 28, 3, 170
+"e:\CHADCO\CRM-Front\constants\setting.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 398, 0, 1, 20, 419
+"e:\CHADCO\CRM-Front\contexts\AccessContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 139, 0, 18, 27, 184
+"e:\CHADCO\CRM-Front\data\requests-mock-data.ts", "TypeScript", 156, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 159
+"e:\CHADCO\CRM-Front\data\single-features-mock-data.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 12
+"e:\CHADCO\CRM-Front\database_schema.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 301, 0, 0, 0, 0, 301
+"e:\CHADCO\CRM-Front\database_schema.sql", "MS SQL", 0, 0, 0, 0, 0, 0, 0, 0, 0, 204, 10, 20, 234
+"e:\CHADCO\CRM-Front\docs\ACCESS_DENIED_FEATURE_CODES.md", "Markdown", 0, 0, 0, 0, 121, 0, 0, 0, 0, 0, 0, 35, 156
+"e:\CHADCO\CRM-Front\docs\BEFORE_AFTER_COMPARISON.md", "Markdown", 0, 0, 0, 0, 195, 0, 0, 0, 0, 0, 0, 41, 236
+"e:\CHADCO\CRM-Front\docs\FEATURE_CODE_MATCHING_GUIDE.md", "Markdown", 0, 0, 0, 0, 336, 0, 0, 0, 0, 0, 0, 71, 407
+"e:\CHADCO\CRM-Front\docs\FEATURE_HIGHLIGHTING_GUIDE.md", "Markdown", 0, 0, 0, 0, 162, 0, 0, 0, 0, 0, 0, 39, 201
+"e:\CHADCO\CRM-Front\docs\HOOKS_QUICK_REFERENCE.md", "Markdown", 0, 0, 0, 0, 287, 0, 0, 0, 0, 0, 0, 52, 339
+"e:\CHADCO\CRM-Front\docs\INFINITE_SCROLL_BEFORE_AFTER.md", "Markdown", 0, 0, 0, 0, 258, 0, 0, 0, 0, 0, 0, 46, 304
+"e:\CHADCO\CRM-Front\docs\INFINITE_SCROLL_OPTIMIZATION.md", "Markdown", 0, 0, 0, 0, 544, 0, 0, 0, 0, 0, 0, 116, 660
+"e:\CHADCO\CRM-Front\docs\SIMPLE_SSE_CART.md", "Markdown", 0, 0, 0, 0, 104, 0, 0, 0, 0, 0, 0, 40, 144
+"e:\CHADCO\CRM-Front\docs\SSE_FLOW_PERSIAN.md", "Markdown", 0, 0, 0, 0, 423, 0, 0, 0, 0, 0, 0, 123, 546
+"e:\CHADCO\CRM-Front\docs\SSE_NOTIFICATION_IMPLEMENTATION.md", "Markdown", 0, 0, 0, 0, 205, 0, 0, 0, 0, 0, 0, 60, 265
+"e:\CHADCO\CRM-Front\docs\api-update-summary.md", "Markdown", 0, 0, 0, 0, 125, 0, 0, 0, 0, 0, 0, 32, 157
+"e:\CHADCO\CRM-Front\globals.css", "CSS", 0, 0, 278, 0, 0, 0, 0, 0, 0, 0, 21, 83, 382
+"e:\CHADCO\CRM-Front\hooks\index.ts", "TypeScript", 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 5, 20
+"e:\CHADCO\CRM-Front\hooks\toastify.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 0, 4, 35
+"e:\CHADCO\CRM-Front\hooks\use-dynamic-form.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 26, 0, 2, 5, 33
+"e:\CHADCO\CRM-Front\hooks\useCartCount.ts", "TypeScript", 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 24, 69
+"e:\CHADCO\CRM-Front\hooks\useCartPolling.ts", "TypeScript", 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 19, 108
+"e:\CHADCO\CRM-Front\hooks\useHighlightSearch.ts", "TypeScript", 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 14, 128
+"e:\CHADCO\CRM-Front\hooks\useInfiniteScroll.ts", "TypeScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 83
+"e:\CHADCO\CRM-Front\hooks\useNotificationCount.ts", "TypeScript", 51, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 12, 67
+"e:\CHADCO\CRM-Front\hooks\useNotificationPolling.ts", "TypeScript", 81, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 18, 108
+"e:\CHADCO\CRM-Front\hooks\useNotifications.ts", "TypeScript", 107, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 17, 136
+"e:\CHADCO\CRM-Front\hooks\usePackageComparison.ts", "TypeScript", 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 12, 84
+"e:\CHADCO\CRM-Front\hooks\usePageData.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 19, 0, 8, 11, 38
+"e:\CHADCO\CRM-Front\hooks\useSingleFeaturesExport.ts", "TypeScript", 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 7, 51
+"e:\CHADCO\CRM-Front\hooks\useUserData.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 11
+"e:\CHADCO\CRM-Front\lib\IRANSansBase64.ts", "TypeScript", 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
+"e:\CHADCO\CRM-Front\lib\bundle-utils.ts", "TypeScript", 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 7, 66
+"e:\CHADCO\CRM-Front\lib\calendar.ts", "TypeScript", 453, 0, 0, 0, 0, 0, 0, 0, 0, 0, 283, 89, 825
+"e:\CHADCO\CRM-Front\lib\date-selector-utils.ts", "TypeScript", 181, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 44, 226
+"e:\CHADCO\CRM-Front\lib\date.ts", "TypeScript", 150, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 28, 197
+"e:\CHADCO\CRM-Front\lib\duration-utils.ts", "TypeScript", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 5, 20
+"e:\CHADCO\CRM-Front\lib\exportToExcel.ts", "TypeScript", 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 13, 59
+"e:\CHADCO\CRM-Front\lib\feature-match-utils.ts", "TypeScript", 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 24, 153
+"e:\CHADCO\CRM-Front\lib\feature-utils.ts", "TypeScript", 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 58
+"e:\CHADCO\CRM-Front\lib\generatePageData.ts", "TypeScript", 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 10, 72
+"e:\CHADCO\CRM-Front\lib\invoice-utils.ts", "TypeScript", 156, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 16, 181
+"e:\CHADCO\CRM-Front\lib\match-path.ts", "TypeScript", 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 10
+"e:\CHADCO\CRM-Front\lib\package-comparison.ts", "TypeScript", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 9, 54
+"e:\CHADCO\CRM-Front\lib\pdf.ts", "TypeScript", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"e:\CHADCO\CRM-Front\lib\utils.ts", "TypeScript", 218, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 232
+"e:\CHADCO\CRM-Front\next.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 4, 3, 20
+"e:\CHADCO\CRM-Front\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 12191, 0, 0, 0, 1, 12192
+"e:\CHADCO\CRM-Front\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 125, 0, 0, 0, 1, 126
+"e:\CHADCO\CRM-Front\package_selection_implementation.md", "Markdown", 0, 0, 0, 0, 830, 0, 0, 0, 0, 0, 0, 129, 959
+"e:\CHADCO\CRM-Front\package_selection_process.md", "Markdown", 0, 0, 0, 0, 501, 0, 0, 0, 0, 0, 0, 86, 587
+"e:\CHADCO\CRM-Front\package_structure_documentation.md", "Markdown", 0, 0, 0, 0, 489, 0, 0, 0, 0, 0, 0, 58, 547
+"e:\CHADCO\CRM-Front\playground.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 160, 0, 0, 66, 16, 242
+"e:\CHADCO\CRM-Front\postcss.config.mjs", "JavaScript", 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 1, 2, 9
+"e:\CHADCO\CRM-Front\public\data\countries.geojson", "JSON", 0, 0, 0, 0, 0, 0, 0, 265, 0, 0, 0, 1, 266
+"e:\CHADCO\CRM-Front\public\data\countries.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 260, 0, 0, 0, 0, 260
+"e:\CHADCO\CRM-Front\public\data\iran.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0, 0, 32
+"e:\CHADCO\CRM-Front\public\data\iran_geo.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 2, 66
+"e:\CHADCO\CRM-Front\public\icons\calendar-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\chevron-down.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\chevron-up.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\download-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 6
+"e:\CHADCO\CRM-Front\public\icons\durations-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 1, 13
+"e:\CHADCO\CRM-Front\public\icons\eye-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 1, 12
+"e:\CHADCO\CRM-Front\public\icons\feature-list-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 6
+"e:\CHADCO\CRM-Front\public\icons\foreground-email-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 11
+"e:\CHADCO\CRM-Front\public\icons\foreground-meet-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\foreground-phone-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 11
+"e:\CHADCO\CRM-Front\public\icons\foreground-plus-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\foreground-sms-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\foreground-voip-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\label-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 1, 10
+"e:\CHADCO\CRM-Front\public\icons\location-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 1, 21
+"e:\CHADCO\CRM-Front\public\icons\menu-invoice-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\menu-package-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\narrow-plus.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\package-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 1, 12
+"e:\CHADCO\CRM-Front\public\icons\package-order-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\payment-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 1, 6
+"e:\CHADCO\CRM-Front\public\icons\pipe-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\public\icons\table-icon.svg", "XML", 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"e:\CHADCO\CRM-Front\scripts\test-sse-config.js", "JavaScript", 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 8, 8, 34
+"e:\CHADCO\CRM-Front\sse.test.html", "HTML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"e:\CHADCO\CRM-Front\store\access-slice.ts", "TypeScript", 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 66
+"e:\CHADCO\CRM-Front\store\admin-invoice-slice.ts", "TypeScript", 123, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 132
+"e:\CHADCO\CRM-Front\store\airline-slice.ts", "TypeScript", 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 141
+"e:\CHADCO\CRM-Front\store\all-users-slice.ts", "TypeScript", 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 40
+"e:\CHADCO\CRM-Front\store\cart-slice.ts", "TypeScript", 213, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 24, 247
+"e:\CHADCO\CRM-Front\store\city-slice.ts", "TypeScript", 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 41
+"e:\CHADCO\CRM-Front\store\contract-slice.ts", "TypeScript", 252, 0, 0, 0, 0, 0, 0, 0, 0, 0, 65, 8, 325
+"e:\CHADCO\CRM-Front\store\country-slice.ts", "TypeScript", 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 40
+"e:\CHADCO\CRM-Front\store\currency-slice.ts", "TypeScript", 37, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 40
+"e:\CHADCO\CRM-Front\store\customer-detail-contract-slice.ts", "TypeScript", 157, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 166
+"e:\CHADCO\CRM-Front\store\customer-slice.ts", "TypeScript", 181, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 187
+"e:\CHADCO\CRM-Front\store\hotel-slice.ts", "TypeScript", 142, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 154
+"e:\CHADCO\CRM-Front\store\index.ts", "TypeScript", 49, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 57
+"e:\CHADCO\CRM-Front\store\invoice-slice.ts", "TypeScript", 177, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 190
+"e:\CHADCO\CRM-Front\store\lead-slice.ts", "TypeScript", 174, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 182
+"e:\CHADCO\CRM-Front\store\login-slice.ts", "TypeScript", 99, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10, 110
+"e:\CHADCO\CRM-Front\store\notification-slice.ts", "TypeScript", 167, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13, 182
+"e:\CHADCO\CRM-Front\store\province-slice.ts", "TypeScript", 36, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 40
+"e:\CHADCO\CRM-Front\store\role-slice.ts", "TypeScript", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 20
+"e:\CHADCO\CRM-Front\store\single-features-slice.ts", "TypeScript", 339, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 25, 390
+"e:\CHADCO\CRM-Front\store\station-slice.ts", "TypeScript", 129, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 142
+"e:\CHADCO\CRM-Front\store\user-slice.ts", "TypeScript", 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 6, 76
+"e:\CHADCO\CRM-Front\styles\range-date-picker.css", "CSS", 0, 0, 95, 0, 0, 0, 0, 0, 0, 0, 7, 8, 110
+"e:\CHADCO\CRM-Front\tailwind.config.ts", "TypeScript", 327, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 335
+"e:\CHADCO\CRM-Front\tsconfig.json", "JSON with Comments", 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 31
+"e:\CHADCO\CRM-Front\types\api.ts", "TypeScript", 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 11, 69
+"e:\CHADCO\CRM-Front\types\billing.ts", "TypeScript", 172, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 22, 205
+"e:\CHADCO\CRM-Front\types\cart.ts", "TypeScript", 90, 0, 0, 0, 0, 0, 0, 0, 0, 0, 26, 10, 126
+"e:\CHADCO\CRM-Front\types\globals.ts", "TypeScript", 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 34
+"e:\CHADCO\CRM-Front\types\invoice.ts", "TypeScript", 66, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 73
+"e:\CHADCO\CRM-Front\types\packages-api.ts", "TypeScript", 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 22
+"e:\CHADCO\CRM-Front\types\packages.ts", "TypeScript", 141, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 20, 175
+"e:\CHADCO\CRM-Front\types\place.ts", "TypeScript", 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 8, 79
+"e:\CHADCO\CRM-Front\types\requests.ts", "TypeScript", 41, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 46
+"e:\CHADCO\CRM-Front\types\single-features-api.ts", "TypeScript", 158, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15, 176
+"Total", "-", 8993, 27, 373, 0, 8433, 37, 137, 13765, 47903, 204, 4273, 6989, 91134

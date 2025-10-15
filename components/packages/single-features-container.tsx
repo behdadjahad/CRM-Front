@@ -103,80 +103,56 @@ export default function SingleFeaturesContainer({
         return cartItems.some((item: CartItem) => item.id === itemId);
     };
 
-    // Helper function to check if bundle is in cart
+    // Helper function to check if bundle is in cart (using satisfiedBundles)
     const isBundleInCart = (bundleId: number): boolean => {
+        if (!cartData?.data?.satisfiedBundles) {
+            return false;
+        }
+        // Check if this bundle is in the satisfied bundles list
+        return cartData.data.satisfiedBundles.some(bundle => bundle.id === bundleId);
+    };
+
+    // Helper function to check if all features of a bundle are in cart
+    const areAllBundleFeaturesInCart = (bundleFeatures: PackageUnit[]): boolean => {
         if (!Array.isArray(cartItems)) {
             return false;
         }
-        return cartItems.some((item: CartItem) => item.bundleId === bundleId);
+        const featureIds = bundleFeatures.map(f => f.id);
+        return featureIds.every(featureId =>
+            cartItems.some((item: CartItem) => item.id === featureId)
+        );
     };
 
-    // Add to cart mutation
+    // Add to cart mutation - NO optimistic updates
     const addToCartMutation = useMutation({
-        mutationFn: async ({ packageUnitIds, chadcoCustomerId, requestMessage }: { packageUnitIds: number[], chadcoCustomerId: number, requestMessage?: string }) => {
-            return await addToCartApi(packageUnitIds, chadcoCustomerId, requestMessage);
+        mutationFn: async ({ unitIds, chadcoCustomerId, }: { unitIds: number[], chadcoCustomerId: number, requestMessage?: string }) => {
+            return await addToCartApi(unitIds, chadcoCustomerId,);
         },
-        onMutate: async ({ packageUnitIds }) => {
+        onMutate: async ({ unitIds }) => {
             // Set loading state for these items
-            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
-
-            // Cancel any outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
-
-            // Snapshot the previous value
-            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
-
-            // Optimistically update to the new value
-            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
-                if (!old?.data?.packageUnits) return old;
-
-                // Find the items being added from the current items list
-                const itemsToAdd = items.filter(item => packageUnitIds.includes(item.id));
-
-                // Recalculate totals
-                const newItems = [...old.data.packageUnits, ...itemsToAdd];
-                const newOriginalTotal = newItems.reduce((sum, item) => sum + item.price, 0);
-
-                return {
-                    ...old,
-                    data: {
-                        ...old.data,
-                        packageUnits: newItems,
-                        originalTotal: newOriginalTotal,
-                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
-                    }
-                };
+            setLoadingItems(prev => new Set([...Array.from(prev), ...unitIds]));
+        },
+        onError: (err: any, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.unitIds.forEach((id: number) => newSet.delete(id));
+                return newSet;
             });
 
-            // Return a context object with the snapshotted value
-            return { previousCart, packageUnitIds };
-        },
-        onError: (err: any, variables, context) => {
-            // If the mutation fails, use the context returned from onMutate to roll back
-            if (context?.previousCart) {
-                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
-            }
-            // Remove loading state for these items
-            if (context?.packageUnitIds) {
-                setLoadingItems(prev => {
+            // Clear bundle loading state if this was a bundle operation
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.unitIds.includes(f.id))
+            ).map(bundle => bundle.id);
+
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
                     const newSet = new Set(prev);
-                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    bundleIds.forEach(id => newSet.delete(id));
                     return newSet;
                 });
-
-                // Clear bundle loading state if this was a bundle operation
-                const bundleIds = bundles.filter(bundle =>
-                    bundle.features.some(f => context.packageUnitIds.includes(f.id))
-                ).map(bundle => bundle.id);
-
-                if (bundleIds.length > 0) {
-                    setBundleLoadingItems(prev => {
-                        const newSet = new Set(prev);
-                        bundleIds.forEach(id => newSet.delete(id));
-                        return newSet;
-                    });
-                }
             }
+
             const errorMessage = err?.message || 'خطا در افزودن به سبد خرید';
             toast.error(errorMessage);
         },
@@ -184,13 +160,13 @@ export default function SingleFeaturesContainer({
             // Remove loading state for these items
             setLoadingItems(prev => {
                 const newSet = new Set(prev);
-                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                variables.unitIds.forEach(id => newSet.delete(id));
                 return newSet;
             });
 
             // Clear bundle loading state if this was a bundle operation
             const bundleIds = bundles.filter(bundle =>
-                bundle.features.some(f => variables.packageUnitIds.includes(f.id))
+                bundle.features.some(f => variables.unitIds.includes(f.id))
             ).map(bundle => bundle.id);
 
             if (bundleIds.length > 0) {
@@ -204,67 +180,61 @@ export default function SingleFeaturesContainer({
             toast.success('آیتم با موفقیت به سبد خرید اضافه شد');
 
             // Clear selected items that were just added to cart
-            const remainingSelected = checkedItems.filter(id => !variables.packageUnitIds.includes(id));
+            const remainingSelected = checkedItems.filter(id => !variables.unitIds.includes(id));
             dispatch(setCheckedItems(remainingSelected));
-        },
-        onSettled: () => {
-            // Always refetch after error or success to ensure server state
+
+            // Refetch cart to get real server state
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
         },
-    });
+        onSettled: (data, error, variables) => {
+            // Always clear bundle loading state regardless of success/error
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.unitIds.includes(f.id))
+            ).map(bundle => bundle.id);
 
-    // Remove from cart mutation
-    const removeFromCartMutation = useMutation({
-        mutationFn: async ({ packageUnitIds, chadcoCustomerId }: { packageUnitIds: number[], chadcoCustomerId: number }) => {
-            return await removeFromCartApi(packageUnitIds, chadcoCustomerId);
-        },
-        onMutate: async ({ packageUnitIds }) => {
-            // Set loading state for these items
-            setLoadingItems(prev => new Set([...Array.from(prev), ...packageUnitIds]));
+            console.log('Add to cart settled - clearing bundle loading for:', bundleIds);
 
-            // Cancel any outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
-
-            // Snapshot the previous value
-            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
-
-            // Optimistically update to the new value
-            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
-                if (!old?.data?.packageUnits) return old;
-
-                const updatedItems = old.data.packageUnits.filter((item: CartItem) =>
-                    !packageUnitIds.includes(item.id)
-                );
-
-                // Recalculate totals
-                const newOriginalTotal = updatedItems.reduce((sum, item) => sum + item.price, 0);
-
-                return {
-                    ...old,
-                    data: {
-                        ...old.data,
-                        packageUnits: updatedItems,
-                        originalTotal: newOriginalTotal,
-                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
-                    }
-                };
-            });
-
-            return { previousCart, packageUnitIds };
-        },
-        onError: (err: any, variables, context) => {
-            // If the mutation fails, roll back
-            if (context?.previousCart) {
-                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
-            }
-            // Remove loading state for these items
-            if (context?.packageUnitIds) {
-                setLoadingItems(prev => {
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
                     const newSet = new Set(prev);
-                    context.packageUnitIds.forEach((id: number) => newSet.delete(id));
+                    bundleIds.forEach(id => newSet.delete(id));
+                    console.log('Bundle loading items after clear:', Array.from(newSet));
                     return newSet;
                 });
             }
+        },
+    });
+
+    // Remove from cart mutation - NO optimistic updates
+    const removeFromCartMutation = useMutation({
+        mutationFn: async ({ unitIds, chadcoCustomerId }: { unitIds: number[], chadcoCustomerId: number }) => {
+            return await removeFromCartApi(unitIds, chadcoCustomerId);
+        },
+        onMutate: async ({ unitIds }) => {
+            // Set loading state for these items
+            setLoadingItems(prev => new Set([...Array.from(prev), ...unitIds]));
+        },
+        onError: (err: any, variables) => {
+            // Remove loading state for these items
+            setLoadingItems(prev => {
+                const newSet = new Set(prev);
+                variables.unitIds.forEach((id: number) => newSet.delete(id));
+                return newSet;
+            });
+
+            // Clear bundle loading state if this was a bundle operation
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.unitIds.includes(f.id))
+            ).map(bundle => bundle.id);
+
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    bundleIds.forEach(id => newSet.delete(id));
+                    return newSet;
+                });
+            }
+
             const errorMessage = err?.message || 'خطا در حذف از سبد خرید';
             toast.error(errorMessage);
         },
@@ -272,14 +242,41 @@ export default function SingleFeaturesContainer({
             // Remove loading state for these items
             setLoadingItems(prev => {
                 const newSet = new Set(prev);
-                variables.packageUnitIds.forEach(id => newSet.delete(id));
+                variables.unitIds.forEach(id => newSet.delete(id));
                 return newSet;
             });
+
+            // Clear bundle loading state if this was a bundle operation
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.unitIds.includes(f.id))
+            ).map(bundle => bundle.id);
+
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    bundleIds.forEach(id => newSet.delete(id));
+                    return newSet;
+                });
+            }
+
             toast.success('آیتم از سبد خرید حذف شد');
-        },
-        onSettled: () => {
-            // Always refetch after error or success
+
+            // Refetch cart to get real server state
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
+        },
+        onSettled: (data, error, variables) => {
+            // Always clear bundle loading state regardless of success/error
+            const bundleIds = bundles.filter(bundle =>
+                bundle.features.some(f => variables.unitIds.includes(f.id))
+            ).map(bundle => bundle.id);
+
+            if (bundleIds.length > 0) {
+                setBundleLoadingItems(prev => {
+                    const newSet = new Set(prev);
+                    bundleIds.forEach(id => newSet.delete(id));
+                    return newSet;
+                });
+            }
         },
     });
 
@@ -287,7 +284,7 @@ export default function SingleFeaturesContainer({
     const handleAddSelectedToCart = () => {
         if (chadcoCustomerId) {
             addToCartMutation.mutate({
-                packageUnitIds: checkedItems,
+                unitIds: checkedItems,
                 chadcoCustomerId: chadcoCustomerId,
                 requestMessage: `Bulk request for ${checkedItems.length} features`
             });
@@ -1118,7 +1115,7 @@ export default function SingleFeaturesContainer({
                         نمایش {displayUnits.length} از {totalItems} مورد
                     </span>
 
-                    {searchFormik.values.searchTerm && (
+                    {/* {searchFormik.values.searchTerm && (
                         <Button
                             variant="outline"
                             size="sm"
@@ -1126,7 +1123,7 @@ export default function SingleFeaturesContainer({
                         >
                             پاک کردن جستجو
                         </Button>
-                    )}
+                    )} */}
                 </div>
             </div>
             {checkedItems.length > 0 && (
@@ -1171,15 +1168,22 @@ export default function SingleFeaturesContainer({
                                 isSelectable={!isBundleInCart(bundle.id)}
                                 onAddToCart={(bundleId, bundleName) => {
                                     if (chadcoCustomerId) {
+                                        console.log('Adding bundle to cart:', bundleId, bundleName);
+                                        console.log('Bundle features:', bundle.features.map(f => f.id));
+
                                         // Set bundle loading state
-                                        setBundleLoadingItems(prev => new Set([...Array.from(prev), bundleId]));
+                                        setBundleLoadingItems(prev => {
+                                            const newSet = new Set([...Array.from(prev), bundleId]);
+                                            console.log('Bundle loading items after add:', Array.from(newSet));
+                                            return newSet;
+                                        });
 
                                         // Add all features in bundle to cart
                                         const featureIds = bundle.features.map(f => f.id);
                                         addToCartMutation.mutate({
-                                            packageUnitIds: featureIds,
+                                            unitIds: featureIds,
                                             chadcoCustomerId: chadcoCustomerId,
-                                            requestMessage: `Bundle: ${bundleName}`
+                                            requestMessage: `Bundle: ${bundleName} (ID: ${bundleId})`
                                         });
                                     }
                                 }}
@@ -1191,12 +1195,12 @@ export default function SingleFeaturesContainer({
                                         // Remove all features in bundle from cart
                                         const featureIds = bundle.features.map(f => f.id);
                                         removeFromCartMutation.mutate({
-                                            packageUnitIds: featureIds,
+                                            unitIds: featureIds,
                                             chadcoCustomerId: chadcoCustomerId
                                         });
                                     }
                                 }}
-                                isInCart={isBundleInCart(bundle.id)}
+                                isInCart={areAllBundleFeaturesInCart(bundle.features)}
                                 showCartActions={true}
                                 cartLoading={bundleLoadingItems.has(bundle.id)}
                                 bundleLoading={bundleLoadingItems.has(bundle.id)}
@@ -1231,7 +1235,7 @@ export default function SingleFeaturesContainer({
                                     onAddToCart={(unitId, requestMessage) => {
                                         if (chadcoCustomerId) {
                                             addToCartMutation.mutate({
-                                                packageUnitIds: [unitId],
+                                                unitIds: [unitId],
                                                 chadcoCustomerId: chadcoCustomerId,
                                                 requestMessage: requestMessage
                                             });
@@ -1240,7 +1244,7 @@ export default function SingleFeaturesContainer({
                                     onRemoveFromCart={(itemId) => {
                                         if (chadcoCustomerId) {
                                             removeFromCartMutation.mutate({
-                                                packageUnitIds: [parseInt(itemId)],
+                                                unitIds: [parseInt(itemId)],
                                                 chadcoCustomerId: chadcoCustomerId
                                             });
                                         }

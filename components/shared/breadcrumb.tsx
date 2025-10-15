@@ -11,18 +11,20 @@ export interface BreadcrumbInterface {
 }
 
 export default function Breadcrumb({ list, className }: BreadcrumbInterface) {
+
   return (
-    <div className={cn('flex  flex-row', className)}>
+    <div className={cn('flex flex-row', className)}>
       {list.map((item, index) => (
         (index == list.length - 1) ? (
-          <span key={item.label + index} className='text-xs text-foreground-mute'>
-            {item.label}
+          <span key={item.label + index} className='text-xs  text-foreground-mute'>
+            {item.label} 
           </span>
         ) : (
           <NavLink
             key={item.label + index}
             link={item.link || ''}
             label={item.label}
+            state={true}
             className='text-xs py-0 text-foreground-mute'
           >
             <span className='mx-1'>/</span>

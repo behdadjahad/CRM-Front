@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import OrderSummaryCard from './order-summary-card';
 import CartItem from './cart-item';
+import CartBundleCard from './cart-bundle-card';
 import { ArrowLeft } from 'lucide-react';
 import DiscountCodeCard from './discount-code-card';
 import EmptyCart from './empty-cart';
@@ -14,6 +15,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { removeFromCart, updateCartItemQuantity, getCartItems } from '@/api/cart';
 import { CartApiResponse, CartItem as CartItemType } from '@/types/cart';
 import toast from 'react-hot-toast';
+import { organizeCartItemsWithBundles } from '@/lib/cart-bundle-utils';
 
 export default function CartContainer() {
     const router = useRouter();
@@ -39,6 +41,7 @@ export default function CartContainer() {
 
     // Extract cart data from API response
     const items = cartData?.data?.packageUnits || [];
+    const satisfiedBundles = cartData?.data?.satisfiedBundles || [];
     const error = queryError?.message || null;
     const originalTotal = cartData?.data?.originalTotal || 0;
     const discountAmount = cartData?.data?.discountAmount || 0;
@@ -46,6 +49,13 @@ export default function CartContainer() {
     const finalTotal = cartData?.data?.finalTotal || 0;
     const itemCount = items.length;
 
+    // Organize items into bundles and individual items
+    const { bundles, individualItems, bundledItemIds } = useMemo(() =>
+        organizeCartItemsWithBundles(items, satisfiedBundles),
+        [items, satisfiedBundles]
+    );
+    console.log("bundles", bundles)
+    console.log("satisfiedBundles", satisfiedBundles)
     // Helper to extract error message
     const getErrorMessage = (err: any, defaultMessage: string): string => {
         return err?.message || defaultMessage;
@@ -56,54 +66,18 @@ export default function CartContainer() {
     }, [refreshCart]);
 
     // Remove item mutation
+    // Remove item mutation - NO optimistic updates
     const removeItemMutation = useMutation({
         mutationFn: async ({ packageUnitIds, chadcoCustomerId }: { packageUnitIds: number[], chadcoCustomerId: number }) => {
             return await removeFromCart(packageUnitIds, chadcoCustomerId);
         },
-        onMutate: async ({ packageUnitIds }) => {
-            // Cancel any outgoing refetches
-            await queryClient.cancelQueries({ queryKey: ['cart', chadcoCustomerId] });
-
-            // Snapshot the previous value
-            const previousCart = queryClient.getQueryData(['cart', chadcoCustomerId]);
-
-            // Optimistically update to the new value
-            queryClient.setQueryData<CartApiResponse>(['cart', chadcoCustomerId], (old) => {
-                if (!old?.data?.packageUnits) return old;
-
-                const updatedItems = old.data.packageUnits.filter((item: CartItemType) =>
-                    !packageUnitIds.includes(item.id)
-                );
-
-                // Recalculate totals
-                const newOriginalTotal = updatedItems.reduce((sum, item) => sum + item.price, 0);
-
-                return {
-                    ...old,
-                    data: {
-                        ...old.data,
-                        packageUnits: updatedItems,
-                        originalTotal: newOriginalTotal,
-                        finalTotal: newOriginalTotal - old.data.discountAmount + old.data.taxAmount,
-                    }
-                };
-            });
-
-            // Return a context object with the snapshotted value
-            return { previousCart };
-        },
-        onError: (err: any, _variables, context) => {
-            if (context?.previousCart) {
-                queryClient.setQueryData(['cart', chadcoCustomerId], context.previousCart);
-            }
+        onError: (err: any) => {
             const errorMessage = getErrorMessage(err, 'خطا در حذف آیتم');
             toast.error(errorMessage);
         },
         onSuccess: () => {
             toast.success('آیتم با موفقیت حذف شد');
-        },
-        onSettled: () => {
-            // Always refetch after error or success to ensure server state
+            // Refetch cart to get real server state
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
         },
     });
@@ -128,6 +102,21 @@ export default function CartContainer() {
 
         removeItemMutation.mutate({
             packageUnitIds: [parseInt(id)],
+            chadcoCustomerId
+        });
+    };
+
+    const handleRemoveBundle = (bundleId: number) => {
+        if (!chadcoCustomerId) return;
+
+        // Find the bundle and get all its item IDs
+        const bundle = bundles.find(b => b.id === bundleId);
+        if (!bundle) return;
+
+        const itemIds = bundle.items.map(item => item.id);
+
+        removeItemMutation.mutate({
+            packageUnitIds: itemIds,
             chadcoCustomerId
         });
     };
@@ -180,7 +169,9 @@ export default function CartContainer() {
 
                         <div className="flex flex-col gap-4">
                             <div className="flex justify-between items-center flex-row gap-4 p-4  border-gray-200 dark:border-gray-700">
-                                <p className="text-lg font-medium text-static-text-primary dark:text-white">سبد خرید ({items.length}) مورد</p>
+                                <p className="text-lg font-medium text-static-text-primary dark:text-white">
+                                    سبد خرید ({items.length} مورد{bundles.length > 0 && ` - ${bundles.length} باندل`})
+                                </p>
                                 <div className="flex items-center justify-between">
                                     <div onClick={() => router.push('/single-features')} className="flex items-center cursor-pointer justify-between gap-2 py-0.5 text-sm font-normal text-static-text-primary ">
                                         بازگشت به فیچرها
@@ -188,17 +179,47 @@ export default function CartContainer() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-4">
-                                {items.map((item: any) => (
-                                    <CartItem
-                                        key={item.id}
-                                        item={item}
-                                        onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
-                                        onRemove={() => handleRemoveItem(item.id.toString())}
-                                        isUpdating={updateQuantityMutation.isPending}
-                                        isRemoving={removeItemMutation.isPending}
-                                    />
-                                ))}
+
+                            <div className="flex flex-col gap-6">
+                                {/* Bundles Section */}
+                                {bundles.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        <h3 className="text-md font-semibold text-gray-700 px-4">
+                                            باندل‌های شما ({bundles.length})
+                                        </h3>
+                                        {bundles.map((bundle) => (
+                                            <CartBundleCard
+                                                key={bundle.id}
+                                                bundle={bundle}
+                                                onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
+                                                onRemoveBundle={handleRemoveBundle}
+                                                isUpdating={updateQuantityMutation.isPending}
+                                                isRemoving={removeItemMutation.isPending}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* Individual Items Section */}
+                                {individualItems.length > 0 && (
+                                    <div className="flex flex-col gap-4">
+                                        {bundles.length > 0 && (
+                                            <h3 className="text-md font-semibold text-gray-700 px-4">
+                                                فیچرهای تکی ({individualItems.length})
+                                            </h3>
+                                        )}
+                                        {individualItems.map((item: any) => (
+                                            <CartItem
+                                                key={item.id}
+                                                item={item}
+                                                onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
+                                                onRemove={() => handleRemoveItem(item.id.toString())}
+                                                isUpdating={updateQuantityMutation.isPending}
+                                                isRemoving={removeItemMutation.isPending}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -207,6 +228,8 @@ export default function CartContainer() {
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 ">
                         <DiscountCodeCard />
                         <OrderSummaryCard
+                        // bundleDiscountByAmount={bundleDiscountByAmount}
+                        bundles={bundles}
                             cartId={cartData?.data?.id || 0}
                             itemCount={itemCount}
                             originalTotal={originalTotal}
@@ -215,6 +238,7 @@ export default function CartContainer() {
                             discountAmountByDiscountCode={cartData?.data?.discountAmountByDiscountCode || null}
                             discountPercentByDiscountCode={cartData?.data?.discountPercentByDiscountCode || null}
                             taxAmount={taxAmount}
+                            bundleDiscountPercent={satisfiedBundles[0]?.discountPercent?.value || 0}
                             taxPercent={cartData?.data?.taxPercent || 0}
                             finalTotal={finalTotal}
                         />

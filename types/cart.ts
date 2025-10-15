@@ -41,7 +41,7 @@ export interface CartItem {
   currencyId: number;
   createdAt: string;
   updatedAt: string;
-  bundleId?: number; // For bundle items
+  bundleId?: number; // Track if added via bundle (null = individual, number = bundle ID)
 }
 
 // Cart data structure
@@ -61,25 +61,19 @@ export interface CartData {
   updatedAt: string;
   items: any[];
   packageUnits: CartItem[];
-  satisfiedBundles: any[];
+  satisfiedBundles: SatisfiedBundle[];
 }
-// "id": 2,
-// "chadcoCustomerId": 303,
-// "discountCodeId": null,
-// "originalTotal": 3000000,
-// "discountAmount": 0,
-// "discountPercent": 0,
-// "discountAmountByDiscountCode": null,
-// "discountPercentByDiscountCode": null,
-// "taxAmount": 0,
-// "taxPercent": 0,
-// "finalTotal": 3000000,
-// "createdAt": "2025-10-11T06:13:27.960Z",
-// "updatedAt": "2025-10-11T10:09:55.661Z",
-// "items": [],
-// "packageUnits": [],
-// "satisfiedBundles": []
-// API Response structure
+export interface SatisfiedBundle { 
+id: number;
+name: string;
+description: string;
+discountPercent: {
+  value: number;
+};
+packageUnitIds: number[];
+}
+
+
 export interface CartApiResponse {
   status: "success" | "error";
   message: string;
@@ -89,9 +83,7 @@ export interface CartApiResponse {
     type: string | null;
     color: string | null;
   };
-  data: CartData & {
-    invoiceId?: number; // For payment response
-  };
+  data: CartData
 }
 
 // Redux Cart State (if still using Redux for cart)

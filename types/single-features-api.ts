@@ -45,9 +45,10 @@ export interface Permission {
     }[];
 }
 
-export interface PackageBundle {
+export interface  PackageBundle {
     id: number;
     name: string;
+    discountPercent:number
 }
 
 // Bundle group structure for rendering
@@ -86,9 +87,11 @@ export interface PackageUnit {
     deletedAt: string | null;
     accessesJson: AccessesJson;
     unitType: string | null;
+    tags: string[];
     unitModel: "flat" | "perCount" | "perDuration";
     enabledDurationInDays: number;
     showDurationInDays: number;
+    noPurchases: number;
     countUnit: number;
     createdAt: string;
     updatedAt: string;
@@ -101,6 +104,7 @@ export interface PackageUnit {
     permissions: Permission[];
     packageUnitLabel: string | null;
     PackageBundle?: PackageBundle[];
+
 
 }
 

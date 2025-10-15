@@ -27,14 +27,14 @@ export async function getCartItems(chadcoCustomerId: number): Promise<CartApiRes
 
 // Add items to cart
 export async function addToCart(
-    packageUnitIds: number[],
+    unitIds: number[],
     chadcoCustomerId: number,
-    requestMessage?: string
+
 ): Promise<CartApiResponse> {
     try {
         const result = await fetchService(`cart/add?chadcoCustomerId=${chadcoCustomerId}`, {
             method: "PATCH",
-            body: { packageUnitIds, requestMessage },
+            body: { unitIds, },
         });
 
         checkApiResponse(result, 'خطا در افزودن به سبد خرید');
@@ -51,9 +51,9 @@ export async function removeFromCart(
     chadcoCustomerId: number
 ): Promise<CartApiResponse> {
     try {
-        const result = await fetchService(`cart/remove/?chadcoCustomerId=${chadcoCustomerId}`, {
+        const result = await fetchService(`cart/remove-from-cart?chadcoCustomerId=${chadcoCustomerId}`, {
             method: "PATCH",
-            body: { packageUnitIds },
+            body: { unitIds: packageUnitIds },
         });
 
         checkApiResponse(result, 'خطا در حذف از سبد خرید');

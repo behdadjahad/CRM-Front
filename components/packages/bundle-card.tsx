@@ -5,7 +5,8 @@ import { BundleGroup } from '@/types/single-features-api';
 import { cn, formatPrice } from '@/lib/utils';
 import SingleFeatureCard from './single-feature-card';
 // convertToSingleFeatureUnit will be passed as prop from container
-import { Package } from 'lucide-react';
+import { Package, Plus } from 'lucide-react';
+import { Button } from '../ui/button';
 interface BundleCardProps {
     bundle: BundleGroup;
     isChecked?: boolean;
@@ -74,10 +75,10 @@ const BundleCard: React.FC<BundleCardProps> = ({
     };
 
     return (
-        <div className="bg-[#F8AC3F1F] rounded-[20px]  shadow-sm transition-all duration-300 border-gray-100 border-dashed border-2 hover:shadow-md">
+        <div className="bg-[#F8AC3F1F] rounded-[20px]  shadow-sm transition-all duration-300 border-gray-300 border-dashed border-2 hover:shadow-md">
             {/* Bundle Header */}
             <div className="p-4 ">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-col items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
                         <Package size={22} className="text-black" />
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -86,12 +87,21 @@ const BundleCard: React.FC<BundleCardProps> = ({
                     </div>
 
                     {/* Bundle Total Price */}
-                    <div className="text-right">
-                        <div className="text-lg font-bold text-[#2949A4]">
-                            {formatPrice(bundle.totalPrice)} {bundle.currency?.name || 'تومان'}
+                    <div className="flex items-start justify-start">
+                        <div className="text-lg flex   font-bold text-[#637381]">
+                            <p>قیمت کل فیچرها: </p>
+                            <p className='line-through'>
+                                {formatPrice(bundle.totalPrice)} {bundle.currency?.name || 'تومان'}
+                            </p>
                         </div>
-                        <div className="text-xs text-gray-500">
-                            مجموع {bundle.features.length} ویژگی
+                        <div className="text-xs flex items-start justify-start text-gray-500">
+                            {/* قیمت باندل: 5۵۰,۰۰۰ تومان */}
+                            <p>
+                                قیمت باندل:
+                            </p>
+                            <p>
+                                {formatPrice(bundle.totalPrice)} {bundle.currency?.name || 'تومان'}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -100,23 +110,29 @@ const BundleCard: React.FC<BundleCardProps> = ({
                 {showCartActions && (
                     <div className="flex justify-end">
                         {isInCart ? (
-                            <button
+                            <Button
                                 onClick={handleRemoveFromCart}
                                 disabled={cartLoading || bundleLoading}
-                                className="px-4 py-2 text-sm border border-red-600 text-red-600 rounded hover:bg-red-50 disabled:opacity-50"
+                                className="px-4 py-2 text-sm border border-red-600 text-red-600 rounded hover:bg-red-50 disabled:opacity-50 flex items-center gap-2"
                             >
+                                {(cartLoading || bundleLoading) && (
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                                )}
                                 {cartLoading || bundleLoading ? 'در حال حذف...' : 'حذف باندل از سبد خرید'}
-                            </button>
+                            </Button>
                         ) : (
-                            <button
+                            <Button
                                 onClick={handleAddToCart}
                                 disabled={cartLoading || bundleLoading}
-                                className="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                                variant={"info"}
                             >
-                                <span>+</span>
-                                {bundleLoading ? 'در حال پردازش باندل...' :
-                                    cartLoading ? 'در حال پردازش...' : 'افزودن باندل به سبد خرید'}
-                            </button>
+                                {(cartLoading || bundleLoading) && (
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                )}
+                                <Plus size={'16'} />
+                                {(cartLoading || bundleLoading) ? 'در حال پردازش ...' :
+                                    'افزودن    '}
+                            </Button>
                         )}
                     </div>
                 )}
