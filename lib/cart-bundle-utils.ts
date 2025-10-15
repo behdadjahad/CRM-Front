@@ -31,7 +31,8 @@ export const organizeCartItemsWithBundles = (
         );
 
         if (bundleItems.length > 0) {
-            const totalPrice = bundleItems.reduce((sum, item) => sum + item.price, 0);
+            // Calculate total price including quantities
+            const totalPrice = bundleItems.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
             const discountAmount = totalPrice * (bundle.discountPercent.value / 100);
             const discountedPrice = totalPrice - discountAmount;
 

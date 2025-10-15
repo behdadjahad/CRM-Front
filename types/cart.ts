@@ -42,6 +42,13 @@ export interface CartItem {
   createdAt: string;
   updatedAt: string;
   bundleId?: number; // Track if added via bundle (null = individual, number = bundle ID)
+  quantity?: number; // Quantity in cart (added by client-side processing)
+}
+
+// Cart Item with quantity
+export interface CartItemWithQuantity {
+  count: number;
+  unitId: number;
 }
 
 // Cart data structure
@@ -59,18 +66,18 @@ export interface CartData {
   finalTotal: number;
   createdAt: string;
   updatedAt: string;
-  items: any[];
-  packageUnits: CartItem[];
+  items: CartItemWithQuantity[];  // Array with count and unitId
+  packageUnits: CartItem[];       // Full item details
   satisfiedBundles: SatisfiedBundle[];
 }
-export interface SatisfiedBundle { 
-id: number;
-name: string;
-description: string;
-discountPercent: {
-  value: number;
-};
-packageUnitIds: number[];
+export interface SatisfiedBundle {
+  id: number;
+  name: string;
+  description: string;
+  discountPercent: {
+    value: number;
+  };
+  packageUnitIds: number[];
 }
 
 

@@ -162,7 +162,7 @@ export default function OrderSummaryCard({
                             {bundleDiscountPercent > 0 && ` (${bundleDiscountPercent}%)`}
                         </span>
                     </span>
-                    <span className="font-medium text-static-secondary-gray-dark">
+                    <span className="font-medium whitespace-nowrap text-static-secondary-gray-dark">
 
                         {bundleDiscountAmount && bundleDiscountAmount > 0 ? <span className="text-red-500">- {formatPrice(bundleDiscountAmount)} تومان</span> : "-"}
                     </span>
@@ -176,9 +176,9 @@ export default function OrderSummaryCard({
                 </div>
 
                 {/* Final Total */}
-                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                <div className="flex w-full justify-between items-center xl:flex-row flex-col pt-4 border-t border-gray-200">
                     <span className="text-base font-semibold text-gray-900">قیمت نهایی :</span>
-                    <span className="text-xl font-bold text-static-info-primary">
+                    <span className="text-lg whitespace-nowrap font-bold text-static-info-primary">
                         {formatPrice(displayingTotal)} تومان
                     </span>
                 </div>

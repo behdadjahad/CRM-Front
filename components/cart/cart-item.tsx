@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import QuantityInput from "../shared/quantity-input";
 import { convertDaysToMonths } from "@/lib/duration-utils";
+import { canUpdateQuantity } from "@/hooks/cart/useQuantityUpdate";
 
 interface CartItemProps {
     item: CartItemType;
@@ -14,6 +15,7 @@ interface CartItemProps {
     isInBundle?: boolean; // If true, this item is part of a bundle
     showPrice?: boolean; // Control price display (default true)
     showRemoveButton?: boolean; // Control remove button display (default true)
+    getOptimisticQuantity?: (itemId: number, fallbackQuantity: number) => number;
 }
 
 export default function CartItem({
@@ -25,6 +27,7 @@ export default function CartItem({
     isInBundle = false,
     showPrice = true,
     showRemoveButton = true,
+    getOptimisticQuantity,
 }: CartItemProps) {
     const getTagClasses = (tag?: string) => {
         switch (tag) {
@@ -51,38 +54,50 @@ export default function CartItem({
                 return '';
         }
     };
-    // For API items, we don't have quantity concept yet
-    // So we'll keep quantity as 1 for now
-    const quantity = 1;
+    // Get quantity from item with optimistic updates (default to 1 if not set)
+    const baseQuantity = item.quantity || 1;
+    const quantity = getOptimisticQuantity ? getOptimisticQuantity(item.id, baseQuantity) : baseQuantity;
+
+    // Check if this item supports quantity updates
+    const supportsQuantityUpdate = canUpdateQuantity(item.unitType, item.unitModel);
 
     const handleIncrease = () => {
-        // Quantity management can be added later if needed
-        console.log('Increase quantity');
+        if (supportsQuantityUpdate) {
+            onQuantityChange(item.id.toString(), quantity + 1);
+        }
     };
 
     const handleDecrease = () => {
-        // If there's no quantity management, just remove the item
-        onRemove();
+        if (supportsQuantityUpdate) {
+            if (quantity > 1) {
+                onQuantityChange(item.id.toString(), quantity - 1);
+            } else {
+                onRemove(); // Remove item if quantity would be 0
+            }
+        }
     };
 
-// Price display component for single features
-const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, showDurationInDays?: number, countUnit?: number) => {
-    if (unitModel === "perDuration" && showDurationInDays) {
+    // Price display component for single features
+    const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, showDurationInDays?: number, countUnit?: number) => {
+        if (unitModel === "perDuration" && showDurationInDays) {
 
-        return <p className="text-xs  flex items-center gap-1 text-gray-500">  <Clock size={12} /> {convertDaysToMonths(showDurationInDays)} </p>;
-    }
-    if (unitModel === "perCount" && countUnit) {
-        return <p className="text-xs text-gray-500"> {countUnit} محدودیت</p>;
-    }
-    if (unitModel === "flat") {
-        return <p className="text-xs text-gray-500">بدون محدودیت</p>;
-    }
-    return "";
-};
+            return <p className="text-xs  flex items-center gap-1 text-gray-500">  <Clock size={12} /> {convertDaysToMonths(showDurationInDays)} </p>;
+        }
+        if (unitModel === "perCount" && countUnit) {
+            return <p className="text-xs text-gray-500"> {countUnit} محدودیت</p>;
+        }
+        if (unitModel === "flat") {
+            return <p className="text-xs text-gray-500">بدون محدودیت</p>;
+        }
+        return "";
+    };
     // Get duration in months from API data (enabledDurationInDays / 30)
     const durationMonths = item.enabledDurationInDays ? Math.round(item.enabledDurationInDays / 30) : null;
     const usageCount = item.countUnit > 0 ? item.countUnit : null;
 
+    const handleQuantityChange = (newQuantity: number) => {
+        onQuantityChange(item.id.toString(), newQuantity);
+    }
     return (
         <div className={cn(
             "flex flex-col items-center p-4 rounded-lg shadow-sm",
@@ -134,9 +149,9 @@ const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, sh
                                 <span className="">{durationMonths} ماه</span>
                             </span>
                         )} */}
-                            <div className="flex border border-[#D5D7DA]  rounded-full w-fit px-2.5 py-1 justify-between items-center">
-                    {getUnitModel(item.unitModel, item.showDurationInDays, item.countUnit)}
-                </div>
+                        <div className="flex border border-[#D5D7DA]  rounded-full w-fit px-2.5 py-1 justify-between items-center">
+                            {getUnitModel(item.unitModel, item.showDurationInDays, item.countUnit)}
+                        </div>
                     </div>
                 </div>
 
@@ -145,15 +160,15 @@ const getUnitModel = (unitModel?: "perCount" | "perDuration" | "flat" | null, sh
                 </p>
 
                 <div className="flex items-center justify-between mt-2">
-                    {!isInBundle && (
+                    {supportsQuantityUpdate && !isInBundle && (
                         <QuantityInput
                             quantity={quantity}
-                            // onQuantityChange={(quantity: string) => onQuantityChange(item.id, Number(quantity))}
-                            onDecreaseQuantity={handleDecrease}
-                            onIncreaseQuantity={handleIncrease}
+                            onDecreaseQuantity={handleQuantityChange}
+                            onIncreaseQuantity={handleQuantityChange}
                             isUpdating={isUpdating}
                         />
                     )}
+
                     {showPrice && (
                         <div className={cn(
                             "sm:text-xl text-base font-bold text-static-info-primary",

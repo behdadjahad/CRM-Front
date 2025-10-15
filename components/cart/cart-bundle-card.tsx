@@ -14,6 +14,7 @@ interface CartBundleCardProps {
     onRemoveBundle: (bundleId: number) => void;
     isUpdating: boolean;
     isRemoving?: boolean;
+    getOptimisticQuantity?: (itemId: number, fallbackQuantity: number) => number;
 }
 
 const CartBundleCard: React.FC<CartBundleCardProps> = ({
@@ -22,6 +23,7 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
     onRemoveBundle,
     isUpdating,
     isRemoving = false,
+    getOptimisticQuantity,
 }) => {
     const discountAmount = bundle.totalPrice - bundle.discountedPrice;
     const savingsPercent = bundle.discountPercent;
@@ -54,7 +56,7 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
                     <div className="flex items-center gap-2">
                         {/* Discount Badge */}
                         {savingsPercent > 0 && (
-                            <Badge className="bg-orange-500 text-white px-3 py-1 text-sm font-semibold flex items-center gap-1">
+                            <Badge className="bg-info text-white px-3 py-1 text-sm font-semibold flex items-center gap-1">
                                 <TrendingDown className="w-4 h-4" />
                                 تخفیف
                             </Badge>
@@ -125,6 +127,7 @@ const CartBundleCard: React.FC<CartBundleCardProps> = ({
                                 isRemoving={isRemoving}
                                 isInBundle={true}
                                 showRemoveButton={false} // Hide remove button for bundled items
+                                getOptimisticQuantity={getOptimisticQuantity}
                             />
                         </div>
                     </div>

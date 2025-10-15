@@ -64,7 +64,7 @@ export default function DiscountCodeCard() {
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex gap-2">
+                    <div className="flex xl:flex-row flex-col justify-start items-start gap-2">
                         <input
                             type="text"
                             placeholder="وارد کردن کد تخفیف"

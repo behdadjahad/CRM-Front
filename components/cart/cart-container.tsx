@@ -16,6 +16,7 @@ import { removeFromCart, updateCartItemQuantity, getCartItems } from '@/api/cart
 import { CartApiResponse, CartItem as CartItemType } from '@/types/cart';
 import toast from 'react-hot-toast';
 import { organizeCartItemsWithBundles } from '@/lib/cart-bundle-utils';
+import { useQuantityUpdate } from '@/hooks/cart/useQuantityUpdate';
 
 export default function CartContainer() {
     const router = useRouter();
@@ -40,22 +41,33 @@ export default function CartContainer() {
     });
 
     // Extract cart data from API response
-    const items = cartData?.data?.packageUnits || [];
+    const cartItems = cartData?.data?.items || []; // Items with quantities
+    const packageUnits = cartData?.data?.packageUnits || []; // Full item details
     const satisfiedBundles = cartData?.data?.satisfiedBundles || [];
     const error = queryError?.message || null;
     const originalTotal = cartData?.data?.originalTotal || 0;
     const discountAmount = cartData?.data?.discountAmount || 0;
     const taxAmount = cartData?.data?.taxAmount || 0;
     const finalTotal = cartData?.data?.finalTotal || 0;
-    const itemCount = items.length;
+    // Calculate total item count including quantities
+    const itemCount = cartItems.reduce((total, item) => total + item.count, 0);
+
+    // Merge cart items with quantities for proper display
+    const itemsWithQuantities = useMemo(() => {
+        return packageUnits.map(unit => {
+            const cartItem = cartItems.find(item => item.unitId === unit.id);
+            return {
+                ...unit,
+                quantity: cartItem?.count || 1
+            };
+        });
+    }, [packageUnits, cartItems]);
 
     // Organize items into bundles and individual items
     const { bundles, individualItems, bundledItemIds } = useMemo(() =>
-        organizeCartItemsWithBundles(items, satisfiedBundles),
-        [items, satisfiedBundles]
+        organizeCartItemsWithBundles(itemsWithQuantities, satisfiedBundles),
+        [itemsWithQuantities, satisfiedBundles]
     );
-    console.log("bundles", bundles)
-    console.log("satisfiedBundles", satisfiedBundles)
     // Helper to extract error message
     const getErrorMessage = (err: any, defaultMessage: string): string => {
         return err?.message || defaultMessage;
@@ -81,19 +93,15 @@ export default function CartContainer() {
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
         },
     });
-
-    // Update quantity mutation
-    const updateQuantityMutation = useMutation({
-        mutationFn: async ({ itemId, quantity, chadcoCustomerId }: { itemId: string, quantity: number, chadcoCustomerId: number }) => {
-            return await updateCartItemQuantity(itemId, quantity, chadcoCustomerId);
-        },
+    // Quantity update hook with debouncing and optimistic updates
+    const { updateQuantity, isUpdating: isQuantityUpdating, getOptimisticQuantity } = useQuantityUpdate({
+        chadcoCustomerId: chadcoCustomerId || 0,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
-            toast.success('تعداد با موفقیت به‌روزرسانی شد');
         },
-        onError: (err: any) => {
-            const errorMessage = getErrorMessage(err, 'خطا در به‌روزرسانی تعداد');
-            toast.error(errorMessage);
+        onQuantityChange: (itemId, newQuantity) => {
+            // This is called immediately for optimistic updates
+            // The actual cart data will be updated when API responds
         },
     });
 
@@ -124,20 +132,23 @@ export default function CartContainer() {
     const handleQuantityChange = (id: string, newQuantity: number) => {
         if (!chadcoCustomerId) return;
 
-        updateQuantityMutation.mutate({
-            itemId: id,
-            quantity: newQuantity,
-            chadcoCustomerId
-        });
+        // Find the current item to get its current quantity
+        const currentItem = itemsWithQuantities.find(item => item.id.toString() === id);
+        if (!currentItem) return;
+
+        const currentQuantity = currentItem.quantity || 1;
+
+        // Use debounced quantity update
+        updateQuantity(currentItem.id, currentQuantity, newQuantity);
     };
 
     // Show loading skeleton
-    if (loading && items.length === 0) {
+    if (loading && cartItems.length === 0) {
         return <CartSkeleton />;
     }
 
     // Show empty cart only if there's no error and no items
-    if (!loading && items.length === 0 && !error) {
+    if (!loading && cartItems.length === 0 && !error) {
         return (
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
                 <div className="max-w-7xl mx-auto p-6">
@@ -170,7 +181,7 @@ export default function CartContainer() {
                         <div className="flex flex-col gap-4">
                             <div className="flex justify-between items-center flex-row gap-4 p-4  border-gray-200 dark:border-gray-700">
                                 <p className="text-lg font-medium text-static-text-primary dark:text-white">
-                                    سبد خرید ({items.length} مورد{bundles.length > 0 && ` - ${bundles.length} باندل`})
+                                    سبد خرید ({itemCount} مورد{bundles.length > 0 && ` - ${bundles.length} باندل`})
                                 </p>
                                 <div className="flex items-center justify-between">
                                     <div onClick={() => router.push('/single-features')} className="flex items-center cursor-pointer justify-between gap-2 py-0.5 text-sm font-normal text-static-text-primary ">
@@ -193,8 +204,9 @@ export default function CartContainer() {
                                                 bundle={bundle}
                                                 onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
                                                 onRemoveBundle={handleRemoveBundle}
-                                                isUpdating={updateQuantityMutation.isPending}
+                                                isUpdating={isQuantityUpdating}
                                                 isRemoving={removeItemMutation.isPending}
+                                                getOptimisticQuantity={getOptimisticQuantity}
                                             />
                                         ))}
                                     </div>
@@ -214,8 +226,9 @@ export default function CartContainer() {
                                                 item={item}
                                                 onQuantityChange={(id, quantity) => handleQuantityChange(id.toString(), quantity)}
                                                 onRemove={() => handleRemoveItem(item.id.toString())}
-                                                isUpdating={updateQuantityMutation.isPending}
+                                                isUpdating={isQuantityUpdating}
                                                 isRemoving={removeItemMutation.isPending}
+                                                getOptimisticQuantity={getOptimisticQuantity}
                                             />
                                         ))}
                                     </div>
@@ -228,8 +241,8 @@ export default function CartContainer() {
                     <div className="col-span-12 lg:col-span-4 flex flex-col gap-4 ">
                         <DiscountCodeCard />
                         <OrderSummaryCard
-                        // bundleDiscountByAmount={bundleDiscountByAmount}
-                        bundles={bundles}
+                            // bundleDiscountByAmount={bundleDiscountByAmount}
+                            bundles={bundles}
                             cartId={cartData?.data?.id || 0}
                             itemCount={itemCount}
                             originalTotal={originalTotal}
