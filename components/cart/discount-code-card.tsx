@@ -6,7 +6,12 @@ import { Button } from '@/components/ui/button';
 import { XCircle } from 'lucide-react';
 import Image from 'next/image';
 
-export default function DiscountCodeCard() {
+interface DiscountCodeCardProps {
+    cartId: number;
+    chadcoCustomerId: number;
+}
+
+export default function DiscountCodeCard({ cartId, chadcoCustomerId }: DiscountCodeCardProps) {
     const discountCode = false;
     const discountAmount = 10000;
     const isLoading = false;
@@ -64,7 +69,7 @@ export default function DiscountCodeCard() {
                         </Button>
                     </div>
                 ) : (
-                    <div className="flex gap-2">
+                    <div className="flex xl:flex-row flex-col justify-start items-start gap-2">
                         <input
                             type="text"
                             placeholder="وارد کردن کد تخفیف"

@@ -22,6 +22,7 @@ import Image from "next/image";
 import ViewToggleGroup from "../shared/ViewToggleGroup";
 import { leadViewOptions } from "@/constants/lead";
 import LeadDetailsOverlay from "./lead-details/lead-detail-overlay";
+import { CloseReasonModal } from "./lead-details";
 export interface LeadContainerInterface {
   className?: string;
 }
@@ -383,6 +384,11 @@ export default function LeadContainer({ leadList }: LeadContainerInterface) {
           onClose={handleCloseOverlay}
         />
       )} */}
+       <CloseReasonModal
+                isOpen={isDetailsOverlayOpen}
+                onClose={handleCloseOverlay}
+                onConfirm={() => {}}
+            />
       <div className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           {/* <Button

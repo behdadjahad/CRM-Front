@@ -1,0 +1,717 @@
+Date : 2025-10-14 15:35:49
+Directory : e:\CHADCO\CRM-Front
+Total : 559 files,  79872 codes, 4273 comments, 6989 blanks, all 91134 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| TypeScript JSX     |        389 |     47,903 |      3,092 |      3,778 |     54,773 |
+| JSON               |         10 |     13,765 |         66 |         22 |     13,853 |
+| TypeScript         |        106 |      8,993 |      1,064 |      1,266 |     11,323 |
+| Markdown           |         23 |      8,433 |          0 |      1,771 |     10,204 |
+| CSS                |          2 |        373 |         28 |         91 |        492 |
+| MS SQL             |          1 |        204 |         10 |         20 |        234 |
+| XML                |         23 |        137 |          0 |         23 |        160 |
+| JavaScript         |          3 |         37 |         13 |         13 |         63 |
+| JSON with Comments |          1 |         27 |          0 |          4 |         31 |
+| HTML               |          1 |          0 |          0 |          1 |          1 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                  | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                     |        559 |     79,872 |      4,273 |      6,989 |     91,134 |
+| . (Files)                                                                             |         21 |     18,448 |        104 |        953 |     19,505 |
+| __tests__                                                                             |          1 |         84 |          5 |         19 |        108 |
+| api                                                                                   |         35 |      2,276 |         78 |        390 |      2,744 |
+| api (Files)                                                                           |         34 |      2,129 |         73 |        361 |      2,563 |
+| api\packages                                                                          |          1 |        147 |          5 |         29 |        181 |
+| app                                                                                   |         37 |      6,330 |        416 |        480 |      7,226 |
+| app\(admin-layout)                                                                    |         10 |      1,539 |         44 |         92 |      1,675 |
+| app\(admin-layout) (Files)                                                            |          1 |         46 |          0 |          9 |         55 |
+| app\(admin-layout)\admin                                                              |          9 |      1,493 |         44 |         83 |      1,620 |
+| app\(admin-layout)\admin\category                                                     |          1 |        228 |          1 |          9 |        238 |
+| app\(admin-layout)\admin\invoices                                                     |          2 |        339 |         40 |         28 |        407 |
+| app\(admin-layout)\admin\invoices (Files)                                             |          1 |         51 |         28 |          7 |         86 |
+| app\(admin-layout)\admin\invoices\[id]                                                |          1 |        288 |         12 |         21 |        321 |
+| app\(admin-layout)\admin\label                                                        |          1 |        189 |          1 |          7 |        197 |
+| app\(admin-layout)\admin\package                                                      |          1 |        193 |          1 |         11 |        205 |
+| app\(admin-layout)\admin\package-unit                                                 |          1 |        216 |          0 |          9 |        225 |
+| app\(admin-layout)\admin\page                                                         |          1 |         94 |          0 |         10 |        104 |
+| app\(admin-layout)\admin\permission                                                   |          1 |        120 |          1 |          6 |        127 |
+| app\(admin-layout)\admin\role                                                         |          1 |        114 |          0 |          3 |        117 |
+| app\(dashboard-layout)                                                                |         22 |      4,604 |        368 |        356 |      5,328 |
+| app\(dashboard-layout) (Files)                                                        |          2 |         67 |          4 |         12 |         83 |
+| app\(dashboard-layout)\calendar                                                       |          1 |         66 |          0 |          6 |         72 |
+| app\(dashboard-layout)\cart                                                           |          1 |          5 |          0 |          2 |          7 |
+| app\(dashboard-layout)\contract                                                       |          3 |      1,890 |         74 |         95 |      2,059 |
+| app\(dashboard-layout)\contract\[id]                                                  |          2 |      1,614 |         69 |         78 |      1,761 |
+| app\(dashboard-layout)\contract\service                                               |          1 |        276 |          5 |         17 |        298 |
+| app\(dashboard-layout)\contract\service\[id]                                          |          1 |        276 |          5 |         17 |        298 |
+| app\(dashboard-layout)\contracts                                                      |          1 |         93 |          0 |          3 |         96 |
+| app\(dashboard-layout)\customer                                                       |          2 |        114 |          1 |         15 |        130 |
+| app\(dashboard-layout)\customer (Files)                                               |          1 |         25 |          0 |          7 |         32 |
+| app\(dashboard-layout)\customer\[id]                                                  |          1 |         89 |          1 |          8 |         98 |
+| app\(dashboard-layout)\invoice                                                        |          2 |        267 |         22 |         39 |        328 |
+| app\(dashboard-layout)\invoice (Files)                                                |          1 |         74 |          0 |          5 |         79 |
+| app\(dashboard-layout)\invoice\[id]                                                   |          1 |        193 |         22 |         34 |        249 |
+| app\(dashboard-layout)\lead                                                           |          1 |         39 |          0 |          8 |         47 |
+| app\(dashboard-layout)\notification                                                   |          1 |         24 |          0 |          3 |         27 |
+| app\(dashboard-layout)\packages                                                       |          1 |         55 |          7 |         15 |         77 |
+| app\(dashboard-layout)\pending-register                                               |          1 |         74 |          0 |          6 |         80 |
+| app\(dashboard-layout)\place-autocomplete-demo                                        |          1 |        260 |         22 |         25 |        307 |
+| app\(dashboard-layout)\register                                                       |          1 |         22 |          0 |          3 |         25 |
+| app\(dashboard-layout)\report                                                         |          1 |        651 |        227 |         57 |        935 |
+| app\(dashboard-layout)\sale                                                           |          1 |        691 |          1 |         30 |        722 |
+| app\(dashboard-layout)\setting                                                        |          1 |        247 |          7 |         25 |        279 |
+| app\(dashboard-layout)\setting\[service]                                              |          1 |        247 |          7 |         25 |        279 |
+| app\(dashboard-layout)\single-features                                                |          1 |         39 |          3 |         12 |         54 |
+| app\(login-layout)                                                                    |          5 |        187 |          4 |         32 |        223 |
+| app\(login-layout) (Files)                                                            |          1 |         41 |          4 |          5 |         50 |
+| app\(login-layout)\login                                                              |          2 |        103 |          0 |         17 |        120 |
+| app\(login-layout)\login (Files)                                                      |          1 |         17 |          0 |          4 |         21 |
+| app\(login-layout)\login\forget-password                                              |          1 |         86 |          0 |         13 |         99 |
+| app\(login-layout)\post-signup                                                        |          1 |         18 |          0 |          5 |         23 |
+| app\(login-layout)\signup                                                             |          1 |         25 |          0 |          5 |         30 |
+| boot                                                                                  |          2 |        290 |        150 |         63 |        503 |
+| components                                                                            |        340 |     40,516 |      2,454 |      3,532 |     46,502 |
+| components\admin                                                                      |         39 |      4,852 |         78 |        270 |      5,200 |
+| components\admin (Files)                                                              |          6 |        216 |          1 |         13 |        230 |
+| components\admin\category                                                             |          2 |        192 |          0 |          8 |        200 |
+| components\admin\forms                                                                |          2 |        173 |          0 |          7 |        180 |
+| components\admin\label                                                                |          1 |         58 |          0 |          9 |         67 |
+| components\admin\package-unit                                                         |          3 |        332 |          0 |         16 |        348 |
+| components\admin\page                                                                 |          2 |        199 |          0 |          7 |        206 |
+| components\admin\permission                                                           |          5 |        520 |          0 |         30 |        550 |
+| components\admin\requests                                                             |          5 |        546 |         32 |         35 |        613 |
+| components\admin\role                                                                 |          1 |         52 |          0 |          2 |         54 |
+| components\admin\tables                                                               |         12 |      2,564 |         45 |        143 |      2,752 |
+| components\billing                                                                    |          6 |        685 |         78 |        125 |        888 |
+| components\calendar                                                                   |          1 |        127 |          0 |          4 |        131 |
+| components\cart                                                                       |          8 |        667 |         72 |         77 |        816 |
+| components\chart                                                                      |          3 |        225 |         52 |         16 |        293 |
+| components\contract                                                                   |         15 |      2,238 |        165 |        130 |      2,533 |
+| components\customer                                                                   |         14 |      2,127 |         45 |        104 |      2,276 |
+| components\events                                                                     |         26 |      3,604 |        412 |        402 |      4,418 |
+| components\events (Files)                                                             |         14 |      2,135 |        332 |        213 |      2,680 |
+| components\events\calendar                                                            |         10 |      1,377 |         79 |        184 |      1,640 |
+| components\events\calendar (Files)                                                    |          5 |        923 |         75 |         89 |      1,087 |
+| components\events\calendar\hooks                                                      |          2 |        196 |          4 |         32 |        232 |
+| components\events\calendar\pickers                                                    |          3 |        258 |          0 |         63 |        321 |
+| components\events\lead                                                                |          2 |         92 |          1 |          5 |         98 |
+| components\form                                                                       |          1 |         30 |          0 |          2 |         32 |
+| components\form\inputs                                                                |          1 |         30 |          0 |          2 |         32 |
+| components\invoice                                                                    |          8 |      1,095 |        111 |         88 |      1,294 |
+| components\lead                                                                       |         31 |      3,402 |        175 |        237 |      3,814 |
+| components\lead (Files)                                                               |         14 |      2,122 |         76 |         78 |      2,276 |
+| components\lead\lead-details                                                          |         17 |      1,280 |         99 |        159 |      1,538 |
+| components\login                                                                      |          5 |        359 |         29 |         40 |        428 |
+| components\menu                                                                       |          1 |        102 |          4 |         10 |        116 |
+| components\notification                                                               |          6 |        399 |         15 |         33 |        447 |
+| components\packages                                                                   |         10 |      2,501 |        381 |        324 |      3,206 |
+| components\pipe                                                                       |          1 |         40 |          0 |          2 |         42 |
+| components\placeAutocomplete                                                          |          7 |      1,451 |        196 |        296 |      1,943 |
+| components\register                                                                   |          4 |        631 |          4 |         25 |        660 |
+| components\report                                                                     |          8 |        311 |         50 |         36 |        397 |
+| components\satisfaction                                                               |          3 |        222 |         16 |         24 |        262 |
+| components\section                                                                    |         11 |        973 |         69 |         80 |      1,122 |
+| components\service                                                                    |         33 |      6,076 |        174 |        309 |      6,559 |
+| components\service (Files)                                                            |         19 |      2,296 |        111 |        159 |      2,566 |
+| components\service\hotel                                                              |          3 |        787 |         30 |         43 |        860 |
+| components\service\other                                                              |          2 |        345 |          2 |         14 |        361 |
+| components\service\ticket                                                             |          7 |      2,165 |         16 |         75 |      2,256 |
+| components\service\visa                                                               |          2 |        483 |         15 |         18 |        516 |
+| components\setting                                                                    |          4 |        988 |         64 |         85 |      1,137 |
+| components\setting (Files)                                                            |          2 |        175 |          0 |         12 |        187 |
+| components\setting\station                                                            |          2 |        813 |         64 |         73 |        950 |
+| components\share                                                                      |          2 |        105 |          0 |          5 |        110 |
+| components\share (Files)                                                              |          1 |         35 |          0 |          1 |         36 |
+| components\share\customer                                                             |          1 |         70 |          0 |          4 |         74 |
+| components\shared                                                                     |         74 |      6,078 |        258 |        645 |      6,981 |
+| components\shared (Files)                                                             |         72 |      6,013 |        231 |        625 |      6,869 |
+| components\shared\input                                                               |          2 |         65 |         27 |         20 |        112 |
+| components\signup                                                                     |          2 |        180 |          1 |         14 |        195 |
+| components\ui                                                                         |         17 |      1,048 |          5 |        149 |      1,202 |
+| config                                                                                |          1 |          4 |          1 |          1 |          6 |
+| constants                                                                             |         18 |      2,344 |        302 |         77 |      2,723 |
+| contexts                                                                              |          1 |        139 |         18 |         27 |        184 |
+| data                                                                                  |          2 |        164 |          1 |          6 |        171 |
+| docs                                                                                  |         11 |      2,760 |          0 |        655 |      3,415 |
+| hooks                                                                                 |         14 |        697 |        111 |        163 |        971 |
+| lib                                                                                   |         15 |      1,474 |        424 |        277 |      2,175 |
+| public                                                                                |         27 |        758 |          0 |         26 |        784 |
+| public\data                                                                           |          4 |        621 |          0 |          3 |        624 |
+| public\icons                                                                          |         23 |        137 |          0 |         23 |        160 |
+| scripts                                                                               |          1 |         18 |          8 |          8 |         34 |
+| store                                                                                 |         22 |      2,648 |        122 |        198 |      2,968 |
+| styles                                                                                |          1 |         95 |          7 |          8 |        110 |
+| types                                                                                 |         10 |        827 |         72 |        106 |      1,005 |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                              | language           | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| e:\CHADCO\CRM-Front\.eslintrc.json                                                    | JSON               |         19 |          0 |          1 |         20 |
+| e:\CHADCO\CRM-Front\ACCESS_MANAGEMENT_ANALYSIS.md                                     | Markdown           |        933 |          0 |        208 |      1,141 |
+| e:\CHADCO\CRM-Front\PROJECT_DOCUMENTATION.md                                          | Markdown           |        827 |          0 |        146 |        973 |
+| e:\CHADCO\CRM-Front\README.md                                                         | Markdown           |         24 |          0 |         14 |         38 |
+| e:\CHADCO\CRM-Front\__tests__\calendar-modal-utils.test.ts                            | TypeScript         |         84 |          5 |         19 |        108 |
+| e:\CHADCO\CRM-Front\access_control_documentation.md                                   | Markdown           |        342 |          0 |         77 |        419 |
+| e:\CHADCO\CRM-Front\access_control_implementation.md                                  | Markdown           |        503 |          0 |         97 |        600 |
+| e:\CHADCO\CRM-Front\access_control_schema.json                                        | JSON               |        348 |          0 |          0 |        348 |
+| e:\CHADCO\CRM-Front\api\accommodation.ts                                              | TypeScript         |        132 |          0 |         27 |        159 |
+| e:\CHADCO\CRM-Front\api\admin.ts                                                      | TypeScript         |        416 |          0 |         54 |        470 |
+| e:\CHADCO\CRM-Front\api\auth.ts                                                       | TypeScript         |        101 |          0 |         18 |        119 |
+| e:\CHADCO\CRM-Front\api\calendar.ts                                                   | TypeScript         |         11 |          0 |          3 |         14 |
+| e:\CHADCO\CRM-Front\api\cart.ts                                                       | TypeScript         |         95 |          9 |         15 |        119 |
+| e:\CHADCO\CRM-Front\api\ceo.ts                                                        | TypeScript         |         28 |          0 |          5 |         33 |
+| e:\CHADCO\CRM-Front\api\client.ts                                                     | TypeScript         |         89 |         24 |         14 |        127 |
+| e:\CHADCO\CRM-Front\api\contract.ts                                                   | TypeScript         |        192 |          0 |         18 |        210 |
+| e:\CHADCO\CRM-Front\api\currency.ts                                                   | TypeScript         |         69 |          0 |         13 |         82 |
+| e:\CHADCO\CRM-Front\api\customer-service.ts                                           | TypeScript         |         19 |          0 |          3 |         22 |
+| e:\CHADCO\CRM-Front\api\customer.ts                                                   | TypeScript         |        105 |          1 |         14 |        120 |
+| e:\CHADCO\CRM-Front\api\event.ts                                                      | TypeScript         |         39 |          0 |          8 |         47 |
+| e:\CHADCO\CRM-Front\api\expense.ts                                                    | TypeScript         |          9 |          0 |          3 |         12 |
+| e:\CHADCO\CRM-Front\api\filter.ts                                                     | TypeScript         |          9 |          0 |          3 |         12 |
+| e:\CHADCO\CRM-Front\api\flight.ts                                                     | TypeScript         |         94 |          0 |         25 |        119 |
+| e:\CHADCO\CRM-Front\api\follow-up.ts                                                  | TypeScript         |          7 |          0 |          2 |          9 |
+| e:\CHADCO\CRM-Front\api\invoices.ts                                                   | TypeScript         |         60 |          3 |         17 |         80 |
+| e:\CHADCO\CRM-Front\api\lead.ts                                                       | TypeScript         |         48 |          0 |          9 |         57 |
+| e:\CHADCO\CRM-Front\api\legal-document.ts                                             | TypeScript         |         48 |          0 |         11 |         59 |
+| e:\CHADCO\CRM-Front\api\location.ts                                                   | TypeScript         |         82 |          0 |          8 |         90 |
+| e:\CHADCO\CRM-Front\api\notification.ts                                               | TypeScript         |         21 |          0 |          4 |         25 |
+| e:\CHADCO\CRM-Front\api\other.ts                                                      | TypeScript         |         65 |          0 |         15 |         80 |
+| e:\CHADCO\CRM-Front\api\packages\package-api.ts                                       | TypeScript         |        147 |          5 |         29 |        181 |
+| e:\CHADCO\CRM-Front\api\report.ts                                                     | TypeScript         |         12 |          0 |          3 |         15 |
+| e:\CHADCO\CRM-Front\api\role.ts                                                       | TypeScript         |          9 |          0 |          3 |         12 |
+| e:\CHADCO\CRM-Front\api\satisfaction.ts                                               | TypeScript         |         39 |          0 |          5 |         44 |
+| e:\CHADCO\CRM-Front\api\service.ts                                                    | TypeScript         |         37 |          0 |          5 |         42 |
+| e:\CHADCO\CRM-Front\api\setting-airline.ts                                            | TypeScript         |         27 |          0 |          5 |         32 |
+| e:\CHADCO\CRM-Front\api\setting-airport.ts                                            | TypeScript         |         27 |          0 |          5 |         32 |
+| e:\CHADCO\CRM-Front\api\setting-hotel.ts                                              | TypeScript         |         27 |          0 |          5 |         32 |
+| e:\CHADCO\CRM-Front\api\signup.ts                                                     | TypeScript         |         59 |         36 |          8 |        103 |
+| e:\CHADCO\CRM-Front\api\stop.ts                                                       | TypeScript         |         27 |          0 |          6 |         33 |
+| e:\CHADCO\CRM-Front\api\ticket.ts                                                     | TypeScript         |         28 |          0 |          5 |         33 |
+| e:\CHADCO\CRM-Front\api\transportation.ts                                             | TypeScript         |          9 |          0 |          3 |         12 |
+| e:\CHADCO\CRM-Front\api\visa.ts                                                       | TypeScript         |         89 |          0 |         19 |        108 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\category\page.tsx                        | TypeScript JSX     |        228 |          1 |          9 |        238 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\invoices\[id]\page.tsx                   | TypeScript JSX     |        288 |         12 |         21 |        321 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\invoices\page.tsx                        | TypeScript JSX     |         51 |         28 |          7 |         86 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\label\page.tsx                           | TypeScript JSX     |        189 |          1 |          7 |        197 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\package-unit\page.tsx                    | TypeScript JSX     |        216 |          0 |          9 |        225 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\package\page.tsx                         | TypeScript JSX     |        193 |          1 |         11 |        205 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\page\page.tsx                            | TypeScript JSX     |         94 |          0 |         10 |        104 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\permission\page.tsx                      | TypeScript JSX     |        120 |          1 |          6 |        127 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\admin\role\page.tsx                            | TypeScript JSX     |        114 |          0 |          3 |        117 |
+| e:\CHADCO\CRM-Front\app\(admin-layout)\layout.tsx                                     | TypeScript JSX     |         46 |          0 |          9 |         55 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\calendar\page.tsx                          | TypeScript JSX     |         66 |          0 |          6 |         72 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\cart\page.tsx                              | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\[id]\_page.tsx                    | TypeScript JSX     |      1,338 |         64 |         61 |      1,463 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\[id]\page.tsx                     | TypeScript JSX     |        276 |          5 |         17 |        298 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\contract\service\[id]\_page.tsx            | TypeScript JSX     |        276 |          5 |         17 |        298 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\contracts\page.tsx                         | TypeScript JSX     |         93 |          0 |          3 |         96 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\customer\[id]\page.tsx                     | TypeScript JSX     |         89 |          1 |          8 |         98 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\customer\page.tsx                          | TypeScript JSX     |         25 |          0 |          7 |         32 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\invoice\[id]\page.tsx                      | TypeScript JSX     |        193 |         22 |         34 |        249 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\invoice\page.tsx                           | TypeScript JSX     |         74 |          0 |          5 |         79 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\layout.tsx                                 | TypeScript JSX     |         52 |          3 |          7 |         62 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\lead\page.tsx                              | TypeScript JSX     |         39 |          0 |          8 |         47 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\notification\page.tsx                      | TypeScript JSX     |         24 |          0 |          3 |         27 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\packages\page.tsx                          | TypeScript JSX     |         55 |          7 |         15 |         77 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\page.tsx                                   | TypeScript JSX     |         15 |          1 |          5 |         21 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\pending-register\page.tsx                  | TypeScript JSX     |         74 |          0 |          6 |         80 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\place-autocomplete-demo\page.tsx           | TypeScript JSX     |        260 |         22 |         25 |        307 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\register\page.tsx                          | TypeScript JSX     |         22 |          0 |          3 |         25 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\report\page.tsx                            | TypeScript JSX     |        651 |        227 |         57 |        935 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\sale\_page.tsx                             | TypeScript JSX     |        691 |          1 |         30 |        722 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\setting\[service]\page.tsx                 | TypeScript JSX     |        247 |          7 |         25 |        279 |
+| e:\CHADCO\CRM-Front\app\(dashboard-layout)\single-features\page.tsx                   | TypeScript JSX     |         39 |          3 |         12 |         54 |
+| e:\CHADCO\CRM-Front\app\(login-layout)\layout.tsx                                     | TypeScript JSX     |         41 |          4 |          5 |         50 |
+| e:\CHADCO\CRM-Front\app\(login-layout)\login\forget-password\page.tsx                 | TypeScript JSX     |         86 |          0 |         13 |         99 |
+| e:\CHADCO\CRM-Front\app\(login-layout)\login\page.tsx                                 | TypeScript JSX     |         17 |          0 |          4 |         21 |
+| e:\CHADCO\CRM-Front\app\(login-layout)\post-signup\page.tsx                           | TypeScript JSX     |         18 |          0 |          5 |         23 |
+| e:\CHADCO\CRM-Front\app\(login-layout)\signup\page.tsx                                | TypeScript JSX     |         25 |          0 |          5 |         30 |
+| e:\CHADCO\CRM-Front\boot\chadco-customer-service.ts                                   | TypeScript         |        145 |         75 |         30 |        250 |
+| e:\CHADCO\CRM-Front\boot\fetch-service.ts                                             | TypeScript         |        145 |         75 |         33 |        253 |
+| e:\CHADCO\CRM-Front\components\admin\admin-layout.tsx                                 | TypeScript JSX     |         37 |          1 |          3 |         41 |
+| e:\CHADCO\CRM-Front\components\admin\category\add-category-to-package.tsx             | TypeScript JSX     |        134 |          0 |          4 |        138 |
+| e:\CHADCO\CRM-Front\components\admin\category\category-container.tsx                  | TypeScript JSX     |         58 |          0 |          4 |         62 |
+| e:\CHADCO\CRM-Front\components\admin\delete-confirmation.tsx                          | TypeScript JSX     |         62 |          0 |          2 |         64 |
+| e:\CHADCO\CRM-Front\components\admin\forms\creation-form.tsx                          | TypeScript JSX     |         85 |          0 |          3 |         88 |
+| e:\CHADCO\CRM-Front\components\admin\forms\editable-form.tsx                          | TypeScript JSX     |         88 |          0 |          4 |         92 |
+| e:\CHADCO\CRM-Front\components\admin\label\label-container.tsx                        | TypeScript JSX     |         58 |          0 |          9 |         67 |
+| e:\CHADCO\CRM-Front\components\admin\no-data.tsx                                      | TypeScript JSX     |          6 |          0 |          2 |          8 |
+| e:\CHADCO\CRM-Front\components\admin\package-container.tsx                            | TypeScript JSX     |         65 |          0 |          4 |         69 |
+| e:\CHADCO\CRM-Front\components\admin\package-unit\add-package-unit-to-category.tsx    | TypeScript JSX     |        133 |          0 |          8 |        141 |
+| e:\CHADCO\CRM-Front\components\admin\package-unit\add-package-unit-to-label.tsx       | TypeScript JSX     |        133 |          0 |          4 |        137 |
+| e:\CHADCO\CRM-Front\components\admin\package-unit\package-unit-container.tsx          | TypeScript JSX     |         66 |          0 |          4 |         70 |
+| e:\CHADCO\CRM-Front\components\admin\page\add-page-feature-to-page.tsx                | TypeScript JSX     |        147 |          0 |          5 |        152 |
+| e:\CHADCO\CRM-Front\components\admin\page\page-container.tsx                          | TypeScript JSX     |         52 |          0 |          2 |         54 |
+| e:\CHADCO\CRM-Front\components\admin\permission\add-permission-form.tsx               | TypeScript JSX     |        127 |          0 |          5 |        132 |
+| e:\CHADCO\CRM-Front\components\admin\permission\add-permission-to-package-unit.tsx    | TypeScript JSX     |        138 |          0 |          7 |        145 |
+| e:\CHADCO\CRM-Front\components\admin\permission\add-permission-to-role.tsx            | TypeScript JSX     |        137 |          0 |          5 |        142 |
+| e:\CHADCO\CRM-Front\components\admin\permission\permission-container.tsx              | TypeScript JSX     |         37 |          0 |          5 |         42 |
+| e:\CHADCO\CRM-Front\components\admin\permission\permission-page-feature-container.tsx | TypeScript JSX     |         81 |          0 |          8 |         89 |
+| e:\CHADCO\CRM-Front\components\admin\requests\admin-request-detail.tsx                | TypeScript JSX     |          0 |          0 |          1 |          1 |
+| e:\CHADCO\CRM-Front\components\admin\requests\admin-requests-container.tsx            | TypeScript JSX     |        273 |         11 |         14 |        298 |
+| e:\CHADCO\CRM-Front\components\admin\requests\admin-requests-table.tsx                | TypeScript JSX     |        166 |         21 |          8 |        195 |
+| e:\CHADCO\CRM-Front\components\admin\requests\discount-action-content.tsx             | TypeScript JSX     |         61 |          0 |          5 |         66 |
+| e:\CHADCO\CRM-Front\components\admin\requests\request-status-badge.tsx                | TypeScript JSX     |         46 |          0 |          7 |         53 |
+| e:\CHADCO\CRM-Front\components\admin\role\role-container.tsx                          | TypeScript JSX     |         52 |          0 |          2 |         54 |
+| e:\CHADCO\CRM-Front\components\admin\tables\category-table.tsx                        | TypeScript JSX     |        232 |          1 |         14 |        247 |
+| e:\CHADCO\CRM-Front\components\admin\tables\feature-selection-table.tsx               | TypeScript JSX     |         94 |          0 |          4 |         98 |
+| e:\CHADCO\CRM-Front\components\admin\tables\label-table.tsx                           | TypeScript JSX     |        162 |          0 |          7 |        169 |
+| e:\CHADCO\CRM-Front\components\admin\tables\package-table.tsx                         | TypeScript JSX     |        169 |         14 |         10 |        193 |
+| e:\CHADCO\CRM-Front\components\admin\tables\package-unit-table.tsx                    | TypeScript JSX     |        294 |         21 |         15 |        330 |
+| e:\CHADCO\CRM-Front\components\admin\tables\page-feature-table.tsx                    | TypeScript JSX     |        141 |          0 |         14 |        155 |
+| e:\CHADCO\CRM-Front\components\admin\tables\page-selection-table.tsx                  | TypeScript JSX     |        294 |          1 |         16 |        311 |
+| e:\CHADCO\CRM-Front\components\admin\tables\page-table.tsx                            | TypeScript JSX     |        171 |          0 |          5 |        176 |
+| e:\CHADCO\CRM-Front\components\admin\tables\permission-feature-sub-table.tsx          | TypeScript JSX     |        220 |          5 |         14 |        239 |
+| e:\CHADCO\CRM-Front\components\admin\tables\permission-page-sub-table.tsx             | TypeScript JSX     |        324 |          3 |         22 |        349 |
+| e:\CHADCO\CRM-Front\components\admin\tables\permission-table.tsx                      | TypeScript JSX     |        288 |          0 |         12 |        300 |
+| e:\CHADCO\CRM-Front\components\admin\tables\role-table.tsx                            | TypeScript JSX     |        175 |          0 |         10 |        185 |
+| e:\CHADCO\CRM-Front\components\admin\tag-card.tsx                                     | TypeScript JSX     |         23 |          0 |          1 |         24 |
+| e:\CHADCO\CRM-Front\components\admin\tag-container.tsx                                | TypeScript JSX     |         23 |          0 |          1 |         24 |
+| e:\CHADCO\CRM-Front\components\billing\README.md                                      | Markdown           |        103 |          0 |         26 |        129 |
+| e:\CHADCO\CRM-Front\components\billing\billing-container.tsx                          | TypeScript JSX     |         47 |          5 |         12 |         64 |
+| e:\CHADCO\CRM-Front\components\billing\duration-selection-card.tsx                    | TypeScript JSX     |        108 |         25 |         21 |        154 |
+| e:\CHADCO\CRM-Front\components\billing\features-list-card.tsx                         | TypeScript JSX     |        226 |         19 |         23 |        268 |
+| e:\CHADCO\CRM-Front\components\billing\order-summary-card.tsx                         | TypeScript JSX     |        161 |         26 |         34 |        221 |
+| e:\CHADCO\CRM-Front\components\billing\tag.tsx                                        | TypeScript JSX     |         40 |          3 |          9 |         52 |
+| e:\CHADCO\CRM-Front\components\calendar\CustomRangeDatePicker.tsx                     | TypeScript JSX     |        127 |          0 |          4 |        131 |
+| e:\CHADCO\CRM-Front\components\cart\cart-container.tsx                                | TypeScript JSX     |        181 |         16 |         21 |        218 |
+| e:\CHADCO\CRM-Front\components\cart\cart-header.tsx                                   | TypeScript JSX     |         23 |          0 |          3 |         26 |
+| e:\CHADCO\CRM-Front\components\cart\cart-item.tsx                                     | TypeScript JSX     |        117 |          7 |         11 |        135 |
+| e:\CHADCO\CRM-Front\components\cart\cart-layout.tsx                                   | TypeScript JSX     |         44 |          5 |          8 |         57 |
+| e:\CHADCO\CRM-Front\components\cart\cart-skeleton.tsx                                 | TypeScript JSX     |         50 |          3 |          5 |         58 |
+| e:\CHADCO\CRM-Front\components\cart\discount-code-card.tsx                            | TypeScript JSX     |         54 |         27 |          8 |         89 |
+| e:\CHADCO\CRM-Front\components\cart\empty-cart.tsx                                    | TypeScript JSX     |         15 |          0 |          2 |         17 |
+| e:\CHADCO\CRM-Front\components\cart\order-summary-card.tsx                            | TypeScript JSX     |        183 |         14 |         19 |        216 |
+| e:\CHADCO\CRM-Front\components\chart\customize-pi-chart.tsx                           | TypeScript JSX     |         50 |          0 |          4 |         54 |
+| e:\CHADCO\CRM-Front\components\chart\multiple-bar-chart.tsx                           | TypeScript JSX     |        108 |         51 |          8 |        167 |
+| e:\CHADCO\CRM-Front\components\chart\pi-chart.tsx                                     | TypeScript JSX     |         67 |          1 |          4 |         72 |
+| e:\CHADCO\CRM-Front\components\contract\AddContractToPipe.tsx                         | TypeScript JSX     |         40 |        127 |          4 |        171 |
+| e:\CHADCO\CRM-Front\components\contract\ContractDashboard.tsx                         | TypeScript JSX     |        500 |         25 |         10 |        535 |
+| e:\CHADCO\CRM-Front\components\contract\ContractInfiniteCard.tsx                      | TypeScript JSX     |         35 |          0 |          7 |         42 |
+| e:\CHADCO\CRM-Front\components\contract\ContractInfiniteContainer.tsx                 | TypeScript JSX     |         78 |          7 |          6 |         91 |
+| e:\CHADCO\CRM-Front\components\contract\ContractOverviewContainer.tsx                 | TypeScript JSX     |         19 |          0 |          1 |         20 |
+| e:\CHADCO\CRM-Front\components\contract\ContractPipe.tsx                              | TypeScript JSX     |         28 |          0 |          2 |         30 |
+| e:\CHADCO\CRM-Front\components\contract\ContractPipeContainer.tsx                     | TypeScript JSX     |         34 |          2 |          5 |         41 |
+| e:\CHADCO\CRM-Front\components\contract\ContractTable.tsx                             | TypeScript JSX     |        230 |          0 |         14 |        244 |
+| e:\CHADCO\CRM-Front\components\contract\ContractTableContainer.tsx                    | TypeScript JSX     |        154 |          0 |          6 |        160 |
+| e:\CHADCO\CRM-Front\components\contract\contract-card.tsx                             | TypeScript JSX     |        322 |          4 |         24 |        350 |
+| e:\CHADCO\CRM-Front\components\contract\contract-container.tsx                        | TypeScript JSX     |         51 |          0 |          5 |         56 |
+| e:\CHADCO\CRM-Front\components\contract\contract-creation.tsx                         | TypeScript JSX     |        329 |          0 |         18 |        347 |
+| e:\CHADCO\CRM-Front\components\contract\contract-overview.tsx                         | TypeScript JSX     |         41 |          0 |          4 |         45 |
+| e:\CHADCO\CRM-Front\components\contract\editable-container.tsx                        | TypeScript JSX     |        287 |          0 |         19 |        306 |
+| e:\CHADCO\CRM-Front\components\contract\registery-form.tsx                            | TypeScript JSX     |         90 |          0 |          5 |         95 |
+| e:\CHADCO\CRM-Front\components\customer\customer-card.tsx                             | TypeScript JSX     |         95 |          4 |          5 |        104 |
+| e:\CHADCO\CRM-Front\components\customer\customer-container.tsx                        | TypeScript JSX     |         84 |          0 |          7 |         91 |
+| e:\CHADCO\CRM-Front\components\customer\customer-detail-content.tsx                   | TypeScript JSX     |        247 |          5 |         13 |        265 |
+| e:\CHADCO\CRM-Front\components\customer\customer-detail-contract-container.tsx        | TypeScript JSX     |         74 |          0 |          8 |         82 |
+| e:\CHADCO\CRM-Front\components\customer\customer-detail-report.tsx                    | TypeScript JSX     |        174 |          2 |          6 |        182 |
+| e:\CHADCO\CRM-Front\components\customer\customer-detail-table.tsx                     | TypeScript JSX     |        144 |          1 |          9 |        154 |
+| e:\CHADCO\CRM-Front\components\customer\customer-expenses-overview.tsx                | TypeScript JSX     |         45 |          0 |          2 |         47 |
+| e:\CHADCO\CRM-Front\components\customer\customer-personal-info.tsx                    | TypeScript JSX     |        240 |          1 |          5 |        246 |
+| e:\CHADCO\CRM-Front\components\customer\customer-report-info-card.tsx                 | TypeScript JSX     |         20 |          0 |          3 |         23 |
+| e:\CHADCO\CRM-Front\components\customer\customer-satisfaction-report-card.tsx         | TypeScript JSX     |         50 |          0 |          3 |         53 |
+| e:\CHADCO\CRM-Front\components\customer\customer-satisfaction-report.tsx              | TypeScript JSX     |         64 |          2 |          3 |         69 |
+| e:\CHADCO\CRM-Front\components\customer\customer-tab-container.tsx                    | TypeScript JSX     |        530 |          8 |         26 |        564 |
+| e:\CHADCO\CRM-Front\components\customer\customer-tab-content.tsx                      | TypeScript JSX     |        125 |         21 |          7 |        153 |
+| e:\CHADCO\CRM-Front\components\customer\customer-table-container.tsx                  | TypeScript JSX     |        235 |          1 |          7 |        243 |
+| e:\CHADCO\CRM-Front\components\events\AddCustomerToFeatureContainer.tsx               | TypeScript JSX     |        161 |          1 |          9 |        171 |
+| e:\CHADCO\CRM-Front\components\events\CalendarContainer.tsx                           | TypeScript JSX     |        759 |        291 |         97 |      1,147 |
+| e:\CHADCO\CRM-Front\components\events\CalendarHeader.tsx                              | TypeScript JSX     |        158 |         10 |          7 |        175 |
+| e:\CHADCO\CRM-Front\components\events\CustomRangeCalendar.tsx                         | TypeScript JSX     |         92 |          0 |          5 |         97 |
+| e:\CHADCO\CRM-Front\components\events\DailyCalendar.tsx                               | TypeScript JSX     |         68 |          5 |         13 |         86 |
+| e:\CHADCO\CRM-Front\components\events\EventDetailCard.tsx                             | TypeScript JSX     |         58 |          5 |          4 |         67 |
+| e:\CHADCO\CRM-Front\components\events\EventDetailContainer.tsx                        | TypeScript JSX     |         73 |          1 |         10 |         84 |
+| e:\CHADCO\CRM-Front\components\events\EventDetailSidebar.tsx                          | TypeScript JSX     |        112 |          1 |          5 |        118 |
+| e:\CHADCO\CRM-Front\components\events\EventEditForm.tsx                               | TypeScript JSX     |         87 |          0 |          3 |         90 |
+| e:\CHADCO\CRM-Front\components\events\GridDailyCalendar.tsx                           | TypeScript JSX     |         75 |          0 |          5 |         80 |
+| e:\CHADCO\CRM-Front\components\events\GridMonthlyCalendar.tsx                         | TypeScript JSX     |        118 |          0 |          6 |        124 |
+| e:\CHADCO\CRM-Front\components\events\GridWeeklyCalendar.tsx                          | TypeScript JSX     |        111 |          0 |          7 |        118 |
+| e:\CHADCO\CRM-Front\components\events\MonthlyCalendar.tsx                             | TypeScript JSX     |        135 |          5 |         20 |        160 |
+| e:\CHADCO\CRM-Front\components\events\WeeklyCalendar.tsx                              | TypeScript JSX     |        128 |         13 |         22 |        163 |
+| e:\CHADCO\CRM-Front\components\events\calendar\CalendarTypeFiltering.tsx              | TypeScript JSX     |         39 |          0 |          3 |         42 |
+| e:\CHADCO\CRM-Front\components\events\calendar\DateSelectorModal.tsx                  | TypeScript JSX     |        230 |         14 |         38 |        282 |
+| e:\CHADCO\CRM-Front\components\events\calendar\DateSelectorStepperClean.tsx           | TypeScript JSX     |        270 |          0 |         28 |        298 |
+| e:\CHADCO\CRM-Front\components\events\calendar\EventCreationContainer.tsx             | TypeScript JSX     |        346 |         61 |         17 |        424 |
+| e:\CHADCO\CRM-Front\components\events\calendar\calendar-time-filtering.tsx            | TypeScript JSX     |         38 |          0 |          3 |         41 |
+| e:\CHADCO\CRM-Front\components\events\calendar\hooks\useDateSelector.ts               | TypeScript         |        145 |          2 |         22 |        169 |
+| e:\CHADCO\CRM-Front\components\events\calendar\hooks\useDateSelectorResult.ts         | TypeScript         |         51 |          2 |         10 |         63 |
+| e:\CHADCO\CRM-Front\components\events\calendar\pickers\DayPicker.tsx                  | TypeScript JSX     |        125 |          0 |         36 |        161 |
+| e:\CHADCO\CRM-Front\components\events\calendar\pickers\MonthPicker.tsx                | TypeScript JSX     |         67 |          0 |         12 |         79 |
+| e:\CHADCO\CRM-Front\components\events\calendar\pickers\YearPicker.tsx                 | TypeScript JSX     |         66 |          0 |         15 |         81 |
+| e:\CHADCO\CRM-Front\components\events\lead\LeadContactTypeCard.tsx                    | TypeScript JSX     |         57 |          0 |          2 |         59 |
+| e:\CHADCO\CRM-Front\components\events\lead\LeadContactTypeContainer.tsx               | TypeScript JSX     |         35 |          1 |          3 |         39 |
+| e:\CHADCO\CRM-Front\components\form\inputs\SelectableTagInput.tsx                     | TypeScript JSX     |         30 |          0 |          2 |         32 |
+| e:\CHADCO\CRM-Front\components\invoice\InvoiceCard.tsx                                | TypeScript JSX     |         80 |         15 |          3 |         98 |
+| e:\CHADCO\CRM-Front\components\invoice\InvoiceContainer.tsx                           | TypeScript JSX     |        188 |          1 |          9 |        198 |
+| e:\CHADCO\CRM-Front\components\invoice\InvoiceList.tsx                                | TypeScript JSX     |         29 |          0 |          3 |         32 |
+| e:\CHADCO\CRM-Front\components\invoice\InvoicePreview.tsx                             | TypeScript JSX     |        144 |         67 |         10 |        221 |
+| e:\CHADCO\CRM-Front\components\invoice\InvoiceSkeleton.tsx                            | TypeScript JSX     |        151 |          4 |         11 |        166 |
+| e:\CHADCO\CRM-Front\components\invoice\invoice-list.tsx                               | TypeScript JSX     |        144 |          6 |         16 |        166 |
+| e:\CHADCO\CRM-Front\components\invoice\invoice-page.tsx                               | TypeScript JSX     |        197 |         11 |         25 |        233 |
+| e:\CHADCO\CRM-Front\components\invoice\invoice-preview-modal.tsx                      | TypeScript JSX     |        162 |          7 |         11 |        180 |
+| e:\CHADCO\CRM-Front\components\lead\AddCustomerToLeadContainer.tsx                    | TypeScript JSX     |        129 |          1 |          5 |        135 |
+| e:\CHADCO\CRM-Front\components\lead\AddEventToLead.tsx                                | TypeScript JSX     |         37 |          0 |          2 |         39 |
+| e:\CHADCO\CRM-Front\components\lead\AddLeadToPipe.tsx                                 | TypeScript JSX     |         39 |          0 |          1 |         40 |
+| e:\CHADCO\CRM-Front\components\lead\EventCreationContainer.tsx                        | TypeScript JSX     |        173 |          4 |          1 |        178 |
+| e:\CHADCO\CRM-Front\components\lead\LeadCard.tsx                                      | TypeScript JSX     |         47 |          0 |          4 |         51 |
+| e:\CHADCO\CRM-Front\components\lead\LeadContainer.tsx                                 | TypeScript JSX     |        476 |         26 |         12 |        514 |
+| e:\CHADCO\CRM-Front\components\lead\LeadEditionContainer.tsx                          | TypeScript JSX     |        282 |          0 |          8 |        290 |
+| e:\CHADCO\CRM-Front\components\lead\LeadPipe.tsx                                      | TypeScript JSX     |         76 |          5 |          5 |         86 |
+| e:\CHADCO\CRM-Front\components\lead\LeadPipeContainer.tsx                             | TypeScript JSX     |         44 |         37 |          3 |         84 |
+| e:\CHADCO\CRM-Front\components\lead\LeadPipeCreation.tsx                              | TypeScript JSX     |         40 |          0 |          2 |         42 |
+| e:\CHADCO\CRM-Front\components\lead\LeadStatus.tsx                                    | TypeScript JSX     |         56 |          1 |          2 |         59 |
+| e:\CHADCO\CRM-Front\components\lead\LeadTableContainer.tsx                            | TypeScript JSX     |        149 |          0 |          5 |        154 |
+| e:\CHADCO\CRM-Front\components\lead\lead-creation-container.tsx                       | TypeScript JSX     |        288 |          1 |         13 |        302 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\close-reason-modal.tsx               | TypeScript JSX     |        148 |          9 |         16 |        173 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\email-tab-content.tsx                | TypeScript JSX     |         81 |          8 |         11 |        100 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\event-status-card.tsx                | TypeScript JSX     |         82 |         10 |         13 |        105 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\event-tab-content.tsx                | TypeScript JSX     |        103 |          2 |         18 |        123 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\index.ts                             | TypeScript         |          9 |          2 |          1 |         12 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-action-buttons.tsx              | TypeScript JSX     |        115 |          3 |          9 |        127 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-detail-overlay.tsx              | TypeScript JSX     |         71 |          5 |          8 |         84 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-details-section.tsx             | TypeScript JSX     |         71 |          5 |          6 |         82 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-card.tsx                   | TypeScript JSX     |         64 |          5 |          9 |         78 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-header.tsx                 | TypeScript JSX     |         60 |          3 |         12 |         75 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-info-sidebar.tsx                | TypeScript JSX     |         89 |          2 |          9 |        100 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-intraction-tabs.tsx             | TypeScript JSX     |         65 |          2 |         11 |         78 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-organization-section.tsx        | TypeScript JSX     |         42 |          6 |          6 |         54 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-person-section.tsx              | TypeScript JSX     |         74 |          7 |          6 |         87 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\lead-workflow-stepper.tsx            | TypeScript JSX     |         89 |          1 |          9 |         99 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\note-tab-content.tsx                 | TypeScript JSX     |        117 |         13 |         13 |        143 |
+| e:\CHADCO\CRM-Front\components\lead\lead-details\type.ts                              | TypeScript         |          0 |         16 |          2 |         18 |
+| e:\CHADCO\CRM-Front\components\lead\lead-table.tsx                                    | TypeScript JSX     |        286 |          1 |         15 |        302 |
+| e:\CHADCO\CRM-Front\components\login\login-form.tsx                                   | TypeScript JSX     |        105 |         21 |         17 |        143 |
+| e:\CHADCO\CRM-Front\components\login\organization-information.tsx                     | TypeScript JSX     |         26 |          7 |          4 |         37 |
+| e:\CHADCO\CRM-Front\components\login\reset-password-form.tsx                          | TypeScript JSX     |         94 |          0 |          5 |         99 |
+| e:\CHADCO\CRM-Front\components\login\user-recovery-form.tsx                           | TypeScript JSX     |         57 |          1 |          4 |         62 |
+| e:\CHADCO\CRM-Front\components\login\verificartion-form.tsx                           | TypeScript JSX     |         77 |          0 |         10 |         87 |
+| e:\CHADCO\CRM-Front\components\menu\sidebar-menu.tsx                                  | TypeScript JSX     |        102 |          4 |         10 |        116 |
+| e:\CHADCO\CRM-Front\components\notification\NotificationBadge.tsx                     | TypeScript JSX     |         37 |          1 |          7 |         45 |
+| e:\CHADCO\CRM-Front\components\notification\notification-card.tsx                     | TypeScript JSX     |        100 |         13 |          4 |        117 |
+| e:\CHADCO\CRM-Front\components\notification\notification-container.tsx                | TypeScript JSX     |        140 |          1 |          8 |        149 |
+| e:\CHADCO\CRM-Front\components\notification\notification-drop-down.tsx                | TypeScript JSX     |         49 |          0 |          5 |         54 |
+| e:\CHADCO\CRM-Front\components\notification\notification-header.tsx                   | TypeScript JSX     |         31 |          0 |          3 |         34 |
+| e:\CHADCO\CRM-Front\components\notification\notification-tab-list.tsx                 | TypeScript JSX     |         42 |          0 |          6 |         48 |
+| e:\CHADCO\CRM-Front\components\packages\bundle-card.tsx                               | TypeScript JSX     |        160 |          8 |         12 |        180 |
+| e:\CHADCO\CRM-Front\components\packages\comparison-table.tsx                          | TypeScript JSX     |        192 |         22 |         18 |        232 |
+| e:\CHADCO\CRM-Front\components\packages\feature-tag.tsx                               | TypeScript JSX     |         67 |          4 |         13 |         84 |
+| e:\CHADCO\CRM-Front\components\packages\package-card.tsx                              | TypeScript JSX     |        177 |         15 |         33 |        225 |
+| e:\CHADCO\CRM-Front\components\packages\package-comparison-container.tsx              | TypeScript JSX     |         75 |         14 |         15 |        104 |
+| e:\CHADCO\CRM-Front\components\packages\package-icons.tsx                             | TypeScript JSX     |        122 |          4 |          9 |        135 |
+| e:\CHADCO\CRM-Front\components\packages\purchase-flow-modal.tsx                       | TypeScript JSX     |        273 |         16 |         35 |        324 |
+| e:\CHADCO\CRM-Front\components\packages\single-feature-card.tsx                       | TypeScript JSX     |        260 |         15 |         44 |        319 |
+| e:\CHADCO\CRM-Front\components\packages\single-feature-purchase-modal.tsx             | TypeScript JSX     |        274 |         17 |         29 |        320 |
+| e:\CHADCO\CRM-Front\components\packages\single-features-container.tsx                 | TypeScript JSX     |        901 |        266 |        116 |      1,283 |
+| e:\CHADCO\CRM-Front\components\pipe\PipeCreation.tsx                                  | TypeScript JSX     |         40 |          0 |          2 |         42 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\FORM_MAKER_INTEGRATION.md            | Markdown           |        413 |          0 |         83 |        496 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\MapSelector.tsx                      | TypeScript JSX     |        218 |         29 |         32 |        279 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocomplete.tsx                | TypeScript JSX     |        240 |         31 |         26 |        297 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocompleteFormField.tsx       | TypeScript JSX     |         92 |         43 |         18 |        153 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\PlaceAutocompleteWithMap.tsx         | TypeScript JSX     |        139 |         28 |         16 |        183 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\README.md                            | Markdown           |        339 |          0 |        114 |        453 |
+| e:\CHADCO\CRM-Front\components\placeAutocomplete\index.ts                             | TypeScript         |         10 |         65 |          7 |         82 |
+| e:\CHADCO\CRM-Front\components\register\registration-container.tsx                    | TypeScript JSX     |        388 |          3 |         13 |        404 |
+| e:\CHADCO\CRM-Front\components\register\registration-progress.tsx                     | TypeScript JSX     |         80 |          0 |          3 |         83 |
+| e:\CHADCO\CRM-Front\components\register\registration-upload-document-card.tsx         | TypeScript JSX     |         99 |          1 |          6 |        106 |
+| e:\CHADCO\CRM-Front\components\register\registration-upload-document-container.tsx    | TypeScript JSX     |         64 |          0 |          3 |         67 |
+| e:\CHADCO\CRM-Front\components\report\bar-report.tsx                                  | TypeScript JSX     |         34 |          0 |          6 |         40 |
+| e:\CHADCO\CRM-Front\components\report\call-contracts.tsx                              | TypeScript JSX     |         38 |          0 |          4 |         42 |
+| e:\CHADCO\CRM-Front\components\report\month-report.tsx                                | TypeScript JSX     |         68 |          0 |          4 |         72 |
+| e:\CHADCO\CRM-Front\components\report\overview-card.tsx                               | TypeScript JSX     |         30 |          0 |          5 |         35 |
+| e:\CHADCO\CRM-Front\components\report\pie-report.tsx                                  | TypeScript JSX     |         29 |          0 |          5 |         34 |
+| e:\CHADCO\CRM-Front\components\report\report-overview.tsx                             | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| e:\CHADCO\CRM-Front\components\report\satisfaction-report.tsx                         | TypeScript JSX     |         35 |          0 |          4 |         39 |
+| e:\CHADCO\CRM-Front\components\report\time-filter.tsx                                 | TypeScript JSX     |         61 |         50 |          5 |        116 |
+| e:\CHADCO\CRM-Front\components\satisfaction\overview-detail-container.tsx             | TypeScript JSX     |        137 |         10 |         12 |        159 |
+| e:\CHADCO\CRM-Front\components\satisfaction\overview.tsx                              | TypeScript JSX     |         36 |          0 |          8 |         44 |
+| e:\CHADCO\CRM-Front\components\satisfaction\social-media.tsx                          | TypeScript JSX     |         49 |          6 |          4 |         59 |
+| e:\CHADCO\CRM-Front\components\section\contract-report-table.tsx                      | TypeScript JSX     |         67 |          2 |          4 |         73 |
+| e:\CHADCO\CRM-Front\components\section\filter-container.tsx                           | TypeScript JSX     |         52 |          7 |         11 |         70 |
+| e:\CHADCO\CRM-Front\components\section\filter-drawer.tsx                              | TypeScript JSX     |         95 |          0 |          5 |        100 |
+| e:\CHADCO\CRM-Front\components\section\font-provider.tsx                              | TypeScript JSX     |          5 |          0 |          2 |          7 |
+| e:\CHADCO\CRM-Front\components\section\iran-map.tsx                                   | TypeScript JSX     |         67 |          2 |         15 |         84 |
+| e:\CHADCO\CRM-Front\components\section\progress-bar-container.tsx                     | TypeScript JSX     |         33 |          0 |          1 |         34 |
+| e:\CHADCO\CRM-Front\components\section\report-pdf.tsx                                 | TypeScript JSX     |         16 |          0 |          3 |         19 |
+| e:\CHADCO\CRM-Front\components\section\satisfaction.tsx                               | TypeScript JSX     |        262 |          9 |          5 |        276 |
+| e:\CHADCO\CRM-Front\components\section\table-pdf.tsx                                  | TypeScript JSX     |        180 |          4 |         13 |        197 |
+| e:\CHADCO\CRM-Front\components\section\time-filter-container.tsx                      | TypeScript JSX     |        122 |          0 |          2 |        124 |
+| e:\CHADCO\CRM-Front\components\section\world-map.tsx                                  | TypeScript JSX     |         74 |         45 |         19 |        138 |
+| e:\CHADCO\CRM-Front\components\service\client-info-card.tsx                           | TypeScript JSX     |        278 |          1 |          9 |        288 |
+| e:\CHADCO\CRM-Front\components\service\client-info-container.tsx                      | TypeScript JSX     |         91 |          0 |          9 |        100 |
+| e:\CHADCO\CRM-Front\components\service\contract-expense-card.tsx                      | TypeScript JSX     |         96 |          3 |          6 |        105 |
+| e:\CHADCO\CRM-Front\components\service\contract-expense-container.tsx                 | TypeScript JSX     |        239 |         61 |         24 |        324 |
+| e:\CHADCO\CRM-Front\components\service\customer-infinite-card.tsx                     | TypeScript JSX     |        148 |          4 |         15 |        167 |
+| e:\CHADCO\CRM-Front\components\service\customer-infinite-container.tsx                | TypeScript JSX     |        109 |          0 |          7 |        116 |
+| e:\CHADCO\CRM-Front\components\service\customer-list-section.tsx                      | TypeScript JSX     |         61 |          0 |          5 |         66 |
+| e:\CHADCO\CRM-Front\components\service\customer-manager.tsx                           | TypeScript JSX     |        239 |          2 |         16 |        257 |
+| e:\CHADCO\CRM-Front\components\service\customer-submitter-container.tsx               | TypeScript JSX     |        122 |          0 |          6 |        128 |
+| e:\CHADCO\CRM-Front\components\service\customer-suggestion-infinite-container.tsx     | TypeScript JSX     |         86 |          0 |         10 |         96 |
+| e:\CHADCO\CRM-Front\components\service\customer-suggestion-infinte-card.tsx           | TypeScript JSX     |        103 |          8 |         11 |        122 |
+| e:\CHADCO\CRM-Front\components\service\expense-detail.tsx                             | TypeScript JSX     |        111 |         22 |          6 |        139 |
+| e:\CHADCO\CRM-Front\components\service\expense-form-generator.tsx                     | TypeScript JSX     |        162 |          0 |          9 |        171 |
+| e:\CHADCO\CRM-Front\components\service\expense-form.tsx                               | TypeScript JSX     |        108 |          3 |          9 |        120 |
+| e:\CHADCO\CRM-Front\components\service\hotel\hotel-container.tsx                      | TypeScript JSX     |        247 |          1 |         14 |        262 |
+| e:\CHADCO\CRM-Front\components\service\hotel\hotel-form.tsx                           | TypeScript JSX     |        291 |         21 |         18 |        330 |
+| e:\CHADCO\CRM-Front\components\service\hotel\room-form.tsx                            | TypeScript JSX     |        249 |          8 |         11 |        268 |
+| e:\CHADCO\CRM-Front\components\service\other\other-container.tsx                      | TypeScript JSX     |        138 |          0 |          5 |        143 |
+| e:\CHADCO\CRM-Front\components\service\other\other-form.tsx                           | TypeScript JSX     |        207 |          2 |          9 |        218 |
+| e:\CHADCO\CRM-Front\components\service\overal-expense-container.tsx                   | TypeScript JSX     |         53 |          1 |          3 |         57 |
+| e:\CHADCO\CRM-Front\components\service\service-customer-card.tsx                      | TypeScript JSX     |         62 |          6 |          2 |         70 |
+| e:\CHADCO\CRM-Front\components\service\service-customer-container.tsx                 | TypeScript JSX     |         20 |          0 |          3 |         23 |
+| e:\CHADCO\CRM-Front\components\service\service-customer-list.tsx                      | TypeScript JSX     |         83 |          0 |          3 |         86 |
+| e:\CHADCO\CRM-Front\components\service\service-customer-manager.tsx                   | TypeScript JSX     |        125 |          0 |          6 |        131 |
+| e:\CHADCO\CRM-Front\components\service\ticket\flight-container.tsx                    | TypeScript JSX     |        130 |          0 |          2 |        132 |
+| e:\CHADCO\CRM-Front\components\service\ticket\flight-form.tsx                         | TypeScript JSX     |        351 |          8 |         17 |        376 |
+| e:\CHADCO\CRM-Front\components\service\ticket\one-way-ticket-form.tsx                 | TypeScript JSX     |        374 |          8 |         13 |        395 |
+| e:\CHADCO\CRM-Front\components\service\ticket\round-trip-ticket-form.tsx              | TypeScript JSX     |        739 |          0 |         17 |        756 |
+| e:\CHADCO\CRM-Front\components\service\ticket\stop-form.tsx                           | TypeScript JSX     |        155 |          0 |          7 |        162 |
+| e:\CHADCO\CRM-Front\components\service\ticket\ticket-container.tsx                    | TypeScript JSX     |        300 |          0 |          8 |        308 |
+| e:\CHADCO\CRM-Front\components\service\ticket\ticket-form.tsx                         | TypeScript JSX     |        116 |          0 |         11 |        127 |
+| e:\CHADCO\CRM-Front\components\service\visa\visa-container.tsx                        | TypeScript JSX     |        261 |          2 |         10 |        273 |
+| e:\CHADCO\CRM-Front\components\service\visa\visa-form.tsx                             | TypeScript JSX     |        222 |         13 |          8 |        243 |
+| e:\CHADCO\CRM-Front\components\setting\setting-create-form.tsx                        | TypeScript JSX     |         54 |          0 |          8 |         62 |
+| e:\CHADCO\CRM-Front\components\setting\setting-edit-form.tsx                          | TypeScript JSX     |        121 |          0 |          4 |        125 |
+| e:\CHADCO\CRM-Front\components\setting\station\setting-container.tsx                  | TypeScript JSX     |        568 |         64 |         60 |        692 |
+| e:\CHADCO\CRM-Front\components\setting\station\setting-table-container.tsx            | TypeScript JSX     |        245 |          0 |         13 |        258 |
+| e:\CHADCO\CRM-Front\components\share\SelectableTagCard.tsx                            | TypeScript JSX     |         35 |          0 |          1 |         36 |
+| e:\CHADCO\CRM-Front\components\share\customer\CustomerCard.tsx                        | TypeScript JSX     |         70 |          0 |          4 |         74 |
+| e:\CHADCO\CRM-Front\components\shared\AccessDenied.tsx                                | TypeScript JSX     |         98 |         10 |          7 |        115 |
+| e:\CHADCO\CRM-Front\components\shared\ActionDropDown.tsx                              | TypeScript JSX     |        113 |          0 |          7 |        120 |
+| e:\CHADCO\CRM-Front\components\shared\ActionDropDownContent.tsx                       | TypeScript JSX     |         78 |          1 |          3 |         82 |
+| e:\CHADCO\CRM-Front\components\shared\Calendar.tsx                                    | TypeScript JSX     |         26 |          0 |          1 |         27 |
+| e:\CHADCO\CRM-Front\components\shared\DroppableActionCard .tsx                        | TypeScript JSX     |         29 |          0 |          1 |         30 |
+| e:\CHADCO\CRM-Front\components\shared\DroppableActionContainer.tsx                    | TypeScript JSX     |         18 |          0 |          3 |         21 |
+| e:\CHADCO\CRM-Front\components\shared\README.md                                       | Markdown           |        369 |          0 |         78 |        447 |
+| e:\CHADCO\CRM-Front\components\shared\Tag.tsx                                         | TypeScript JSX     |        138 |         21 |         26 |        185 |
+| e:\CHADCO\CRM-Front\components\shared\ViewToggleGroup.tsx                             | TypeScript JSX     |         46 |          0 |          3 |         49 |
+| e:\CHADCO\CRM-Front\components\shared\animated-bar-chart.tsx                          | TypeScript JSX     |        108 |          3 |          6 |        117 |
+| e:\CHADCO\CRM-Front\components\shared\autocomplete-input.tsx                          | TypeScript JSX     |        229 |         12 |         22 |        263 |
+| e:\CHADCO\CRM-Front\components\shared\bar-chart.tsx                                   | TypeScript JSX     |         79 |          0 |          4 |         83 |
+| e:\CHADCO\CRM-Front\components\shared\breadcrumb.tsx                                  | TypeScript JSX     |         32 |          0 |          3 |         35 |
+| e:\CHADCO\CRM-Front\components\shared\cart-icon.tsx                                   | TypeScript JSX     |         39 |          2 |         13 |         54 |
+| e:\CHADCO\CRM-Front\components\shared\checkbox-input.tsx                              | TypeScript JSX     |         41 |          0 |          2 |         43 |
+| e:\CHADCO\CRM-Front\components\shared\company-logo.tsx                                | TypeScript JSX     |         27 |          0 |          4 |         31 |
+| e:\CHADCO\CRM-Front\components\shared\contract-info-container.tsx                     | TypeScript JSX     |        390 |          0 |         12 |        402 |
+| e:\CHADCO\CRM-Front\components\shared\currency-drop-down.tsx                          | TypeScript JSX     |         76 |          0 |         12 |         88 |
+| e:\CHADCO\CRM-Front\components\shared\custom-modal.tsx                                | TypeScript JSX     |         48 |          0 |          4 |         52 |
+| e:\CHADCO\CRM-Front\components\shared\custom-time-picker.tsx                          | TypeScript JSX     |         50 |          1 |          4 |         55 |
+| e:\CHADCO\CRM-Front\components\shared\custome-date-picker.tsx                         | TypeScript JSX     |        132 |         20 |         17 |        169 |
+| e:\CHADCO\CRM-Front\components\shared\custome-date-time-picker.tsx                    | TypeScript JSX     |        138 |         18 |         16 |        172 |
+| e:\CHADCO\CRM-Front\components\shared\custome-toast.tsx                               | TypeScript JSX     |         83 |          2 |         11 |         96 |
+| e:\CHADCO\CRM-Front\components\shared\date-input.tsx                                  | TypeScript JSX     |         64 |          0 |          4 |         68 |
+| e:\CHADCO\CRM-Front\components\shared\date-time-input.tsx                             | TypeScript JSX     |         65 |          0 |          4 |         69 |
+| e:\CHADCO\CRM-Front\components\shared\drawer.tsx                                      | TypeScript JSX     |        105 |          5 |          9 |        119 |
+| e:\CHADCO\CRM-Front\components\shared\expert-info-container.tsx                       | TypeScript JSX     |         40 |          0 |          3 |         43 |
+| e:\CHADCO\CRM-Front\components\shared\export-data-container.tsx                       | TypeScript JSX     |        179 |          2 |         17 |        198 |
+| e:\CHADCO\CRM-Front\components\shared\file-input.tsx                                  | TypeScript JSX     |         71 |          6 |          8 |         85 |
+| e:\CHADCO\CRM-Front\components\shared\file-preview.tsx                                | TypeScript JSX     |         56 |          2 |          6 |         64 |
+| e:\CHADCO\CRM-Front\components\shared\form-extender.tsx                               | TypeScript JSX     |        308 |         29 |         28 |        365 |
+| e:\CHADCO\CRM-Front\components\shared\form-maker.tsx                                  | TypeScript JSX     |        216 |          3 |         15 |        234 |
+| e:\CHADCO\CRM-Front\components\shared\form-tab-container.tsx                          | TypeScript JSX     |        145 |         20 |         10 |        175 |
+| e:\CHADCO\CRM-Front\components\shared\header.tsx                                      | TypeScript JSX     |         36 |          0 |          9 |         45 |
+| e:\CHADCO\CRM-Front\components\shared\input\TextEditorInput - Copy.tsx                | TypeScript JSX     |         36 |          0 |          4 |         40 |
+| e:\CHADCO\CRM-Front\components\shared\input\TextEditorInput.tsx                       | TypeScript JSX     |         29 |         27 |         16 |         72 |
+| e:\CHADCO\CRM-Front\components\shared\layout.tsx                                      | TypeScript JSX     |         38 |          0 |          3 |         41 |
+| e:\CHADCO\CRM-Front\components\shared\list-preview.tsx                                | TypeScript JSX     |         50 |          1 |          3 |         54 |
+| e:\CHADCO\CRM-Front\components\shared\location-input.tsx                              | TypeScript JSX     |         68 |          3 |          3 |         74 |
+| e:\CHADCO\CRM-Front\components\shared\logo.tsx                                        | TypeScript JSX     |         30 |          1 |          3 |         34 |
+| e:\CHADCO\CRM-Front\components\shared\map.tsx                                         | TypeScript JSX     |         44 |          2 |          9 |         55 |
+| e:\CHADCO\CRM-Front\components\shared\multi-added-text-input.tsx                      | TypeScript JSX     |         88 |          3 |          8 |         99 |
+| e:\CHADCO\CRM-Front\components\shared\multi-select-input.tsx                          | TypeScript JSX     |        113 |          0 |         10 |        123 |
+| e:\CHADCO\CRM-Front\components\shared\nav-link.tsx                                    | TypeScript JSX     |        119 |          9 |         12 |        140 |
+| e:\CHADCO\CRM-Front\components\shared\notification-drawer.tsx                         | TypeScript JSX     |        114 |          0 |          8 |        122 |
+| e:\CHADCO\CRM-Front\components\shared\notification-header.tsx                         | TypeScript JSX     |         19 |          3 |          5 |         27 |
+| e:\CHADCO\CRM-Front\components\shared\notification-list.tsx                           | TypeScript JSX     |         10 |          0 |          1 |         11 |
+| e:\CHADCO\CRM-Front\components\shared\notification.tsx                                | TypeScript JSX     |         48 |          2 |          7 |         57 |
+| e:\CHADCO\CRM-Front\components\shared\person-info-container.tsx                       | TypeScript JSX     |         40 |          0 |          3 |         43 |
+| e:\CHADCO\CRM-Front\components\shared\phone-input.tsx                                 | TypeScript JSX     |         37 |          0 |          3 |         40 |
+| e:\CHADCO\CRM-Front\components\shared\pie-chart.tsx                                   | TypeScript JSX     |         64 |          0 |          4 |         68 |
+| e:\CHADCO\CRM-Front\components\shared\profile-drop-down.tsx                           | TypeScript JSX     |         95 |         10 |         22 |        127 |
+| e:\CHADCO\CRM-Front\components\shared\progress-bar.tsx                                | TypeScript JSX     |         40 |          0 |          6 |         46 |
+| e:\CHADCO\CRM-Front\components\shared\quantity-input.tsx                              | TypeScript JSX     |         35 |          2 |          1 |         38 |
+| e:\CHADCO\CRM-Front\components\shared\radio-input.tsx                                 | TypeScript JSX     |         33 |          0 |          3 |         36 |
+| e:\CHADCO\CRM-Front\components\shared\range-input.tsx                                 | TypeScript JSX     |         28 |          0 |          2 |         30 |
+| e:\CHADCO\CRM-Front\components\shared\rating-chart.tsx                                | TypeScript JSX     |         64 |          0 |          6 |         70 |
+| e:\CHADCO\CRM-Front\components\shared\search-input.tsx                                | TypeScript JSX     |        114 |         10 |         20 |        144 |
+| e:\CHADCO\CRM-Front\components\shared\search.tsx                                      | TypeScript JSX     |         64 |          0 |          9 |         73 |
+| e:\CHADCO\CRM-Front\components\shared\select-input.tsx                                | TypeScript JSX     |        106 |          4 |          3 |        113 |
+| e:\CHADCO\CRM-Front\components\shared\service-card.tsx                                | TypeScript JSX     |         69 |          0 |          6 |         75 |
+| e:\CHADCO\CRM-Front\components\shared\service-container.tsx                           | TypeScript JSX     |        116 |          0 |         10 |        126 |
+| e:\CHADCO\CRM-Front\components\shared\single-file-input.tsx                           | TypeScript JSX     |         59 |          0 |         10 |         69 |
+| e:\CHADCO\CRM-Front\components\shared\single-file-preview.tsx                         | TypeScript JSX     |         44 |          0 |          8 |         52 |
+| e:\CHADCO\CRM-Front\components\shared\slider-input.tsx                                | TypeScript JSX     |         34 |          0 |          5 |         39 |
+| e:\CHADCO\CRM-Front\components\shared\sort-drop-down.tsx                              | TypeScript JSX     |         50 |          0 |          5 |         55 |
+| e:\CHADCO\CRM-Front\components\shared\suggestion-input.tsx                            | TypeScript JSX     |        126 |          3 |         10 |        139 |
+| e:\CHADCO\CRM-Front\components\shared\tag-preview.tsx                                 | TypeScript JSX     |         42 |          0 |          6 |         48 |
+| e:\CHADCO\CRM-Front\components\shared\text-area-input.tsx                             | TypeScript JSX     |         51 |          0 |          4 |         55 |
+| e:\CHADCO\CRM-Front\components\shared\text-input.tsx                                  | TypeScript JSX     |        105 |         17 |         11 |        133 |
+| e:\CHADCO\CRM-Front\components\shared\time-input.tsx                                  | TypeScript JSX     |         56 |          4 |          4 |         64 |
+| e:\CHADCO\CRM-Front\components\shared\title.tsx                                       | TypeScript JSX     |         11 |          0 |          3 |         14 |
+| e:\CHADCO\CRM-Front\components\shared\toggle-input.tsx                                | TypeScript JSX     |         35 |          0 |          2 |         37 |
+| e:\CHADCO\CRM-Front\components\shared\verification-input.tsx                          | TypeScript JSX     |         82 |          0 |         15 |         97 |
+| e:\CHADCO\CRM-Front\components\signup\post-sign-up-form.tsx                           | TypeScript JSX     |         32 |          0 |          3 |         35 |
+| e:\CHADCO\CRM-Front\components\signup\sign-up-form.tsx                                | TypeScript JSX     |        148 |          1 |         11 |        160 |
+| e:\CHADCO\CRM-Front\components\ui\accordion.tsx                                       | TypeScript JSX     |         50 |          0 |          9 |         59 |
+| e:\CHADCO\CRM-Front\components\ui\badge.tsx                                           | TypeScript JSX     |         36 |          0 |          6 |         42 |
+| e:\CHADCO\CRM-Front\components\ui\button.tsx                                          | TypeScript JSX     |         80 |          1 |          6 |         87 |
+| e:\CHADCO\CRM-Front\components\ui\checkbox.tsx                                        | TypeScript JSX     |         26 |          0 |          5 |         31 |
+| e:\CHADCO\CRM-Front\components\ui\dialog.tsx                                          | TypeScript JSX     |         58 |          0 |         13 |         71 |
+| e:\CHADCO\CRM-Front\components\ui\dropdown-menu.tsx                                   | TypeScript JSX     |        182 |          0 |         19 |        201 |
+| e:\CHADCO\CRM-Front\components\ui\popover.tsx                                         | TypeScript JSX     |         25 |          0 |          7 |         32 |
+| e:\CHADCO\CRM-Front\components\ui\popup.tsx                                           | TypeScript JSX     |         14 |          0 |          3 |         17 |
+| e:\CHADCO\CRM-Front\components\ui\progress.tsx                                        | TypeScript JSX     |         31 |          0 |          6 |         37 |
+| e:\CHADCO\CRM-Front\components\ui\radio-group.tsx                                     | TypeScript JSX     |         39 |          0 |          6 |         45 |
+| e:\CHADCO\CRM-Front\components\ui\select.tsx                                          | TypeScript JSX     |        146 |          0 |         15 |        161 |
+| e:\CHADCO\CRM-Front\components\ui\sheet.tsx                                           | TypeScript JSX     |         62 |          0 |          9 |         71 |
+| e:\CHADCO\CRM-Front\components\ui\skeleton.tsx                                        | TypeScript JSX     |         13 |          0 |          3 |         16 |
+| e:\CHADCO\CRM-Front\components\ui\slider.tsx                                          | TypeScript JSX     |         29 |          0 |          4 |         33 |
+| e:\CHADCO\CRM-Front\components\ui\table.tsx                                           | TypeScript JSX     |        107 |          0 |         11 |        118 |
+| e:\CHADCO\CRM-Front\components\ui\tabs.tsx                                            | TypeScript JSX     |         48 |          0 |          8 |         56 |
+| e:\CHADCO\CRM-Front\components\ui\tooltip.tsx                                         | TypeScript JSX     |        102 |          4 |         19 |        125 |
+| e:\CHADCO\CRM-Front\config\config.ts                                                  | TypeScript         |          4 |          1 |          1 |          6 |
+| e:\CHADCO\CRM-Front\constants\admin-creation-form-fields.tsx                          | TypeScript JSX     |        399 |        102 |          5 |        506 |
+| e:\CHADCO\CRM-Front\constants\admin-invoice-actions.tsx                               | TypeScript JSX     |         23 |          0 |          4 |         27 |
+| e:\CHADCO\CRM-Front\constants\admin-sidebar-menu-links.tsx                            | TypeScript JSX     |        113 |          0 |          4 |        117 |
+| e:\CHADCO\CRM-Front\constants\client-form-fields.tsx                                  | TypeScript JSX     |        360 |         41 |          3 |        404 |
+| e:\CHADCO\CRM-Front\constants\color-mapping.ts                                        | TypeScript         |         63 |         21 |         15 |         99 |
+| e:\CHADCO\CRM-Front\constants\contract.tsx                                            | TypeScript JSX     |          5 |          0 |          1 |          6 |
+| e:\CHADCO\CRM-Front\constants\countries-phone-code.tsx                                | TypeScript JSX     |          5 |          1 |          0 |          6 |
+| e:\CHADCO\CRM-Front\constants\credentials.tsx                                         | TypeScript JSX     |         32 |          0 |          2 |         34 |
+| e:\CHADCO\CRM-Front\constants\customer-filter-fields.tsx                              | TypeScript JSX     |         54 |          0 |          2 |         56 |
+| e:\CHADCO\CRM-Front\constants\event-creation-form-fields.tsx                          | TypeScript JSX     |         26 |          0 |          1 |         27 |
+| e:\CHADCO\CRM-Front\constants\invoice-constants.tsx                                   | TypeScript JSX     |         80 |        107 |          4 |        191 |
+| e:\CHADCO\CRM-Front\constants\lead.tsx                                                | TypeScript JSX     |         30 |          0 |          2 |         32 |
+| e:\CHADCO\CRM-Front\constants\navigation-links.tsx                                    | TypeScript JSX     |        213 |          1 |          2 |        216 |
+| e:\CHADCO\CRM-Front\constants\pages-data.tsx                                          | TypeScript JSX     |         37 |          0 |          6 |         43 |
+| e:\CHADCO\CRM-Front\constants\registration-creation-form-fields.tsx                   | TypeScript JSX     |        314 |          0 |          1 |        315 |
+| e:\CHADCO\CRM-Front\constants\service-form-fields.tsx                                 | TypeScript JSX     |         53 |          0 |          2 |         55 |
+| e:\CHADCO\CRM-Front\constants\services.tsx                                            | TypeScript JSX     |        139 |         28 |          3 |        170 |
+| e:\CHADCO\CRM-Front\constants\setting.tsx                                             | TypeScript JSX     |        398 |          1 |         20 |        419 |
+| e:\CHADCO\CRM-Front\contexts\AccessContext.tsx                                        | TypeScript JSX     |        139 |         18 |         27 |        184 |
+| e:\CHADCO\CRM-Front\data\requests-mock-data.ts                                        | TypeScript         |        156 |          0 |          3 |        159 |
+| e:\CHADCO\CRM-Front\data\single-features-mock-data.ts                                 | TypeScript         |          8 |          1 |          3 |         12 |
+| e:\CHADCO\CRM-Front\database_schema.json                                              | JSON               |        301 |          0 |          0 |        301 |
+| e:\CHADCO\CRM-Front\database_schema.sql                                               | MS SQL             |        204 |         10 |         20 |        234 |
+| e:\CHADCO\CRM-Front\docs\ACCESS_DENIED_FEATURE_CODES.md                               | Markdown           |        121 |          0 |         35 |        156 |
+| e:\CHADCO\CRM-Front\docs\BEFORE_AFTER_COMPARISON.md                                   | Markdown           |        195 |          0 |         41 |        236 |
+| e:\CHADCO\CRM-Front\docs\FEATURE_CODE_MATCHING_GUIDE.md                               | Markdown           |        336 |          0 |         71 |        407 |
+| e:\CHADCO\CRM-Front\docs\FEATURE_HIGHLIGHTING_GUIDE.md                                | Markdown           |        162 |          0 |         39 |        201 |
+| e:\CHADCO\CRM-Front\docs\HOOKS_QUICK_REFERENCE.md                                     | Markdown           |        287 |          0 |         52 |        339 |
+| e:\CHADCO\CRM-Front\docs\INFINITE_SCROLL_BEFORE_AFTER.md                              | Markdown           |        258 |          0 |         46 |        304 |
+| e:\CHADCO\CRM-Front\docs\INFINITE_SCROLL_OPTIMIZATION.md                              | Markdown           |        544 |          0 |        116 |        660 |
+| e:\CHADCO\CRM-Front\docs\SIMPLE_SSE_CART.md                                           | Markdown           |        104 |          0 |         40 |        144 |
+| e:\CHADCO\CRM-Front\docs\SSE_FLOW_PERSIAN.md                                          | Markdown           |        423 |          0 |        123 |        546 |
+| e:\CHADCO\CRM-Front\docs\SSE_NOTIFICATION_IMPLEMENTATION.md                           | Markdown           |        205 |          0 |         60 |        265 |
+| e:\CHADCO\CRM-Front\docs\api-update-summary.md                                        | Markdown           |        125 |          0 |         32 |        157 |
+| e:\CHADCO\CRM-Front\globals.css                                                       | CSS                |        278 |         21 |         83 |        382 |
+| e:\CHADCO\CRM-Front\hooks\index.ts                                                    | TypeScript         |          6 |          9 |          5 |         20 |
+| e:\CHADCO\CRM-Front\hooks\toastify.tsx                                                | TypeScript JSX     |         31 |          0 |          4 |         35 |
+| e:\CHADCO\CRM-Front\hooks\use-dynamic-form.tsx                                        | TypeScript JSX     |         26 |          2 |          5 |         33 |
+| e:\CHADCO\CRM-Front\hooks\useCartCount.ts                                             | TypeScript         |         42 |          3 |         24 |         69 |
+| e:\CHADCO\CRM-Front\hooks\useCartPolling.ts                                           | TypeScript         |         81 |          8 |         19 |        108 |
+| e:\CHADCO\CRM-Front\hooks\useHighlightSearch.ts                                       | TypeScript         |         96 |         18 |         14 |        128 |
+| e:\CHADCO\CRM-Front\hooks\useInfiniteScroll.ts                                        | TypeScript         |         60 |         11 |         12 |         83 |
+| e:\CHADCO\CRM-Front\hooks\useNotificationCount.ts                                     | TypeScript         |         51 |          4 |         12 |         67 |
+| e:\CHADCO\CRM-Front\hooks\useNotificationPolling.ts                                   | TypeScript         |         81 |          9 |         18 |        108 |
+| e:\CHADCO\CRM-Front\hooks\useNotifications.ts                                         | TypeScript         |        107 |         12 |         17 |        136 |
+| e:\CHADCO\CRM-Front\hooks\usePackageComparison.ts                                     | TypeScript         |         59 |         13 |         12 |         84 |
+| e:\CHADCO\CRM-Front\hooks\usePageData.tsx                                             | TypeScript JSX     |         19 |          8 |         11 |         38 |
+| e:\CHADCO\CRM-Front\hooks\useSingleFeaturesExport.ts                                  | TypeScript         |         30 |         14 |          7 |         51 |
+| e:\CHADCO\CRM-Front\hooks\useUserData.ts                                              | TypeScript         |          8 |          0 |          3 |         11 |
+| e:\CHADCO\CRM-Front\lib\IRANSansBase64.ts                                             | TypeScript         |          2 |          0 |          0 |          2 |
+| e:\CHADCO\CRM-Front\lib\bundle-utils.ts                                               | TypeScript         |         44 |         15 |          7 |         66 |
+| e:\CHADCO\CRM-Front\lib\calendar.ts                                                   | TypeScript         |        453 |        283 |         89 |        825 |
+| e:\CHADCO\CRM-Front\lib\date-selector-utils.ts                                        | TypeScript         |        181 |          1 |         44 |        226 |
+| e:\CHADCO\CRM-Front\lib\date.ts                                                       | TypeScript         |        150 |         19 |         28 |        197 |
+| e:\CHADCO\CRM-Front\lib\duration-utils.ts                                             | TypeScript         |         12 |          3 |          5 |         20 |
+| e:\CHADCO\CRM-Front\lib\exportToExcel.ts                                              | TypeScript         |         24 |         22 |         13 |         59 |
+| e:\CHADCO\CRM-Front\lib\feature-match-utils.ts                                        | TypeScript         |         89 |         40 |         24 |        153 |
+| e:\CHADCO\CRM-Front\lib\feature-utils.ts                                              | TypeScript         |         46 |          0 |         12 |         58 |
+| e:\CHADCO\CRM-Front\lib\generatePageData.ts                                           | TypeScript         |         53 |          9 |         10 |         72 |
+| e:\CHADCO\CRM-Front\lib\invoice-utils.ts                                              | TypeScript         |        156 |          9 |         16 |        181 |
+| e:\CHADCO\CRM-Front\lib\match-path.ts                                                 | TypeScript         |          7 |          1 |          2 |         10 |
+| e:\CHADCO\CRM-Front\lib\package-comparison.ts                                         | TypeScript         |         23 |         22 |          9 |         54 |
+| e:\CHADCO\CRM-Front\lib\pdf.ts                                                        | TypeScript         |         16 |          0 |          4 |         20 |
+| e:\CHADCO\CRM-Front\lib\utils.ts                                                      | TypeScript         |        218 |          0 |         14 |        232 |
+| e:\CHADCO\CRM-Front\next.config.mjs                                                   | JavaScript         |         13 |          4 |          3 |         20 |
+| e:\CHADCO\CRM-Front\package-lock.json                                                 | JSON               |     12,191 |          0 |          1 |     12,192 |
+| e:\CHADCO\CRM-Front\package.json                                                      | JSON               |        125 |          0 |          1 |        126 |
+| e:\CHADCO\CRM-Front\package_selection_implementation.md                               | Markdown           |        830 |          0 |        129 |        959 |
+| e:\CHADCO\CRM-Front\package_selection_process.md                                      | Markdown           |        501 |          0 |         86 |        587 |
+| e:\CHADCO\CRM-Front\package_structure_documentation.md                                | Markdown           |        489 |          0 |         58 |        547 |
+| e:\CHADCO\CRM-Front\playground.json                                                   | JSON               |        160 |         66 |         16 |        242 |
+| e:\CHADCO\CRM-Front\postcss.config.mjs                                                | JavaScript         |          6 |          1 |          2 |          9 |
+| e:\CHADCO\CRM-Front\public\data\countries.geojson                                     | JSON               |        265 |          0 |          1 |        266 |
+| e:\CHADCO\CRM-Front\public\data\countries.json                                        | JSON               |        260 |          0 |          0 |        260 |
+| e:\CHADCO\CRM-Front\public\data\iran.json                                             | JSON               |         32 |          0 |          0 |         32 |
+| e:\CHADCO\CRM-Front\public\data\iran_geo.json                                         | JSON               |         64 |          0 |          2 |         66 |
+| e:\CHADCO\CRM-Front\public\icons\calendar-icon.svg                                    | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\chevron-down.svg                                     | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\chevron-up.svg                                       | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\download-icon.svg                                    | XML                |          5 |          0 |          1 |          6 |
+| e:\CHADCO\CRM-Front\public\icons\durations-icon.svg                                   | XML                |         12 |          0 |          1 |         13 |
+| e:\CHADCO\CRM-Front\public\icons\eye-icon.svg                                         | XML                |         11 |          0 |          1 |         12 |
+| e:\CHADCO\CRM-Front\public\icons\feature-list-icon.svg                                | XML                |          5 |          0 |          1 |          6 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-email-icon.svg                            | XML                |         10 |          0 |          1 |         11 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-meet-icon.svg                             | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-phone-icon.svg                            | XML                |         10 |          0 |          1 |         11 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-plus-icon.svg                             | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-sms-icon.svg                              | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\foreground-voip-icon.svg                             | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\label-icon.svg                                       | XML                |          9 |          0 |          1 |         10 |
+| e:\CHADCO\CRM-Front\public\icons\location-icon.svg                                    | XML                |         20 |          0 |          1 |         21 |
+| e:\CHADCO\CRM-Front\public\icons\menu-invoice-icon.svg                                | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\menu-package-icon.svg                                | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\narrow-plus.svg                                      | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\package-icon.svg                                     | XML                |         11 |          0 |          1 |         12 |
+| e:\CHADCO\CRM-Front\public\icons\package-order-icon.svg                               | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\payment-icon.svg                                     | XML                |          5 |          0 |          1 |          6 |
+| e:\CHADCO\CRM-Front\public\icons\pipe-icon.svg                                        | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\public\icons\table-icon.svg                                       | XML                |          3 |          0 |          1 |          4 |
+| e:\CHADCO\CRM-Front\scripts\test-sse-config.js                                        | JavaScript         |         18 |          8 |          8 |         34 |
+| e:\CHADCO\CRM-Front\sse.test.html                                                     | HTML               |          0 |          0 |          1 |          1 |
+| e:\CHADCO\CRM-Front\store\access-slice.ts                                             | TypeScript         |         58 |          0 |          8 |         66 |
+| e:\CHADCO\CRM-Front\store\admin-invoice-slice.ts                                      | TypeScript         |        123 |          0 |          9 |        132 |
+| e:\CHADCO\CRM-Front\store\airline-slice.ts                                            | TypeScript         |        128 |          0 |         13 |        141 |
+| e:\CHADCO\CRM-Front\store\all-users-slice.ts                                          | TypeScript         |         37 |          0 |          3 |         40 |
+| e:\CHADCO\CRM-Front\store\cart-slice.ts                                               | TypeScript         |        213 |         10 |         24 |        247 |
+| e:\CHADCO\CRM-Front\store\city-slice.ts                                               | TypeScript         |         37 |          0 |          4 |         41 |
+| e:\CHADCO\CRM-Front\store\contract-slice.ts                                           | TypeScript         |        252 |         65 |          8 |        325 |
+| e:\CHADCO\CRM-Front\store\country-slice.ts                                            | TypeScript         |         37 |          0 |          3 |         40 |
+| e:\CHADCO\CRM-Front\store\currency-slice.ts                                           | TypeScript         |         37 |          0 |          3 |         40 |
+| e:\CHADCO\CRM-Front\store\customer-detail-contract-slice.ts                           | TypeScript         |        157 |          4 |          5 |        166 |
+| e:\CHADCO\CRM-Front\store\customer-slice.ts                                           | TypeScript         |        181 |          0 |          6 |        187 |
+| e:\CHADCO\CRM-Front\store\hotel-slice.ts                                              | TypeScript         |        142 |          0 |         12 |        154 |
+| e:\CHADCO\CRM-Front\store\index.ts                                                    | TypeScript         |         49 |          2 |          6 |         57 |
+| e:\CHADCO\CRM-Front\store\invoice-slice.ts                                            | TypeScript         |        177 |          0 |         13 |        190 |
+| e:\CHADCO\CRM-Front\store\lead-slice.ts                                               | TypeScript         |        174 |          2 |          6 |        182 |
+| e:\CHADCO\CRM-Front\store\login-slice.ts                                              | TypeScript         |         99 |          1 |         10 |        110 |
+| e:\CHADCO\CRM-Front\store\notification-slice.ts                                       | TypeScript         |        167 |          2 |         13 |        182 |
+| e:\CHADCO\CRM-Front\store\province-slice.ts                                           | TypeScript         |         36 |          0 |          4 |         40 |
+| e:\CHADCO\CRM-Front\store\role-slice.ts                                               | TypeScript         |         16 |          0 |          4 |         20 |
+| e:\CHADCO\CRM-Front\store\single-features-slice.ts                                    | TypeScript         |        339 |         26 |         25 |        390 |
+| e:\CHADCO\CRM-Front\store\station-slice.ts                                            | TypeScript         |        129 |          0 |         13 |        142 |
+| e:\CHADCO\CRM-Front\store\user-slice.ts                                               | TypeScript         |         60 |         10 |          6 |         76 |
+| e:\CHADCO\CRM-Front\styles\range-date-picker.css                                      | CSS                |         95 |          7 |          8 |        110 |
+| e:\CHADCO\CRM-Front\tailwind.config.ts                                                | TypeScript         |        327 |          2 |          6 |        335 |
+| e:\CHADCO\CRM-Front\tsconfig.json                                                     | JSON with Comments |         27 |          0 |          4 |         31 |
+| e:\CHADCO\CRM-Front\types\api.ts                                                      | TypeScript         |         50 |          8 |         11 |         69 |
+| e:\CHADCO\CRM-Front\types\billing.ts                                                  | TypeScript         |        172 |         11 |         22 |        205 |
+| e:\CHADCO\CRM-Front\types\cart.ts                                                     | TypeScript         |         90 |         26 |         10 |        126 |
+| e:\CHADCO\CRM-Front\types\globals.ts                                                  | TypeScript         |         31 |          0 |          3 |         34 |
+| e:\CHADCO\CRM-Front\types\invoice.ts                                                  | TypeScript         |         66 |          1 |          6 |         73 |
+| e:\CHADCO\CRM-Front\types\packages-api.ts                                             | TypeScript         |         10 |          6 |          6 |         22 |
+| e:\CHADCO\CRM-Front\types\packages.ts                                                 | TypeScript         |        141 |         14 |         20 |        175 |
+| e:\CHADCO\CRM-Front\types\place.ts                                                    | TypeScript         |         68 |          3 |          8 |         79 |
+| e:\CHADCO\CRM-Front\types\requests.ts                                                 | TypeScript         |         41 |          0 |          5 |         46 |
+| e:\CHADCO\CRM-Front\types\single-features-api.ts                                      | TypeScript         |        158 |          3 |         15 |        176 |
+| Total                                                                                 |                    |     79,872 |      4,273 |      6,989 |     91,134 |
++---------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

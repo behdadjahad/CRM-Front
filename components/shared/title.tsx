@@ -8,6 +8,6 @@ export interface TitleInterface {
 
 export default function Title({ label, className }: TitleInterface) {
   return (
-    <h1 className={cn("leading-9 md:leading-loose", className)}>{label}</h1>
+    <h1 className={cn("leading-9  md:leading-loose", className)}>{label}</h1>
   );
 }

@@ -25,6 +25,7 @@ export interface Page {
 // AccessesJson structure
 export interface AccessesJson {
   pages: Page[];
+  usageCount?: number;
 }
 
 // Package Unit (Cart Item)
@@ -41,6 +42,14 @@ export interface CartItem {
   currencyId: number;
   createdAt: string;
   updatedAt: string;
+  bundleId?: number; // Track if added via bundle (null = individual, number = bundle ID)
+  quantity?: number; // Quantity in cart (added by client-side processing)
+}
+
+// Cart Item with quantity
+export interface CartItemWithQuantity {
+  count: number;
+  unitId: number;
 }
 
 // Cart data structure
@@ -58,11 +67,21 @@ export interface CartData {
   finalTotal: number;
   createdAt: string;
   updatedAt: string;
-  packageUnits: CartItem[];
-  satisfiedBundles: any[];
+  items: CartItemWithQuantity[];  // Array with count and unitId
+  packageUnits: CartItem[];       // Full item details
+  satisfiedBundles: SatisfiedBundle[];
+}
+export interface SatisfiedBundle {
+  id: number;
+  name: string;
+  description: string;
+  discountPercent: {
+    value: number;
+  };
+  packageUnitIds: number[];
 }
 
-// API Response structure
+
 export interface CartApiResponse {
   status: "success" | "error";
   message: string;
@@ -72,9 +91,7 @@ export interface CartApiResponse {
     type: string | null;
     color: string | null;
   };
-  data: CartData & {
-    invoiceId?: number; // For payment response
-  };
+  data: CartData
 }
 
 // Redux Cart State (if still using Redux for cart)

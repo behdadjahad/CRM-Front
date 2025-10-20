@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import BillingContainer from "@/components/billing/billing-container";
-import { mockBillingData } from "@/data/billing-mock-data";
+
 import { BillingPageData, FeatureCategory, PackagesByInvoiceResponse } from "@/types/billing";
 import Breadcrumb from "@/components/shared/breadcrumb";
 import Title from "@/components/shared/title";
-import { payInvoice } from "@/api/invoices";
+import { payInvoice, getSingleInvoice } from "@/api/invoices";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { useParams } from "next/navigation";
@@ -16,7 +16,7 @@ import { getPackagesByInvoice } from "@/api/packages/package-api";
 
 export default function InvoiceDetailPage() {
 
-    const [billingData, setBillingData] = useState<BillingPageData>(mockBillingData);
+    const [billingData, setBillingData] = useState<BillingPageData | null>(null);
     const chadcoCustomerId = useSelector((state: RootState) => state.login.chadcoCustomerId);
     const { id } = useParams();
 
@@ -28,58 +28,131 @@ export default function InvoiceDetailPage() {
         staleTime: 5 * 60 * 1000, // 5 minutes
     });
 
+    // Fetch invoice data
+    const { data: invoiceResponse, isLoading: isLoadingInvoice } = useQuery({
+        queryKey: ["invoice", id],
+        queryFn: () => getSingleInvoice(Number(id)),
+        enabled: !!id,
+        staleTime: 5 * 60 * 1000,
+    });
+
     // Transform calculatedPrices into duration options
     const durationOptions = useMemo(() => {
         if (!packageResponse?.data?.calculatedPrices) {
-            return billingData.durationOptions;
+            return [];
         }
 
         return packageResponse.data.calculatedPrices.map((calc, index) => ({
-            id: `duration-${calc.months}`,
+            // id: `duration-${calc.months}`,
+            id: calc.months.toString(),
+            months: calc.months,
             title: `${calc.months} ماهه`,
             description: calc.months === 6 ? "محبوب ترین" : `پکیج ${calc.months} ماهه`,
-            originalPrice: calc.price,
-            discount: {
-                percentage: 0,
-                amount: 0,
-            },
-            currentPrice: calc.price,
-            isSelected: index === 0, // First option selected by default
-            isPopular: calc.months === 6,
+            originalPrice: calc.originalPrice,
+            finalPrice: calc.finalPrice,
+            discountPercent: 0,
+            isSpecialized: false,
+            isSelected: billingData?.selectedDuration === calc.months.toString() || (index === 0 && !billingData?.selectedDuration),
         }));
-    }, [packageResponse, billingData.durationOptions]);
+    }, [packageResponse, billingData?.selectedDuration]);
+
+    // Initialize billing data from API
+    useEffect(() => {
+        if (packageResponse?.data && invoiceResponse?.data && !billingData) {
+            const packageData = packageResponse.data.package;
+            const invoiceData = invoiceResponse.data;
+            const firstDurationId = packageResponse.data.calculatedPrices[0]?.months.toString();
+
+            setBillingData({
+                user: {
+                    name: "کاربر", // Will be fetched from user API if needed
+                    avatar: undefined,
+                },
+                package: {
+                    name: packageData.title,
+                    type: "rental" as const,
+                    purchaseType: "خرید پکیج",
+                    basePrice: packageData.price.value,
+                    discount: { percentage: 0, amount: 0 },
+                    validityPeriod: invoiceData.dueAt ? new Date(invoiceData.dueAt).toLocaleDateString('fa-IR') : "-",
+                },
+                features: [], // Will be populated from package categories
+                durationOptions: [],
+                selectedDuration: firstDurationId,
+            });
+        }
+    }, [packageResponse, invoiceResponse, billingData]);
+
+    // Transform package categories into features from API
+    const apiFeatures = useMemo(() => {
+        if (!packageResponse?.data?.package?.packageCategories) {
+            return []; // No fallback to mock data
+        }
+
+        return packageResponse.data.package.packageCategories.map((category, index) => ({
+            id: `category-${category.id}`,
+            title: category.name,
+            isExpanded: false,
+            features: category.units?.map((unit, unitIndex) => ({
+                id: `feature-${category.id}-${unit.id}`,
+                name: unit.name,
+                description: unit.description || `توضیحات ${unit.name}`
+            })) || [{
+                id: `feature-${category.id}-1`,
+                name: category.name,
+                description: `توضیحات ${category.name}`
+            }]
+        }));
+    }, [packageResponse]);
 
     // Update billingData when durationOptions change
-    const updatedBillingData = useMemo(() => ({
-        ...billingData,
-        durationOptions,
-        selectedDuration: durationOptions.find(opt => opt.isSelected)?.id || durationOptions[0]?.id || "",
-    }), [billingData, durationOptions]);
+    const updatedBillingData = useMemo(() => {
+        if (!billingData) return null;
+
+        return {
+            ...billingData,
+            // Use API features
+            features: apiFeatures,
+            // Use calculated duration options
+            durationOptions,
+        };
+    }, [billingData, durationOptions, apiFeatures]);
 
     const handleDurationChange = (durationId: string) => {
-        setBillingData(prev => ({
+        const months = parseInt(durationId.replace('duration-', ''));
+        const selectedOption = durationOptions.find(opt => opt.id === durationId);
+
+        // Log the selected duration
+        console.log('Selected duration:', {
+            durationId: durationId,
+            months: months,
+            title: selectedOption?.title,
+            price: selectedOption?.finalPrice,
+            packageTitle: packageResponse?.data?.package?.title
+        });
+
+        // Update local state only
+        setBillingData(prev => prev ? ({
             ...prev,
             selectedDuration: durationId,
-            durationOptions: prev.durationOptions.map(option => ({
-                ...option,
-                isSelected: option.id === durationId,
-            })),
-        }));
+        }) : null);
     };
     console.log(id, "inboive id")
     console.log(chadcoCustomerId, "chadcoCustomerId")
     const handleFeatureToggle = (categoryId: string) => {
-        setBillingData(prev => ({
+        setBillingData(prev => prev ? ({
             ...prev,
             features: prev.features.map(category =>
                 category.id === categoryId
                     ? { ...category, isExpanded: !category.isExpanded }
                     : category
             ),
-        }));
+        }) : null);
     };
 
     const handlePay = async () => {
+        if (!billingData) return;
+
         const selectedOption = billingData.durationOptions.find(
             option => option.id === billingData.selectedDuration
         );
@@ -92,57 +165,24 @@ export default function InvoiceDetailPage() {
     };
 
     const handleLoadMoreFeatures = () => {
-        // Simulate loading more features
-        const newCategory: FeatureCategory = {
-            id: `category-${billingData.features.length + 1}`,
-            title: `دسته بندی ${billingData.features.length + 1}`,
-            isExpanded: false,
-            features: [
-                {
-                    id: `feature-${billingData.features.length + 1}-1`,
-                    name: `ویژگی جدید ${billingData.features.length + 1}`,
-                    description: "توضیحات ویژگی جدید",
-                },
-            ],
-        };
-
-        setBillingData(prev => ({
-            ...prev,
-            features: [...prev.features, newCategory],
-        }));
+        // No more features to load from API
+        console.log('No more features to load from API');
     };
 
     const handleCloseAllFeatures = () => {
-        // Reset to original 3 features and close all
-        const originalFeatures = mockBillingData.features;
-        setBillingData(prev => ({
+        // Close all expanded features
+        setBillingData(prev => prev ? ({
             ...prev,
-            features: originalFeatures.map(category => ({
+            features: prev.features.map(category => ({
                 ...category,
                 isExpanded: false
             }))
-        }));
+        }) : null);
     };
 
     const handleLoadMoreDurations = () => {
-        // Simulate loading more duration options
-        const newDuration = {
-            id: `duration-${billingData.durationOptions.length + 1}`,
-            title: `${billingData.durationOptions.length + 1} ماهه`,
-            description: "پکیج جدید",
-            originalPrice: 2000000,
-            discount: {
-                percentage: 10,
-                amount: 200000,
-            },
-            currentPrice: 1800000,
-            isSelected: false,
-        };
-
-        setBillingData(prev => ({
-            ...prev,
-            durationOptions: [...prev.durationOptions, newDuration],
-        }));
+        // No more duration options to load from API
+        console.log('No more duration options to load from API');
     };
 
     return (
@@ -169,15 +209,39 @@ export default function InvoiceDetailPage() {
 
             </div>
 
-            <BillingContainer
-                data={updatedBillingData}
-                onDurationChange={handleDurationChange}
-                onPay={handlePay}
-                onFeatureToggle={handleFeatureToggle}
-                onLoadMoreFeatures={handleLoadMoreFeatures}
-                onLoadMoreDurations={handleLoadMoreDurations}
-                onCloseAllFeatures={handleCloseAllFeatures}
-            />
+            {/* Loading State */}
+            {(isLoadingPackage || isLoadingInvoice) && (
+                <div className="flex items-center justify-center p-8">
+                    <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                    <span className="mr-2 text-blue-800">در حال بارگذاری...</span>
+                </div>
+            )}
+
+            {/* Error State */}
+            {(!isLoadingPackage && !isLoadingInvoice && !updatedBillingData) && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <div className="flex items-center gap-2">
+                        <div className="text-red-500 text-xl">⚠️</div>
+                        <div>
+                            <h3 className="text-red-800 font-medium">خطا در بارگذاری اطلاعات</h3>
+                            <p className="text-red-600 text-sm">لطفاً دوباره تلاش کنید</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Billing Container */}
+            {updatedBillingData && (
+                <BillingContainer
+                    data={updatedBillingData}
+                    onDurationChange={handleDurationChange}
+                    onPay={handlePay}
+                    onFeatureToggle={handleFeatureToggle}
+                    onLoadMoreFeatures={handleLoadMoreFeatures}
+                    onLoadMoreDurations={handleLoadMoreDurations}
+                    onCloseAllFeatures={handleCloseAllFeatures}
+                />
+            )}
         </main>
 
     );

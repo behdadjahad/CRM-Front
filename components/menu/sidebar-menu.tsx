@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { drawerLinks } from "@/constants/navigation-links";
 
@@ -18,6 +18,18 @@ export default function SideBarMenu({
   setState,
   sideBarLinks,
 }: SideBarMenuInterface) {
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const toggleExpanded = (id: string) => {
+    setExpandedItems(prev => {
+      // If clicking the same item, collapse it
+      if (prev.has(id)) {
+        return new Set();
+      }
+      // Otherwise, collapse all and expand only the new item (accordion behavior)
+      return new Set([id]);
+    });
+  };
   return (
     <div
       className={cn(
@@ -51,7 +63,7 @@ export default function SideBarMenu({
                 )}
               </div>
 
-              {item.links.map((linkItem:any) => (
+              {item.links.map((linkItem: any) => (
                 <div key={linkItem.label} className="relative group">
                   {!state && (
                     <span className="absolute right-full top-1/2 -translate-y-1/2 mr-0 hidden group-hover:flex whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 z-1000 shadow-lg transition-opacity">
@@ -60,11 +72,13 @@ export default function SideBarMenu({
                   )}
                   <NavLink
                     {...linkItem}
+                    onClick={() => toggleExpanded(linkItem?.id || linkItem?.label || "")}
                     key={linkItem.label}
                     className="text-primary-foreground text-xs p-3 rounded-xl relative"
                     activeClassName="bg-primary-hover before:absolute before:bg-accent before:-right-4.5 before:rounded-l-[6px] before:w-1.5 before:h-9"
                     labelClass={!state ? "hidden" : ""}
                     state={state}
+                    isExpanded={expandedItems.has(linkItem?.id || linkItem?.label || "")}
                   />
                 </div>
               ))}

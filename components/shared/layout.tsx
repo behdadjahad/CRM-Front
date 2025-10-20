@@ -4,9 +4,7 @@ import Header from "./header";
 import Drawer from "./drawer";
 import { cn } from "@/lib/utils";
 import { drawerLinks } from "@/constants/navigation-links";
-import { fetchUserData } from "@/store/user-slice";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+
 export default function Layout({
   children,
 }: Readonly<{

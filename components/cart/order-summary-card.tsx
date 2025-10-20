@@ -8,6 +8,7 @@ import { RootState } from '@/store';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { CustomToast } from '@/components/shared/custome-toast';
 
 interface OrderSummaryCardProps {
     cartId: number;
@@ -20,6 +21,9 @@ interface OrderSummaryCardProps {
     taxAmount: number;
     taxPercent: number;
     finalTotal: number;
+    bundles: any[];
+    bundleDiscountPercent: number;
+
 }
 
 export default function OrderSummaryCard({
@@ -33,73 +37,61 @@ export default function OrderSummaryCard({
     taxAmount,
     taxPercent,
     finalTotal,
+    bundles,
+    bundleDiscountPercent,
+
 }: OrderSummaryCardProps) {
     const chadcoCustomerId = useSelector((state: RootState) => state?.login?.chadcoCustomerId);
     const router = useRouter();
     const queryClient = useQueryClient();
+    const bundleDiscountAmount = bundles.reduce((acc, bundle) => acc + (bundle.totalPrice - bundle.discountedPrice), 0);
 
-    // Toast styles
-    const TOAST_STYLES = {
-        success: {
-            duration: 2000,
-            position: 'top-center' as const,
-            style: {
-                width: '350px',
-                height: '60px',
-                borderRadius: '16px',
-                backgroundColor: '#FFF',
-                border: '2px solid #1CB771',
-                color: '#000',
-                fontWeight: '500',
-            },
-        },
-        error: {
-            duration: 4000,
-            position: 'top-center' as const,
-            style: {
-                width: '350px',
-                minHeight: '60px',
-                borderRadius: '16px',
-                backgroundColor: '#FFF',
-                border: '2px solid #D80027',
-                color: '#000',
-                fontWeight: '500',
-            },
-        },
-    };
+    // Use server's finalTotal instead of manual calculation to ensure accuracy
+    const displayingTotal = finalTotal;
 
     const { mutate: payFeaturesMutation, isPending: isPaymentPending } = useMutation({
         mutationFn: (cartId: number) => payFeatures(cartId, chadcoCustomerId),
         onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['cart', chadcoCustomerId] });
-            toast.success('پرداخت شما با موفقیت انجام شد. در حال انتقال به صفحه فاکتور...', TOAST_STYLES.success);
+            CustomToast({
+                type: 'success',
+                message: 'پرداخت شما با موفقیت انجام شد. در حال انتقال به صفحه فاکتور...'
+            });
 
-            const redirectUrl = response?.data?.invoiceId
-                ? `/invoice/${response.data.invoiceId}`
-                : '/single-features';
+            // const redirectUrl = response?.data?.invoiceId
+            //     ? `/invoice`
+            //     : '/single-features';
 
-            setTimeout(() => router.push(redirectUrl), 2000);
+            // setTimeout(() => router.push(redirectUrl), 2000);
         },
         onError: (error: any) => {
             const errorMessage = error?.message || 'خطا در پرداخت. لطفا دوباره تلاش کنید.';
-            toast.error(errorMessage, TOAST_STYLES.error);
+            CustomToast({
+                type: 'error',
+                message: errorMessage
+            });
         },
     });
 
     const handlePayment = () => {
         if (itemCount === 0) {
-            toast.error('سبد خرید شما خالی است');
+            CustomToast({
+                type: 'error',
+                message: 'سبد خرید شما خالی است'
+            });
             return;
         }
         if (finalTotal <= 0) {
-            toast.error('مبلغ قابل پرداخت نامعتبر است');
+            CustomToast({
+                type: 'error',
+                message: 'مبلغ قابل پرداخت نامعتبر است'
+            });
             return;
         }
         payFeaturesMutation(cartId);
     };
 
-    const isPaymentDisabled =  itemCount === 0;
-
+    const isPaymentDisabled = itemCount === 0;
 
     return (
         <div className="bg-white border border-static-border-light p-6 text-right font-primary-medium text-sm leading-[140%] tracking-normal rounded-[12px]" >
@@ -158,12 +150,33 @@ export default function OrderSummaryCard({
                         </span>
                     </div>
                 )}
+                {/* Bundle Discount - only show if there are bundles with discounts */}
+                {bundleDiscountAmount > 0 && (
+                    <div className="flex justify-between items-center">
+                        <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal">
+                            تخفیف باندل:
+                            {/* show the tag in red for discount percentage of bundel */}
+                            <span className="text-red-500">
+                                {bundleDiscountPercent > 0 && ` (${bundleDiscountPercent}%)`}
+                            </span>
+                        </span>
+                        <span className="font-medium whitespace-nowrap text-static-secondary-gray-dark">
+
+                            <span className="text-red-500">- {formatPrice(bundleDiscountAmount)} تومان</span>
+                        </span>
+
+
+
+                        {/* {discountPercentByBandle > 0 && ` (${discountPercentByBandle}%)`} */}
+
+                    </div>
+                )}
 
                 {/* Final Total */}
-                <div className="flex justify-between items-center pt-4 border-t border-gray-200">
+                <div className="flex w-full justify-between items-center xl:flex-row flex-col pt-4 border-t border-gray-200">
                     <span className="text-base font-semibold text-gray-900">قیمت نهایی :</span>
-                    <span className="text-xl font-bold text-static-info-primary">
-                        {formatPrice(finalTotal)} تومان
+                    <span className="text-lg whitespace-nowrap font-bold text-static-info-primary">
+                        {formatPrice(displayingTotal)} تومان
                     </span>
                 </div>
             </div>
@@ -195,13 +208,7 @@ export default function OrderSummaryCard({
                         'پرداخت'
                     )}
                 </Button>
-                <Button
-                    variant={'outline'}
-                    className='lg:w-full text-base py-2 w-full font-medium text-black border border-black sm:w-fit px-12'
-                    disabled={isPaymentDisabled}
-                >
-                    ایجاد باندل (13% تخفیف )
-                </Button>
+
             </div>
         </div>
     );

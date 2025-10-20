@@ -48,7 +48,7 @@ export default function DurationSelectionCard({
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("fa-IR").format(price);
     };
-    console.log(durationOptions,"88888888888888888888888")
+    console.log(durationOptions, "88888888888888888888888")
 
     return (
         <>
@@ -69,11 +69,15 @@ export default function DurationSelectionCard({
 
                 <div className="space-y-4 p-2.5 max-h-96 overflow-x-hidden overflow-y-auto custom-scrollbar">
                     {durationOptions.map((option) => (
+
                         <div
                             key={option.id}
-                            className={`border-2 w-full rounded-lg py-3 px-4 m-1 cursor-pointer transition-all `}
+                            className={`border-2 w-full rounded-lg py-3 px-4 m-1 cursor-pointer transition-all`}
                             style={{
-                                background: "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 97, 254, 0.1) 100%)"
+                                background: option.isSelected
+                                    ? "linear-gradient(90deg, rgba(0, 97, 254, 0.2) 0%, rgba(0, 97, 254, 0.1) 100%)"
+                                    : "linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 97, 254, 0.1) 100%)",
+                                borderColor: option.isSelected ? '#0061FE' : 'transparent'
                             }}
                             onClick={() => onDurationChange(option.id)}
                         >
@@ -90,8 +94,6 @@ export default function DurationSelectionCard({
                                     <Image className="mx-4" src="/icons/package-icon.svg" alt="duration-icon" width={32} height={32} />
                                     <div className="flex-1 flex items-center justify-between w-full">
                                         {/* icon */}
-
-
                                         <div className="flex flex-col  items-start ">
                                             <p className="font-medium sm:text-base text-sm text-[#17181A]">{option.title}</p>
                                             <p className="sm:text-sm text-[10px] font-normal text-gray-600 ">{option.description}</p>
@@ -99,10 +101,10 @@ export default function DurationSelectionCard({
 
 
                                         {/* discount */}
-                                        {option.discount.percentage > 0 && (
+                                        {option.discountPercent > 0 && (
                                             <div className="flex items-center ">
                                                 <div className=" text-[10px] text-[#1C68DA]  bg-white border-[#1C68DA] rounded-lg border  whitespace-nowrap py-1 px-2">
-                                                    {option.discount.percentage}% تخفیف
+                                                    {option.discountPercent}% تخفیف
                                                 </div>
 
                                             </div>
@@ -116,13 +118,13 @@ export default function DurationSelectionCard({
 
                                 {/* PRICING */}
                                 <div className="flex flex-col lg:w-1/3  lg:items-end items-start w-full">
-                                    {option.originalPrice !== option.currentPrice && (
+                                    {option.originalPrice !== option.finalPrice && (
                                         <span className="text-[10px] font-normal text-gray-500 line-through">
                                             {formatPrice(option.originalPrice)} تومان
                                         </span>
                                     )}
                                     <span className="text-base font-medium text-primary">
-                                        {formatPrice(option.currentPrice)} تومان
+                                        {formatPrice(option.finalPrice)} تومان
                                     </span>
                                     {/* Pricing */}
                                 </div>
@@ -132,8 +134,8 @@ export default function DurationSelectionCard({
 
                         </div>
                     ))}
-
-                    {/* Load More Button */}
+                    {/* 
+                 
                     <div className="pt-4" >
                         <Button
                             onClick={onLoadMore}
@@ -143,7 +145,7 @@ export default function DurationSelectionCard({
                             بیشتر
                             <ChevronDownIcon className="w-5 h-5 text-[#414651]" />
                         </Button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </>

@@ -6,7 +6,7 @@ export async function getUserInvoices(chadcoCustomerId: number) {
     const result = await fetchService(`invoice/chadco-customer/${chadcoCustomerId}`);
 
     return result;
-  } catch {}
+  } catch { }
 }
 
 export async function acceptInvoice(invoiceId: number) {
@@ -25,16 +25,16 @@ export async function rejectInvoice(invoiceId: number) {
     });
 
     return result;
-  } catch {}
+  } catch { }
 }
 
 export async function discountInvoice(invoiceId: number, data: any) {
 
   try {
-      console.log(data);
+    console.log(data);
     const result = await fetchService(`invoice/${invoiceId}/discount`, {
       method: "PATCH",
-      body:data
+      body: data
     });
 
     return result;
@@ -51,11 +51,17 @@ export async function getSingleInvoice(id: number) {
 }
 
 //pay invoice
-export async function payInvoice(invoiceId: number, chadcoCustomerId: number) {
+export async function payInvoice(invoiceId: number, chadcoCustomerId: number, numberOfMonths?: number) {
   try {
-    const result = await fetchService(`payment/pay/${invoiceId}?chadcoCustomerId=${chadcoCustomerId}`, {
-      method: "PATCH",
+    let url = `payment/pay/${invoiceId}?chadcoCustomerId=${chadcoCustomerId}`;
 
+  
+
+    const result = await fetchService(url, {
+      method: "PATCH",
+      body: {
+        numberOfMonths: numberOfMonths
+      }
     });
 
     return result;
@@ -69,5 +75,5 @@ export async function getAllInvoices() {
     const result = await fetchService('invoice');
 
     return result;
-  } catch {}
+  } catch { }
 }
