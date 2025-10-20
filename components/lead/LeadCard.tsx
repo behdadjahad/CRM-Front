@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
 import { leadFollowUpTypeList } from "@/constants/lead";
-import { AddEventToLead } from "./AddEventToLead";
+
 import LeadStatus from "./LeadStatus";
+import { AddEvent } from "./AddEvent";
 
 export interface LeadCardInterface {
   list: {
@@ -38,13 +39,13 @@ export default function LeadCard({ list, main }: LeadCardInterface) {
           >
             <div>{item.label}:</div>
             <div className="flex items-center gap-1">
-              {item?.status && (<LeadStatus />)}
+              {item?.status && <LeadStatus />}
               <span>{item.value}</span>
             </div>
           </div>
         ))}
       </div>
-      <AddEventToLead list={leadFollowUpTypeList} />
+      <AddEvent list={leadFollowUpTypeList} onSubmit={() => {}} />
     </div>
   );
 }

@@ -1,18 +1,17 @@
-import { MdClose } from "react-icons/md";
-import CustomModal from "../shared/custom-modal";
-import { useState } from "react";
+
 import Image from "next/image";
 import EventCreationContainer from "./EventCreationContainer";
-export interface AddEventToLeadInterface {
+export interface AddEventInterface {
   list: {
     label: string;
     value: string;
     icon: string;
     className?: string;
   }[];
+  onSubmit: () => void;
 }
 
-export function AddEventToLead({ list }: AddEventToLeadInterface) {
+export function AddEvent({ list, onSubmit }: AddEventInterface) {
   return (
     <>
       <div className="flex items-center w-full justify-center gap-2">
@@ -30,6 +29,7 @@ export function AddEventToLead({ list }: AddEventToLeadInterface) {
                 />
               </div>
             }
+            onSubmit={() => {}}
           />
         ))}
       </div>

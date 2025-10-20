@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import ContractInfiniteCard from "./ContractInfiniteCard";
 import { Draggable } from "@hello-pangea/dnd";
+import { convertDate } from "@/lib/date";
+import { contractType, formatPrice } from "@/lib/utils";
 export interface ContractInfiniteContainerInterface {
   status: string;
 }
@@ -49,7 +51,56 @@ export default function ContractInfiniteContainer({
         page?.data?.map((item: any, i: number) => {
           const contract = {
             id: item.id,
-            list: [{ label: "شماره قرارداد:", value: item?.contractNo  },],
+            headerData: {
+              contractType: item?.contractType?.name ?? "",
+              customer:
+                item?.mainCustomerSoldto?.person?.firstName &&
+                item?.mainCustomerSoldto?.person?.lastName
+                  ? item?.mainCustomerSoldto?.person?.firstName +
+                    " " +
+                    item?.mainCustomerSoldto?.person?.lastName
+                  : "",
+              contractDate:
+                item?.contractDate && item?.dateType
+                  ? convertDate(item?.contractDate, item?.dateType)
+                  : "",
+            },
+            list: [
+              {
+                label: "تاریخ ثبت:",
+                value: convertDate(item?.submitDateTime, item?.dateType),
+              },
+              { label: "شماره قرارداد:", value: item?.contractNo },
+              {
+                label: "ثبت کننده:",
+                value: item?.userSubmitter?.fullName ?? "",
+              },
+              {
+                label: "مسئول قرارداد:",
+                value: item?.userResponsible?.fullName
+                  ? item?.userResponsible?.fullName
+                  : "",
+              },
+              {
+                label: "موضوع قرارداد:",
+                value: item?.contractType?.name ?? "",
+              },
+            ],
+
+            footerData: [
+              {
+                label: "درآمد:",
+                value: item.sellPrice ? formatPrice(item?.sellPrice) : 0,
+              },
+              {
+                label: "هزینه:",
+                value: item?.buyPrice ? formatPrice(item?.buyPrice) : 0,
+              },
+              {
+                label: item?.sellPrice - item?.buyPrice >= 0 ? "سود:" : "زیان:",
+                value: formatPrice(item?.sellPrice - item?.buyPrice),
+              },
+            ],
           };
           const card = (
             <ContractInfiniteCard
@@ -60,7 +111,11 @@ export default function ContractInfiniteContainer({
           );
 
           return (
-            <Draggable draggableId={contract.id.toString()} index={i} key={contract.id}>
+            <Draggable
+              draggableId={contract.id.toString()}
+              index={i}
+              key={contract.id}
+            >
               {(provided) => (
                 <div
                   ref={provided.innerRef}

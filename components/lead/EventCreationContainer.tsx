@@ -3,41 +3,21 @@ import CustomModal from "../shared/custom-modal";
 import { MdClose } from "react-icons/md";
 import { useFormik } from "formik";
 import FormMaker from "../shared/form-maker";
-import Image from "next/image";
-import { FaLocationArrow, FaMapMarkerAlt, FaSnapchatGhost, FaTag, FaTags, FaThLarge, FaUser, FaUserAlt, FaUserAltSlash } from 'react-icons/fa';
-import {
-    Calendar,
-    Clock,
-    MapPin,
-    Bell,
-    Search,
-    User,
-    X,
-    Phone,
-    MessageSquare,
-    Mail,
-    Users,
-    Headphones,
-    CheckCircle,
-    AlertCircle,
-    ShieldCloseIcon,
-    SettingsIcon,
-    PersonStanding,
-    PersonStandingIcon,
-    User2,
-    MenuIcon
-} from 'lucide-react';
+import { FaMapMarkerAlt, FaTag } from "react-icons/fa";
+import { Clock, User2, MenuIcon } from "lucide-react";
 export interface EventCreationContainerInterface {
   trigger?: React.ReactElement;
+  onSubmit: () => void;
 }
 export default function EventCreationContainer({
   trigger,
+  onSubmit,
 }: EventCreationContainerInterface) {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: {
       personSearch: "",
-      personSearchPreview:""
+      personSearchPreview: "",
     },
     onSubmit: async () => {},
     enableReinitialize: true,
@@ -160,7 +140,7 @@ export default function EventCreationContainer({
                 floating: true,
                 labelClassName: "w-full",
                 className: "w-full mr-8",
-                options:[{label:"شخص 1",value:"1"}]
+                options: [{ label: "شخص 1", value: "1" }],
               },
               {
                 key: "personSearchPreview",

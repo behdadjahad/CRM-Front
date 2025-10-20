@@ -158,24 +158,43 @@ const contractSlice = createSlice({
         //   name: item?.userResponsible?.fullName,
         // },
         id: item?.id,
+        headerData: {
+          contractType: item?.contractType?.name ?? "",
+        },
         list: [
           {
-            label: ":تاریخ ثبت",
-            value:
-              item?.submitDateTime && item?.dateType
-                ? convertDate(item?.submitDateTime, item?.dateType)
-                : "",
+            label: "تاریخ ثبت:",
+            value: convertDate(item?.submitDateTime, item?.dateType),
+          },
+          { label: "شماره قرارداد:", value: item?.contractNo },
+          {
+            label: "ثبت کننده:",
+            value: item?.userSubmitter?.fullName ?? "",
           },
           {
-            label: ":شماره قرارداد",
-            value: item.contractNo ?? "",
+            label: "مسئول قرارداد:",
+            value: item?.userResponsible?.fullName
+              ? item?.userResponsible?.fullName
+              : "",
           },
           {
-            label: ":تاریخ ثبت",
-            value:
-              item?.submitDateTime && item?.dateType
-                ? convertDate(item?.submitDateTime, item?.dateType)
-                : "",
+            label: "موضوع قرارداد:",
+            value: item?.contractType?.name ?? "",
+          },
+        ],
+
+        footerData: [
+          {
+            label: "درآمد:",
+            value: item.sellPrice ? formatPrice(item?.sellPrice) : 0,
+          },
+          {
+            label: "هزینه:",
+            value: item?.buyPrice ? formatPrice(item?.buyPrice) : 0,
+          },
+          {
+            label: item?.sellPrice - item?.buyPrice >= 0 ? "سود:" : "زیان:",
+            value: formatPrice(item?.sellPrice - item?.buyPrice),
           },
         ],
         exportData: {

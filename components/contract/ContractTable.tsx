@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../ui/button";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import Link from "next/link";
-import { getSortFieldFromLabel } from "@/lib/utils";
+import { cn, getSortFieldFromLabel } from "@/lib/utils";
 import { AccessDenied } from "../shared/AccessDenied";
 import { generateFeatureAccess } from "@/lib/generatePageData";
 import { usePageData } from "@/hooks/usePageData";
@@ -31,10 +31,12 @@ export interface ContractTableInterface {
     exportData: any;
     editData: any;
   }[];
+  className?: string;
 }
 
 export default function ContractTable({
   contractList,
+  className
 }: ContractTableInterface) {
   const pageFeatures = usePageData();
 
@@ -84,6 +86,12 @@ export default function ContractTable({
   };
 
   return (
+        <div
+          className={cn(
+            " flex flex-col items-center justify-between h-full",
+            className
+          )}
+        >
     <Table>
       <TableHeader>
         <TableRow>
@@ -238,6 +246,7 @@ export default function ContractTable({
           </Fragment>
         ))}
       </TableBody>
-    </Table>
+      </Table>
+      </div>
   );
 }
