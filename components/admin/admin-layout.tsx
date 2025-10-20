@@ -11,7 +11,7 @@ export default function AdminLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(true);
   return (
     <div className="relative flex flex-row w-full overflow-hidden">
       <Drawer state={isDrawerOpen} setState={setIsDrawerOpen} sideBarLinks={adminSideBarMenuLinks} />

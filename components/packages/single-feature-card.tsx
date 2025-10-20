@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 
 import { selectUnit } from '@/api/packages/package-api';
 import { CustomToast } from '../shared/custome-toast';
-// import SingleFeaturePurchaseModal from './single-feature-purchase-modal';
 import { SingleFeatureUnit } from '@/data/single-features-mock-data';
 import Tag from '../billing/tag';
 import { Checkbox } from '../ui/checkbox';
@@ -38,7 +37,15 @@ interface SingleFeatureCardProps {
     // Add highlighting props
     isHighlighted?: boolean;
     highlightCode?: string; // The feature code being highlighted
-    accessesJson?: any; // The accessesJson from the unit
+    accessesJson?: { pages: Array<{ code: string; features: Array<{ code: string }> }> };
+    // Add bundle-related props
+    isInBundle?: boolean; // If true, hide individual price/button and show bundle info
+    showPrice?: boolean; // Control price display
+    showAddButton?: boolean; // Control add button display
+    bundleLoading?: boolean; // Bundle-specific loading state
+    featureLoading?: boolean; // Individual feature loading state
+    bundleTotalPrice?: number; // Total price for bundle display
+    bundleCurrency?: Currency; // Currency for bundle display
 }
 
 
@@ -93,7 +100,15 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
     isSelectable = true,
     isHighlighted = false,
     highlightCode,
-    accessesJson
+    accessesJson,
+    // Bundle-related props
+    isInBundle = false,
+    showPrice = true,
+    showAddButton = true,
+    bundleLoading = false,
+    featureLoading = false,
+    bundleTotalPrice,
+    bundleCurrency
 }) => {
     const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
     const [isSelecting, setIsSelecting] = useState(false);
@@ -201,12 +216,15 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                 <div className="mb-4">
                     <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
-                            <Checkbox
-                                checked={isChecked}
-                                onCheckedChange={(checked) => onCheckChange?.(unit.id, checked as boolean)}
-                                className="border border-[#D5D7DA]"
-                                disabled={!isSelectable}
-                            />
+                            {/* Only show checkbox if not in bundle mode or if explicitly enabled */}
+                            {(!isInBundle || showAddButton) && (
+                                <Checkbox
+                                    checked={isChecked}
+                                    onCheckedChange={(checked) => onCheckChange?.(unit.id, checked as boolean)}
+                                    className="border border-[#D5D7DA]"
+                                    disabled={!isSelectable}
+                                />
+                            )}
                             <Tooltip content={unit.name}>
                                 <p className={cn(
                                     "text-lg lg:text-base xl:text-lg textlg zinc-900 text-right overflow-hidden whitespace-nowrap truncate lg:max-w-[100px] xl:max-w-[150px] max-w-[150px]",
@@ -248,19 +266,26 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
 
             {/* Price Section */}
             <div className="flex justify-between items-center">
+                {/* Show bundle total price if in bundle mode, otherwise show individual price */}
+                {isInBundle && bundleTotalPrice ? (
+                    <FeaturePriceDisplay
+                        price={bundleTotalPrice}
+                        currency={bundleCurrency || unit.currency}
+                    />
+                ) : showPrice ? (
+                    <FeaturePriceDisplay
+                        price={unit.price}
+                        currency={unit.currency}
+                    />
+                ) : null}
 
-                <FeaturePriceDisplay
-                    price={unit.price}
-                    currency={unit.currency}
-
-                />
-                {showCartActions && (
+                {showCartActions && showAddButton && (
                     <div className="flex gap-2 mt-4">
                         {(isInCart && !cartLoading) ? (
                             <Button
                                 variant="outline"
                                 onClick={() => onRemoveFromCart?.(unit.id.toString())}
-                                disabled={removeFromCartLoading || cartLoading}
+                                disabled={removeFromCartLoading || cartLoading || bundleLoading}
                                 className="text-red-600 border-red-600 hover:bg-red-50"
                             >
                                 {(removeFromCartLoading || cartLoading) ? 'آیتم حذف شد...' : 'حذف از سبد خرید'}
@@ -270,10 +295,12 @@ const SingleFeatureCard: React.FC<SingleFeatureCardProps> = ({
                                 className="text-base "
                                 variant="info"
                                 onClick={handleAddToCart}
-                                disabled={!onAddToCart || addToCartLoading || cartLoading}
+                                disabled={!onAddToCart || addToCartLoading || cartLoading || bundleLoading}
                             >
                                 <Plus size={20} />
-                                {cartLoading ? 'در حال پردازش...' : 'افزودن'}
+                                {bundleLoading ? 'در حال پردازش باندل...' :
+                                    featureLoading ? 'در حال پردازش...' :
+                                        cartLoading ? 'در حال پردازش...' : 'افزودن'}
                             </Button>
                         )}
                     </div>

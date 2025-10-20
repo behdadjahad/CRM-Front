@@ -29,14 +29,15 @@ export default function OrderSummaryCard({
     const invoiceData: SingleInvoice | undefined = response?.data;
 
     const { mutate: payInvoiceMutation } = useMutation({
-        mutationFn: (id: number) => payInvoice(id, invoiceData?.chadcoCustomerId || 0),
+        mutationFn: ({ id, months }: { id: number, months: number }) => 
+            payInvoice(id, invoiceData?.chadcoCustomerId || 0, months),
         onSuccess: () => {
             // alert("پرداخت با موفقیت انجام شد");
         },
     });
 
     const handlePayment = () => {
-        payInvoiceMutation(Number(id));
+        payInvoiceMutation({ id: Number(id), months: selectedDuration?.months || 0 });
     }
 
     // Show skeleton while loading
@@ -141,7 +142,7 @@ export default function OrderSummaryCard({
                 {/* Package Name */}
                 <div className="flex justify-between items-center">
                     <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >نام پکیج:</span>
-                    <span className="font-medium text-static-secondary-gray-dark">{invoiceData?.invoiceNumber?.slice(0, 5) || "-"}</span>
+                    <span className="font-medium text-static-secondary-gray-dark">{packageData?.name || "-"}</span>
                 </div>
 
                 {/* Package Type */}
@@ -162,7 +163,7 @@ export default function OrderSummaryCard({
                 <div className="flex justify-between items-center">
                     <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >قیمت پایه:</span>
                     <span className="font-medium text-static-secondary-gray-dark">
-                        {invoiceData?.originalTotal ? formatPrice(invoiceData.originalTotal) : "-"} تومان
+                        {packageData?.basePrice ? formatPrice(packageData.basePrice) : "-"} تومان
                     </span>
                 </div>
 
@@ -188,7 +189,9 @@ export default function OrderSummaryCard({
                 {/* Validity Period */}
                 <div className="flex justify-between items-center">
                     <span className="text-static-secondary-gray text-sm font-primary-medium leading-[140%] tracking-normal" >مدت زمان اعتبار:</span>
-                    <span className="font-medium text-static-info-primary">{getValidityPeriod(invoiceData?.issuedAt || null, invoiceData?.dueAt || null) || "-"}</span>
+                    <span className="font-medium text-static-info-primary">
+                        {selectedDuration ? selectedDuration.title : "-"}
+                    </span>
                 </div>
 
 
@@ -197,7 +200,7 @@ export default function OrderSummaryCard({
                 <div className="flex justify-between items-center">
                     <span className="text-base font-normal text-static-text-summary">جمع کل:</span>
                     <span className="text-base font-medium text-static-text-summary ">
-                        {invoiceData?.finalTotal ? formatPrice(invoiceData.finalTotal) : "-"} تومان
+                        {selectedDuration?.finalPrice ? formatPrice(selectedDuration.finalPrice) : (packageData?.basePrice ? formatPrice(packageData.basePrice) : "-")} تومان
                     </span>
                 </div>
             </div>
